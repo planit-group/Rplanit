@@ -1,0 +1,22 @@
+Package: Rplanit
+Type: Package
+Title: RT planning simulations and related procedures
+Version: 1.0
+Date: 2014-03-26
+Author: Who wrote it
+Maintainer: Who to complain to <yourfault@somewhere.net>
+Description: A collection of methods and procedures to perform simulations and
+    analysis related to treatment planning (with ion beams). It includes a set
+    of radiobiological evaluations and display possibilities.
+License: GPL2
+Depends:
+    R (>= 3.0.0)
+Imports:
+    ggplot2 (>= 0.9.3.1),
+    fields (>= 6.8),
+    grid (>= 3.0.1),
+    gtable (>= 0.1.2),
+    oro.nifti
+Suggests:
+    rgl (>= 0.93.991),
+    misc3d (>= 0.8-4)

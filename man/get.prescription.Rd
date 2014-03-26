@@ -1,0 +1,14 @@
+\name{get.prescription}
+\alias{get.prescription}
+\title{recupera prescrizione}
+\usage{
+get.prescription(plan)
+}
+\description{
+recupera prescrizione
+}
+\seealso{
+Other Prescription: \code{\link{check.prescription}};
+\code{\link{create.constraint}}
+}
+

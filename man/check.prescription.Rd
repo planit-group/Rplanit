@@ -1,0 +1,30 @@
+\name{check.prescription}
+\alias{check.prescription}
+\title{Check the prescription}
+\usage{
+check.prescription(plan = plan, values = NULL, vois = NULL,
+  prescription = NULL)
+}
+\arguments{
+  \item{plan}{the plan object}
+
+  \item{values}{the values object. If it is \code{NULL},
+  \code{values} is obtained directly from the \code{plan}}
+
+  \item{vois}{the vois object. If it is \code{NULL},
+  \code{vois} is obtained directly from the \code{plan}}
+
+  \item{prescription}{the prescription dataframe. If it is
+  \code{NULL}, \code{prescription} is obtained directly
+  from the \code{plan}}
+}
+\description{
+It verifies if the contraints defined in the prescription
+are verified. It uses the actual values distributions to
+perform the check.
+}
+\seealso{
+Other Prescription: \code{\link{create.constraint}};
+\code{\link{get.prescription}}
+}
+

@@ -1,0 +1,18 @@
+\name{convert.mu2fluence}
+\alias{convert.mu2fluence}
+\title{converte fluenze in beams da MU a numero di particelle}
+\usage{
+convert.mu2fluence(beams, type = "protonCnao")
+}
+\description{
+secondo le curve di calibrazione specificate
+}
+\seealso{
+Other Beams: \code{\link{add.field}};
+\code{\link{convert.fluence2mu}};
+\code{\link{create.beam}}; \code{\link{create.field}};
+\code{\link{display.beams}}; \code{\link{get.beams}};
+\code{\link{get.isocenter}}; \code{\link{read.beams}};
+\code{\link{write.beams}}
+}
+

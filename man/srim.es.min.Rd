@@ -1,0 +1,15 @@
+\docType{data}
+\name{srim.es.min}
+\alias{srim.es.min}
+\title{srim.limits}
+\format{\preformatted{ Named num [1:10] 0.01 0.0025 0.001428 0.001111 0.000909 ...
+ - attr(*, "names")= chr [1:10] "H" "He" "Li" "Be" ...
+}}
+\usage{
+srim.es.min
+}
+\description{
+srim.limits
+}
+\keyword{datasets}
+

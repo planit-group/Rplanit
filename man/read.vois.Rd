@@ -1,0 +1,15 @@
+\name{read.vois}
+\alias{read.vois}
+\title{Legge i vois da un file .3d e restituisce un dataframe "esteso"}
+\usage{
+read.vois(file.name, x.min = -Inf, x.max = +Inf, y.min = -Inf,
+  y.max = +Inf, z.min = -Inf, z.max = +Inf)
+}
+\description{
+OBSOLETE
+}
+\seealso{
+Other R/W VOIs: \code{\link{read.vois.array}};
+\code{\link{read.vois.spliced}}
+}
+

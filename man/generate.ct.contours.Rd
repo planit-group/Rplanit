@@ -1,0 +1,42 @@
+\name{generate.ct.contours}
+\alias{generate.ct.contours}
+\title{Generate a complete phantom (CT + contours)}
+\usage{
+generate.ct.contours(CT.df, contours.df, deltaX, deltaY, deltaZ,
+  name = "waterbox", tissue = "R3PIDEd0.2v0+MKM")
+}
+\arguments{
+  \item{the}{dataframe in which the definition of the
+  volumes for the CT is stored}
+
+  \item{the}{dataframe in which the definition of the
+  volumes for the contours is stored}
+
+  \item{deltaX,}{deltaY, deltaZ are the dimensions of the
+  voxels}
+
+  \item{the}{name of the phantom. Files are
+  automaticallywritten for the CT (<name>.3d) and the
+  contours (<name>.contours)}
+
+  \item{tissue}{the tissue name}
+}
+\description{
+It generates a CT and assocuated contours, via the
+definition of box-shaped volumes.
+}
+\details{
+It uses the definition of volumes and VOIs stored in two
+dataframes:
+
+CT.df: x_min, x_max, y_min, y_max, z_min, z_max, HU, voi.
+
+contours.df: x_min, x_max, y_min, y_max, z_min, z_max, voi.
+
+It is possible to use directly the same CT.df for the
+definition of the volumes of the contours (contours.df).
+
+CT and contours are directly written in two files with
+names specfied by \code{name}.
+}
+

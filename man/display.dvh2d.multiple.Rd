@@ -1,0 +1,44 @@
+\name{display.dvh2d.multiple}
+\alias{display.dvh2d.multiple}
+\title{plot multiplo di dvh2D}
+\usage{
+display.dvh2d.multiple(values = values, vois = vois,
+  variables = c("Dose[Gy]", "Dose[Gy]"), voi = voi, alpha = 0.2,
+  means = FALSE, x.lim = NULL, y.lim = NULL, model.LQ = NULL,
+  model.LM = NULL, model.cMKM = NULL, model.MKM = NULL,
+  RBE.alpha = FALSE, legend = c("plan"), legend.position = 1,
+  different.model.colors = FALSE, file.name = NULL, height, width)
+}
+\arguments{
+  \item{legend.position}{The position of the legend.
+  legend.position = 0 means no legend.}
+}
+\description{
+utilizza una lista di values, di vois, e di voi. C'è
+flessibilità su come si può combinare la molteplicità: ad
+es. il nome del voi specificato può essere comune a tutti i
+vois, oppure si può specificare per ciascun values. E'
+necessario fornire un vettore per la legenda, per
+identificare a mano i diversi contributi.
+}
+\details{
+E' possibile passare dei dataframe di parametri per ogni
+distribuzione per i modelli da usare (a cui sono associati
+coppie di parametri specifiche): - (Dose,
+Survival[.LM,.cMKM]) -> model.LQ - (LETd, alpha) ->
+model.LM, model.cMKM, model.MKM - i dataframe dei parametri
+devono avere la forma: par1, par2, ... , id dove il numero
+di righe = length(legend) e id[i] = legend[i]
+
+i parametri hanno i nomi: model.LQ -> (alpha, beta)
+model.LM -> (alpha0, m) model.cMKM -> (alphaX, betaX, Rn,
+Rd) model.MKM -> (alphaX, betaX, Rn, Rd)
+
+se è RBE.alpha=TRUE, viene anche usata l'alphaX
+(specificata nel modello) per calcolare l'RBE.alpha del
+modello
+
+Nota: per il modello cMKM occorre specificare
+obbligatoriamente l'intervallo xlim
+}
+

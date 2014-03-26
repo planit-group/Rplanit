@@ -1,0 +1,15 @@
+\name{dvh.evaluate.all}
+\alias{dvh.evaluate.all}
+\title{calcola DVH per tutti i VOI}
+\usage{
+dvh.evaluate.all(values = NULL, vois = NULL, variable = NULL,
+  with.0 = FALSE, with.na = FALSE)
+}
+\description{
+OBSOLETA ... da integrare con dvh.evaluate
+}
+\seealso{
+Other DVH: \code{\link{dvh.evaluate.bands}};
+\code{\link{dvh.evaluate}}
+}
+

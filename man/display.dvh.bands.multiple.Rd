@@ -1,0 +1,13 @@
+\name{display.dvh.bands.multiple}
+\alias{display.dvh.bands.multiple}
+\title{Visualizza una banda sui DVH}
+\usage{
+display.dvh.bands.multiple(dvh, dvh.reference = NULL, alpha = 0.37,
+  alpha.color = 0.25, show.plot = TRUE, file.name = NULL, width = 7,
+  height = 7, with.mean = TRUE, with.median = TRUE, title = NULL)
+}
+\description{
+accetta una lista di "dvh" i dvh vengono raggruppati a
+seconda del nome contenuto in dvh$voi.
+}
+

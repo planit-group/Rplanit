@@ -1,0 +1,36 @@
+\name{display.lut}
+\alias{display.lut}
+\title{2D display of the beam-lut}
+\usage{
+display.lut(lut, variable = NULL, E = NULL, bw = FALSE, r.cut = NULL,
+  cont = FALSE, z.absolute = FALSE)
+}
+\arguments{
+  \item{lut}{the Look Up Table object}
+
+  \item{variable}{the specific variable to be displayed
+  (not needed if values contains only one variable, or if
+  the variable is the first of the list)}
+
+  \item{E}{the energy of the beam (if it is not specified,
+  the mean energy of the available energies is used). The
+  energy displayed is approximated to the nearest available
+  in the lut.}
+
+  \item{bw}{display using gray color levels (optional,
+  boolean)}
+
+  \item{r.cut}{cut-off radius (optional)}
+
+  \item{display}{contour levels (optional, boolean)}
+
+  \item{z.absolute}{display absolute z (optional, boolean)}
+}
+\description{
+The \code{lut} object use a structure similar to the
+"values" object. For example the different quantities are
+stored in a 5D array, \code{lut$values[i,j,k,l]}. The
+indices of the array correspond to: variable, energy, x, y,
+normalized z.
+}
+

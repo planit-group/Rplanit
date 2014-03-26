@@ -1,0 +1,12 @@
+\name{display.dvh.combined}
+\alias{display.dvh.combined}
+\title{plot del dvh diff+integral combinato}
+\usage{
+display.dvh.combined(dvh, plan = NULL, alpha.color = 1, title = NULL,
+  decimate = TRUE, unique.variable = FALSE, show.plot = TRUE,
+  original.colors = FALSE, filename = NULL, width = 7, height = 7)
+}
+\description{
+plot del dvh diff+integral combinato
+}
+

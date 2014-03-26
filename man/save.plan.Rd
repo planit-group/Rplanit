@@ -1,0 +1,15 @@
+\name{save.plan}
+\alias{save.plan}
+\title{Save Plan}
+\usage{
+save.plan(plan)
+}
+\description{
+Save the Plan object on disk. The name of the folder in
+which the plan data are saved is derived from the plan name
+}
+\seealso{
+Other Plan: \code{\link{create.plan}};
+\code{\link{read.plan}}
+}
+

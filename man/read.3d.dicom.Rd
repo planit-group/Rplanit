@@ -1,0 +1,36 @@
+\name{read.3d.dicom}
+\alias{read.3d.dicom}
+\title{Read 3d DICOM}
+\usage{
+read.3d.dicom(dicom.folder, exclude = NULL, recursive = TRUE,
+  verbose = TRUE, invert = TRUE, variable = "HounsfieldNumber")
+}
+\arguments{
+  \item{dicom.folder}{Path name to the DICOM directory.}
+
+  \item{recursive}{Search recursively down from the given
+  path name.}
+
+  \item{exclude}{Exclude file names containing this
+  character string.}
+
+  \item{verbose}{Flag to provide text-based progress bar.}
+
+  \item{variable}{name of the variable to be assigned to
+  the 3d data.}
+}
+\value{
+A values object.
+}
+\description{
+Read 3D image from DICOM dile and return a \code{values}
+object. Note: it assumes a regurlary spaced slices,
+constant pixel dimensions among slices and the same
+ImagePositionPatient for each slice.
+}
+\seealso{
+Other R/W Arrays: \code{\link{read.1d}};
+\code{\link{read.3d.df}}; \code{\link{read.3d.hdr}};
+\code{\link{read.3d.spliced}}; \code{\link{read.3d}}
+}
+

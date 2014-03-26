@@ -1,0 +1,14 @@
+\name{display.slices.interactive}
+\alias{display.slices.interactive}
+\title{mostra slice in maniera interattiva}
+\usage{
+display.slices.interactive(values = values, variables = NULL,
+  gray = FALSE)
+}
+\description{
+usa il pacchetto tkrplot (installa prima tk-dev con
+apt-get) può visualizzare più di una variabile
+simultaneamente (mappandola sul "tempo") (questo magari lo
+riformulerò quando userò immagini 4D...)
+}
+

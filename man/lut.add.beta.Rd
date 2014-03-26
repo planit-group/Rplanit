@@ -1,0 +1,17 @@
+\name{lut.add.beta}
+\alias{lut.add.beta}
+\title{aggiungi beta alla lut}
+\usage{
+lut.add.beta(lut)
+}
+\description{
+la formula: LethAlphaPerEvent / DosePerEvent
+}
+\seealso{
+Other LUT: \code{\link{get.zBP.fun}};
+\code{\link{lut.add.alpha}};
+\code{\link{lut.add.rbe.alpha}};
+\code{\link{lut.radial.integral}}; \code{\link{read.lut}};
+\code{\link{write.lut}}
+}
+

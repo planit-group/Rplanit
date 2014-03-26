@@ -1,0 +1,22 @@
+\name{TCP.LL.LM}
+\alias{TCP.LL.LM}
+\title{calcola la log likelihood di cura (TCP), per un singolo caso, rispetto al dato clinico}
+\usage{
+TCP.LL.LM(values, vois, voi = "PTV", alpha0, beta, m, G = G, Np = Np,
+  R = R, Nf = Nf)
+}
+\description{
+Utilizza il modello lineare (alpha=alpha0 + m*LETd,
+beta=cost.). Assume frazioni indipendenti e costanti.
+Assume la presenza di matrice di dose fisica e di LETd per
+il calcolo LM.
+}
+\details{
+Np -> numero di pazienti R -> numero di pazienti responder
+(R=Np*TCP) Nf -> numero di frazioni
+}
+\seealso{
+Other Likelihood Evaluations: \code{\link{NTCP.LL.LM}};
+\code{\link{NTCP.LL.cMKM}}; \code{\link{TCP.LL.cMKM}}
+}
+

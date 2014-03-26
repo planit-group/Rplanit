@@ -1,0 +1,14 @@
+\name{TCP.LM}
+\alias{TCP.LM}
+\title{calcola TCP con modello LM}
+\usage{
+TCP.LM(values, vois, voi = "PTV", alpha0, beta, m, G = G, Nf = Nf)
+}
+\description{
+calcola TCP con modello LM
+}
+\seealso{
+Other LM/cMKM TCP/NTCP Models: \code{\link{NTCP.LM}};
+\code{\link{NTCP.cMKM}}; \code{\link{TCP.cMKM}}
+}
+

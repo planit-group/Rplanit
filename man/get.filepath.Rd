@@ -1,0 +1,27 @@
+\name{get.filepath}
+\alias{get.filepath}
+\title{Filepath of objects}
+\usage{
+get.filepath(object, plan = plan)
+}
+\arguments{
+  \item{object}{the specific object (\code{ctFile},
+  \code{contoursFile}, \code{hounsfieldToDensityFile},
+  \code{hounsfieldToStoichiometryFile},
+  \code{prescriptionFile}, \code{voisFile},
+  \code{outputValuesFile}, \code{inputBeamsFile},
+  \code{outputBeamsFile})}
+}
+\value{
+filepah
+}
+\description{
+Returns the name of the file with complete filepath for the
+specified object in the plan.
+}
+\seealso{
+Other Utilities: \code{\link{evaluate.bands}};
+\code{\link{points2intervals}};
+\code{\link{sanitize.filename}}
+}
+

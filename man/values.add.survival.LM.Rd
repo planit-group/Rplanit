@@ -1,0 +1,19 @@
+\name{values.add.survival.LM}
+\alias{values.add.survival.LM}
+\title{Calcola la sopravvivenza secondo il modello LM e la aggiunge in values}
+\usage{
+values.add.survival.LM(values, alpha0, m, beta, add.alpha = TRUE)
+}
+\description{
+m, c e beta sono i parametri del modello m -> coefficiente
+angolare c -> costante beta -> valore di beta (indipendente
+dal LETd) Nota: l'oggetto values deve avere le due
+variabili 'Dose[Gy]' e 'DoseAveragedLET[keV/um]'
+}
+\seealso{
+Other Values Bioogical Evaluations:
+\code{\link{values.add.RBE.alpha}};
+\code{\link{values.add.RBE}};
+\code{\link{values.add.survival.cMKM}}
+}
+

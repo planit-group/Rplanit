@@ -1,0 +1,12 @@
+\name{display.dvh2d}
+\alias{display.dvh2d}
+\title{plot di "dvh2D per un voi e due variabili specifiche}
+\usage{
+display.dvh2d(values = values, vois = vois, variables = c("Dose[Gy]",
+  "Dose[Gy]"), voi = voi, alpha = 0.2, means = FALSE, x.lim = NULL,
+  y.lim = NULL)
+}
+\description{
+plot di "dvh2D per un voi e due variabili specifiche
+}
+

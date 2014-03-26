@@ -1,0 +1,16 @@
+\name{lut.add.rbe.alpha}
+\alias{lut.add.rbe.alpha}
+\title{Aggiunge RBE.alpha alla LUT}
+\usage{
+lut.add.rbe.alpha(lut, alphaX)
+}
+\description{
+Aggiunge RBE.alpha alla LUT
+}
+\seealso{
+Other LUT: \code{\link{get.zBP.fun}};
+\code{\link{lut.add.alpha}}; \code{\link{lut.add.beta}};
+\code{\link{lut.radial.integral}}; \code{\link{read.lut}};
+\code{\link{write.lut}}
+}
+

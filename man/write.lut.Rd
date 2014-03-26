@@ -1,0 +1,17 @@
+\name{write.lut}
+\alias{write.lut}
+\title{salva la lut a partire dai dati in memoria}
+\usage{
+write.lut(lut.array, variables = NULL, E = NULL, x = NULL, y = NULL,
+  zn = NULL, filename = "lut.4d", binary = FALSE)
+}
+\description{
+salva la lut a partire dai dati in memoria
+}
+\seealso{
+Other LUT: \code{\link{get.zBP.fun}};
+\code{\link{lut.add.alpha}}; \code{\link{lut.add.beta}};
+\code{\link{lut.add.rbe.alpha}};
+\code{\link{lut.radial.integral}}; \code{\link{read.lut}}
+}
+

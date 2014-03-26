@@ -1,0 +1,20 @@
+\name{read.materials.gate}
+\alias{read.materials.gate}
+\title{Read materials database (Gate)}
+\usage{
+read.materials.gate(materialDatabase = NULL)
+}
+\arguments{
+  \item{materialDatabase}{the file name of the material
+  database}
+}
+\value{
+a list of materials
+}
+\description{
+Read materials database (Gate)
+}
+\seealso{
+Other GateMaterials: \code{\link{generate.materials.gate}}
+}
+

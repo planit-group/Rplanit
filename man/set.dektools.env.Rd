@@ -1,0 +1,27 @@
+\name{set.dektools.env}
+\alias{set.dektools.env}
+\title{Set Environment Variables}
+\usage{
+set.dektools.env(dek.setenv = NULL, lem.setenv = NULL, gate.setenv = NULL,
+  gate.template = NULL)
+}
+\arguments{
+  \item{dek.setenv}{path to configuration script plankit
+  TPS.}
+
+  \item{lem.setenv}{path to the cofiguration script for the
+  radiobiological simulation code.}
+
+  \item{gate.setenv}{path to the configuration script for
+  Gate/Geant4 code.}
+
+  \item{gate.template}{path to the folder containing the
+  template macro files for the Gate4/Geant4 simulations.}
+}
+\description{
+Set Environment Variables
+}
+\seealso{
+Other Environment: \code{\link{get.dektools.env}}
+}
+

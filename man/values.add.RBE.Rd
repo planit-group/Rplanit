@@ -1,0 +1,18 @@
+\name{values.add.RBE}
+\alias{values.add.RBE}
+\title{calcola l'RBE e l'agiunge in values a partire da alpha e beta e dose}
+\usage{
+values.add.RBE(values, model = NULL, alphaX = 0.2, betaX = 0.02,
+  model.LM = NULL, model.cMKM = NULL, biological.dose = FALSE)
+}
+\description{
+calcola l'RBE e l'agiunge in values a partire da alpha e
+beta e dose
+}
+\seealso{
+Other Values Bioogical Evaluations:
+\code{\link{values.add.RBE.alpha}};
+\code{\link{values.add.survival.LM}};
+\code{\link{values.add.survival.cMKM}}
+}
+

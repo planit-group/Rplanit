@@ -1,0 +1,21 @@
+\name{read.plan}
+\alias{read.plan}
+\title{Read Plan}
+\usage{
+read.plan(name)
+}
+\arguments{
+  \item{name}{a string name of the plan.}
+}
+\value{
+the Plan object
+}
+\description{
+Read a Plan object from disk. The origin folder is derived
+from the plan name.
+}
+\seealso{
+Other Plan: \code{\link{create.plan}};
+\code{\link{save.plan}}
+}
+

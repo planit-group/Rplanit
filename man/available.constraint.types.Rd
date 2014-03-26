@@ -1,0 +1,18 @@
+\name{available.constraint.types}
+\alias{available.constraint.types}
+\title{Available constraints (PlanKIT)}
+\usage{
+available.constraint.types()
+}
+\value{
+A list of the available variables
+}
+\description{
+The available constraint types name identifiers tha can be
+used in the optimization procedure of PlanKIT
+}
+\seealso{
+Other PlanKITVariables: \code{\link{available.beamlines}};
+\code{\link{available.variables}}
+}
+

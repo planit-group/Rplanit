@@ -1,0 +1,23 @@
+\name{read.1d}
+\alias{read.1d}
+\title{Read 1D array}
+\usage{
+read.1d(file.name, melted = FALSE)
+}
+\arguments{
+  \item{file.name}{the file name}
+
+  \item{melted}{return a "melted" dataframe (optional)}
+}
+\value{
+a dataframe
+}
+\description{
+Read a file "*.1d" (PlanKIT format) and return a dataframe.
+}
+\seealso{
+Other R/W Arrays: \code{\link{read.3d.df}};
+\code{\link{read.3d.dicom}}; \code{\link{read.3d.hdr}};
+\code{\link{read.3d.spliced}}; \code{\link{read.3d}}
+}
+

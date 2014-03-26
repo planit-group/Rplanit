@@ -1,0 +1,32 @@
+\name{get.vois}
+\alias{get.vois}
+\title{Get VOIs from plan}
+\usage{
+get.vois(plan)
+}
+\arguments{
+  \item{plan}{the \code{plan} object}
+}
+\value{
+the \code{vois} object; a list consisting of
+\item{values}{3D "character" array (logical strings such as
+"10010110")} \item{vois}{vector of VOI names}
+\item{x}{vector of x coordinates} \item{y}{vector of y
+coordinates} \item{z}{vector of z coordinates}
+\item{Nx}{number of voxels along x} \item{Ny}{number of
+voxels along y} \item{Nz}{number of voxels along z}
+\item{Nv}{number of VOIs} \item{file}{reference file}
+}
+\description{
+Get the VOIs (\code{vois} object) from a \code{plan}
+object.
+}
+\details{
+The \code{vois} object is similar (but different) to the
+values object.
+}
+\seealso{
+Other VOIs: \code{\link{get.voi.logical}};
+\code{\link{get.voiindex}}
+}
+

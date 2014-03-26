@@ -1,0 +1,20 @@
+\name{write.contours}
+\alias{write.contours}
+\title{Save contours}
+\usage{
+write.contours(contours, name)
+}
+\arguments{
+  \item{contours}{the \code{contours} dataframe}
+
+  \item{name}{the name of the file (the contours will be
+  saved in \code{<name>.contours})}
+}
+\description{
+Save the \code{contours} dataframe in a file with PlanKIT
+format ("*.contours")
+}
+\seealso{
+Other R/W Contours: \code{\link{read.contours}}
+}
+

@@ -1,0 +1,29 @@
+\name{evaluate.bands}
+\alias{evaluate.bands}
+\title{Evaluate percentile band}
+\usage{
+evaluate.bands(v.list, alpha = 0.37)
+}
+\arguments{
+  \item{v.list}{the list of vectors. Note: the vectors
+  should have the same number of elements.}
+
+  \item{alpha}{the alpha value.}
+}
+\value{
+a list of vectors, consisting of: \item{mean}{the mean
+values} \item{median}{the median values}
+\item{alpha.lo}{lower confidence band}
+\item{alpha.up}{upper confidence band} \item{min}{min
+values} \item{max}{max values}
+}
+\description{
+Evaluate the percentile (confidence) band for a list of
+vectors.
+}
+\seealso{
+Other Utilities: \code{\link{get.filepath}};
+\code{\link{points2intervals}};
+\code{\link{sanitize.filename}}
+}
+

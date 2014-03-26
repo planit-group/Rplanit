@@ -1,0 +1,40 @@
+\name{dvh.evaluate}
+\alias{dvh.evaluate}
+\title{Evaluate DVH}
+\usage{
+dvh.evaluate(values = NULL, vois = NULL, voi = "PTV", variable = NULL,
+  with.na = FALSE, with.0 = FALSE)
+}
+\arguments{
+  \item{values}{the \code{values} object}
+
+  \item{vois}{the \code{vois} object}
+
+  \item{voi}{the VOI name}
+
+  \item{variable}{the name of the variable (optional if
+  \code{values} contains only one variable)}
+
+  \item{with.na}{leave explicitly NA values in DVH
+  representing voxels were the specified variable is not
+  defined (optional, boolean)}
+
+  \item{with0}{put explicitly in the DVH a point at (0,1)
+  (optional, boolean)}
+}
+\value{
+The \code{dvh} object; a list consisting of:
+\item{value}{vector containing the value data}
+\item{valume}{vector containing the volume fractions}
+\item{volume.tot}{total volume of the VOI in mm^3}
+\item{voi}{the name of the VOI} \item{Nvoxel}{the number of
+voxels of the VOI}
+}
+\description{
+Evaluate the DVH for a single VOI and a specified variable
+}
+\seealso{
+Other DVH: \code{\link{dvh.evaluate.all}};
+\code{\link{dvh.evaluate.bands}}
+}
+

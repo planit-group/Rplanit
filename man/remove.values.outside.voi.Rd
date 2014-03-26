@@ -1,0 +1,23 @@
+\name{remove.values.outside.voi}
+\alias{remove.values.outside.voi}
+\title{Removes values outside VOI}
+\usage{
+remove.values.outside.voi(values, vois, voi, index.voi = NULL)
+}
+\arguments{
+  \item{values}{The original values}
+
+  \item{vois}{The vois object}
+
+  \item{voi}{the name of the VOI}
+
+  \item{index.voi}{It is possible to pass directly the
+  logical index array.}
+}
+\value{
+A values object
+}
+\description{
+Removes values outside VOI
+}
+

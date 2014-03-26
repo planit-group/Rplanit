@@ -1,0 +1,14 @@
+\docType{data}
+\name{mkm.lower}
+\alias{mkm.lower}
+\title{MKM lower limits}
+\format{\preformatted{ num [1:4] 0.1 0.02 1 0.1
+}}
+\usage{
+mkm.lower
+}
+\description{
+MKM lower limits
+}
+\keyword{datasets}
+

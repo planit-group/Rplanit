@@ -1,0 +1,24 @@
+\name{get.contours}
+\alias{get.contours}
+\title{Get contours from plan}
+\usage{
+get.contours(plan)
+}
+\arguments{
+  \item{plan}{the \code{plan} object}
+}
+\value{
+A \code{contours} dataframe consisting of: \item{id}{index
+of the contours} \item{polygon}{index of the polygon}
+\item{slice}{index of the slice} \item{x,y,z}{x,y,z
+coordinates} \item{contour}{contour (VOI) name}
+\item{tissue}{tissue+biological model name}
+\item{type}{contour type (target, OAR, etc.)}
+}
+\description{
+Get the contours dataframe from the \code{plan} object.
+}
+\seealso{
+Other Contours: \code{\link{volume.contours}}
+}
+

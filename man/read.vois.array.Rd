@@ -1,0 +1,25 @@
+\name{read.vois.array}
+\alias{read.vois.array}
+\title{Read VOIs from file}
+\usage{
+read.vois.array(file.name, x.min = -Inf, x.max = +Inf, y.min = -Inf,
+  y.max = +Inf, z.min = -Inf, z.max = +Inf)
+}
+\arguments{
+  \item{file.name}{the file name}
+
+  \item{x.min,x.max,y.min,y.max,z.min,z.max}{load only the
+  volume inside the specified ranges (optinal)}
+}
+\value{
+The \code{vois} object
+}
+\description{
+Read the VOIS from a file (VOIs *.3d PlanKIT format) and
+return a \code{vois} object.
+}
+\seealso{
+Other R/W VOIs: \code{\link{read.vois.spliced}};
+\code{\link{read.vois}}
+}
+

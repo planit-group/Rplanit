@@ -1,0 +1,28 @@
+\name{create.values}
+\alias{create.values}
+\title{Create values object}
+\usage{
+create.values(array, variable, x, y, z)
+}
+\arguments{
+  \item{array}{the 3D array}
+
+  \item{variable}{the name of the variable}
+
+  \item{x,y,z}{coordinate vectors}
+}
+\value{
+a \code{values} object
+}
+\description{
+Create values object from array
+}
+\seealso{
+Other Values: \code{\link{get.dataframe.from.values}};
+\code{\link{get.profile}};
+\code{\link{get.sparse.array.from.values}};
+\code{\link{get.values.dataframe}};
+\code{\link{get.values.from.sparse.array}};
+\code{\link{get.values}}; \code{\link{sanitize.values}}
+}
+

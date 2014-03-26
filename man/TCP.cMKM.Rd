@@ -1,0 +1,16 @@
+\name{TCP.cMKM}
+\alias{TCP.cMKM}
+\title{calcola TCP con modello cMKM}
+\usage{
+TCP.cMKM(values = values, vois = vois, voi = "PTV", alphaX = alphaX,
+  betaX = betaX, rN = rN, rd = rd, beta = beta,
+  particleType = particleType, G = G, Nf = Nf)
+}
+\description{
+calcola TCP con modello cMKM
+}
+\seealso{
+Other LM/cMKM TCP/NTCP Models: \code{\link{NTCP.LM}};
+\code{\link{NTCP.cMKM}}; \code{\link{TCP.LM}}
+}
+

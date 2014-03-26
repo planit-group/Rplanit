@@ -1,0 +1,15 @@
+\docType{data}
+\name{srim.let.max}
+\alias{srim.let.max}
+\title{srim.limits}
+\format{\preformatted{ Named num [1:10] 84.3 236.9 404 605.2 782.5 ...
+ - attr(*, "names")= chr [1:10] "H" "He" "Li" "Be" ...
+}}
+\usage{
+srim.let.max
+}
+\description{
+srim.limits
+}
+\keyword{datasets}
+

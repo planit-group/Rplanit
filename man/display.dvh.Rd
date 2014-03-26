@@ -1,0 +1,51 @@
+\name{display.dvh}
+\alias{display.dvh}
+\title{Display DVHs}
+\usage{
+display.dvh(dvh, plan = NULL, Diff = FALSE, alpha.color = 1,
+  title = NULL, show.plot = TRUE, decimate = TRUE,
+  show.prescription = FALSE, file.name = NULL, height = 7, width = 7,
+  fixed.scale = FALSE)
+}
+\arguments{
+  \item{dvh}{single DVH (created via
+  \code{\link{dvh.evaluate}}) or a list of DVHs}
+
+  \item{plan}{plan object (optional)}
+
+  \item{Diff}{display "differential" DVH (boolean,
+  optional)}
+
+  \item{alpha.color}{opacity of the plot (optional)}
+
+  \item{title}{the title of the plot (optional)}
+
+  \item{show.plot}{if \code{TRUE} it display the plot on
+  screen. If \code{FALSE} it returns a ggplot plot
+  structure if (optional)}
+
+  \item{decimate}{if the DVH points are too much (> 1000),
+  it plots only a sample of them, to speed up the
+  visualization (boolean, optional)}
+
+  \item{show.prescription}{plot the prescription over the
+  DVH. The plan object needs to be specified also (boolean,
+  optional)}
+
+  \item{filename}{the name of the file in which to save the
+  figure (optional)}
+
+  \item{height,weight}{sizes (inches) of the figure to be
+  saved in the file (optional)}
+
+  \item{fixed.scale}{Forces a common fixed scale when
+  faceting (if there are different variables).}
+}
+\value{
+If \code{show.plot} is \code{FALSE}, it returns a ggplot2
+plot structure to be used for further processing.
+}
+\description{
+Display a single DVH or a list of DVHs
+}
+

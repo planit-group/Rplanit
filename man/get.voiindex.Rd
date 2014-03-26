@@ -1,0 +1,22 @@
+\name{get.voiindex}
+\alias{get.voiindex}
+\title{Get the VOI index from the contours file}
+\usage{
+get.voiindex(voi, file.contours = NULL)
+}
+\arguments{
+  \item{voi}{the VOI name}
+
+  \item{file.contours}{the contours file}
+}
+\value{
+the VOI index
+}
+\description{
+Get the VOI index from the contours file
+}
+\seealso{
+Other VOIs: \code{\link{get.voi.logical}};
+\code{\link{get.vois}}
+}
+

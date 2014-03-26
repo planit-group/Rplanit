@@ -1,0 +1,16 @@
+\name{lut.radial.integral}
+\alias{lut.radial.integral}
+\title{integra la lut radiale}
+\usage{
+lut.radial.integral(lut, r.cut = Inf)
+}
+\description{
+integra la lut radiale
+}
+\seealso{
+Other LUT: \code{\link{get.zBP.fun}};
+\code{\link{lut.add.alpha}}; \code{\link{lut.add.beta}};
+\code{\link{lut.add.rbe.alpha}}; \code{\link{read.lut}};
+\code{\link{write.lut}}
+}
+

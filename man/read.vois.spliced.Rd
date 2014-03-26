@@ -1,0 +1,19 @@
+\name{read.vois.spliced}
+\alias{read.vois.spliced}
+\title{Legge i VOIS da un file .3d e restituisce un dataframe "esteso".}
+\usage{
+read.vois.spliced(file.name, x.min = -Inf, x.max = +Inf, y.min = -Inf,
+  y.max = +Inf, z.min = -Inf, z.max = +Inf, Nsplices = 8)
+}
+\description{
+La creazione del dataframe e' fatta a "splices" per
+ottimizzare la memoria.
+}
+\details{
+OBSOLETE
+}
+\seealso{
+Other R/W VOIs: \code{\link{read.vois.array}};
+\code{\link{read.vois}}
+}
+

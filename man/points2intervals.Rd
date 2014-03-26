@@ -1,0 +1,29 @@
+\name{points2intervals}
+\alias{points2intervals}
+\title{Evaluate intervals}
+\usage{
+points2intervals(x)
+}
+\arguments{
+  \item{x}{the puntual coordinate vector}
+}
+\value{
+the intervals vector (the length of this vector is Nx+1,
+where Nx = length(x))
+}
+\description{
+Evaluate intervals vector from points vector.
+}
+\details{
+Voxel coordinates are usually specified by indicating
+(x,y,z) the middle point. Another way is to indicate the
+intervals (xmin,xmax), (ymin,ymax) (zmin,zmax). Since it is
+assumed that voxels are contiguous, xmax[i] = xmin[i-1],
+for each axis the coordinates can be stored in a single
+vector.
+}
+\seealso{
+Other Utilities: \code{\link{evaluate.bands}};
+\code{\link{get.filepath}}; \code{\link{sanitize.filename}}
+}
+

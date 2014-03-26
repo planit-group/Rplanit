@@ -1,0 +1,19 @@
+\name{available.beamlines}
+\alias{available.beamlines}
+\title{Available beamlines (PlanKIT)}
+\usage{
+available.beamlines()
+}
+\value{
+A list of the available beamlines
+}
+\description{
+The available beamlines name identifiers to be used with
+PlanKIT
+}
+\seealso{
+Other PlanKITVariables:
+\code{\link{available.constraint.types}};
+\code{\link{available.variables}}
+}
+

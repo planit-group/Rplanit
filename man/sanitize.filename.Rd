@@ -1,0 +1,20 @@
+\name{sanitize.filename}
+\alias{sanitize.filename}
+\title{Sanitize file name}
+\usage{
+sanitize.filename(filename)
+}
+\arguments{
+  \item{filename}{the file name}
+}
+\value{
+sanitized file name
+}
+\description{
+Sanitize file name
+}
+\seealso{
+Other Utilities: \code{\link{evaluate.bands}};
+\code{\link{get.filepath}}; \code{\link{points2intervals}}
+}
+

@@ -1,0 +1,35 @@
+\name{tcp.S}
+\alias{tcp.S}
+\title{TCP (Poissonian Model)}
+\usage{
+tcp.S(dvh.survival = dvh.survival, gam = 2, Nf = 30)
+}
+\arguments{
+  \item{dvh.survival}{DVH of the cell "survivals" for a
+  single fraction}
+
+  \item{gam}{radiobiological parameter, related to the
+  clonogenic density}
+
+  \item{Nf}{number of fractions}
+}
+\value{
+the TCP value.
+}
+\description{
+Evaluate TCP directly from the DVH of the "survivals" (for
+a given endpoint and VOI), without using the biological
+dose and/or indirect radiobiological parameters for a
+reference radiation.
+}
+\details{
+It assumes identical and uncorrelated fractions
+(complete-repair)
+}
+\seealso{
+Other General TCP/NTCP Models: \code{\link{ntcp.S}};
+\code{\link{ntcp.kallman.train}};
+\code{\link{ntcp.kallman}}; \code{\link{tcp.lqp.train}};
+\code{\link{tcp.lqp}}
+}
+

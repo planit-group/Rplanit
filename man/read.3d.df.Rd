@@ -1,0 +1,16 @@
+\name{read.3d.df}
+\alias{read.3d.df}
+\title{Legge array da un file "3d" e restituisce un dataframe}
+\usage{
+read.3d.df(file.name, x.min = -Inf, x.max = +Inf, y.min = -Inf,
+  y.max = +Inf, z.min = -Inf, z.max = +Inf)
+}
+\description{
+OBSOLETO
+}
+\seealso{
+Other R/W Arrays: \code{\link{read.1d}};
+\code{\link{read.3d.dicom}}; \code{\link{read.3d.hdr}};
+\code{\link{read.3d.spliced}}; \code{\link{read.3d}}
+}
+

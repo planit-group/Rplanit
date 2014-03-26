@@ -1,0 +1,14 @@
+\name{available.variables.gate}
+\alias{available.variables.gate}
+\title{Available variables (Gate)}
+\usage{
+available.variables.gate()
+}
+\value{
+A list of the available variables
+}
+\description{
+The available variables name identifiers that can be
+evaluated with Gate.
+}
+
