@@ -1,0 +1,86 @@
+# BDL GTR4 ESSEN BEAM PARAMETERS
+
+# Nozzle exit to Isocenter distance
+430.5
+# SMX to Isocenter distance
+6000
+# SMY to Isocenter distance
+6000
+
+# ENERGY
+# mean energy
+# polynomial order
+1
+# polynomial parameters (highest to lowest)
++1.0
++0.0
+
+# energy spread
+# polynomial order
+2
+# polynomial parameters (highest to lowest)
+-0.0
++0.0
++0.0
+
+# SPOT x y theta phi
+# x
+# polynomial order
+4
+# polynomial parameters
+-0.0
++0.0
+-0.0
++0.0
++4.0
+# Theta
+# polynomial order
+6
+# polynomial parameters
+-0.0
++0.0
+-0.0
++0.0
+-0.0
++0.0
++0.0001
+# y
+# polynomial order
+3
+# polynomial parameters
++0.0
+-0.0
+-0.0
++4.0
+# Phi
+# polynomial order
+6
+# polynomial parameters
+0.0
+-0.0
++0.0
+-0.0
++0.0
+-0.0
++0.0001
+
+# SPOT emmittances
+# x-theta emmittance
+# polynomial order
+5
+# polynomial parameters
+0.0
+0.0
+0.0
++0.0
+0.0
++0.0001
+# y-phi emmittance
+# polynomial order
+4
+# polynomial parameters
++0.0
+-0.0
++0.0
+-0.0
++0.0001

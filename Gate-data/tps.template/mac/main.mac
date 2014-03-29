@@ -1,0 +1,104 @@
+#-------------------oooooOOOOO00000OOOOOooooo---------------------#
+
+#-------------------oooooOOOOO00000OOOOOooooo---------------------#
+
+
+#=====================================================
+# VERBOSE and VISUALISATION 
+#=====================================================
+
+/control/execute mac/verbose.mac
+/control/execute mac/visu.mac
+
+
+#=====================================================
+# GEOMETRY
+#=====================================================
+
+/gate/geometry/setMaterialDatabase                 @materialDatabase.gate
+
+# WORLD
+/gate/world/setMaterial                      Vacuum
+/gate/world/geometry/setXLength              2.0 m
+/gate/world/geometry/setYLength              2.0 m
+/gate/world/geometry/setZLength              2.0 m
+/gate/world/placement/setTranslation         0 0 0 mm
+
+# Ionization potential of water
+/gate/geometry/setIonisationPotential Water @waterIonisationPotential.gate eV
+
+# PATIENT CT DATA (alternative to WaterBox)
+/control/execute                              mac/Voxel_Patient.mac
+
+
+#=====================================================
+# PHYSICS
+#=====================================================
+
+/control/execute mac/physicslist_EM_std.mac
+/control/execute mac/physicslist_HAD_std.mac
+
+/gate/physics/displayCuts
+/gate/physics/print output/physics.txt
+
+
+
+#=====================================================
+# OUTPUT - DETECTOR
+#=====================================================
+
+/gate/actor/addActor               SimulationStatisticActor stat
+/gate/actor/stat/save              output/stat.txt
+/gate/actor/stat/saveEveryNSeconds @saveEveryNSeconds.gate
+
+# ----------------------------------------------------
+# the following actor stores 3D distributions of
+# dose/edep/uncertainty/nbHit into files (hdr image file format)
+
+/gate/actor/addActor                               DoseActor  doseDistribution
+/gate/actor/doseDistribution/save                  output/values.hdr
+/gate/actor/doseDistribution/attachTo    	   target
+/gate/actor/doseDistribution/stepHitType           random
+#/gate/actor/doseDistribution/setSize              @size.gate mm
+/gate/actor/doseDistribution/setPosition           @position.gate mm
+/gate/actor/doseDistribution/setVoxelSize          @voxelSize.gate mm
+/gate/actor/doseDistribution/enableEdep            @enableEdep
+/gate/actor/doseDistribution/enableSquaredEdep     @enableSquaredEdep
+/gate/actor/doseDistribution/enableUncertaintyEdep @enableUncertaintyEdep
+/gate/actor/doseDistribution/enableDose            @enableDose
+/gate/actor/doseDistribution/enableSquaredDose     @enableSquaredDose
+/gate/actor/doseDistribution/enableUncertaintyDose @enableUncertaintyDose
+/gate/actor/doseDistribution/enableNumberOfHits    @enableNumberOfHits
+/gate/actor/doseDistribution/saveEveryNSeconds     @saveEveryNSeconds.gate
+
+
+#=====================================================
+# INITIALISATION
+#=====================================================
+
+/gate/run/initialize
+
+
+#=====================================================
+# SOURCE
+#=====================================================
+
+/gate/source/addSource PBS TPSPencilBeam
+/gate/source/PBS/setParticleType proton
+/gate/source/PBS/setTestFlag false
+/gate/source/PBS/setPlan @beams.gate
+#/gate/source/PBS/setNotAllowedFieldID 1
+#/gate/source/PBS/setNotAllowedFieldID 2
+/gate/source/PBS/setSourceDescriptionFile data/protonSimple.txt
+/gate/source/PBS/setFlatGenerationFlag false
+/gate/source/PBS/setSpotIntensityAsNbProtons true
+
+
+#=====================================================
+# RUN
+#=====================================================
+
+/gate/application/setTotalNumberOfPrimaries @totalNumberOfPrimaries
+/gate/random/setEngineSeed auto
+/gate/run/initialize
+/gate/application/start

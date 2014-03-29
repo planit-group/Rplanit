@@ -1,0 +1,63 @@
+#=====================================================
+# VOXEL PATIENT
+#=====================================================
+
+#=====================================================
+# Generate materials from Hounsfield units. 
+# Once the files ct-HUmaterials.db and ct-HU2mat.txt are
+# generated, the following lines can be commented.
+
+#/gate/HounsfieldMaterialGenerator/SetMaterialTable                  data/Schneider2000MaterialsTable.txt 
+#/gate/HounsfieldMaterialGenerator/SetDensityTable                   data/Schneider2000DensitiesTable.txt
+#/gate/HounsfieldMaterialGenerator/SetDensityTolerance               0.1 g/cm3
+#/gate/HounsfieldMaterialGenerator/SetOutputMaterialDatabaseFilename data/ct-HUmaterials.db
+#/gate/HounsfieldMaterialGenerator/SetOutputHUMaterialFilename       data/ct-HU2mat.txt
+#/gate/HounsfieldMaterialGenerator/Generate
+
+
+#=====================================================
+# Insert image
+
+
+# CT Scan Mother Volume
+
+/gate/world/daughters/name                    CT
+/gate/world/daughters/insert                  box
+/gate/CT/setMaterial                          Vacuum
+/gate/CT/geometry/setXLength                  2.0 m
+/gate/CT/geometry/setYLength                  2.0 m
+/gate/CT/geometry/setZLength                  2.0 m
+/gate/CT/placement/setTranslation             0.0 0.0 0.0 cm
+/gate/CT/placement/setRotationAxis            1 0 0
+/gate/CT/placement/setRotationAngle           -90 deg
+
+# WATERBOX (alternative to patient CT)
+#@wb/gate/CT/daughters/name                      target
+#@wb/gate/CT/daughters/insert                    box
+#@wb/gate/target/setMaterial                     Water
+#@wb/gate/target/geometry/setXLength             @Dx mm
+#@wb/gate/target/geometry/setYLength             @Dy mm
+#@wb/gate/target/geometry/setZLength             @Dz mm
+#@wb/gate/target/placement/setTranslation        0 0 0 mm
+#@wb/gate/target/vis/forceSolid
+#@wb/gate/target/vis/setColor                    blue 
+
+
+# CT Patient target Volume
+#/gate/CT/daughters/name                        target
+#/gate/CT/daughters/insert                      ImageNestedParametrisedVolume
+#/gate/geometry/setMaterialDatabase             data/ct-HUmaterials.db
+#/gate/target/geometry/SetHUToMaterialFile      data/ct-HU2mat.txt
+#/gate/target/geometry/SetImage                 data/ct.hdr
+
+
+# optional : dump used image
+# /gate/target/geometry/buildAndDumpLabeledImage  output/ct.hdr
+
+
+# Put the following image point (in image coordinate, in mm) at the
+# world center
+
+#/gate/target/placement/setTranslation                  -17.70 -24.62 -39.69 mm
+#/gate/target/geometry/setOrigin                        0 0 1498.2 mm
+#/gate/target/geometry/TranslateTheImageAtThisIsoCenter 303.90 178.82 1664.49 mm
