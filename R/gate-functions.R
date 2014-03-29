@@ -322,5 +322,8 @@ run.gate.forward <- function(plan=plan, N=plan$TotalNumberOfPrimaries, save.spar
   system(cmd, ignore.stdout=ignore.stdout, ignore.stderr=ignore.stderr)
   message('...done.')
   
+  # salva oggetto plan
+  save.plan(plan)
+  
   return(plan)
 }
