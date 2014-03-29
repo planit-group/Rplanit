@@ -16,7 +16,10 @@ Imports:
     fields (>= 6.8),
     grid (>= 3.0.1),
     gtable (>= 0.1.2),
-    oro.nifti
-Suggests:
+    oro.nifti,
+    knitr,
+    oro.dicom,
+    reshape2,
+    splancs,
     rgl (>= 0.93.991),
     misc3d (>= 0.8-4)

@@ -8,6 +8,7 @@ get.dektools.env()
 Get Environment Variables
 }
 \seealso{
-Other Environment: \code{\link{set.dektools.env}}
+Other Environment: \code{\link{set.dektools.env}};
+\code{\link{setenv.rplanit}}
 }
 

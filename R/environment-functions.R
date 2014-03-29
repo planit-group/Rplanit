@@ -144,4 +144,6 @@ check.gate <- function(use.warning=FALSE)
 
 
 # RUNNING ----------------------------------------------------------------------
+# qui vengono eseguite tutte procedure al momento del caricamento del pacchetto.
+
 setenv.rplanit()

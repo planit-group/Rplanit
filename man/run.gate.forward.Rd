@@ -2,8 +2,8 @@
 \alias{run.gate.forward}
 \title{Evaluate forward planning (Gate)}
 \usage{
-run.gate.forward(plan = plan, N = plan$TotalNumberOfPrimaries,
-  save.sparse.arrays = FALSE, outmessages = FALSE)
+run.gate.forward(plan = plan, N = NULL, save.sparse.arrays = FALSE,
+  outmessages = FALSE)
 }
 \arguments{
   \item{plan}{The plan object (Gate)}
