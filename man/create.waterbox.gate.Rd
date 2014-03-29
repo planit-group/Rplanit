@@ -18,6 +18,7 @@ simulations.
 \seealso{
 Other PlanGate: \code{\link{create.gate.structure}};
 \code{\link{create.plan.gate}};
-\code{\link{file.variable.gate}}; \code{\link{set.ct.gate}}
+\code{\link{file.variable.gate}};
+\code{\link{run.gate.forward}}; \code{\link{set.ct.gate}}
 }
 

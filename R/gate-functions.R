@@ -293,7 +293,15 @@ create.gate.structure <- function(plan)
 }
 
 
-#' calcola una simulazione Forward Planning
+#' Evaluate forward planning (Gate)
+#' 
+#' @param plan The plan object (Gate)
+#' @param N The mumber of primary particles to simulate (events)
+#' @param save.sparse.array Save a sparse array for the values (in which the information for the individual beam contribution is stored).
+#' @param outmessages Show the optuputs from the Gate simulation
+#' @return The updated plan object (Gate)
+#' @export
+#' @family PlanGate
 run.gate.forward <- function(plan=plan, N=plan$TotalNumberOfPrimaries, save.sparse.arrays=FALSE, outmessages=FALSE)
 {
   

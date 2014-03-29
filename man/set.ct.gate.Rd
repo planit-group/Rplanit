@@ -14,6 +14,7 @@ Set the patient CT or phantom for a simulation with Gate
 Other PlanGate: \code{\link{create.gate.structure}};
 \code{\link{create.plan.gate}};
 \code{\link{create.waterbox.gate}};
-\code{\link{file.variable.gate}}
+\code{\link{file.variable.gate}};
+\code{\link{run.gate.forward}}
 }
 

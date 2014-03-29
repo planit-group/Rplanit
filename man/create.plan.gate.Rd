@@ -20,6 +20,7 @@ with Gate.
 \seealso{
 Other PlanGate: \code{\link{create.gate.structure}};
 \code{\link{create.waterbox.gate}};
-\code{\link{file.variable.gate}}; \code{\link{set.ct.gate}}
+\code{\link{file.variable.gate}};
+\code{\link{run.gate.forward}}; \code{\link{set.ct.gate}}
 }
 
