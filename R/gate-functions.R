@@ -20,6 +20,27 @@ available.variables.gate <- function()
 }
 
 
+#' Map the variable name to file name (Gate)
+#' @param variable The variable name.
+#' @return The prefix of the file name.
+#' @export
+#' @family PlanGate
+file.variable.gate <- function(variable)
+{
+  file.names <- c('values-Dose', # dose 2 water
+                  'values-Dose-Squared',
+                  'values-Dose-Uncertainty',
+                  'values-Dose', # dose 2 material
+                  'values-Dose-Squared',
+                  'values-Dose-Uncertainty',
+                  'values-Edep',
+                  'values-Edep-Squared',
+                  'values-Dose-Uncertainty',
+                  'values-NbOfHits')
+  variables <- available.variables.gate()
+  return(file.names[which(variables==variable)])
+}
+
 # GATE MATERIALS ---------------------------------------------------------------
 
 #' Read materials database (Gate)
@@ -55,6 +76,19 @@ generate.materials.gate <- function(MaterialTable='./data/Schneider2000Materials
 }
 
 
+#' Create a water box object (Gate)
+#' 
+#' Create a water box object to be used as a CT with Gate simulations.
+#' @param Dx The size of the box along x (mm).
+#' @param Dy The size of the box along y (mm).
+#' @param Dz The size of the box along z (mm).
+#' @export
+#' @family PlanGate
+create.waterbox.gate <- function(Dx=100, Dy=100, Dz=100)
+{
+  return(list(Dx=Dx, Dy=Dy, Dz=Dz))
+}
+
 # PLAN GATE --------------------------------------------------------------------
 
 #' Generate Plan template (Gate)
@@ -64,6 +98,7 @@ generate.materials.gate <- function(MaterialTable='./data/Schneider2000Materials
 #' @family PlanGate
 create.plan.gate <- function(name='gate.simulation',
                              ctFile.gate=NULL,
+                             ctWater=NULL,
                              materialDatabase.gate='./data/MyMaterials.db',
                              HUToMaterialFile='data/ct-HU2mat.txt',
                              origin.gate=c(0,0,0),    
@@ -82,6 +117,7 @@ create.plan.gate <- function(name='gate.simulation',
 {
   plan <- list(name=name,
                ctFile.gate=ctFile.gate,
+               ctWater=ctWater, # una semplice lista con la size del waterbox (Dx,Dy,Dz)
                materialDatabase.gate=materialDatabase.gate,
                HUToMaterialFile=HUToMaterialFile,
                origin.gate=origin.gate,
@@ -98,6 +134,41 @@ create.plan.gate <- function(name='gate.simulation',
                totalNumberOfPrimaries=totalNumberOfPrimaries    
   )
   return(plan)
+}
+
+
+#' Set the CT/phantom (Gate)
+#' 
+#' Set the patient CT or phantom for a simulation with Gate
+#' @param plan.gate a plan (Gate) object.
+#' @family PlanGate
+set.ct.gate <- function(plan.gate) {
+  
+  gate.template <- get('gate.template', envir=dektoolsEnv)
+  message('gate.template = ', gate.template)
+  
+  # legge file Voxel_Patient.mac da template
+  vp.mac.template <- file(paste(gate.template, '/mac/Voxel_Patient.mac', sep=''), "rt")
+  vp.mac.txt <- readLines(vp.mac.template)
+  vp.mac.txt <- paste(vp.mac.txt, collapse='\n')
+  close(vp.mac.template)
+  
+  # WATERBOX
+  if(!is.null(plan.gate$ctWater)) {
+    message('setting water box...')
+    vp.mac.txt <- gsub('#@wb', '', vp.mac.txt)
+    vp.mac.txt <- sub('@Dx', plan.gate$ctWater$Dx, vp.mac.txt)
+    vp.mac.txt <- sub('@Dy', plan.gate$ctWater$Dy, vp.mac.txt)
+    vp.mac.txt <- sub('@Dz', plan.gate$ctWater$Dz, vp.mac.txt)
+  } else {
+    error('setting for CT not yet implemented')
+  }
+  
+  # write file .mac
+  vp.mac <- file(paste(plan.gate$name, '/mac/Voxel_Patient.mac', sep=''), "wt")
+  write(vp.mac.txt, file=vp.mac)
+  close(vp.mac)
+  message('CT/phantom written in plan ', plan.gate$name)
 }
 
 
@@ -125,7 +196,7 @@ create.gate.structure <- function(plan)
   file.copy(paste(gate.template, '/mac', sep=''), paste(plan$name, '/', sep=''), recursive=TRUE)
   file.copy(paste(gate.template, '/output', sep=''), paste(plan$name, '/', sep=''), recursive=TRUE)
 
-  # crea file main.mac
+  # legge file main.mac da template
   main.mac.template <- file(paste(gate.template, '/mac/main.mac', sep=''), "rt")
   main.mac.txt <- readLines(main.mac.template)
   main.mac.txt <- paste(main.mac.txt, collapse='\n')
@@ -215,18 +286,41 @@ create.gate.structure <- function(plan)
   close(main.mac)
   message('plan ', plan$name, ' written.')
   
+  # SET CT
+  set.ct.gate(plan)
+  
   return(plan)
 }
 
 
 #' calcola una simulazione Forward Planning
-run.gate.forward <- function(plan=plan, N=plan$TotalNumberOfPrimaries, save.sparse.arrays=FALSE)
+run.gate.forward <- function(plan=plan, N=plan$TotalNumberOfPrimaries, save.sparse.arrays=FALSE, outmessages=FALSE)
 {
+  
+  gate.template <- get('gate.template', envir=dektoolsEnv)
+  gate.setenv <- get('gate.setenv', envir=dektoolsEnv)
   
   plan$totalNumberOfPrimaries <- N
   
   # crea struttura file
   plan <- create.gate.structure(plan)
+  
+  # SET bash script
+  run.template <- file(paste(gate.template, '/run-gate.sh', sep=''), "rt")
+  run.txt <- readLines(run.template)
+  run.txt <- paste(run.txt, collapse='\n')
+  close(run.template)
+  run.txt <- sub('@gate.setenv', gate.setenv, run.txt)
+  run <- file(paste(plan$name, '/run-gate.sh', sep=''), "wt")
+  write(run.txt, file=run)
+  close(run)
+  
+  # run
+  message('running Gate...')
+  if(outmessages) {ignore.stdout=FALSE; ignore.stderr=FALSE} else {ignore.stdout=TRUE; ignore.stderr=TRUE}
+  cmd <- paste('cd ', plan$name, '; chmod +x ./run-gate.sh; ./run-gate.sh', sep='')
+  system(cmd, ignore.stdout=ignore.stdout, ignore.stderr=ignore.stderr)
+  message('...done.')
   
   return(plan)
 }

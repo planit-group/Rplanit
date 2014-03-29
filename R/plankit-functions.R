@@ -153,7 +153,7 @@ read.plan <- function(name)
 #' 
 #' @family PlanKIT
 #' @export
-run.dek.inverse <- function(plan, outmessages=TRUE) {
+run.dek.inverse <- function(plan, outmessages=FALSE) {
   
   # input files
   ctFile <- paste(getwd(), '/', plan[['ctFile']], sep='')
@@ -256,7 +256,7 @@ run.dek.inverse <- function(plan, outmessages=TRUE) {
 #' 
 #' @family PlanKIT
 #' @export 
-run.dek.forward <- function(plan, outmessages=TRUE) {
+run.dek.forward <- function(plan, outmessages=FALSE) {
   
   # input files
   ctFile <- paste(getwd(), '/', plan$ctFile, sep='')

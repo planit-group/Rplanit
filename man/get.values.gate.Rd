@@ -1,11 +1,11 @@
-\name{get.values}
-\alias{get.values}
-\title{Get values object (PlanKIT)}
+\name{get.values.gate}
+\alias{get.values.gate}
+\title{Get values object (Gate)}
 \usage{
-get.values(plan)
+get.values.gate(plan.gate)
 }
 \arguments{
-  \item{plan}{The plan object.}
+  \item{plan.gate}{The plan object.}
 }
 \description{
 Get the values matrices for a plan (PlanKIT).
@@ -17,7 +17,7 @@ Other Values: \code{\link{create.values}};
 \code{\link{get.sparse.array.from.values}};
 \code{\link{get.values.dataframe}};
 \code{\link{get.values.from.sparse.array}};
-\code{\link{get.values.gate}}; \code{\link{merge.values}};
+\code{\link{get.values}}; \code{\link{merge.values}};
 \code{\link{sanitize.values}}
 }
 

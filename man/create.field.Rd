@@ -1,6 +1,6 @@
 \name{create.field}
 \alias{create.field}
-\title{Crea oggetto field (dataframe)}
+\title{Crea oggetto field (dataframe ops)}
 \usage{
 create.field(targetVOI = "PTV", targetVOIIndex = NA, iecGantryAngle = 0,
   iecPatientSupportAngle = 0, interSpotSpacing = c(1.5, 1.5, 1),

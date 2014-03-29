@@ -36,8 +36,10 @@ create.values <- function(array, variable, x, y, z)
 }
 
 
-#' recupera matrice di valori
+#' Get values object (PlanKIT)
 #' 
+#' Get the values matrices for a plan (PlanKIT).
+#' @param plan The plan object.
 #' @family Values
 #' @export
 get.values <- function(plan)
@@ -47,6 +49,26 @@ get.values <- function(plan)
     return(NULL)
   } 
   return(read.3d( paste(plan[['name']], '/', plan[['outputValuesFile']], sep='') ))
+}
+
+
+#' Get values object (Gate)
+#' 
+#' Get the values matrices for a plan (PlanKIT).
+#' @param plan.gate The plan object.
+#' @family Values
+#' @export
+get.values.gate <- function(plan.gate)
+{
+  values <- list()
+  variables <- plan.gate$computingValues.gate
+  for(i in 1:length(variables))
+  {
+    variable.file <- file.variable.gate(variables[i])
+    variable.file <- paste(plan.gate$name, '/output/', variable.file, sep='')
+    values[[i]] <- read.3d.hdr(file.name=variable.file, variable=variables[i])
+  }
+  return(merge.values(values.list=values))
 }
 
 
@@ -201,6 +223,28 @@ sanitize.values <- function(values)
     }
   }
   return(values)
+}
+
+#' Merge a list of values
+#' 
+#' Merge a list of values objects in a single object. It assumes that the variable names are unique.
+#' @param values.list A list of values objects.
+#' @return A values object
+#' @family Values
+#' @export
+merge.values <- function(values.list)
+{
+  NV <- length(values.list)
+  if(NV==1) {return(values.list[[1]])}
+  values1 <- values.list[[1]]
+  for(i in 2:NV) {
+    values <- values.list[[i]]
+    nv <- values$Nv
+    for(v in 1:nv) {
+      values1 <- add.array.values(values=values1, new.array=values$values, variable=values$variable[v])
+    }
+  }
+  return(values1)
 }
 
 

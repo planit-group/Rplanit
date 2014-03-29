@@ -3,7 +3,7 @@
 \title{calcola una simulazione Forward Planning}
 \usage{
 run.gate.forward(plan = plan, N = plan$TotalNumberOfPrimaries,
-  save.sparse.arrays = FALSE)
+  save.sparse.arrays = FALSE, outmessages = FALSE)
 }
 \description{
 calcola una simulazione Forward Planning

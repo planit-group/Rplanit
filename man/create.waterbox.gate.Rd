@@ -1,0 +1,23 @@
+\name{create.waterbox.gate}
+\alias{create.waterbox.gate}
+\title{Create a water box object (Gate)}
+\usage{
+create.waterbox.gate(Dx = 100, Dy = 100, Dz = 100)
+}
+\arguments{
+  \item{Dx}{The size of the box along x (mm).}
+
+  \item{Dy}{The size of the box along y (mm).}
+
+  \item{Dz}{The size of the box along z (mm).}
+}
+\description{
+Create a water box object to be used as a CT with Gate
+simulations.
+}
+\seealso{
+Other PlanGate: \code{\link{create.gate.structure}};
+\code{\link{create.plan.gate}};
+\code{\link{file.variable.gate}}; \code{\link{set.ct.gate}}
+}
+

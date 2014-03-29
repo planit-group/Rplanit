@@ -2,7 +2,7 @@
 \alias{run.dek.forward}
 \title{Forward planning (PlanKIT)}
 \usage{
-run.dek.forward(plan, outmessages = TRUE)
+run.dek.forward(plan, outmessages = FALSE)
 }
 \arguments{
   \item{plan}{the Plan object. It should include also the

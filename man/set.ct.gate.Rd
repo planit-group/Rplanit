@@ -1,0 +1,19 @@
+\name{set.ct.gate}
+\alias{set.ct.gate}
+\title{Set the CT/phantom (Gate)}
+\usage{
+set.ct.gate(plan.gate)
+}
+\arguments{
+  \item{plan.gate}{a plan (Gate) object.}
+}
+\description{
+Set the patient CT or phantom for a simulation with Gate
+}
+\seealso{
+Other PlanGate: \code{\link{create.gate.structure}};
+\code{\link{create.plan.gate}};
+\code{\link{create.waterbox.gate}};
+\code{\link{file.variable.gate}}
+}
+

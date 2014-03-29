@@ -33,6 +33,7 @@ Other Values: \code{\link{create.values}};
 \code{\link{get.sparse.array.from.values}};
 \code{\link{get.values.dataframe}};
 \code{\link{get.values.from.sparse.array}};
-\code{\link{get.values}}; \code{\link{sanitize.values}}
+\code{\link{get.values.gate}}; \code{\link{get.values}};
+\code{\link{merge.values}}; \code{\link{sanitize.values}}
 }
 

@@ -2,7 +2,7 @@
 \alias{run.dek.inverse}
 \title{Inverse planning (PlanKIT)}
 \usage{
-run.dek.inverse(plan, outmessages = TRUE)
+run.dek.inverse(plan, outmessages = FALSE)
 }
 \arguments{
   \item{plan}{the Plan object.}

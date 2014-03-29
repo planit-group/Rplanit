@@ -12,6 +12,8 @@ Create the folder structure of a Gate simulation for a
 specific plan.
 }
 \seealso{
-Other PlanGate: \code{\link{create.plan.gate}}
+Other PlanGate: \code{\link{create.plan.gate}};
+\code{\link{create.waterbox.gate}};
+\code{\link{file.variable.gate}}; \code{\link{set.ct.gate}}
 }
 
