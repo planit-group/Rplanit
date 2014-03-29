@@ -1,3 +1,5 @@
+# Script di battaglia per caricare le librerie al volo (per modifiche durante altre sessioni di lavoro)
+
 # librerie esterne  
 library(ggplot2)
 library(fields)
