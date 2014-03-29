@@ -13,6 +13,52 @@ assign('lem.setenv', '/opt/dek-tools/lem-setenv.sh', envir=dektoolsEnv)
 assign('gate.setenv', '/home/andrea/Gate6.2/setenv.sh', envir=dektoolsEnv)
 assign('gate.template', '/home/andrea/Gate6.2/tps.template', envir=dektoolsEnv)
 
+#' Set the system environment variables
+#' 
+#' Set the esystem environment variables for Plankit, Gate and Survival.
+#' @family Environment
+#' @export
+setenv.rplanit <- function()
+{
+  # HOME
+  my.home <- paste(Sys.getenv('HOME'), 'R', sep='/')
+  
+  # Gate
+  Sys.setenv(DYLD_LIBRARY_PATH=paste(my.home, 'Gate6.2-install/root_v5.34/lib', sep='/'),
+             G4ABLADATA=paste(my.home, 'Gate6.2-install/geant4.9.5.p01-install/share/Geant4-9.5.1/data/G4ABLA3.0', sep='/'),
+             G4LEDATA=paste(my.home, 'Gate6.2-install/geant4.9.5.p01-install/share/Geant4-9.5.1/data/G4EMLOW6.23', sep='/'),
+             G4LEVELGAMMADATA=paste(my.home, 'Gate6.2-install/geant4.9.5.p01-install/share/Geant4-9.5.1/data/PhotonEvaporation2.2', sep='/'),
+             G4NEUTRONHPDATA=paste(my.home, 'Gate6.2-install/geant4.9.5.p01-install/share/Geant4-9.5.1/data/G4NDL4.0', sep='/'),
+             G4NEUTRONXSDATA=paste(my.home, 'Gate6.2-install/geant4.9.5.p01-install/share/Geant4-9.5.1/data/G4NEUTRONXS1.1', sep='/'),
+             G4PIIDATA=paste(my.home, 'Gate6.2-install/geant4.9.5.p01-install/share/Geant4-9.5.1/data/G4PII1.3', sep='/'),
+             G4RADIOACTIVEDATA=paste(my.home, 'Gate6.2-install/geant4.9.5.p01-install/share/Geant4-9.5.1/data/RadioactiveDecay3.4', sep='/'),
+             G4REALSURFACEDATA=paste(my.home, 'Gate6.2-install/geant4.9.5.p01-install/share/Geant4-9.5.1/data/RealSurface1.0', sep='/'),
+             LIBPATH=paste(my.home, 'Gate6.2-install/root_v5.34/lib', sep='/'),
+             PYTHONPATH=paste(my.home, 'Gate6.2-install/root_v5.34/lib', sep='/'),
+             ROOTSYS=paste(my.home, 'Gate6.2-install/root_v5.34', sep='/'),
+             SHLIB_PATH=paste(my.home, 'Gate6.2-install/root_v5.34/lib', sep='/')
+  )
+  
+  ld_library_path <- paste(Sys.getenv('LD_LIBRARY_PATH'),
+                           ':', my.home, 'Gate6.2-install/geant4.9.5.p01-install/lib',
+                           ':', my.home, 'Gate6.2-install/root_v5.34/lib',
+                           ':', my.home, 'Gate6.2-install/2.1.1.0/CLHEP/lib', sep='')
+  manpath <- paste(Sys.getenv('MANPATH'),
+                   ':', my.home, 'Gate6.2-install/root_v5.34/man', sep='')
+  path <- paste(Sys.getenv('PATH'),
+                ':', my.home, 'Gate6.2-install/geant4.9.5.p01-install/bin',
+                ':', my.home, 'Gate6.2-install/root_v5.34/bin',
+                ':', my.home, 'Gate6.2-install/2.1.1.0/CLHEP/bin',
+                ':', my.home, 'Gate6.2-install/gate.6.2-install/bin',
+                ':', my.home, 'Gate6.2-install/sanitize-hdr', sep='')
+  Sys.setenv(LD_LIBRARY_PATH=ld_library_path, MANPATH=manpath, PATH=path)
+  
+  # PlanKIT
+  
+  # Survival
+  
+}
+
 #' Set Environment Variables
 #' 
 #' @param dek.setenv path to configuration script plankit TPS.
@@ -92,3 +138,10 @@ check.gate <- function(use.warning=FALSE)
     }
   }
 }
+
+
+# INSTALLING -------------------------------------------------------------------
+
+
+# RUNNING ----------------------------------------------------------------------
+setenv.rplanit()

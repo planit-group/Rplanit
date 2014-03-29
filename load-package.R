@@ -8,6 +8,7 @@ library(misc3d)
 library(oro.nifti)
 library(oro.dicom)
 library(gtable)
+library(knitr)
   
 # carica tutte le funzioni definite nel folder...
   
