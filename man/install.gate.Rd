@@ -1,0 +1,13 @@
+\name{install.gate}
+\alias{install.gate}
+\title{Install Gate}
+\usage{
+install.gate()
+}
+\description{
+Install Gate
+}
+\seealso{
+Other Install: \code{\link{install.plankit}}
+}
+

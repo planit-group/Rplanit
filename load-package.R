@@ -24,3 +24,4 @@ for(my.file in my.files) {
   source(paste(my.folder, my.file, sep=''))
 }
 
+setenv.rplanit()
