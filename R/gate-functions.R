@@ -302,7 +302,7 @@ create.gate.structure <- function(plan)
 #' @return The updated plan object (Gate)
 #' @export
 #' @family PlanGate
-run.gate.forward <- function(plan=plan, N=plan$TotalNumberOfPrimaries, save.sparse.arrays=FALSE, outmessages=FALSE)
+run.gate.forward <- function(plan=plan, N=NULL, save.sparse.arrays=FALSE, outmessages=FALSE)
 {
   
   gate.template <- get('gate.template', envir=dektoolsEnv)
