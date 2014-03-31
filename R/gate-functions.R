@@ -145,7 +145,7 @@ create.plan.gate <- function(name='gate.simulation',
 set.ct.gate <- function(plan.gate) {
   
   gate.template <- get('gate.template', envir=dektoolsEnv)
-  message('gate.template = ', gate.template)
+  #message('gate.template = ', gate.template)
   
   # legge file Voxel_Patient.mac da template
   vp.mac.template <- file(paste(gate.template, '/mac/Voxel_Patient.mac', sep=''), "rt")
@@ -181,20 +181,21 @@ set.ct.gate <- function(plan.gate) {
 create.gate.structure <- function(plan)
 {
   gate.template <- get('gate.template', envir=dektoolsEnv)
-  message('gate.template = ', gate.template)
+  #message('gate.template = ', gate.template)
 
   # crea folder
   dir.create(plan$name, recursive=TRUE, showWarnings=FALSE)
   
   # rimuove le cartelle di gate
-  unlink(paste(plan$name, '/data', sep=''), recursive = TRUE, force = FALSE)
-  unlink(paste(plan$name, '/mac', sep=''), recursive = TRUE, force = FALSE)
-  unlink(paste(plan$name, '/output', sep=''), recursive = TRUE, force = FALSE)
+  unlink(paste0(plan$name, '/data'), recursive = TRUE, force = FALSE)
+  unlink(paste0(plan$name, '/mac'), recursive = TRUE, force = FALSE)
+  unlink(paste0(plan$name, '/output'), recursive = TRUE, force = FALSE)
 
   # crea nuova struttura dal template
-  file.copy(paste(gate.template, '/data', sep=''), paste(plan$name, '/', sep=''), recursive=TRUE)
-  file.copy(paste(gate.template, '/mac', sep=''), paste(plan$name, '/', sep=''), recursive=TRUE)
-  file.copy(paste(gate.template, '/output', sep=''), paste(plan$name, '/', sep=''), recursive=TRUE)
+  file.copy(paste0(gate.template, '/data'), paste0(plan$name, '/'), recursive=TRUE)
+  file.copy(paste0(gate.template, '/mac'), paste0(plan$name, '/'), recursive=TRUE)
+  file.copy(paste0(gate.template, '/output'), paste0(plan$name, '/'), recursive=TRUE)
+  file.copy(paste0(gate.template, '/run-gate.sh'), paste0(plan$name, '/'))
 
   # legge file main.mac da template
   main.mac.template <- file(paste(gate.template, '/mac/main.mac', sep=''), "rt")
@@ -305,8 +306,8 @@ create.gate.structure <- function(plan)
 run.gate.forward <- function(plan=plan, N=NULL, save.sparse.arrays=FALSE, outmessages=FALSE)
 {
   
-  gate.template <- get('gate.template', envir=dektoolsEnv)
-  gate.setenv <- get('gate.setenv', envir=dektoolsEnv)
+  #gate.template <- get('gate.template', envir=dektoolsEnv)
+  #gate.setenv <- get('gate.setenv', envir=dektoolsEnv)
   
   plan$totalNumberOfPrimaries <- N
   
@@ -314,14 +315,14 @@ run.gate.forward <- function(plan=plan, N=NULL, save.sparse.arrays=FALSE, outmes
   plan <- create.gate.structure(plan)
   
   # SET bash script
-  run.template <- file(paste(gate.template, '/run-gate.sh', sep=''), "rt")
-  run.txt <- readLines(run.template)
-  run.txt <- paste(run.txt, collapse='\n')
-  close(run.template)
-  run.txt <- sub('@gate.setenv', gate.setenv, run.txt)
-  run <- file(paste(plan$name, '/run-gate.sh', sep=''), "wt")
-  write(run.txt, file=run)
-  close(run)
+  #run.template <- file(paste(gate.template, '/run-gate.sh', sep=''), "rt")
+  #run.txt <- readLines(run.template)
+  #run.txt <- paste(run.txt, collapse='\n')
+  #close(run.template)
+  #run.txt <- sub('@gate.setenv', gate.setenv, run.txt)
+  #run <- file(paste(plan$name, '/run-gate.sh', sep=''), "wt")
+  #write(run.txt, file=run)
+  #close(run)
   
   # run
   message('running Gate...')

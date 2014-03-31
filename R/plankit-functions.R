@@ -9,14 +9,12 @@
 available.beamlines <- function()
 {
   return(
-  c('protonEssenGtr4',
-    'protonCnao',
-    'protonCnao_RS20mm',
-    'carbonCnao',
-    'testFluka_1',
-    'testFluka_2',
-    'protonSimple',
-    'carbonSimple')
+  c('protonSimple',
+    'protonSimpleGate',
+    'carbonSimple',
+    'lithiumSimple',
+    'heliumSimple',
+    'oxygenSimple')
   )
 }
   
@@ -33,6 +31,7 @@ available.variables <- function()
   
   return(
   c('Dose[Gy]',
+    'DoseSquared[Gy^2]',
     'MeanLET[keV/um]',
     'DoseAveragedLET[keV/um]',
     'BiologicalDose[Gy(RBE)]',
@@ -238,8 +237,9 @@ run.dek.inverse <- function(plan, outmessages=FALSE) {
   
   # chiamata di sistema
   if(outmessages) {ignore.stdout=FALSE; ignore.stderr=FALSE} else {ignore.stdout=TRUE; ignore.stderr=TRUE}
-  dek.setenv <- get('dek.setenv', envir=dektoolsEnv)
-  cmd <- paste('. ', dek.setenv, '; cd ', plan[['name']], '; dek plan.config')
+  #dek.setenv <- get('dek.setenv', envir=dektoolsEnv)
+  #cmd <- paste('. ', dek.setenv, '; cd ', plan[['name']], '; dek plan.config')
+  cmd <- paste('cd ', plan$name, '; dek plan.config')
   system.time(system(cmd, ignore.stdout=ignore.stdout, ignore.stderr=ignore.stderr))
   
   save.plan(plan)
@@ -310,8 +310,9 @@ run.dek.forward <- function(plan, outmessages=FALSE) {
   
   # chiamata di sistema
   if(outmessages) {ignore.stdout=FALSE; ignore.stderr=FALSE} else {ignore.stdout=TRUE; ignore.stderr=TRUE}
-  dek.setenv <- get('dek.setenv', envir=dektoolsEnv)
-  cmd <- paste('. ', dek.setenv, '; cd ', plan[['name']], '; dek plan.config')
+  #dek.setenv <- get('dek.setenv', envir=dektoolsEnv)
+  #cmd <- paste('. ', dek.setenv, '; cd ', plan[['name']], '; dek plan.config')
+  cmd <- paste('cd ', plan$name, '; dek plan.config')
   system.time(system(cmd, ignore.stdout=ignore.stdout, ignore.stderr=ignore.stderr))
   
   save.plan(plan)

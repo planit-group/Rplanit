@@ -22,6 +22,7 @@ set.dektools.env(dek.setenv = NULL, lem.setenv = NULL, gate.setenv = NULL,
 Set Environment Variables
 }
 \seealso{
-Other Environment: \code{\link{get.dektools.env}}
+Other Environment: \code{\link{get.dektools.env}};
+\code{\link{setenv.rplanit}}
 }
 

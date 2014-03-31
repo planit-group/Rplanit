@@ -8,10 +8,63 @@
 # potrebbe esistere una funzione per generare questo file localemente, con i settaggi correnti, in maniera da poterlo
 # editare al bisogno.
 dektoolsEnv <- new.env()
-assign('dek.setenv', '/home/andrea/dek/trunk/DEK/bin/setenv.sh', envir=dektoolsEnv)
-assign('lem.setenv', '/opt/dek-tools/lem-setenv.sh', envir=dektoolsEnv)
-assign('gate.setenv', '/home/andrea/Gate6.2/setenv.sh', envir=dektoolsEnv)
-assign('gate.template', '/home/andrea/Gate6.2/tps.template', envir=dektoolsEnv)
+
+#' Set the system environment variables
+#' 
+#' Set the esystem environment variables for Plankit, Gate and Survival.
+#' @family Environment
+#' @export
+setenv.rplanit <- function()
+{
+  # HOME
+  my.home <- paste(Sys.getenv('HOME'), 'R', sep='/')
+  
+  # Gate
+  Sys.setenv(DYLD_LIBRARY_PATH=paste(my.home, 'Gate6.2-install/root_v5.34/lib', sep='/'),
+             G4ABLADATA=paste(my.home, 'Gate6.2-install/geant4.9.5.p01-install/share/Geant4-9.5.1/data/G4ABLA3.0', sep='/'),
+             G4LEDATA=paste(my.home, 'Gate6.2-install/geant4.9.5.p01-install/share/Geant4-9.5.1/data/G4EMLOW6.23', sep='/'),
+             G4LEVELGAMMADATA=paste(my.home, 'Gate6.2-install/geant4.9.5.p01-install/share/Geant4-9.5.1/data/PhotonEvaporation2.2', sep='/'),
+             G4NEUTRONHPDATA=paste(my.home, 'Gate6.2-install/geant4.9.5.p01-install/share/Geant4-9.5.1/data/G4NDL4.0', sep='/'),
+             G4NEUTRONXSDATA=paste(my.home, 'Gate6.2-install/geant4.9.5.p01-install/share/Geant4-9.5.1/data/G4NEUTRONXS1.1', sep='/'),
+             G4PIIDATA=paste(my.home, 'Gate6.2-install/geant4.9.5.p01-install/share/Geant4-9.5.1/data/G4PII1.3', sep='/'),
+             G4RADIOACTIVEDATA=paste(my.home, 'Gate6.2-install/geant4.9.5.p01-install/share/Geant4-9.5.1/data/RadioactiveDecay3.4', sep='/'),
+             G4REALSURFACEDATA=paste(my.home, 'Gate6.2-install/geant4.9.5.p01-install/share/Geant4-9.5.1/data/RealSurface1.0', sep='/'),
+             LIBPATH=paste(my.home, 'Gate6.2-install/root_v5.34/lib', sep='/'),
+             PYTHONPATH=paste(my.home, 'Gate6.2-install/root_v5.34/lib', sep='/'),
+             ROOTSYS=paste(my.home, 'Gate6.2-install/root_v5.34', sep='/'),
+             SHLIB_PATH=paste(my.home, 'Gate6.2-install/root_v5.34/lib', sep='/')
+  )
+  
+  ld_library_path <- paste(Sys.getenv('LD_LIBRARY_PATH'),
+                           ':', my.home, '/Gate6.2-install/geant4.9.5.p01-install/lib',
+                           ':', my.home, '/Gate6.2-install/root_v5.34/lib',
+                           ':', my.home, '/Gate6.2-install/2.1.1.0/CLHEP/lib', sep='')
+  manpath <- paste(Sys.getenv('MANPATH'),
+                   ':', my.home, '/Gate6.2-install/root_v5.34/man', sep='')
+  path <- paste(Sys.getenv('PATH'),
+                ':', my.home, '/Gate6.2-install/geant4.9.5.p01-install/bin',
+                ':', my.home, '/Gate6.2-install/root_v5.34/bin',
+                ':', my.home, '/Gate6.2-install/2.1.1.0/CLHEP/bin',
+                ':', my.home, '/Gate6.2-install/gate.6.2-install/bin',
+                ':', my.home, '/Gate6.2-install/sanitize-hdr', sep='')
+  Sys.setenv(LD_LIBRARY_PATH=ld_library_path, MANPATH=manpath, PATH=path)
+  
+  # PlanKIT
+  Sys.setenv(PATH_TO_DISPLAY=paste0(my.home, '/DEK-install/Display/'),
+             LOG4CXX_CONFIGURATION=paste0(my.home, '/DEK-install/log4cxx.properties'),
+             PATH_TO_WEPL=paste0(my.home, '/DEK-install/Beams/'),
+             PATH_TO_LUT=paste0(my.home, '/DEK-install/LUT/'))
+  path <- paste0(Sys.getenv('PATH'), ':', my.home, '/DEK-install')
+  Sys.setenv(PATH=path)
+  
+  # Survival
+  
+  # NAMESPACE
+  assign('dek.setenv', paste0(my.home, '/DEK-install/setenv.sh'), envir=dektoolsEnv)
+  assign('lem.setenv', paste0(my.home, '/Survival/setenv.sh'), envir=dektoolsEnv)
+  assign('gate.setenv', paste0(my.home, '/Gate6.2-install/setenv.sh'), envir=dektoolsEnv)
+  assign('gate.template', paste0(my.home, '/Gate6.2-install/tps.template'), envir=dektoolsEnv)
+}
 
 #' Set Environment Variables
 #' 
@@ -91,4 +144,39 @@ check.gate <- function(use.warning=FALSE)
       stop('Error in variable gate.template (\"', gate.template, '\" not found)')
     }
   }
+}
+
+
+# INSTALLING -------------------------------------------------------------------
+
+#' Install Gate
+#' @export
+#' @family Install
+install.gate <- function()
+{
+  message('downloading gate...')
+  download.file(url='http://totlxl.to.infn.it/tools/Gate6.2-install.tar.bz2', destfile='Gate6.2-install.tar.bz2')
+  message('uncompressing gate...')
+  system('tar jxf Gate6.2-install.tar.bz2; rm -r $HOME/R/Gate6.2-install; mv Gate6.2-install $HOME/R/', ignore.stdout=TRUE, ignore.stderr=TRUE)
+  system('rm Gate6.2-install.tar.bz2')
+}
+
+#' Install PlanKIT
+#' @export
+#' @family Install
+install.plankit <- function()
+{
+  message('downloading plankit...')
+  download.file(url='http://totlxl.to.infn.it/tools/DEK-install.tar.bz2', destfile='DEK-install.tar.bz2')
+  message('uncompressing plankit...')
+  system('tar jxf DEK-install.tar.bz2; rm -r $HOME/R/DEK-install; mv DEK-install $HOME/R/', ignore.stdout=TRUE, ignore.stderr=TRUE)
+  system('rm DEK-install.tar.bz2')
+}
+
+# RUNNING ----------------------------------------------------------------------
+# qui vengono eseguite tutte procedure al momento del caricamento del pacchetto.
+
+.onLoad <- function(libname=find.package("Rplanit"), pkgname = "Rplanit")
+{
+  setenv.rplanit()
 }
