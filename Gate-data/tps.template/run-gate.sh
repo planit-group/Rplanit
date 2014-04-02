@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source @gate.setenv
+#source @gate.setenv
 Gate mac/main.mac
 
 # sanitizza tutto...
