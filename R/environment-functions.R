@@ -61,7 +61,8 @@ setenv.rplanit <- function()
   
   # NAMESPACE
   assign('dek.setenv', paste0(my.home, '/DEK-install/setenv.sh'), envir=dektoolsEnv)
-  assign('lem.setenv', paste0(my.home, '/Survival/setenv.sh'), envir=dektoolsEnv)
+  #assign('lem.setenv', paste0(my.home, '/Survival/setenv.sh'), envir=dektoolsEnv) 
+  assign('lem.setenv', '/opt/dek-tools/lem-setenv.sh', envir=dektoolsEnv)
   assign('gate.setenv', paste0(my.home, '/Gate6.2-install/setenv.sh'), envir=dektoolsEnv)
   assign('gate.template', paste0(my.home, '/Gate6.2-install/tps.template'), envir=dektoolsEnv)
 }
