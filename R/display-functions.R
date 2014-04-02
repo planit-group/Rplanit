@@ -822,14 +822,26 @@ display.dvh.old <- function(dvh, plan=NULL, Diff=FALSE) {
 #'  @param filename the name of the file in which to save the figure (optional)
 #'  @param height,weight sizes (inches) of the figure to be saved in the file (optional)
 #'  @param fixed.scale Forces a common fixed scale when faceting (if there are different variables).
+#'  @param return.dataframe Return the data.frame of the DVH(s).
 #'  
-#'  @return If \code{show.plot} is \code{FALSE}, it returns a ggplot2 plot structure to be used for further processing.
+#'  @return If \code{show.plot} is \code{FALSE}, it returns a ggplot2 plot structure to be used for further processing. If \code{return.dataframe = TRUE} it returns the generated data.frame of the DVH(s).
 #'  
 #'  @family display dvh
 #'  @export
 #'  @import ggplot2
 
-display.dvh <- function(dvh, plan=NULL, Diff=FALSE, alpha.color=1, title=NULL, show.plot=TRUE, decimate=TRUE, show.prescription=FALSE, file.name=NULL, height=7, width=7, fixed.scale=FALSE) {
+display.dvh <- function(dvh, plan=NULL,
+                        Diff=FALSE,
+                        alpha.color=1,
+                        title=NULL,
+                        show.plot=TRUE,
+                        decimate=TRUE,
+                        show.prescription=FALSE,
+                        file.name=NULL,
+                        height=7,
+                        width=7,
+                        fixed.scale=FALSE,
+                        return.dataframe=FALSE) {
   
   # usa le librerie ggplot2 (per fare prima...)
   #suppressMessages(library(ggplot2))
@@ -875,6 +887,9 @@ display.dvh <- function(dvh, plan=NULL, Diff=FALSE, alpha.color=1, title=NULL, s
     
     if(i==init) {df <- df.tmp} else (df <- rbind(df, df.tmp))
   }
+  
+  if(return.dataframe) {return(df)}
+  
   #print(summary(df))
   Ncol <- length(unique(df$voi))
   #my.cols <- sample(colors(), N)
