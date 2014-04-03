@@ -1659,11 +1659,21 @@ display.slices.interactive <- function(values=values, variables=NULL, gray=FALSE
 #' @param profile.values the main profile dataframe to be plotted. It can be a single profile or a list of profiles
 #' @param profile.ct the background ct (or other data) profile
 #' @param profile.name a vector containing the names of the profiles. It is used if a list of different profiles is used as imput.
-#' 
+#' @param shot.plot Show plot.
+#' @param file.name File name for saving the plot.
+#' @param height The height of the saved plot image (inches).
+#' @param width The width of the saved plot image (inches).
+#' @return If sho.plot=FALSE, it returns a ggplot object.
 #' @export
 #' @family Profiles
 
-display.profile <- function(profile.values, profile.ct=NULL, profile.names=NULL) {
+display.profile <- function(profile.values,
+                            profile.ct=NULL,
+                            profile.names=NULL,
+                            show.plot=TRUE,
+                            file.name=NULL,
+                            height=7,
+                            width=7) {
   
   #crea intervalli per la ct
   if(!is.null(profile.ct)) {
@@ -1733,7 +1743,9 @@ display.profile <- function(profile.values, profile.ct=NULL, profile.names=NULL)
   }
   
   my.ggplot.theme()
-  print(p)
+  if(!is.null(file.name)) {ggsave(plot=p, filename=file.name, height=height, width=width)}
+  if(show.plot) {print(p)} else {return(p)}
+
 }
 
 # UTILITIES ====================================================================
@@ -1757,13 +1769,23 @@ my.ggplot.theme <- function(size=16)
 
 #' Beam statistics plot
 #' 
-#' @param beams beams dataframe
-#'
+#' @param beams beams dataframe.
+#' @param plan The plan object.
+#' @param shot.plot Show plot.
+#' @param file.name File name for saving the plot.
+#' @param height The height of the saved plot image (inches).
+#' @param width The width of the saved plot image (inches).
+#' @return If show.plot=FALSE, it returns a ggplot object.
 #' @export
 #' @import ggplot2
 #' @family Beams
 
-display.beams <- function(beams, plan=NULL)
+display.beams <- function(beams,
+                          plan=NULL,
+                          show.plot=TRUE,
+                          file.name=NULL,
+                          height=7,
+                          width=7)
 {
   if(!is.null(plan)) {
     my.title <- paste(plan$name, 'Beams', sep=' - ')
@@ -1783,7 +1805,10 @@ display.beams <- function(beams, plan=NULL)
     coord_flip() +
     labs(y='Total number of primary ions', x='Energy Layers [MeV/u]', title=my.title) +
     theme(axis.title.y=element_text(vjust=.2))
-  print(p)
+  my.ggplot.theme()
+  
+  if(!is.null(file.name)) {ggsave(plot=p, filename=file.name, height=height, width=width)}
+  if(show.plot) {print(p)} else {return(p)}
 }
 
 
@@ -1814,4 +1839,46 @@ display.spots <- function(beams, vois=NULL, voi=NULL, display.iso=TRUE, alpha.sp
   if(!is.null(vois) & !is.null(voi)) {
     render.voi.isosurfaces(vois=vois, voi=voi, add=TRUE, alpha=alpha.voi)
   }
+}
+
+#' Beam-port splot
+#' 
+#' @param beams beams dataframe.
+#' @param plan The plan object.
+#' @param shot.plot Show plot.
+#' @param file.name File name for saving the plot.
+#' @param height The height of the saved plot image (inches).
+#' @param width The width of the saved plot image (inches).
+#' @return If show.plot=FALSE, it returns a ggplot object.
+#' @export
+#' @import ggplot2
+#' @family Beams
+display.beamports <- function(beams,
+                          plan=NULL,
+                          show.plot=TRUE,
+                          file.name=NULL,
+                          height=7,
+                          width=7)
+{
+  if(!is.null(plan)) {
+    my.title <- paste(plan$name, 'Beam-ports', sep=' - ')
+  } else {
+    my.title <- 'Beams'
+  }
+  
+  # aggiunge field ID
+  beams <- add.field(beams)
+  
+  beams.a <- aggregate(list(Npart=beams$fluence), list(deflX=beams$deflX, deflY=beams$deflY, beam.port=beams$field), sum)
+  
+  # plot
+  p <- ggplot(beams.a) +
+    geom_point(aes(x=deflX, y=deflY, colour=Npart)) +
+    labs(y='deflY [mm]', x='deflY [mm]', coulour='N part.', title=my.title) +
+    facet_wrap(~beam.port)
+    #theme(axis.title.y=element_text(vjust=.2))
+  my.ggplot.theme()
+  
+  if(!is.null(file.name)) {ggsave(plot=p, filename=file.name, height=height, width=width)}
+  if(show.plot) {print(p)} else {return(p)}
 }
