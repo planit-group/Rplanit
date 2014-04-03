@@ -33,8 +33,11 @@ create.field <- function(targetVOI='PTV',
 }
 
 
-#' legge dati e crea oggetto beams
+#' Read beams from file (PlanKIT)
 #' 
+#' Read RtIonPlan file (Plankit *.beams format) and return a beams object.
+#' @param beams.file The file name.
+#' @return a beams object.
 #' @family Beams
 #' @export
 read.beams <- function(beams.file)
@@ -51,6 +54,64 @@ read.beams <- function(beams.file)
     message('Spot positions NOT present...')
   }
   
+  return(beams)
+}
+
+#' Read beams from file (Fluka)
+#' 
+#' Read RtIonPlan file (Fluka format) and return a beams object.
+#' @param fluka.file The file name.
+#' @return a beams object.
+#' @family Beams
+#' @export
+read.beams.fluka <- function(fluka.file)
+{
+  message('reading beams file...')
+  beams.fluka <- readLines(fluka.file)
+  index <- 0
+  Nbeams <- 0
+  
+  # ciclo preliminare per numero totale di fasci
+  for(i in 1:length(beams.fluka)) {
+    if(length(grep('#points', beams.fluka[i], fixed=TRUE))>0) {
+      st <- strsplit(beams.fluka[i], ' +')[[1]]
+      Nbeams <- Nbeams + as.numeric(st[2])
+    }
+  }
+  message('number of beams: ', Nbeams)
+  
+  beams <- create.beam(nbeams=Nbeams, with.spots=FALSE)
+  
+  i <- 0
+  while(i < length(beams.fluka)) {
+    i <- i+1
+    if(length(grep('submachine#', beams.fluka[i], fixed=TRUE))>0) {
+      st <- strsplit(beams.fluka[i], ' +')[[1]]
+      energy <- as.numeric(st[3])
+      message(i, ', energy: ', energy)
+    } else if (length(grep('#points', beams.fluka[i], fixed=TRUE))>0) {
+      while(
+        length(grep('submachine#', beams.fluka[i], fixed=TRUE))==0 & i < length(beams.fluka)
+        ) {
+        i <- i+1
+        if(length(grep('submachine#', beams.fluka[i], fixed=TRUE))==0) {
+          st <- strsplit(beams.fluka[i], ' +')[[1]]
+          deflX <- as.numeric(st[1])
+          deflY <- as.numeric(st[2])
+          fluence <- as.numeric(st[3])
+          index <- index+1
+          beams$energy[index] <- energy
+          beams$deflX[index] <- deflX
+          beams$deflY[index] <- deflY
+          beams$fluence[index] <- fluence
+          if(is.na(deflX)) {message('NA: ', i)}
+        }
+        #print(beams[index,])
+      }
+      i <- i-1
+    }
+  }
+
   return(beams)
 }
 
@@ -122,21 +183,31 @@ convert.fluence2mu <- function(beams, type='protonCnao')
 }
 
 
-#' crea tabella vuota x 1 beam
+#' Create an empty beams object
 #' 
+#' @param nbeams The number of the beams
+#' @param with.spots Include spot coordinates
 #' @family Beams
 #' @export
-create.beam <- function()
+create.beam <- function(nbeams=1, with.spots=FALSE)
 {
-  beam <- data.frame(x_iso=0, y_iso=0, z_iso=0, gantryAngle=0, patientAngle=0, fluence=1, energy=0, deflX=0, deflY=0)
+  if(with.spots) {
+    beam <- data.frame(x_iso=rep(0, nbeams), y_iso=0, z_iso=0, gantryAngle=0, patientAngle=0, fluence=1, energy=0, deflX=0, deflY=0, x_s=0, y_s=0, z_s=0)
+  } else {
+    beam <- data.frame(x_iso=rep(0, nbeams), y_iso=0, z_iso=0, gantryAngle=0, patientAngle=0, fluence=1, energy=0, deflX=0, deflY=0)
+  }
   return(beam)
 }
 
 
-#' salva tabella beams (RTIonPlan)
+#' Write beams (RTIonPlan)
 #' 
-#' Puo salvare in diversi formati (default PlanKIT)
+#' Write the beams object on file. It can use different formats (default PlanKIT).
 #' 
+#' @param beams The beams object
+#' @param file.name The prefix of the file name.
+#' @param format The format. It can be 'plankit', 'gate' or 'fluka'.
+#' @param ion. The primary ion. (used by fluka).
 #' @family Beams
 #' @export
 #' 
