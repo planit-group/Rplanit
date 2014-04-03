@@ -82,7 +82,8 @@ create.plan <- function(plan=NA,
                         prescription=NULL,
                         maxOptimizationIterations=50,
                         outputBeamsFile=NULL,
-                        inputBeamsFile=NULL)
+                        inputBeamsFile=NULL,
+                        beams=NULL)
 {
   plan <- list(name=name,
                ctFile=ctFile,
@@ -99,7 +100,8 @@ create.plan <- function(plan=NA,
                prescription=prescription,
                maxOptimizationIterations=maxOptimizationIterations,
                outputBeamsFile=outputBeamsFile,
-               inputBeamsFile=inputBeamsFile
+               inputBeamsFile=inputBeamsFile,
+               beams=beams # include possibilità di includere direttamente un beams object.
   )
   return(plan)
 }
@@ -264,7 +266,7 @@ run.dek.forward <- function(plan, outmessages=FALSE) {
   hounsfieldToStoichiometryFile <- paste(getwd(), '/', plan$hounsfieldToStoichiometryFile, sep='')
   contoursFile <- paste(getwd(), '/', plan$contoursFile, sep='')
   plan.config <- paste(plan[['name']], '/plan.config', sep='')
-  inputBeamsFile <- paste(getwd(), '/', plan$inputBeamsFile, sep='')
+  
   
   # crea folder
   dir.create(plan[['name']], recursive=TRUE, showWarnings=FALSE)
@@ -288,7 +290,13 @@ run.dek.forward <- function(plan, outmessages=FALSE) {
   writeLines(paste('cutOffRadius = ', plan[['cutOffRadius']], '\n'), con=con, sep='')
   
   # beams input
-  writeLines(paste('inputBeamsFile = ', inputBeamsFile, '\n'), con=con, sep='')
+  if(!is.null(plan$inputBeamsFile)) {
+    inputBeamsFile <- paste(getwd(), '/', plan$inputBeamsFile, sep='')
+    writeLines(paste('inputBeamsFile = ', inputBeamsFile, '\n'), con=con, sep='')
+  } else if(!is.null(plan$Beams)) {
+    write.beams(beams=plan$Beams, file.name=paste0(plan$name, '/plan'), format='plankit')
+    writeLines(paste('inputBeamsFile = plan.beams\n'), con=con, sep='')
+  }
   
   # output
   if(is.null(plan[['outputBeamsFile']])) {
