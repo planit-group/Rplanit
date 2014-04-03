@@ -12,18 +12,32 @@
 #' @family Values
 #' @export
 #' 
-create.values <- function(array, variable, x, y, z)
+create.values <- function(array.values=NULL, variables='variable name', x, y, z)
 {
+  
+  Nx <- length(x)
+  Ny <- length(y)
+  Nz <- length(z)
+  Nv <- length(variables)
+  
+  if(is.null(array.values)) {
+    if(Nv>1) {
+      array.values <- array(0, dim=c(Nx, Ny, Nz, Nv))
+    } else {
+      array.values <- array(0, dim=c(Nx, Ny, Nz))
+    }
+  }
+  
   values <- list()
-  values$values <- array
+  values$values <- array.values
   values$x <- x
   values$y <- y
   values$z <- z
-  values$Nx <- length(x)
-  values$Ny <- length(y)
-  values$Nz <- length(z)
-  values$Nv <- length(z)
-  values$variables <- variable
+  values$Nx <- Nx
+  values$Ny <- Ny
+  values$Nz <- Nz
+  values$Nv <- Nv
+  values$variables <- variables
   values$file <- NULL
   
   # check dimensioni
@@ -464,5 +478,49 @@ remove.values.outside.voi <- function(values, vois, voi, index.voi=NULL)
   }
   
   return(values)
+}
+
+#' Create values form events
+#' 
+#' Uses the (x,y,z) coordinates of a shower of events to create a values object with the 3D histogram of the events.
+#' 
+#' @param Xe event x coorditate vector.
+#' @param Ye event y coordinate vector.
+#' @param Ze event z coordinate vector.
+#' @param weight weight vector.
+#' @param xbin bins x coordinates (extremes).
+#' @param ybin bins y coordinates (extremes).
+#' @param zbin bins z coordinates (extremes).
+#' @param variable The variable name.
+#' @return A values object
+#' @exports
+#' @family Values, Utilities
+generate.values.from.events <- function(Xe, Ye, Ze, xbin, ybin, zbin, weight=1, variable='Activity', group=10000)
+{
+  
+  message('histogramming the ', variable, '...')
+  if(length(weight)==1) {weight=rep(weight, length(Xe))}
+  
+  # intervalli (da coordinate puntuali)
+  Nx <- length(xbin) - 1
+  Ny <- length(ybin) - 1
+  Nz <- length(zbin) - 1
+  x <- (xbin[1:Nx] + xbin[2:(Nx+1)])/2
+  y <- (ybin[1:Ny] + ybin[2:(Ny+1)])/2
+  z <- (zbin[1:Nz] + zbin[2:(Nz+1)])/2
+  
+  # cuts (se riuscissi a fare direttamente un cut=voxel index...)
+  Xe.c <- cut(Xe, breaks=xbin)
+  Ye.c <- cut(Ye, breaks=ybin)
+  Ze.c <- cut(Ze, breaks=zbin)
+  voxel.index <- as.numeric(interaction(Xe.c, Ye.c, Ze.c)) # questo è quasi un miracolo della fede.
+  
+  # crea oggetto values (vuoto)
+  # values <- create.values(variables=variable, x=x, y=y, z=z)
+  
+  #XYZ <- aggregate(list(weigth=weight), list(x=Xe.c, y=Ye.c, z=Ze.c), sum)
+  XYZ <- aggregate(list(value=weight), list(voxel.index=voxel.index), sum)
+  
+  return(get.values.from.sparse.array(sparse.array=XYZ, variable=variable, x=x, y=y, z=z))
 }
   
