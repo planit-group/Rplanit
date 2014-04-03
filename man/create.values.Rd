@@ -2,7 +2,7 @@
 \alias{create.values}
 \title{Create values object}
 \usage{
-create.values(array, variable, x, y, z)
+create.values(array.values = NULL, variables = "variable name", x, y, z)
 }
 \arguments{
   \item{array}{the 3D array}

@@ -10,7 +10,7 @@ create.plan(plan = NA, name = "test", ctFile = "ct.3d",
   computingGridCoverageBoundary = 0, beamLine = "protonCnao",
   computingValues = c("Dose[Gy]"), cutOffRadius = 100, fields = NULL,
   prescription = NULL, maxOptimizationIterations = 50,
-  outputBeamsFile = NULL, inputBeamsFile = NULL)
+  outputBeamsFile = NULL, inputBeamsFile = NULL, beams = NULL)
 }
 \value{
 A Plan object (list).

@@ -1,18 +1,18 @@
-\name{read.beams}
-\alias{read.beams}
-\title{Read beams from file (PlanKIT)}
+\name{read.beams.fluka}
+\alias{read.beams.fluka}
+\title{Read beams from file (Fluka)}
 \usage{
-read.beams(beams.file)
+read.beams.fluka(fluka.file)
 }
 \arguments{
-  \item{beams.file}{The file name.}
+  \item{fluka.file}{The file name.}
 }
 \value{
 a beams object.
 }
 \description{
-Read RtIonPlan file (Plankit *.beams format) and return a
-beams object.
+Read RtIonPlan file (Fluka format) and return a beams
+object.
 }
 \seealso{
 Other Beams: \code{\link{add.field}};
@@ -21,7 +21,7 @@ Other Beams: \code{\link{add.field}};
 \code{\link{create.beam}}; \code{\link{create.field}};
 \code{\link{display.beamports}};
 \code{\link{display.beams}}; \code{\link{get.beams}};
-\code{\link{get.isocenter}};
-\code{\link{read.beams.fluka}}; \code{\link{write.beams}}
+\code{\link{get.isocenter}}; \code{\link{read.beams}};
+\code{\link{write.beams}}
 }
 

@@ -11,6 +11,7 @@ library(oro.nifti)
 library(oro.dicom)
 library(gtable)
 library(knitr)
+#library(gplots)
   
 # carica tutte le funzioni definite nel folder...
   
