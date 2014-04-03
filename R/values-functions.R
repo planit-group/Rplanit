@@ -493,7 +493,7 @@ remove.values.outside.voi <- function(values, vois, voi, index.voi=NULL)
 #' @param zbin bins z coordinates (extremes).
 #' @param variable The variable name.
 #' @return A values object
-#' @exports
+#' @export
 #' @family Values, Utilities
 generate.values.from.events <- function(Xe, Ye, Ze, xbin, ybin, zbin, weight=1, variable='Activity', group=10000)
 {
