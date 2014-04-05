@@ -22,7 +22,7 @@ create.values <- function(array.values=NULL, variables='variable name', x, y, z)
   
   if(is.null(array.values)) {
     if(Nv>1) {
-      array.values <- array(0, dim=c(Nx, Ny, Nz, Nv))
+      array.values <- array(0, dim=c(Nv, Nx, Ny, Nz))
     } else {
       array.values <- array(0, dim=c(Nx, Ny, Nz))
     }
@@ -42,8 +42,14 @@ create.values <- function(array.values=NULL, variables='variable name', x, y, z)
   
   # check dimensioni
   my.dims <- dim(values$values)
-  if(my.dims[1]!=values$Nx | my.dims[2]!=values$Ny | my.dims[3]!=values$Nz) {
-    message('create.values warning: inconsistent size with coordinates')
+  if(length(my.dims)==1) {
+    if(my.dims[1]!=values$Nx | my.dims[2]!=values$Ny | my.dims[3]!=values$Nz) {
+      message('create.values warning: inconsistent size with coordinates')
+    }
+  } else {
+    if(my.dims[1]!=values$Nv | my.dims[2]!=values$Nx | my.dims[3]!=values$Ny | my.dims[4]!=values$Nz) {
+      message('create.values warning: inconsistent size with coordinates')
+    }
   }
   
   return(values)
@@ -68,7 +74,7 @@ get.values <- function(plan)
 
 #' Get values object (Gate)
 #' 
-#' Get the values matrices for a plan (PlanKIT).
+#' Get the values matrices for a plan (Gate).
 #' @param plan.gate The plan object.
 #' @family Values
 #' @export
@@ -83,6 +89,19 @@ get.values.gate <- function(plan.gate)
     values[[i]] <- read.3d.hdr(file.name=variable.file, variable=variables[i])
   }
   return(merge.values(values.list=values))
+}
+
+#' Get sparse array values (Gate)
+#' 
+#' Get the sparse array evaluated for a plan (Gate).
+#' Note: the plan has to be evaluated via run.gate.forward() with the option evaluate.sparse.arrays=TRUE.
+#' @param plan.gate The plan object.
+#' @family Values
+#' @export
+get.sparse.array.gate <- function(plan.gate)
+{
+  load(paste(plan.gate$name, 'values.sparse.Rdata', sep=''))
+  return(values.sparse)
 }
 
 
@@ -177,15 +196,25 @@ get.sparse.array.from.values <- function(values, variable='Dose[Gy]', threshold=
     v.index <- which(values$variables==variable)
     my.array <- values$values[v.index,,,]
     voxel.index <- which(values$values[1,,,]>threshold)
+    
+    for(i in 1:values$Nv) {
+      my.array <- values$values[i,,,]
+      sparse.array <- my.array[voxel.index]
+      if(i==1) {
+        df <- data.frame(voxel.index=voxel.index, value=sparse.array, variable=as.factor(values$variables[i]))
+      } else {
+        df <- rbind(df, data.frame(voxel.index=voxel.index, value=sparse.array, variable=as.factor(values$variables[i])))
+      }
+    }
+    return(df)
+    
   } else {
     my.array <- values$values
     voxel.index <- which(my.array>threshold)
+    sparse.array <- my.array[voxel.index]
+    return(data.frame(voxel.index=voxel.index, value=sparse.array))
   }
   
-  # matrice sparsa
-  sparse.array <- my.array[voxel.index]
-  
-  return(data.frame(voxel.index=voxel.index, value=sparse.array))
 }
 
 
@@ -203,19 +232,21 @@ get.values.from.sparse.array <- function(sparse.array, variable='Dose[Gy]', x, y
   Nx <- length(x)
   Ny <- length(y)
   Nz <- length(z)
-  Nv <- 1
   
-  values$values <- array(0, dim=c(Nx, Ny, Nz))
-  values$values[sparse.array$voxel.index] <- sparse.array[,2]
-  values$x <- x
-  values$y <- y
-  values$z <- z
-  values$Nx <- Nx
-  values$Ny <- Ny
-  values$Nz <- Nz
-  values$Nv <- Nv
-  values$variables <- variable
-  values$file <- ''
+  # variables
+  variables <- as.character(unique(sparse.array$variable))
+  Nv <- length(variables)
+  
+  values <- create.values(variables=variables, x=x, y=y, z=z)
+  
+  if(Nv==1) {values$values[sparse.array$voxel.index] <- sparse.array[,2]}
+  else {
+    for(i in 1:Nv) {
+      temp.array <- array(0, dim=c(Nx, Ny, Nz))
+      temp.array[sparse.array$voxel.index] <- sparse.array$value[sparse.array$variable==variables[i]]
+      values$values[i,,,] <- temp.array
+    }
+  }
   
   return(values)
 }
