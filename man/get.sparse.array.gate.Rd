@@ -1,0 +1,24 @@
+\name{get.sparse.array.gate}
+\alias{get.sparse.array.gate}
+\title{Get sparse array values (Gate)}
+\usage{
+get.sparse.array.gate(plan.gate)
+}
+\arguments{
+  \item{plan.gate}{The plan object.}
+}
+\description{
+Get the sparse array evaluated for a plan (Gate). Note: the
+plan has to be evaluated via run.gate.forward() with the
+option evaluate.sparse.arrays=TRUE.
+}
+\seealso{
+Other Values: \code{\link{create.values}};
+\code{\link{get.dataframe.from.values}};
+\code{\link{get.sparse.array.from.values}};
+\code{\link{get.values.dataframe}};
+\code{\link{get.values.from.sparse.array}};
+\code{\link{get.values.gate}}; \code{\link{get.values}};
+\code{\link{merge.values}}; \code{\link{sanitize.values}}
+}
+

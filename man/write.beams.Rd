@@ -2,12 +2,13 @@
 \alias{write.beams}
 \title{Write beams (RTIonPlan)}
 \usage{
-write.beams(beams, file.name, format = "plankit", ion = "1H")
+write.beams(beams, file.name, format = "plankit", ion = "1H",
+  add.extension = TRUE)
 }
 \arguments{
   \item{beams}{The beams object}
 
-  \item{file.name}{The prefix of the file name.}
+  \item{file.name}{The file name.}
 
   \item{format}{The format. It can be 'plankit', 'gate' or
   'fluka'.}
@@ -25,7 +26,7 @@ Other Beams: \code{\link{add.field}};
 \code{\link{create.beam}}; \code{\link{create.field}};
 \code{\link{display.beamports}};
 \code{\link{display.beams}}; \code{\link{get.beams}};
-\code{\link{get.isocenter}};
+\code{\link{get.isocenter}}; \code{\link{get.rays}};
 \code{\link{read.beams.fluka}}; \code{\link{read.beams}}
 }
 

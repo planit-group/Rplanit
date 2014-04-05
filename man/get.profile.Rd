@@ -3,7 +3,7 @@
 \title{Get profile}
 \usage{
 get.profile(values, variable = NULL, x = NULL, y = NULL, z = NULL,
-  integrate = FALSE)
+  integrate = FALSE, ray = NULL, return.voxel.index = FALSE)
 }
 \arguments{
   \item{values}{the \code{values object}}
@@ -17,9 +17,16 @@ get.profile(values, variable = NULL, x = NULL, y = NULL, z = NULL,
 
   \item{integrate}{perform an integration over the two
   coordinates (boolean, optional)}
+
+  \item{ray}{The ray object.}
+
+  \item{return.voxel.index}{Returns the index of the voxel
+  crossed by the ray.}
 }
 \value{
-a dataframe containing the specified profile
+a dataframe containing the specified profile, or the
+sequence of the voxel index crossed by the ray if
+return.voxel.index=TRUE.
 }
 \description{
 Get a profile (values along a specific axis, or voxel line)
@@ -28,12 +35,8 @@ the definition of two of the following three coordinates:
 x, y, z.
 }
 \seealso{
-Other Values: \code{\link{create.values}};
-\code{\link{get.dataframe.from.values}};
-\code{\link{get.sparse.array.from.values}};
-\code{\link{get.values.dataframe}};
-\code{\link{get.values.from.sparse.array}};
-\code{\link{get.values.gate}}; \code{\link{get.values}};
-\code{\link{merge.values}}; \code{\link{sanitize.values}}
+Other Values, Utilities: \code{\link{create.intervals}};
+\code{\link{generate.values.from.events}};
+\code{\link{get.voxel.index}}
 }
 

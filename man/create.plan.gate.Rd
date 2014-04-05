@@ -8,14 +8,15 @@ create.plan.gate(name = "gate.simulation", ctFile.gate = NULL,
   waterIonisationPotential.gate = 78,
   computingValues.gate = "DoseToMaterial[Gy]", saveEveryNSeconds.gate = 200,
   size.gate = "auto", position.gate = c(0, 0, 0), voxelSize.gate = c(2, 2,
-  2), beams = NULL, beams.gate = "./data/beams.gate",
+  2), beams = NULL, beamsFile.gate = "./data/beams.gate",
   particleType.gate = "proton",
   sourceDescriptionFile.gate = "./data/ProtonSimple.txt",
-  totalNumberOfPrimaries = 0)
+  totalNumberOfPrimaries = 0, K = NULL)
 }
 \description{
 Generate a default (empty) template of the Plan, to be used
-with Gate.
+with Gate. (documentation for the parameters coming
+soon...)
 }
 \seealso{
 Other PlanGate: \code{\link{create.gate.structure}};

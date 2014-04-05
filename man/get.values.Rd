@@ -13,8 +13,8 @@ Get the values matrices for a plan (PlanKIT).
 \seealso{
 Other Values: \code{\link{create.values}};
 \code{\link{get.dataframe.from.values}};
-\code{\link{get.profile}};
 \code{\link{get.sparse.array.from.values}};
+\code{\link{get.sparse.array.gate}};
 \code{\link{get.values.dataframe}};
 \code{\link{get.values.from.sparse.array}};
 \code{\link{get.values.gate}}; \code{\link{merge.values}};

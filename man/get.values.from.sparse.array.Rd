@@ -11,8 +11,8 @@ specificato
 \seealso{
 Other Values: \code{\link{create.values}};
 \code{\link{get.dataframe.from.values}};
-\code{\link{get.profile}};
 \code{\link{get.sparse.array.from.values}};
+\code{\link{get.sparse.array.gate}};
 \code{\link{get.values.dataframe}};
 \code{\link{get.values.gate}}; \code{\link{get.values}};
 \code{\link{merge.values}}; \code{\link{sanitize.values}}

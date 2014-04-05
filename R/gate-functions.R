@@ -365,7 +365,7 @@ run.gate.forward <- function(plan=plan, N=NULL, K=NULL, evaluate.sparse.arrays=F
     Ne <- round(beams$fluence*plan$K)
     #print(Ne)
     
-    for(b in 1:10){
+    for(b in 1:Nb){
       message('evaluating beam ', b, '/', Nb, ' (', format(b/Nb*100, digits=3), '%) --- ',
               'N primaries: ', Ne[b], '/', N , ' (', format(Ne[b]/N*100, digits=3), '%) ...')
       

@@ -3,7 +3,7 @@
 \title{Create values form events}
 \usage{
 generate.values.from.events(Xe, Ye, Ze, xbin, ybin, zbin, weight = 1,
-  variable = "Activity", group = 10000)
+  variable = "Activity", sparse.matrix = FALSE)
 }
 \arguments{
   \item{Xe}{event x coorditate vector.}
@@ -21,12 +21,18 @@ generate.values.from.events(Xe, Ye, Ze, xbin, ybin, zbin, weight = 1,
   \item{zbin}{bins z coordinates (extremes).}
 
   \item{variable}{The variable name.}
+
+  \item{sparse.matrix}{Return a sparse matrix if TRUE.}
 }
 \value{
-A values object
+A values object or a sparse matrix.
 }
 \description{
 Uses the (x,y,z) coordinates of a shower of events to
 create a values object with the 3D histogram of the events.
+}
+\seealso{
+Other Values, Utilities: \code{\link{create.intervals}};
+\code{\link{get.profile}}; \code{\link{get.voxel.index}}
 }
 

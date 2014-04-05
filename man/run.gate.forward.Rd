@@ -2,8 +2,8 @@
 \alias{run.gate.forward}
 \title{Evaluate forward planning (Gate)}
 \usage{
-run.gate.forward(plan = plan, N = NULL, save.sparse.arrays = FALSE,
-  outmessages = FALSE)
+run.gate.forward(plan = plan, N = NULL, K = NULL,
+  evaluate.sparse.arrays = FALSE, outmessages = FALSE)
 }
 \arguments{
   \item{plan}{The plan object (Gate)}
@@ -11,9 +11,9 @@ run.gate.forward(plan = plan, N = NULL, save.sparse.arrays = FALSE,
   \item{N}{The mumber of primary particles to simulate
   (events)}
 
-  \item{save.sparse.array}{Save a sparse array for the
-  values (in which the information for the individual beam
-  contribution is stored).}
+  \item{evaluate.sparse.array}{Evaluate and save also a
+  sparse array for the values (in which the information for
+  the individual beam contribution is stored).}
 
   \item{outmessages}{Show the optuputs from the Gate
   simulation}

@@ -31,7 +31,7 @@ Other Beams: \code{\link{add.field}};
 \code{\link{convert.mu2fluence}};
 \code{\link{create.beam}}; \code{\link{create.field}};
 \code{\link{display.beams}}; \code{\link{get.beams}};
-\code{\link{get.isocenter}};
+\code{\link{get.isocenter}}; \code{\link{get.rays}};
 \code{\link{read.beams.fluka}}; \code{\link{read.beams}};
 \code{\link{write.beams}}
 }

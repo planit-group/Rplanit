@@ -8,7 +8,7 @@ add.field(beams)
   \item{beams}{the beams data.frame}
 }
 \description{
-A unique field ID is associated to a unique combination of
+An unique field ID is associated to a unique combination of
 gantry and patient angle.
 }
 \seealso{
@@ -17,7 +17,7 @@ Other Beams: \code{\link{convert.fluence2mu}};
 \code{\link{create.beam}}; \code{\link{create.field}};
 \code{\link{display.beamports}};
 \code{\link{display.beams}}; \code{\link{get.beams}};
-\code{\link{get.isocenter}};
+\code{\link{get.isocenter}}; \code{\link{get.rays}};
 \code{\link{read.beams.fluka}}; \code{\link{read.beams}};
 \code{\link{write.beams}}
 }
