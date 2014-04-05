@@ -98,7 +98,8 @@
 # RUN
 #=====================================================
 
-/gate/application/setTotalNumberOfPrimaries @totalNumberOfPrimaries
+/control/execute mac/run.mac
+#/gate/application/setTotalNumberOfPrimaries @totalNumberOfPrimaries
 /gate/random/setEngineSeed auto
 /gate/run/initialize
 /gate/application/start
