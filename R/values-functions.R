@@ -100,7 +100,7 @@ get.values.gate <- function(plan.gate)
 #' @export
 get.sparse.array.gate <- function(plan.gate)
 {
-  load(paste(plan.gate$name, 'values.sparse.Rdata', sep=''))
+  load(paste(plan.gate$name, 'values.sparse.Rdata', sep='/'))
   return(values.sparse)
 }
 
