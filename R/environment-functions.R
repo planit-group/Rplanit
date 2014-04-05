@@ -157,9 +157,15 @@ install.gate <- function()
 {
   message('downloading gate...')
   download.file(url='http://totlxl.to.infn.it/tools/Gate6.2-install.tar.bz2', destfile='Gate6.2-install.tar.bz2')
+  
   message('uncompressing gate...')
-  system('tar jxf Gate6.2-install.tar.bz2; rm -r $HOME/R/Gate6.2-install; mv Gate6.2-install $HOME/R/', ignore.stdout=TRUE, ignore.stderr=TRUE)
-  system('rm Gate6.2-install.tar.bz2')
+  system('tar jxf Gate6.2-install.tar.bz2; rm Gate6.2-install.tar.bz2', ignore.stdout=TRUE, ignore.stderr=TRUE)
+  
+  install.dir <- paste(Sys.getenv('HOME'), 'R', 'Gate6.2-install', sep='/')
+  R.dir <- paste(Sys.getenv('HOME'), 'R/', sep='/')
+  message('moving gate in ', install.dir, ' ...')
+  unlink(install.dir, recursive=TRUE)
+  file.rename(from='Gate6.2-install', to=install.dir)
 }
 
 #' Install PlanKIT
@@ -169,9 +175,15 @@ install.plankit <- function()
 {
   message('downloading plankit...')
   download.file(url='http://totlxl.to.infn.it/tools/DEK-install.tar.bz2', destfile='DEK-install.tar.bz2')
+  
   message('uncompressing plankit...')
-  system('tar jxf DEK-install.tar.bz2; rm -r $HOME/R/DEK-install; mv DEK-install $HOME/R/', ignore.stdout=TRUE, ignore.stderr=TRUE)
-  system('rm DEK-install.tar.bz2')
+  system('tar jxf DEK-install.tar.bz2; rm DEK-install.tar.bz2', ignore.stdout=TRUE, ignore.stderr=TRUE)
+  
+  install.dir <- paste(Sys.getenv('HOME'), 'R', 'DEK-install', sep='/')
+  R.dir <- paste(Sys.getenv('HOME'), 'R/', sep='/')
+  message('moving plankit in ', install.dir, ' ...')
+  unlink(install.dir, recursive=TRUE)
+  file.rename(from='DEK-install', to=install.dir)
 }
 
 # RUNNING ----------------------------------------------------------------------
