@@ -271,7 +271,7 @@ create.gate.structure <- function(plan)
     main.mac.txt <- sub('@enableNumberOfHits', 'false', main.mac.txt)
   }
 
-  # beams
+  # SET BEAMS
   if(!is.null(plan$beams)) {
     message('Using beams dataframe stored in plan for ', plan$name)
     file.beams.gate <- paste(plan$name, '/data/beams', sep='')
@@ -284,18 +284,24 @@ create.gate.structure <- function(plan)
   }
   
   # numero di eventi
-  main.mac.txt <- sub('@totalNumberOfPrimaries', plan$totalNumberOfPrimaries, main.mac.txt)
+  #main.mac.txt <- sub('@totalNumberOfPrimaries', plan$totalNumberOfPrimaries, main.mac.txt)
   
   # scrive file
   #print(main.mac.txt)
   main.mac <- file(paste(plan$name, '/mac/main.mac', sep=''), "wt")
   write(main.mac.txt, file=main.mac)
   close(main.mac)
-  message('plan ', plan$name, ' written.')
   
   # SET CT
   set.ct.gate(plan)
   
+  # SET RUN
+  run.mac <- file(paste(plan$name, '/mac/run.mac', sep=''), "wt")
+  run.mac.txt <- paste('/gate/application/setTotalNumberOfPrimaries', plan$totalNumberOfPrimaries)
+  write(run.mac.txt, file=run.mac)
+  close(run.mac)
+  
+  message('gate structure ', plan$name, ' written.')
   return(plan)
 }
 
@@ -339,28 +345,54 @@ run.gate.forward <- function(plan=plan, N=NULL, K=NULL, evaluate.sparse.arrays=F
   
   # run
   cmd <- paste('cd ', plan$name, '; chmod +x ./run-gate.sh; ./run-gate.sh', sep='')
+  if(outmessages) {ignore.stdout=FALSE; ignore.stderr=FALSE} else {ignore.stdout=TRUE; ignore.stderr=TRUE}
   
   if(!evaluate.sparse.arrays) {
     message('running Gate...')
-    if(outmessages) {ignore.stdout=FALSE; ignore.stderr=FALSE} else {ignore.stdout=TRUE; ignore.stderr=TRUE}
     system(cmd, ignore.stdout=ignore.stdout, ignore.stderr=ignore.stderr)
-  } else {
+  }
+  else 
+  {
     #recupera beams
     beams <- get.beams(plan)
-    beams.file <- plan.gate$beamsFile.gate # il file deve essere comunque presente (da create.gate.structure)
+    beams.file <- plan$beamsFile.gate # il file deve essere comunque presente (da create.gate.structure)
     if(beams.file=='./data/beams.gate') {beams.file <- paste0(plan$name, '/data/beams.gate')}
-    print(beams.file)
     Nb <- nrow(beams)
     N <- plan$totalNumberOfPrimaries
     if(is.null(plan$K)) {message('using default K = cost. ...'); plan$K <- rep(1, Nb)}
-    plan$K <- plan$K/(sum(plan$K*beams$fluence)) * sum(beams$fluence)
-    for(b in 1:3){
-      Ne <- N/plan$K[b]
+    f <- sum(plan$K*beams$fluence)/N
+    plan$K <- plan$K/f
+    Ne <- round(beams$fluence*plan$K)
+    #print(Ne)
+    
+    for(b in 1:10){
       message('evaluating beam ', b, '/', Nb, ' (', format(b/Nb*100, digits=3), '%) --- ',
-              'N primaries: ', Ne, '/', N , ' (', format(Ne/N*100, digits=3), '%) ...')
+              'N primaries: ', Ne[b], '/', N , ' (', format(Ne[b]/N*100, digits=3), '%) ...')
+      
+      if(Ne[b]==0) next
+      # beams
       beam <- beams[b,]
       write.beams(beams=beam, file.name=beams.file, format='gate', add.extension=FALSE)
+      
+      # numero di eventi
+      run.mac <- file(paste(plan$name, '/mac/run.mac', sep=''), "wt")
+      run.mac.txt <- paste('/gate/application/setTotalNumberOfPrimaries', Ne[b])
+      write(run.mac.txt, file=run.mac)
+      close(run.mac)
+      
+      # run
+      system(cmd, ignore.stdout=ignore.stdout, ignore.stderr=ignore.stderr)
+      
+      vb <- get.values.gate(plan)
+      vs.tmp <- get.sparse.array.from.values(get.values.gate(plan))
+      vs.tmp$beam.id <- b
+      vs.tmp$Ne <- Ne[b]
+      
+      if(b==1) {values.sparse <- vs.tmp} else {values.sparse <- rbind(values.sparse, vs.tmp)}
     }
+    
+    message('saving sparse matrix...')
+    save(values.sparse, file=paste(plan$name, 'values.sparse.Rdata', sep='/'), compress='bzip2')
   }
   message('...done.')
   
