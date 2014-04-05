@@ -29,6 +29,7 @@ create.field <- function(targetVOI='PTV',
                       targetIsocenter.x=targetIsocenter.x,
                       targetIsocenter.y=targetIsocenter.y,
                       targetIsocenter.z=targetIsocenter.z)
+  #class(field) <- 'field.plankit'
   return(field)
 }
 
@@ -53,7 +54,7 @@ read.beams <- function(beams.file)
     names(beams) <- c('x_iso', 'y_iso', 'z_iso', 'gantryAngle', 'patientAngle', 'fluence', 'energy', 'deflX', 'deflY')
     message('Spot positions NOT present...')
   }
-  
+  #class(beams) <- 'beams'
   return(beams)
 }
 
@@ -112,6 +113,7 @@ read.beams.fluka <- function(fluka.file)
     }
   }
 
+  #class(beams) <- beams
   return(beams)
 }
 
@@ -133,9 +135,22 @@ get.beams <- function(plan, input=FALSE)
   #  beams.file <- get.filepath('inputBeamsFile', plan=plan)
   #}
   
-  if(input){beams.file <- get.filepath('inputBeamsFile', plan=plan)}
-  else {beams.file <- get.filepath('outputBeamsFile', plan=plan)}
-  return(read.beams(beams.file))
+  if(class(plan)=='list') {
+    message('getting beams (assuming plankit plan)...')
+    class(plan) <- 'plankit.plan'
+  }
+
+  if(!is.null(plan$beams)) {
+    return(plan$beams)
+  } else if(class(plan)=='plankit.plan') {
+    if(input){beams.file <- get.filepath('inputBeamsFile', plan=plan)}
+    else {beams.file <- get.filepath('outputBeamsFile', plan=plan)}
+    return(read.beams(beams.file))
+  } else if(class(plan)=='gate.plan') {
+    beams.file <- paste(plan$name, plan$beamsFile.gate, sep='/')
+    return(read.beams(beams.file))
+  }
+
 }
 
 
@@ -205,18 +220,18 @@ create.beam <- function(nbeams=1, with.spots=FALSE)
 #' Write the beams object on file. It can use different formats (default PlanKIT).
 #' 
 #' @param beams The beams object
-#' @param file.name The prefix of the file name.
+#' @param file.name The file name.
 #' @param format The format. It can be 'plankit', 'gate' or 'fluka'.
 #' @param ion. The primary ion. (used by fluka).
 #' @family Beams
 #' @export
 #' 
-write.beams <- function(beams, file.name, format='plankit', ion='1H')
+write.beams <- function(beams, file.name, format='plankit', ion='1H', add.extension=TRUE)
 {
   
   # PlanKIT
   if(format=='plankit') {
-    file.name <- paste(file.name, '.beams', sep='')
+    if(add.extension) {file.name <- paste(file.name, '.beams', sep='')}
     N <- nrow(beams)
     con <- file(file.name, "w")
     writeLines(paste(N), con=con)
@@ -258,7 +273,8 @@ write.beams <- function(beams, file.name, format='plankit', ion='1H')
     # scrivi file *.gate
     
     # open connection to file
-    gate <- file(paste(file.name, '.gate', sep=''), "w")
+    if(add.extension) {file.name <- paste(file.name, '.gate', sep='')}
+    gate <- file(file.name, "w")
     
     cat('#TREATMENT-PLAN-DESCRIPTION\n', file=gate, sep='')
     cat('#PlanName\n', PlanName, '\n', file=gate, sep='')
@@ -346,7 +362,8 @@ write.beams <- function(beams, file.name, format='plankit', ion='1H')
     
     
     # write Fluka file
-    fluka <- file(paste(file.name, '.fluka', sep=''), "w")
+    if(add.extension) {file.name <- paste(file.name, '.fluka', sep='')}
+    fluka <- file(file.name, "w")
     
     # header
     cat(paste('patient_id ', patient_id, '\n', sep=''), file=fluka, sep='')
@@ -416,13 +433,12 @@ get.isocenter <- function(plan)
 
 #' Add field ID column to beams
 #' 
-#' A unique field ID is associated to a unique combination of gantry and patient angle.
+#' An unique field ID is associated to a unique combination of gantry and patient angle.
 #' 
 #' @param beams the beams data.frame
 #' 
 #' @export
 #' @family Beams
-
 add.field <- function(beams)
 {
   # check per vedere se esiste già il campo field
@@ -436,3 +452,72 @@ add.field <- function(beams)
   return(beams)
 }
 
+#' Get rays from beams
+#' 
+#' Get rays (normalized vector directions + absolute coordinate) in the reference frame of the CT.
+#' 
+#' @param beams the beams data.frame
+#' @param s distance of the source from the isocenter (it uses only one virtual source).
+#' @export
+#' @family Beams
+get.rays <- function(beams, s=4000, unique=FALSE)
+{
+  
+  X0 <- X1 <- X2 <- c(1,0,0)
+  Y0 <- Y1 <- Y2 <- c(0,0,1) # = Z nel sistema di riferimento della CT
+  s0 <- s1 <- s2 <- c(0,-s,0)
+  
+  # per arrivare nel sistema di riferimento della CT occorre ruotare tutto di 90
+  # attorno all'asse X
+  
+  # il gantry corrisponde a ruotare attorno all'asse Z del sistema di riferimento della CT
+  # il patient angel corrisponde a ruotare attorno all'asse X (?)
+  
+  Nb <- nrow(beams)
+  
+  rays <- data.frame(X=rep(0, Nb), Y=0, Z=0, xn=0, yn=0, zn=0)
+  
+  for(i in 1:Nb) {
+    gantryAngle <- beams$gantryAngle[i]
+    patientAngle <- beams$patientAngle[i]
+    
+    # gantry (attorno a z)
+    X1[1] <- (X0[1]*cos(gantryAngle) - X0[2]*sin(gantryAngle))
+    X1[2] <- (X0[1]*sin(gantryAngle) + X0[2]*cos(gantryAngle))
+    Y1[1] <- (Y0[1]*cos(gantryAngle) - Y0[2]*sin(gantryAngle))
+    Y1[2] <- (Y0[1]*sin(gantryAngle) + Y0[2]*cos(gantryAngle))
+    s1[1] <- (s0[1]*cos(gantryAngle) - s0[2]*sin(gantryAngle))
+    s1[2] <- (s0[1]*sin(gantryAngle) + s0[2]*cos(gantryAngle))
+    
+    #patient (attorno a x)
+    X2[1] <- X1[1]
+    X2[3] <- (X1[3]*cos(patientAngle) - X1[2]*sin(patientAngle))
+    X2[2] <- (X1[3]*sin(patientAngle) + X1[2]*cos(patientAngle))
+    Y2[1] <- Y1[1]
+    Y2[3] <- (Y1[3]*cos(patientAngle) - Y1[2]*sin(patientAngle))
+    Y2[2] <- (Y1[3]*sin(patientAngle) + Y1[2]*cos(patientAngle))
+    s2[1] <- s1[1]
+    s2[3] <- (s1[3]*cos(patientAngle) - s1[2]*sin(patientAngle))
+    s2[2] <- (s1[3]*sin(patientAngle) + s1[2]*cos(patientAngle))
+    
+    R <- X2*beams$deflX[i]+Y2*beams$deflY[i] + c(beams$x_iso[i], beams$y_iso[i], beams$z_iso[i])
+    rn <- R-s2
+    rn <- rn / sqrt(sum(rn^2))
+    
+    rays$X[i] <- R[1]
+    rays$Y[i] <- R[2]
+    rays$Z[i] <- R[3]
+    rays$xn[i] <- rn[1]
+    rays$yn[i] <- rn[2]
+    rays$zn[i] <- rn[3]
+    
+    #X <- R*X0 * beams$deflX[i]
+    #Y <- R*Y0 * beams$deflY[i]
+  }
+  
+  if(unique) {
+    rays <- rays[!duplicated(rays),]
+  }
+  
+  return(rays)
+}
