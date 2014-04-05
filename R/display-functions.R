@@ -403,7 +403,7 @@ display.slice.all <- function(ct=NULL,
   # recupera oggetti da plan
   if(is.null(values)) {values <- get.values(plan)}
   if(is.null(ct)) {ct <- get.ct(plan)}
-  if(is.null(contours)) {contours <- get.contours(plan)}
+  if(is.null(contours) & !is.null(plan)) {contours <- get.contours(plan)}
   #if(!use.contours) {contours <- NULL}
   
   Nx.ct <- Ny.ct <- Nz.ct <- Nx.values <- Ny.values <- Nz.values <- NA
@@ -1822,7 +1822,6 @@ display.beams <- function(beams,
 #' 
 #' @export
 #' @import rgl misc3d
-
 display.spots <- function(beams, vois=NULL, voi=NULL, display.iso=TRUE, alpha.spot=0.2, alpha.voi=1)
 {
   # plot 3d
@@ -1840,6 +1839,29 @@ display.spots <- function(beams, vois=NULL, voi=NULL, display.iso=TRUE, alpha.sp
     render.voi.isosurfaces(vois=vois, voi=voi, add=TRUE, alpha=alpha.voi)
   }
 }
+
+
+#' Display rays (3D)
+#' 
+#' @param rays the rays dataframe.
+#' @param alpha the opacity value for the point and lines.
+#' @param ray.length Length of the rays. If ray.lengt=0 ti will plot only the spots.
+#' @param add Add to existing 3D plot.
+#' @export
+#' @import rgl misc3d
+display.rays <- function(rays, alpha=1, ray.length=1, add=FALSE)
+{
+  # plot 3d
+  plot3d(rays$X, rays$Y, rays$Z, xlab='x [mm]', ylab='y [mm]', zlab='z [mm]', type='p', size=2, alpha.spot=alpha, add=add, col='red')
+  if(ray.length!=0)
+  for(i in 1:nrow(rays)) {
+    xx <- c(rays$X[i], rays$X[i] + rays$xn[i]*ray.length)
+    yy <- c(rays$Y[i], rays$Y[i] + rays$yn[i]*ray.length)
+    zz <- c(rays$Z[i], rays$Z[i] + rays$zn[i]*ray.length)
+    plot3d(xx, yy, zz, type='l', add=TRUE, alpha=alpha/2)
+  }
+}
+
 
 #' Beam-port splot
 #' 
@@ -1874,7 +1896,7 @@ display.beamports <- function(beams,
   # plot
   p <- ggplot(beams.a) +
     geom_point(aes(x=deflX, y=deflY, colour=Npart)) +
-    labs(y='deflY [mm]', x='deflY [mm]', coulour='N part.', title=my.title) +
+    labs(y='deflY [mm]', x='deflX [mm]', coulour='N part.', title=my.title) +
     facet_wrap(~beam.port)
     #theme(axis.title.y=element_text(vjust=.2))
   my.ggplot.theme()
