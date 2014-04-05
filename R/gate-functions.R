@@ -72,7 +72,7 @@ generate.materials.gate <- function(MaterialTable='./data/Schneider2000Materials
                                     OutputMaterialDatabase='./data/ct-HUmaterials.db',
                                     OutputHUMaterial='./data/ct-HU2mat.txt')
 {
-  
+  # da scrivere
 }
 
 
@@ -89,11 +89,13 @@ create.waterbox.gate <- function(Dx=100, Dy=100, Dz=100)
   return(list(Dx=Dx, Dy=Dy, Dz=Dz))
 }
 
+
 # PLAN GATE --------------------------------------------------------------------
 
 #' Generate Plan template (Gate)
 #' 
 #' Generate a default (empty) template of the Plan, to be used with Gate.
+#' (documentation for the parameters coming soon...)
 #' @export
 #' @family PlanGate
 create.plan.gate <- function(name='gate.simulation',
@@ -103,16 +105,17 @@ create.plan.gate <- function(name='gate.simulation',
                              HUToMaterialFile='data/ct-HU2mat.txt',
                              origin.gate=c(0,0,0),    
                              waterIonisationPotential.gate=78,
-			                       computingValues.gate='DoseToMaterial[Gy]',
+			     computingValues.gate='DoseToMaterial[Gy]',
                              saveEveryNSeconds.gate=200,
                              size.gate='auto',
                              position.gate=c(0,0,0),
                              voxelSize.gate=c(2,2,2),
-			                       beams=NULL,
-                             beams.gate='./data/beams.gate',
+			     beams=NULL,
+                             beamsFile.gate='./data/beams.gate',
                              particleType.gate='proton',
                              sourceDescriptionFile.gate='./data/ProtonSimple.txt',
-                             totalNumberOfPrimaries=0
+                             totalNumberOfPrimaries=0,
+			     K=NULL
                              )
 {
   plan <- list(name=name,
@@ -122,17 +125,19 @@ create.plan.gate <- function(name='gate.simulation',
                HUToMaterialFile=HUToMaterialFile,
                origin.gate=origin.gate,
                waterIonisationPotential.gate=waterIonisationPotential.gate,
-	             computingValues.gate=computingValues.gate,
+	       computingValues.gate=computingValues.gate,
                saveEveryNSeconds.gate=saveEveryNSeconds.gate,
                size.gate=size.gate,
                position.gate=position.gate,
                voxelSize.gate=voxelSize.gate,
-	             beams=beams, # oggetto beams
-               beams.gate=beams.gate, # file dei beams
+	       beams=beams, # oggetto beams
+               beamsFile.gate=beamsFile.gate, # file dei beams
                particleType.gate=particleType.gate,
                sourceDescriptionFile.gate=sourceDescriptionFile.gate,
-               totalNumberOfPrimaries=totalNumberOfPrimaries    
+               totalNumberOfPrimaries=totalNumberOfPrimaries,
+	       K=K # pesi di ciascun beam (usato solo per il calcolo dei bea indipendente nelle matrici sparse)    
   )
+  class(plan) <- 'gate.plan'
   return(plan)
 }
 
@@ -271,10 +276,11 @@ create.gate.structure <- function(plan)
     message('Using beams dataframe stored in plan for ', plan$name)
     file.beams.gate <- paste(plan$name, '/data/beams', sep='')
     write.beams(beams=plan$beams, file.name=file.beams.gate, format='gate')
+    
     main.mac.txt <- sub('@beams.gate', './data/beams.gate', main.mac.txt)
     plan.gate$beams.gate <- './data/beams.gate'
   } else {
-    main.mac.txt <- sub('@beams.gate', plan$beams.gate, main.mac.txt)
+    main.mac.txt <- sub('@beams.gate', plan$beamsFile.gate, main.mac.txt)
   }
   
   # numero di eventi
@@ -298,18 +304,25 @@ create.gate.structure <- function(plan)
 #' 
 #' @param plan The plan object (Gate)
 #' @param N The mumber of primary particles to simulate (events)
-#' @param save.sparse.array Save a sparse array for the values (in which the information for the individual beam contribution is stored).
+#' @param evaluate.sparse.array Evaluate and save also a sparse array for the values (in which the information for the individual beam contribution is stored).
 #' @param outmessages Show the optuputs from the Gate simulation
 #' @return The updated plan object (Gate)
 #' @export
 #' @family PlanGate
-run.gate.forward <- function(plan=plan, N=NULL, save.sparse.arrays=FALSE, outmessages=FALSE)
+run.gate.forward <- function(plan=plan, N=NULL, K=NULL, evaluate.sparse.arrays=FALSE, outmessages=FALSE)
 {
   
   #gate.template <- get('gate.template', envir=dektoolsEnv)
   #gate.setenv <- get('gate.setenv', envir=dektoolsEnv)
   
-  plan$totalNumberOfPrimaries <- N
+  if(!is.null(N)) {
+    message('using N=', N, ' primary particles...')
+    plan$totalNumberOfPrimaries <- N
+  }
+  if(!is.null(K)) {
+    message('using K...')
+    plan$K <- K
+  }
   
   # crea struttura file
   plan <- create.gate.structure(plan)
@@ -325,10 +338,30 @@ run.gate.forward <- function(plan=plan, N=NULL, save.sparse.arrays=FALSE, outmes
   #close(run)
   
   # run
-  message('running Gate...')
-  if(outmessages) {ignore.stdout=FALSE; ignore.stderr=FALSE} else {ignore.stdout=TRUE; ignore.stderr=TRUE}
   cmd <- paste('cd ', plan$name, '; chmod +x ./run-gate.sh; ./run-gate.sh', sep='')
-  system(cmd, ignore.stdout=ignore.stdout, ignore.stderr=ignore.stderr)
+  
+  if(!evaluate.sparse.arrays) {
+    message('running Gate...')
+    if(outmessages) {ignore.stdout=FALSE; ignore.stderr=FALSE} else {ignore.stdout=TRUE; ignore.stderr=TRUE}
+    system(cmd, ignore.stdout=ignore.stdout, ignore.stderr=ignore.stderr)
+  } else {
+    #recupera beams
+    beams <- get.beams(plan)
+    beams.file <- plan.gate$beamsFile.gate # il file deve essere comunque presente (da create.gate.structure)
+    if(beams.file=='./data/beams.gate') {beams.file <- paste0(plan$name, '/data/beams.gate')}
+    print(beams.file)
+    Nb <- nrow(beams)
+    N <- plan$totalNumberOfPrimaries
+    if(is.null(plan$K)) {message('using default K = cost. ...'); plan$K <- rep(1, Nb)}
+    plan$K <- plan$K/(sum(plan$K*beams$fluence)) * sum(beams$fluence)
+    for(b in 1:3){
+      Ne <- N/plan$K[b]
+      message('evaluating beam ', b, '/', Nb, ' (', format(b/Nb*100, digits=3), '%) --- ',
+              'N primaries: ', Ne, '/', N , ' (', format(Ne/N*100, digits=3), '%) ...')
+      beam <- beams[b,]
+      write.beams(beams=beam, file.name=beams.file, format='gate', add.extension=FALSE)
+    }
+  }
   message('...done.')
   
   # salva oggetto plan

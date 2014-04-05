@@ -103,6 +103,7 @@ create.plan <- function(plan=NA,
                inputBeamsFile=inputBeamsFile,
                beams=beams # include possibilità di includere direttamente un beams object.
   )
+  class(plan) <- 'plankit.plan'
   return(plan)
 }
 
@@ -242,7 +243,7 @@ run.dek.inverse <- function(plan, outmessages=FALSE) {
   #dek.setenv <- get('dek.setenv', envir=dektoolsEnv)
   #cmd <- paste('. ', dek.setenv, '; cd ', plan[['name']], '; dek plan.config')
   cmd <- paste('cd ', plan$name, '; dek plan.config')
-  system.time(system(cmd, ignore.stdout=ignore.stdout, ignore.stderr=ignore.stderr))
+  system(cmd, ignore.stdout=ignore.stdout, ignore.stderr=ignore.stderr)
   
   save.plan(plan)
   
@@ -293,8 +294,8 @@ run.dek.forward <- function(plan, outmessages=FALSE) {
   if(!is.null(plan$inputBeamsFile)) {
     inputBeamsFile <- paste(getwd(), '/', plan$inputBeamsFile, sep='')
     writeLines(paste('inputBeamsFile = ', inputBeamsFile, '\n'), con=con, sep='')
-  } else if(!is.null(plan$Beams)) {
-    write.beams(beams=plan$Beams, file.name=paste0(plan$name, '/plan'), format='plankit')
+  } else if(!is.null(plan$beams)) {
+    write.beams(beams=plan$beams, file.name=paste0(plan$name, '/plan'), format='plankit')
     writeLines(paste('inputBeamsFile = plan.beams\n'), con=con, sep='')
   }
   
@@ -321,7 +322,7 @@ run.dek.forward <- function(plan, outmessages=FALSE) {
   #dek.setenv <- get('dek.setenv', envir=dektoolsEnv)
   #cmd <- paste('. ', dek.setenv, '; cd ', plan[['name']], '; dek plan.config')
   cmd <- paste('cd ', plan$name, '; dek plan.config')
-  system.time(system(cmd, ignore.stdout=ignore.stdout, ignore.stderr=ignore.stderr))
+  system(cmd, ignore.stdout=ignore.stdout, ignore.stderr=ignore.stderr)
   
   save.plan(plan)
   
