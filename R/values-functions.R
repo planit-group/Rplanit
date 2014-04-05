@@ -359,11 +359,12 @@ identify.slice <- function(x, xvec)
 #' @param variable the variable to be profiled
 #' @param x,y,z definition of the axis (only two coordinates should be defined). For example \code{x=4.4} and \code{z=0.5} specifies a profile along the y-axis passing through x=4.4 and z=0.5
 #' @param integrate perform an integration over the two coordinates (boolean, optional)
-#' @return a dataframe containing the specified profile
-#' 
-#' @family Values
+#' @param ray The ray object.
+#' @param return.voxel.index Returns the index of the voxel crossed by the ray.
+#' @return a dataframe containing the specified profile, or the sequence of the voxel index crossed by the ray if return.voxel.index=TRUE.
+#' @family Values, Utilities
 #' @export
-get.profile <- function(values, variable=NULL, x=NULL, y=NULL, z=NULL, integrate=FALSE)
+get.profile <- function(values, variable=NULL, x=NULL, y=NULL, z=NULL, integrate=FALSE, ray=NULL, return.voxel.index=FALSE)
 {
   
   # variable
@@ -417,6 +418,74 @@ get.profile <- function(values, variable=NULL, x=NULL, y=NULL, z=NULL, integrate
     }
   }
   
+  # profilo su direzione arbitraria (ray-tracing)
+  if(!is.null(ray)) {
+    R <- c(ray$X, ray$Y, ray$Z)
+    rn <- c(ray$xn, ray$yn, ray$zn)
+    px <- py <- pz <- list()
+    
+    # coordinate piani tra i voxels
+    dx <- mean(diff(values$x)); dy <- mean(diff(values$y)); dz <- mean(diff(values$z))
+    xi <- create.intervals(values$x)
+    yi <- create.intervals(values$y)
+    zi <- create.intervals(values$z)
+    
+    # calcola intersezione dei piani
+    if(rn[1]!=0) {
+      tx <- (xi - R[1])/rn[1]
+      px.x <- R[1]+tx*rn[1]
+      px.y <- R[2]+tx*rn[2]
+      px.z <- R[3]+tx*rn[3]
+      px <- data.frame(x=px.x, y=px.y, z=px.z, t=tx)
+    } else {
+      tx <-NULL
+      px <- data.frame(x=NA, y=NA, z=NA, t=NA)
+    }
+    if(rn[2]!=0) {
+      ty <- (yi - R[2])/rn[2]
+      py.x <- R[1]+ty*rn[1]
+      py.y <- R[2]+ty*rn[2]
+      py.z <- R[3]+ty*rn[3]
+      py <- data.frame(x=py.x, y=py.y, z=py.z, t=ty)  
+    } else {
+      ty <- NULL
+      py <- data.frame(x=NA, y=NA, z=NA, t=NA)
+    }
+    if(rn[3]!=0) {
+      tz <- (zi - R[3])/rn[3]
+      pz.x <- R[1]+tz*rn[1]
+      pz.y <- R[2]+tz*rn[2]
+      pz.z <- R[3]+tz*rn[3]
+      pz <- data.frame(x=pz.x, y=pz.y, z=pz.z, t=tz)    
+    } else {
+      tz <- NULL
+      pz <- data.frame(x=NA, y=NA, z=NA, t=NA)
+    }
+    
+    # merge di punti
+    p <- rbind(px, py, pz)
+    
+    # elimina punti fuori array
+    p <- subset(p, x>=min(xi, na.rm=TRUE) & x<=max(xi, na.rm=TRUE) &
+                  y>=min(yi, na.rm=TRUE) & y<=max(yi, na.rm=TRUE) &
+                  z>=min(zi, na.rm=TRUE) & z<=max(zi, na.rm=TRUE))
+    
+    # sorting dei punti
+    p <- p[order(p$t),]
+    np <- nrow(p)-1
+    
+    # punti centrali dei segmenti
+    p.mid <- data.frame(x=(p$x[1:np]+diff(p$x)/2), y=(p$y[1:np]+diff(p$y)/2), z=(p$z[1:np]+diff(p$z)/2), t=(p$t[1:np]+diff(p$t)))
+    
+    # identifica voxels
+    voxel.index <- get.voxel.index(Xv=values$x, Yv=values$y, Zv=values$z, x=p.mid$x, y=p.mid$y, z=p.mid$z)
+    
+    if(return.voxel.index) {return(voxel.index)}
+    
+    coord.name <- 'r [mm]'
+    coord.value <- p.mid$t
+    profile.value <- values$values[voxel.index]
+  }
 
   
   profile.df <- data.frame(variable=variable, axis=coord.name, depth=coord.value, value=profile.value)
@@ -492,10 +561,13 @@ remove.values.outside.voi <- function(values, vois, voi, index.voi=NULL)
 #' @param ybin bins y coordinates (extremes).
 #' @param zbin bins z coordinates (extremes).
 #' @param variable The variable name.
-#' @return A values object
+#' @param sparse.matrix Return a sparse matrix if TRUE.
+#' @return A values object or a sparse matrix.
 #' @export
 #' @family Values, Utilities
-generate.values.from.events <- function(Xe, Ye, Ze, xbin, ybin, zbin, weight=1, variable='Activity', group=10000)
+generate.values.from.events <- function(Xe, Ye, Ze,
+                                        xbin, ybin, zbin,
+                                        weight=1, variable='Activity', sparse.matrix=FALSE)
 {
   
   message('histogramming the ', variable, '...')
@@ -521,6 +593,44 @@ generate.values.from.events <- function(Xe, Ye, Ze, xbin, ybin, zbin, weight=1, 
   #XYZ <- aggregate(list(weigth=weight), list(x=Xe.c, y=Ye.c, z=Ze.c), sum)
   XYZ <- aggregate(list(value=weight), list(voxel.index=voxel.index), sum)
   
-  return(get.values.from.sparse.array(sparse.array=XYZ, variable=variable, x=x, y=y, z=z))
+  if(sparse.matrix) {
+    return(XYZ)
+  } else {
+    return(get.values.from.sparse.array(sparse.array=XYZ, variable=variable, x=x, y=y, z=z))
+  }
 }
   
+#' Generate bin intervals from points
+#' 
+#' Merge a list of values objects in a single object. It assumes that the variable names are unique.
+#' @param x A vector.
+#' @return A vector (with N+1 elements)
+#' @family Values, Utilities
+#' @export
+create.intervals <- function(x)
+{
+  dx <- diff(x)
+  nx <- length(x)
+  xi <- c(x[1] - dx[1]/2, x[1:(nx-1)]+dx/2, x[nx]+dx[nx-1]/2)
+  return(xi)
+}
+
+#' get voxel index from coordinates
+#' 
+#' Merge a list of values objects in a single object. It assumes that the variable names are unique.
+#' @param x,y,z coordinate vectors.
+#' @param Xv,Yv,Zv coordinates of the voxels
+#' @return A vector.
+#' @family Values, Utilities
+#' @export
+get.voxel.index <- function(x, y, z, Xv, Yv, Zv)
+{
+  xbin <- create.intervals(Xv)
+  ybin <- create.intervals(Yv)
+  zbin <- create.intervals(Zv)
+  
+  X.c <- cut(x, breaks=xbin)
+  Y.c <- cut(y, breaks=ybin)
+  Z.c <- cut(z, breaks=zbin)
+  return(as.numeric(interaction(X.c, Y.c, Z.c)))
+}
