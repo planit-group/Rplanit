@@ -96,7 +96,7 @@ generate.contours <- function(contours.df, CT=NULL, z=NULL, tissue='R3PIDEd0.2v0
       if(z[iz]>=contours.df$z_min[i] & z[iz]<=contours.df$z_max[i]) {
         xc <- c(contours.df$x_min[i], contours.df$x_max[i], contours.df$x_max[i], contours.df$x_min[i])
         yc <- c(contours.df$y_min[i], contours.df$y_min[i], contours.df$y_max[i], contours.df$y_max[i])
-        contours.tmp <- data.frame(id=(i-1), polygon=id.polygon, slice=iz-1, x=xc, y=yc, z=z[iz], contour=contours.df$voi[i], tissue=tissue, type=contours.df$voi[i])
+	contours.tmp <- data.frame(id=i-1, polygon=id.polygon, slice=iz-1, x=xc, y=yc, z=z[iz], contour=contours.df$voi[i], tissue=tissue, type=contours.df$voi[i])
         id.polygon <- id.polygon+1
         if(i==1 & id.polygon==1) {contours <- contours.tmp} else {contours <- rbind(contours, contours.tmp)}
       }
