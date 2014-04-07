@@ -1,12 +1,30 @@
 \name{get.values.from.sparse.array}
 \alias{get.values.from.sparse.array}
-\title{ricostruisce oggetto values 3d dalla matrice sparsa}
+\title{Create values from sparse array}
 \usage{
-get.values.from.sparse.array(sparse.array, variable = "Dose[Gy]", x, y, z)
+get.values.from.sparse.array(sparse.array, variables = NULL, x, y, z)
+}
+\arguments{
+  \item{sparse.array}{The sparse array. Note: the sparse
+  array is a dataframe containing at least the following
+  columns: 'voxel.index' and 'value'. Optionally it could
+  contain also the column 'variable'. The latter is
+  mandatory if there are multiple variables.}
+
+  \item{variables}{The name of the variable(s). If there is
+  only one variable specified and the sparse array dose not
+  contain the column "variable", it is assumed that all the
+  value correspond to the specified variable. It it is
+  NULL, the values object will contains all the variable
+  found in the sparse array.}
+}
+\value{
+Values object. Note: the sparse array is a dataframe
+containing at least the following columns: 'voxel.index'
+and 'value'
 }
 \description{
-l'oggetto values conterrà solo una variabile, con il nome
-specificato
+Create a values object from a sparse array.
 }
 \seealso{
 Other Values: \code{\link{create.values}};

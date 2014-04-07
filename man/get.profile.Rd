@@ -18,7 +18,9 @@ get.profile(values, variable = NULL, x = NULL, y = NULL, z = NULL,
   \item{integrate}{perform an integration over the two
   coordinates (boolean, optional)}
 
-  \item{ray}{The ray object.}
+  \item{ray}{The ray object, Note the ray is a data.frame
+  defined by 6 components (X, Y, Z, xn, yn, zn), i.e. point
+  coordinates + normalized vector direction.}
 
   \item{return.voxel.index}{Returns the index of the voxel
   crossed by the ray.}
@@ -32,11 +34,13 @@ return.voxel.index=TRUE.
 Get a profile (values along a specific axis, or voxel line)
 from a \code{values} object. The axis is specifed trough
 the definition of two of the following three coordinates:
-x, y, z.
+x, y, z, or with a single ray object for arbitrary
+directions.
 }
 \seealso{
 Other Values, Utilities: \code{\link{create.intervals}};
 \code{\link{generate.values.from.events}};
+\code{\link{get.coordinates}};
 \code{\link{get.voxel.index}}
 }
 

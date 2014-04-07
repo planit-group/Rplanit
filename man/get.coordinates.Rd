@@ -1,0 +1,25 @@
+\name{get.coordinates}
+\alias{get.coordinates}
+\title{Get coordinates from voxel index}
+\usage{
+get.coordinates(voxel.index, x, y, z)
+}
+\arguments{
+  \item{x,y,z}{coordinate vectors corresponding to the 3D
+  array.}
+
+  \item{voxel.index}{The voxels index (can be a vectors of
+  voxel index).}
+}
+\value{
+A data.frame (x,y,z) for more than a single voxel index.
+}
+\description{
+Get coordinates from voxel index
+}
+\seealso{
+Other Values, Utilities: \code{\link{create.intervals}};
+\code{\link{generate.values.from.events}};
+\code{\link{get.profile}}; \code{\link{get.voxel.index}}
+}
+

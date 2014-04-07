@@ -25,7 +25,7 @@ generate.values.from.events(Xe, Ye, Ze, xbin, ybin, zbin, weight = 1,
   \item{sparse.matrix}{Return a sparse matrix if TRUE.}
 }
 \value{
-A values object or a sparse matrix.
+Values object or a sparse matrix.
 }
 \description{
 Uses the (x,y,z) coordinates of a shower of events to
@@ -33,6 +33,7 @@ create a values object with the 3D histogram of the events.
 }
 \seealso{
 Other Values, Utilities: \code{\link{create.intervals}};
-\code{\link{get.profile}}; \code{\link{get.voxel.index}}
+\code{\link{get.coordinates}}; \code{\link{get.profile}};
+\code{\link{get.voxel.index}}
 }
 

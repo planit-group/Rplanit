@@ -3,7 +3,8 @@
 \title{Display profile}
 \usage{
 display.profile(profile.values, profile.ct = NULL, profile.names = NULL,
-  show.plot = TRUE, file.name = NULL, height = 7, width = 7)
+  depth.lim = NULL, show.plot = TRUE, file.name = NULL, height = 7,
+  width = 7)
 }
 \arguments{
   \item{profile.values}{the main profile dataframe to be
@@ -13,9 +14,12 @@ display.profile(profile.values, profile.ct = NULL, profile.names = NULL,
   \item{profile.ct}{the background ct (or other data)
   profile}
 
-  \item{profile.name}{a vector containing the names of the
+  \item{profile.names}{a vector containing the names of the
   profiles. It is used if a list of different profiles is
-  used as imput.}
+  used as input.}
+
+  \item{depth.lim}{The x-axis range to display. (automatic
+  if not specified).}
 
   \item{shot.plot}{Show plot.}
 

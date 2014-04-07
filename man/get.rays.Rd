@@ -2,13 +2,20 @@
 \alias{get.rays}
 \title{Get rays from beams}
 \usage{
-get.rays(beams, s = 4000, unique = FALSE)
+get.rays(beams, s = 4000, unique.rays = FALSE)
 }
 \arguments{
   \item{beams}{the beams data.frame}
 
   \item{s}{distance of the source from the isocenter (it
   uses only one virtual source).}
+
+  \item{unique.rays}{Return only unique rays}
+}
+\value{
+data frame of rays. Each ray has 6 component: a point
+(X,Y,Z) on the plane passing through the isocenter, and a
+normalized vector for the direction (xn, yn, zn).
 }
 \description{
 Get rays (normalized vector directions + absolute
