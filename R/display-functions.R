@@ -1892,7 +1892,7 @@ display.beamports <- function(beams,
   if(!is.null(plan)) {
     my.title <- paste(plan$name, 'Beam-ports', sep=' - ')
   } else {
-    my.title <- 'Beams'
+    my.title <- 'Beam-ports (fields)'
   }
   
   # aggiunge field ID
@@ -1902,7 +1902,7 @@ display.beamports <- function(beams,
   
   # plot
   p <- ggplot(beams.a) +
-    geom_point(aes(x=deflX, y=deflY, colour=Npart)) +
+    geom_point(aes(x=deflX, y=deflY, colour=Npart, size=Npart)) +
     labs(y='deflY [mm]', x='deflX [mm]', coulour='N part.', title=my.title) +
     facet_wrap(~beam.port)
     #theme(axis.title.y=element_text(vjust=.2))
