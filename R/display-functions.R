@@ -555,6 +555,7 @@ display.slice.all <- function(ct=NULL,
   
   # layer roi (solo slice assiali)
   if(!is.null(contours) & !is.na(Nz.values)) {
+    message('using voi contours...')
     roi.s <- subset(contours, slice==(Nz.ct-1)) # nota: il numero della slice dei contorni inizia da zero, mentre l'indice-slice della CT da 1.
     roi.names <- unique(roi.s$contour)
     N.roi <- length(roi.names)
@@ -1658,7 +1659,8 @@ display.slices.interactive <- function(values=values, variables=NULL, gray=FALSE
 #' 
 #' @param profile.values the main profile dataframe to be plotted. It can be a single profile or a list of profiles
 #' @param profile.ct the background ct (or other data) profile
-#' @param profile.name a vector containing the names of the profiles. It is used if a list of different profiles is used as imput.
+#' @param profile.names a vector containing the names of the profiles. It is used if a list of different profiles is used as input.
+#' @param depth.lim The x-axis range to display. (automatic if not specified).
 #' @param shot.plot Show plot.
 #' @param file.name File name for saving the plot.
 #' @param height The height of the saved plot image (inches).
@@ -1670,6 +1672,7 @@ display.slices.interactive <- function(values=values, variables=NULL, gray=FALSE
 display.profile <- function(profile.values,
                             profile.ct=NULL,
                             profile.names=NULL,
+			    depth.lim=NULL,
                             show.plot=TRUE,
                             file.name=NULL,
                             height=7,
@@ -1690,6 +1693,8 @@ display.profile <- function(profile.values,
     # combina eventuale lista profili in un unico dataframe
     for(i in 1:length(profile.values)) {
       profile.values.df.tmp <- profile.values[[i]]
+      # strip away le colonne in eccesso (in maniera da creare profili consistenti)
+      profile.values.df.tmp <- profile.values.df.tmp[c('variable', 'axis', 'depth', 'value')]
       if(!is.null(profile.names)) {
         profile.values.df.tmp$name <- profile.names[i]
       } else {
@@ -1741,6 +1746,8 @@ display.profile <- function(profile.values,
       p <- p + geom_line(data=profile.values, aes(x=depth, y=value)) +
       labs(x=values.axis, y=values.variable)
   }
+
+  if(!is.null(depth.lim)) {p <- p + scale_x_continuous(limits=depth.lim)}
   
   my.ggplot.theme()
   if(!is.null(file.name)) {ggsave(plot=p, filename=file.name, height=height, width=width)}
