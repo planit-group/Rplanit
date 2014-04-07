@@ -42,7 +42,7 @@ create.values <- function(array.values=NULL, variables='variable name', x, y, z)
   
   # check dimensioni
   my.dims <- dim(values$values)
-  if(length(my.dims)==1) {
+  if(length(my.dims)==3) {
     if(my.dims[1]!=values$Nx | my.dims[2]!=values$Ny | my.dims[3]!=values$Nz) {
       message('create.values warning: inconsistent size with coordinates')
     }
@@ -218,14 +218,18 @@ get.sparse.array.from.values <- function(values, variable='Dose[Gy]', threshold=
 }
 
 
-#' ricostruisce oggetto values 3d dalla matrice sparsa
+#' Create values from sparse array
 #' 
-#' l'oggetto values conterrà solo una variabile, con il nome specificato
-#' 
+#' Create a values object from a sparse array.
+#'
+#' @param sparse.array The sparse array. Note: the sparse array is a dataframe containing at least the following columns: 'voxel.index' and 'value'. Optionally it could contain also the column 'variable'. The latter is mandatory if there are multiple variables.
+#' @param variables The name of the variable(s). If there is only one variable specified and the sparse array dose not contain the column "variable", it is assumed that all the value correspond to the specified variable. It it is NULL, the values object will contains all the variable found in the sparse array.
+#' @return Values object.
+#' Note: the sparse array is a dataframe containing at least the following columns: 'voxel.index' and 'value'
 #' @family Values
 #' @export
 #' 
-get.values.from.sparse.array <- function(sparse.array, variable='Dose[Gy]', x, y, z)
+get.values.from.sparse.array <- function(sparse.array, variables=NULL, x, y, z)
 {
   values <- list()
   
@@ -234,7 +238,21 @@ get.values.from.sparse.array <- function(sparse.array, variable='Dose[Gy]', x, y
   Nz <- length(z)
   
   # variables
-  variables <- as.character(unique(sparse.array$variable))
+  if(is.null(variables)) {
+    if('variable' %in% colnames(sparse.array)) {
+      variables <- as.character(unique(sparse.array$variable))
+    } else {
+      warning('variable not specified, using dummy...')
+      variables <- 'dummy'
+    }
+  } else {
+    if('variable' %in% colnames(sparse.array)) {
+      sparse.array <- subset(sparse.array, variable %in% variables)
+      variables <- as.character(sparse.array$variable)
+    } else {
+      if(length(variables)>1) {stop('variable names not present in sparse array')}
+    }  
+  }
   Nv <- length(variables)
   
   values <- create.values(variables=variables, x=x, y=y, z=z)
@@ -384,13 +402,13 @@ identify.slice <- function(x, xvec)
 
 #' Get profile
 #' 
-#' Get a profile (values along a specific axis, or voxel line) from a \code{values} object. The axis is specifed trough the definition of two of the following three coordinates: x, y, z.
+#' Get a profile (values along a specific axis, or voxel line) from a \code{values} object. The axis is specifed trough the definition of two of the following three coordinates: x, y, z, or with a single ray object for arbitrary directions.
 #' 
 #' @param values the \code{values object}
 #' @param variable the variable to be profiled
 #' @param x,y,z definition of the axis (only two coordinates should be defined). For example \code{x=4.4} and \code{z=0.5} specifies a profile along the y-axis passing through x=4.4 and z=0.5
 #' @param integrate perform an integration over the two coordinates (boolean, optional)
-#' @param ray The ray object.
+#' @param ray The ray object, Note the ray is a data.frame defined by 6 components (X, Y, Z, xn, yn, zn), i.e. point coordinates + normalized vector direction.
 #' @param return.voxel.index Returns the index of the voxel crossed by the ray.
 #' @return a dataframe containing the specified profile, or the sequence of the voxel index crossed by the ray if return.voxel.index=TRUE.
 #' @family Values, Utilities
@@ -593,7 +611,7 @@ remove.values.outside.voi <- function(values, vois, voi, index.voi=NULL)
 #' @param zbin bins z coordinates (extremes).
 #' @param variable The variable name.
 #' @param sparse.matrix Return a sparse matrix if TRUE.
-#' @return A values object or a sparse matrix.
+#' @return Values object or a sparse matrix.
 #' @export
 #' @family Values, Utilities
 generate.values.from.events <- function(Xe, Ye, Ze,
@@ -616,24 +634,22 @@ generate.values.from.events <- function(Xe, Ye, Ze,
   Xe.c <- cut(Xe, breaks=xbin)
   Ye.c <- cut(Ye, breaks=ybin)
   Ze.c <- cut(Ze, breaks=zbin)
-  voxel.index <- as.numeric(interaction(Xe.c, Ye.c, Ze.c)) # questo è quasi un miracolo della fede.
-  
+  voxel.index <- as.numeric(interaction(Xe.c, Ye.c, Ze.c)) # questo è quasi un miracolo della fede.  
   # crea oggetto values (vuoto)
   # values <- create.values(variables=variable, x=x, y=y, z=z)
   
   #XYZ <- aggregate(list(weigth=weight), list(x=Xe.c, y=Ye.c, z=Ze.c), sum)
   XYZ <- aggregate(list(value=weight), list(voxel.index=voxel.index), sum)
-  
+
   if(sparse.matrix) {
     return(XYZ)
   } else {
-    return(get.values.from.sparse.array(sparse.array=XYZ, variable=variable, x=x, y=y, z=z))
+    return(get.values.from.sparse.array(sparse.array=XYZ, variables=variable, x=x, y=y, z=z))
   }
 }
   
 #' Generate bin intervals from points
 #' 
-#' Merge a list of values objects in a single object. It assumes that the variable names are unique.
 #' @param x A vector.
 #' @return A vector (with N+1 elements)
 #' @family Values, Utilities
@@ -646,11 +662,10 @@ create.intervals <- function(x)
   return(xi)
 }
 
-#' get voxel index from coordinates
+#' Get voxel index from coordinates
 #' 
-#' Merge a list of values objects in a single object. It assumes that the variable names are unique.
 #' @param x,y,z coordinate vectors.
-#' @param Xv,Yv,Zv coordinates of the voxels
+#' @param Xv,Yv,Zv coordinates of the voxels.
 #' @return A vector.
 #' @family Values, Utilities
 #' @export
@@ -664,4 +679,28 @@ get.voxel.index <- function(x, y, z, Xv, Yv, Zv)
   Y.c <- cut(y, breaks=ybin)
   Z.c <- cut(z, breaks=zbin)
   return(as.numeric(interaction(X.c, Y.c, Z.c)))
+}
+
+#' Get coordinates from voxel index
+#' 
+#' @param x,y,z coordinate vectors corresponding to the 3D array.
+#' @param voxel.index The voxels index (can be a vectors of voxel index).
+#' @return A data.frame (x,y,z) for more than a single voxel index. 
+#' @family Values, Utilities
+#' @export
+get.coordinates <- function(voxel.index, x, y, z)
+{
+  # crea le matrici X,Y,Z
+  Nx <- length(x); Ny <- length(y); Nz <- length(z)
+  # X
+  A <- array(x, dim=c(Nx,Ny,Nz))
+  X <- A[voxel.index]
+  # Y
+  A <- array(y, dim=c(Ny,Nx,Nz)); A <- aperm(A, c(2,1,3))
+  Y <- A[voxel.index]
+  # Z
+  A <- array(z, dim=c(Nz,Nx,Ny)); A <- aperm(A, c(2,3,1))
+  Z <- A[voxel.index]
+
+  return(data.frame(x=X, y=Y, z=Z))
 }
