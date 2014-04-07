@@ -458,9 +458,11 @@ add.field <- function(beams)
 #' 
 #' @param beams the beams data.frame
 #' @param s distance of the source from the isocenter (it uses only one virtual source).
+#' @param unique.rays Return only unique rays
+#' @return data frame of rays. Each ray has 6 component: a point (X,Y,Z) on the plane passing through the isocenter, and a normalized vector for the direction (xn, yn, zn).
 #' @export
 #' @family Beams
-get.rays <- function(beams, s=4000, unique=FALSE)
+get.rays <- function(beams, s=4000, unique.rays=FALSE)
 {
   
   X0 <- X1 <- X2 <- c(1,0,0)
@@ -515,7 +517,7 @@ get.rays <- function(beams, s=4000, unique=FALSE)
     #Y <- R*Y0 * beams$deflY[i]
   }
   
-  if(unique) {
+  if(unique.rays) {
     rays <- rays[!duplicated(rays),]
   }
   
