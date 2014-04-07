@@ -78,6 +78,7 @@ create.plan <- function(plan=NA,
                         beamLine='protonCnao',
                         computingValues=c('Dose[Gy]'),
                         cutOffRadius=100,
+                        cutEnergyFraction=0.01,
                         fields=NULL,
                         prescription=NULL,
                         maxOptimizationIterations=50,
@@ -96,6 +97,7 @@ create.plan <- function(plan=NA,
                beamLine=beamLine,
                computingValues=computingValues,
                cutOffRadius=cutOffRadius,
+               cutEnergyFraction=cutEnergyFraction,
                fields=fields,
                prescription=prescription,
                maxOptimizationIterations=maxOptimizationIterations,
@@ -197,6 +199,7 @@ run.dek.inverse <- function(plan, outmessages=FALSE) {
   writeLines(paste('beamLine = ', plan[['beamLine']], '\n'), con=con, sep='')
   writeLines(paste('computingValues = ', plan[['computingValues']], '\n'), con=con, sep='')
   writeLines(paste('cutOffRadius = ', plan[['cutOffRadius']], '\n'), con=con, sep='')
+  writeLines(paste('cutEnergyFraction = ', plan[['cutEnergyFraction']], '\n'), con=con, sep='')
   
   # fields
   fields <- plan[['fields']]
@@ -289,6 +292,7 @@ run.dek.forward <- function(plan, outmessages=FALSE) {
   writeLines(paste('beamLine = ', plan[['beamLine']], '\n'), con=con, sep='')
   writeLines(paste('computingValues = ', plan[['computingValues']], '\n'), con=con, sep='')
   writeLines(paste('cutOffRadius = ', plan[['cutOffRadius']], '\n'), con=con, sep='')
+  writeLines(paste('cutEnergyFraction = ', plan[['cutEnergyFraction']], '\n'), con=con, sep='')
   
   # beams input
   if(!is.null(plan$inputBeamsFile)) {
