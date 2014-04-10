@@ -1665,18 +1665,20 @@ display.slices.interactive <- function(values=values, variables=NULL, gray=FALSE
 #' @param file.name File name for saving the plot.
 #' @param height The height of the saved plot image (inches).
 #' @param width The width of the saved plot image (inches).
-#' @return If sho.plot=FALSE, it returns a ggplot object.
+#' @param return.dataframe return the dataframe created for the plot (with ggplot2).
+#' @return If show.plot=FALSE, it returns a ggplot object. If return.dataframe=TRUE, it returns the the dataframe created for the plot (with ggplot2).
 #' @export
 #' @family Profiles
 
 display.profile <- function(profile.values,
                             profile.ct=NULL,
                             profile.names=NULL,
-			    depth.lim=NULL,
+			                      depth.lim=NULL,
                             show.plot=TRUE,
                             file.name=NULL,
                             height=7,
-                            width=7) {
+                            width=7,
+                            return.dataframe=FALSE) {
   
   #crea intervalli per la ct
   if(!is.null(profile.ct)) {
@@ -1700,6 +1702,7 @@ display.profile <- function(profile.values,
       } else {
         profile.values.df.tmp$name <- as.factor(i)
       }
+      profile.values.df.tmp$id <- i
       if(i==1) {profile.values.df <- profile.values.df.tmp} else {profile.values.df <- rbind(profile.values.df, profile.values.df.tmp)}
     }
     
@@ -1719,7 +1722,7 @@ display.profile <- function(profile.values,
         scale_fill_gradient(low="gray", high='white') +
         labs(fill=ct.variable)
     }
-    p <- p + geom_line(data=profile.values.df, aes(x=depth, y=value, colour=name)) +
+    p <- p + geom_line(data=profile.values.df, aes(x=depth, y=value, colour=name, group=id)) +
       labs(x=values.axis, y=values.variable)
   }
   
@@ -1751,6 +1754,7 @@ display.profile <- function(profile.values,
   
   my.ggplot.theme()
   if(!is.null(file.name)) {ggsave(plot=p, filename=file.name, height=height, width=width)}
+  if(return.dataframe) {return(profile.values.df)}
   if(show.plot) {print(p)} else {return(p)}
 
 }
