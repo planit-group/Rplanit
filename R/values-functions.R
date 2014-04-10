@@ -311,14 +311,14 @@ merge.values <- function(values.list)
 }
 
 
-# ARRAY VALUES -----------------------------------------------------------------
+# VALUES MANIPULATION ----------------------------------------------------
 
 #' Get origin coordinates
 #' 
 #' Get the coordinates of origin corner (corner of voxel [1,1,1]).
 #' @param values the values object
 #' @return a vector of the coordinates x, y and z.
-#' @family Array Values
+#' @family Values Manipulation
 #' @export
 get.origin <- function(values)
 {
@@ -333,7 +333,7 @@ get.origin <- function(values)
 #' Set the coordinates of origin corner (corner of voxel [1,1,1]).
 #' @param coordinates a vector of the coordinates x, y and z.
 #' @return the translated values object
-#' @family Array Values
+#' @family Values Manipulation
 #' @export
 set.origin <- function(values, coordinates)
 {
@@ -350,7 +350,7 @@ set.origin <- function(values, coordinates)
 
 #' estrai array della variabile specificata dai values
 #' 
-#' @family Array Values
+#' @family Values Manipulation
 #' @export
 get.array.values <- function(values, variable)
 {
@@ -366,7 +366,7 @@ get.array.values <- function(values, variable)
 
 #' aggiungi array di una nuova variabile all'oggetto values
 #' 
-#' @family Array Values
+#' @family Values Manipulation
 #' @export
 add.array.values <- function(values, new.array, variable='New Data')
 {
@@ -390,16 +390,6 @@ add.array.values <- function(values, new.array, variable='New Data')
 }
 
 
-#' identifica slice corrispondente alla coordinata
-#' 
-#' @family Profiles
-#' @export
-identify.slice <- function(x, xvec)
-{
-  return(which( abs(x-xvec) == min(abs(x-xvec)))[1])
-}
-
-
 #' Get profile
 #' 
 #' Get a profile (values along a specific axis, or voxel line) from a \code{values} object. The axis is specifed trough the definition of two of the following three coordinates: x, y, z, or with a single ray object for arbitrary directions.
@@ -411,7 +401,7 @@ identify.slice <- function(x, xvec)
 #' @param ray The ray object, Note the ray is a data.frame defined by 6 components (X, Y, Z, xn, yn, zn), i.e. point coordinates + normalized vector direction.
 #' @param return.voxel.index Returns the index of the voxel crossed by the ray.
 #' @return a dataframe containing the specified profile, or the sequence of the voxel index crossed by the ray if return.voxel.index=TRUE.
-#' @family Values, Utilities
+#' @family Values, Values Manipulation
 #' @todo Generation of multi-variable profiles (a list?). If no variable is specified all the available variable will be used. Integration around arbitrary ray.
 #' @export
 get.profile <- function(values, variable=NULL, x=NULL, y=NULL, z=NULL, integrate=FALSE, ray=NULL, return.voxel.index=FALSE)
@@ -545,7 +535,16 @@ get.profile <- function(values, variable=NULL, x=NULL, y=NULL, z=NULL, integrate
 
 
 
-# UTILITIES --------------------------------------------------------------------
+# VALUES UTILITIES -------------------------------------------------------------
+
+#' identifica slice corrispondente alla coordinata
+#' 
+#' @family ValuesUtilities
+#' @export
+identify.slice <- function(x, xvec)
+{
+  return(which( abs(x-xvec) == min(abs(x-xvec)))[1])
+}
 
 #' Evaluate intervals
 #' 
@@ -556,7 +555,7 @@ get.profile <- function(values, variable=NULL, x=NULL, y=NULL, z=NULL, integrate
 #' @param x the puntual coordinate vector
 #' @return the intervals vector (the length of this vector is Nx+1, where Nx = length(x))
 #' @export
-#' @family Utilities
+#' @family Values Utilities
 points2intervals <- function(x)
 {
   if(length(x)>1) {
@@ -577,7 +576,7 @@ points2intervals <- function(x)
 #' @param index.voi It is possible to pass directly the logical index array.
 #' @return A values object
 #' @export
-#' @family Vois, Values, Utilities
+#' @family Vois, Values, Values Utilities
 remove.values.outside.voi <- function(values, vois, voi, index.voi=NULL)
 {
   
@@ -614,7 +613,7 @@ remove.values.outside.voi <- function(values, vois, voi, index.voi=NULL)
 #' @param sparse.matrix Return a sparse matrix if TRUE.
 #' @return Values object or a sparse matrix.
 #' @export
-#' @family Values, Utilities
+#' @family Values, Values Utilities
 generate.values.from.events <- function(Xe, Ye, Ze,
                                         xbin, ybin, zbin,
                                         weight=1, variable='Activity', sparse.matrix=FALSE)
@@ -653,7 +652,7 @@ generate.values.from.events <- function(Xe, Ye, Ze,
 #' 
 #' @param x A vector.
 #' @return A vector (with N+1 elements)
-#' @family Values, Utilities
+#' @family Values, Values Utilities
 #' @export
 create.intervals <- function(x)
 {
@@ -668,7 +667,7 @@ create.intervals <- function(x)
 #' @param x,y,z coordinate vectors.
 #' @param Xv,Yv,Zv coordinates of the voxels.
 #' @return A vector.
-#' @family Values, Utilities
+#' @family Values, Values Utilities
 #' @export
 get.voxel.index <- function(x, y, z, Xv, Yv, Zv)
 {
@@ -687,7 +686,7 @@ get.voxel.index <- function(x, y, z, Xv, Yv, Zv)
 #' @param x,y,z coordinate vectors corresponding to the 3D array.
 #' @param voxel.index The voxels index (can be a vectors of voxel index).
 #' @return A data.frame (x,y,z) for more than a single voxel index. 
-#' @family Values, Utilities
+#' @family Values, Values Utilities
 #' @export
 get.coordinates <- function(voxel.index, x, y, z)
 {

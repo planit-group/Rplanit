@@ -21,7 +21,6 @@ specified object in the plan.
 }
 \seealso{
 Other Utilities: \code{\link{evaluate.bands}};
-\code{\link{points2intervals}};
 \code{\link{sanitize.filename}}
 }
 

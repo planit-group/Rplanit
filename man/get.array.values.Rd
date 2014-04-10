@@ -8,7 +8,7 @@ get.array.values(values, variable)
 estrai array della variabile specificata dai values
 }
 \seealso{
-Other Array Values: \code{\link{add.array.values}};
+Other Values Manipulation: \code{\link{add.array.values}};
 \code{\link{get.origin}}; \code{\link{set.origin}}
 }
 

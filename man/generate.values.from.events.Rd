@@ -32,8 +32,9 @@ Uses the (x,y,z) coordinates of a shower of events to
 create a values object with the 3D histogram of the events.
 }
 \seealso{
-Other Values, Utilities: \code{\link{create.intervals}};
-\code{\link{get.coordinates}}; \code{\link{get.profile}};
+Other Values, Values Utilities:
+\code{\link{create.intervals}};
+\code{\link{get.coordinates}};
 \code{\link{get.voxel.index}}
 }
 

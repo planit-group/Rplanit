@@ -16,8 +16,9 @@ A vector.
 Get voxel index from coordinates
 }
 \seealso{
-Other Values, Utilities: \code{\link{create.intervals}};
+Other Values, Values Utilities:
+\code{\link{create.intervals}};
 \code{\link{generate.values.from.events}};
-\code{\link{get.coordinates}}; \code{\link{get.profile}}
+\code{\link{get.coordinates}}
 }
 

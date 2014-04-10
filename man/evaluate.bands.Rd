@@ -23,7 +23,6 @@ vectors.
 }
 \seealso{
 Other Utilities: \code{\link{get.filepath}};
-\code{\link{points2intervals}};
 \code{\link{sanitize.filename}}
 }
 

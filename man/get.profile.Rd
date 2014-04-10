@@ -8,7 +8,8 @@ get.profile(values, variable = NULL, x = NULL, y = NULL, z = NULL,
 \arguments{
   \item{values}{the \code{values object}}
 
-  \item{variable}{the variable to be profiled}
+  \item{variable}{the variable to be profiled. If it is not
+  specified, the fist available variable will be used.}
 
   \item{x,y,z}{definition of the axis (only two coordinates
   should be defined). For example \code{x=4.4} and
@@ -16,7 +17,8 @@ get.profile(values, variable = NULL, x = NULL, y = NULL, z = NULL,
   through x=4.4 and z=0.5}
 
   \item{integrate}{perform an integration over the two
-  coordinates (boolean, optional)}
+  coordinates (boolean, optional). Note: integration is not
+  yet implemented around an arbitrary ray.}
 
   \item{ray}{The ray object, Note the ray is a data.frame
   defined by 6 components (X, Y, Z, xn, yn, zn), i.e. point
@@ -36,11 +38,5 @@ from a \code{values} object. The axis is specifed trough
 the definition of two of the following three coordinates:
 x, y, z, or with a single ray object for arbitrary
 directions.
-}
-\seealso{
-Other Values, Utilities: \code{\link{create.intervals}};
-\code{\link{generate.values.from.events}};
-\code{\link{get.coordinates}};
-\code{\link{get.voxel.index}}
 }
 

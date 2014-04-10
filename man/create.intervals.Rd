@@ -14,9 +14,9 @@ A vector (with N+1 elements)
 Generate bin intervals from points
 }
 \seealso{
-Other Values, Utilities:
+Other Values, Values Utilities:
 \code{\link{generate.values.from.events}};
-\code{\link{get.coordinates}}; \code{\link{get.profile}};
+\code{\link{get.coordinates}};
 \code{\link{get.voxel.index}}
 }
 

@@ -18,8 +18,9 @@ A data.frame (x,y,z) for more than a single voxel index.
 Get coordinates from voxel index
 }
 \seealso{
-Other Values, Utilities: \code{\link{create.intervals}};
+Other Values, Values Utilities:
+\code{\link{create.intervals}};
 \code{\link{generate.values.from.events}};
-\code{\link{get.profile}}; \code{\link{get.voxel.index}}
+\code{\link{get.voxel.index}}
 }
 

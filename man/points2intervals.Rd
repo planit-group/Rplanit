@@ -22,8 +22,4 @@ assumed that voxels are contiguous, xmax[i] = xmin[i-1],
 for each axis the coordinates can be stored in a single
 vector.
 }
-\seealso{
-Other Utilities: \code{\link{evaluate.bands}};
-\code{\link{get.filepath}}; \code{\link{sanitize.filename}}
-}
 

@@ -7,7 +7,4 @@
 \description{
 identifica slice corrispondente alla coordinata
 }
-\seealso{
-Other Profiles: \code{\link{display.profile}}
-}
 

@@ -15,6 +15,6 @@ Sanitize file name
 }
 \seealso{
 Other Utilities: \code{\link{evaluate.bands}};
-\code{\link{get.filepath}}; \code{\link{points2intervals}}
+\code{\link{get.filepath}}
 }
 
