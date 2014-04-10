@@ -405,13 +405,14 @@ identify.slice <- function(x, xvec)
 #' Get a profile (values along a specific axis, or voxel line) from a \code{values} object. The axis is specifed trough the definition of two of the following three coordinates: x, y, z, or with a single ray object for arbitrary directions.
 #' 
 #' @param values the \code{values object}
-#' @param variable the variable to be profiled
+#' @param variable the variable to be profiled. If it is not specified, the fist available variable will be used.
 #' @param x,y,z definition of the axis (only two coordinates should be defined). For example \code{x=4.4} and \code{z=0.5} specifies a profile along the y-axis passing through x=4.4 and z=0.5
-#' @param integrate perform an integration over the two coordinates (boolean, optional)
+#' @param integrate perform an integration over the two coordinates (boolean, optional). Note: integration is not yet implemented around an arbitrary ray.
 #' @param ray The ray object, Note the ray is a data.frame defined by 6 components (X, Y, Z, xn, yn, zn), i.e. point coordinates + normalized vector direction.
 #' @param return.voxel.index Returns the index of the voxel crossed by the ray.
 #' @return a dataframe containing the specified profile, or the sequence of the voxel index crossed by the ray if return.voxel.index=TRUE.
 #' @family Values, Utilities
+#' @todo Generation of multi-variable profiles (a list?). If no variable is specified all the available variable will be used. Integration around arbitrary ray.
 #' @export
 get.profile <- function(values, variable=NULL, x=NULL, y=NULL, z=NULL, integrate=FALSE, ray=NULL, return.voxel.index=FALSE)
 {
@@ -537,7 +538,7 @@ get.profile <- function(values, variable=NULL, x=NULL, y=NULL, z=NULL, integrate
   }
 
   
-  profile.df <- data.frame(variable=variable, axis=coord.name, depth=coord.value, value=profile.value)
+  profile.df <- data.frame(variable=variable, axis=coord.name, depth=coord.value, value=profile.value, variable='variable')
   
   return(profile.df)
 }
