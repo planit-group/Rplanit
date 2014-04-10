@@ -8,9 +8,10 @@ create.plan(plan = NA, name = "test", ctFile = "ct.3d",
   hounsfieldToStoichiometryFile = "fluka-schneider.HNToStoichiometry.1d",
   computingGridVoxelSizes = c(2, 2, 2), computingGridCoverage = 0,
   computingGridCoverageBoundary = 0, beamLine = "protonCnao",
-  computingValues = c("Dose[Gy]"), cutOffRadius = 100, fields = NULL,
-  prescription = NULL, maxOptimizationIterations = 50,
-  outputBeamsFile = NULL, inputBeamsFile = NULL, beams = NULL)
+  computingValues = c("Dose[Gy]"), cutOffRadius = 100,
+  cutEnergyFraction = 0.01, fields = NULL, prescription = NULL,
+  maxOptimizationIterations = 50, outputBeamsFile = NULL,
+  inputBeamsFile = NULL, beams = NULL)
 }
 \value{
 A Plan object (list).
