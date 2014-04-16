@@ -108,12 +108,13 @@ dvh.evaluate.bands <- function(dvh.list, alpha=0.37) {
     v.list[[i]] <- dvh.list[[i]]$value # calcola sui valori, non sui volumi
   }
   v.band <- evaluate.bands(v.list, alpha=alpha)
-  
+  message('band -> alpha=', alpha)
+
   # crea nuovi dvh prendendo come template i vecchi
   dvh.mean <-
-    dvh.min <- dvh.max <-
-    dvh.median <- dvh.alpha.lo <-
-    dvh.alpha.up <- dvh.list[[1]]
+  dvh.min <- dvh.max <-
+  dvh.median <- dvh.alpha.lo <-
+  dvh.alpha.up <- dvh.list[[1]]
   dvh.mean$value <- v.band$mean
   dvh.max$value <- v.band$max
   dvh.min$value <- v.band$min
@@ -147,7 +148,7 @@ dvh.evaluate.bands <- function(dvh.list, alpha=0.37) {
 #' 
 #' @family Utilities
 #' @export
-evaluate.bands <- function(v.list, alpha=0.37)
+evaluate.bands <- function(v.list, alpha=0)
 {
   Nv <- length(v.list)
   if(Nv<2) {
@@ -166,6 +167,11 @@ evaluate.bands <- function(v.list, alpha=0.37)
   v.max <- apply(a, 2, FUN='max')
   v.min <- apply(a, 2, FUN='min')
   
+  if(alpha==0) {
+    message('using alpha=0 in bands...')
+    v.q[1,] <- v.min
+    v.q[3,] <- v.max
+  }  
   
   return(list(mean=v.mean, median=v.q[2,], alpha.lo=v.q[1,], alpha.up=v.q[3,], max=v.max, min=v.min))
 }
