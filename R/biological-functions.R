@@ -638,7 +638,7 @@ values.add.survival.cMKM <- function(values=values, alphaX=alphaX, betaX=betaX, 
 
   # vettore di lets da interpolare
   lets <- seq(min(LETd, na.rm=TRUE), max(LETd, na.rm=TRUE), length.out=30)
-  
+   
   # calcola un nuovo array 'Survival.cMKM' da 'Dose[Gy]' e 'DoseAveragedLET[keV/um]'
   alpha.mkm <- alpha.fun.mkm(alphaX=alphaX, betaX=betaX, rN=rN, rd=rd,
                              particleType=particleType,
