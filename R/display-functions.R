@@ -370,7 +370,9 @@ display.slice.ct <- function(ct, roi=NULL,
 #' @param linear.graymap Uses a linear gray scale for the visualization of the CT Hounsfield number. If it is set to FALSE it uses a non linear mapping.
 #' @param window.center Center of the Hounsfiled window values to visualize. It is used if \code{linear.graymap=FALSE}.
 #' @param window.width Width of the Hounsfiled window values to visualize. It is used if \code{linear.graymap=FALSE}.
-#' @param alpha.threshold fraction of the values below which apply transparency. The opacity (alpha) is evaluated as a linear ramp (0 to 1) from 0 to \code{alpha.threshold} of the values range, and then  alpha=1 from \code{alpha.threshold} to 1 of the values range.
+#' 
+#' @param alpha.lower,alpha.upperThe opacity (alpha) is evaluated as a linear ramp (\code{alpha.lower} to \code{alpha.upper}) from \code{alpha.lower} to \code{alpha.upper} of the values range.
+#' 
 #' @param invert.y.axis Invert the y axis.
 #' @param contour.color The color used for the contour of the VOI.
 #' 
@@ -394,7 +396,8 @@ display.slice.all <- function(ct=NULL,
                               width=7, height=7,
                               linear.graymap=TRUE,
                               window.center=50, window.width=800,
-                              alpha.threshold=0.7,
+                              alpha.lower=0,
+                              alpha.upper=1,
                               invert.y.axis=FALSE,
                               contour.color='green')
 {
@@ -472,10 +475,10 @@ display.slice.all <- function(ct=NULL,
   
   # colori
   Nc <- 255
-  Nc.alpha <- round(Nc*1)
+  Nc.alpha <- round(Nc*(alpha.upper-alpha.lower))
   interval <- ((1:Nc)-1)/Nc
-  interval.alpha <- c(seq(0, 1, length.out=Nc.alpha), rep(1,Nc-Nc.alpha))
-  col.val <- hsv( interval[Nc:1]*0.66, alpha=interval.alpha)
+  interval.alpha <- c( rep(alpha.lower,round(Nc*alpha.lower)), seq(alpha.lower, alpha.upper, length.out=Nc.alpha), rep(alpha.upper,round(Nc-Nc*alpha.upper)) )
+  col.val <- hsv( interval[Nc:1]*0.64, alpha=interval.alpha[1:Nc])
   if(linear.graymap) {
     col.ct <- gray( interval )
   } else {
