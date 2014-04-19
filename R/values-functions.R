@@ -2,10 +2,11 @@
 
 #' Create values object
 #' 
-#' Create values object from array
+#' Create values object from array. Note: the value distributions are stored in a multidimensional array:
+#' values$values with dim(values$values) = c(Nv, Nx, Nz, Ny).
 #' 
 #' @param array the 3D array
-#' @param variable the name of the variable
+#' @param variables The name of the variable (can be a vector of names).
 #' @param x,y,z coordinate vectors
 #' @return a \code{values} object
 #' 
@@ -567,6 +568,68 @@ get.profile <- function(values, variable=NULL, x=NULL, y=NULL, z=NULL, integrate
 
 
 # VALUES UTILITIES -------------------------------------------------------------
+
+#' Tri-linear interpolation
+#' 
+#' @param values Values object
+#' @param x,y,z cartesian coordinate on which evaluate the interpolation.
+#' @return a values object (with elements at coordinates x,y,z).
+#' 
+#' @family ValuesUtilities
+#' @export
+interpolate.values <- function(values, x, y, z)
+{
+  Nx <- length(x); Ny <- length(y); Nz <- length(z)
+  
+  # crea oggetto values
+  values.intrp <- create.values(variables=values$variables, x=x, y=y, z=z)
+  
+  for(v in 1:values$Nv) {
+    if(values$Nv==1) {array.v <- values$values} else {array.v <- values$values[v,,,]}
+    array.x <- array(0, dim=c(Nx, values$Ny, values$Nz))
+    array.y <- array(0, dim=c(Nx, Ny, values$Nz))
+    array.z <- array(0, dim=c(Nx, Ny, Nz))
+    
+    message('interpolating ', values$variables[v])
+    
+    # interpolazione lungo x
+    for(iy in 1:values$Ny) {
+      for(iz in 1:values$Nz) {
+        vx.fun <- approxfun(x=values$x, y=array.v[,iy,iz], rule=2)
+        vx <- vx.fun(x)
+        array.x[,iy,iz] <- vx
+      }
+    }
+    
+    # interpolazione lungo y
+    for(ix in 1:Nx) {
+      for(iz in 1:values$Nz) {
+        vy.fun <- approxfun(x=values$y, y=array.x[ix,,iz], rule=2)
+        vy <- vy.fun(y)
+        array.y[ix,,iz] <- vy
+      }
+    }
+    
+    # interpolazione lungo z
+    for(ix in 1:Nx) {
+      for(iy in 1:Ny) {
+        vz.fun <- approxfun(x=values$z, y=array.y[ix,iy,], rule=2)
+        vz <- vz.fun(z)
+        array.z[ix,iy,] <- vz
+      }
+    }
+   
+    
+    if(values$Nv==1) {
+      values.intrp$values <- array.z
+    } else {
+      values.intrp$values[v,,,] <- array.z
+    }
+  }
+  
+  return(values.intrp)
+}
+
 
 #' identifica slice corrispondente alla coordinata
 #' 

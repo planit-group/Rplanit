@@ -7,4 +7,7 @@
 \description{
 identifica slice corrispondente alla coordinata
 }
+\seealso{
+Other ValuesUtilities: \code{\link{interpolate.values}}
+}
 

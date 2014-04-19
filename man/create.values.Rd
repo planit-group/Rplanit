@@ -7,7 +7,8 @@ create.values(array.values = NULL, variables = "variable name", x, y, z)
 \arguments{
   \item{array}{the 3D array}
 
-  \item{variable}{the name of the variable}
+  \item{variables}{The name of the variable (can be a
+  vector of names).}
 
   \item{x,y,z}{coordinate vectors}
 }
@@ -15,7 +16,9 @@ create.values(array.values = NULL, variables = "variable name", x, y, z)
 a \code{values} object
 }
 \description{
-Create values object from array
+Create values object from array. Note: the value
+distributions are stored in a multidimensional array:
+values$values with dim(values$values) = c(Nv, Nx, Nz, Ny).
 }
 \seealso{
 Other Values: \code{\link{get.dataframe.from.values}};
