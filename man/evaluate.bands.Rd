@@ -2,7 +2,7 @@
 \alias{evaluate.bands}
 \title{Evaluate percentile band}
 \usage{
-evaluate.bands(v.list, alpha = 0.37)
+evaluate.bands(v.list, alpha = 0)
 }
 \arguments{
   \item{v.list}{the list of vectors. Note: the vectors

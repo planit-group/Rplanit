@@ -28,6 +28,7 @@ Other Beams: \code{\link{add.field}};
 \code{\link{create.beam}}; \code{\link{create.field}};
 \code{\link{display.beamports}};
 \code{\link{display.beams}}; \code{\link{get.beams}};
+\code{\link{get.ct.entrance.point}};
 \code{\link{get.isocenter}};
 \code{\link{read.beams.fluka}}; \code{\link{read.beams}};
 \code{\link{write.beams}}

@@ -390,6 +390,73 @@ add.array.values <- function(values, new.array, variable='New Data')
 }
 
 
+# PROFILES ---------------------------------------------------------------------
+
+#' Ray-tracing (intersections)
+#' 
+#' Evaluate the intersections along voxels 
+#' @export
+#' @family Values, Profiles
+ray.tracing <- function(ray, xi, yi, zi, values=NULL) {
+  
+  if(!is.null(values)) {
+    # coordinate piani tra i voxels
+    xi <- create.intervals(values$x)
+    yi <- create.intervals(values$y)
+    zi <- create.intervals(values$z)   
+  }
+  
+  R <- c(ray$X, ray$Y, ray$Z)
+  rn <- c(ray$xn, ray$yn, ray$zn)
+  px <- py <- pz <- list()
+  
+  # calcola intersezione dei piani
+  if(rn[1]!=0) {
+    tx <- (xi - R[1])/rn[1]
+    px.x <- R[1]+tx*rn[1]
+    px.y <- R[2]+tx*rn[2]
+    px.z <- R[3]+tx*rn[3]
+    px <- data.frame(x=px.x, y=px.y, z=px.z, t=tx)
+  } else {
+    tx <-NULL
+    px <- data.frame(x=NA, y=NA, z=NA, t=NA)
+  }
+  if(rn[2]!=0) {
+    ty <- (yi - R[2])/rn[2]
+    py.x <- R[1]+ty*rn[1]
+    py.y <- R[2]+ty*rn[2]
+    py.z <- R[3]+ty*rn[3]
+    py <- data.frame(x=py.x, y=py.y, z=py.z, t=ty)  
+  } else {
+    ty <- NULL
+    py <- data.frame(x=NA, y=NA, z=NA, t=NA)
+  }
+  if(rn[3]!=0) {
+    tz <- (zi - R[3])/rn[3]
+    pz.x <- R[1]+tz*rn[1]
+    pz.y <- R[2]+tz*rn[2]
+    pz.z <- R[3]+tz*rn[3]
+    pz <- data.frame(x=pz.x, y=pz.y, z=pz.z, t=tz)    
+  } else {
+    tz <- NULL
+    pz <- data.frame(x=NA, y=NA, z=NA, t=NA)
+  }
+  
+  # merge di punti
+  p <- rbind(px, py, pz)
+  
+  # elimina punti fuori array
+  p <- subset(p, x>=min(xi, na.rm=TRUE) & x<=max(xi, na.rm=TRUE) &
+                y>=min(yi, na.rm=TRUE) & y<=max(yi, na.rm=TRUE) &
+                z>=min(zi, na.rm=TRUE) & z<=max(zi, na.rm=TRUE))
+  
+  # sorting dei punti
+  p <- p[order(p$t),]
+  
+  return(p)
+}
+
+
 #' Get profile
 #' 
 #' Get a profile (values along a specific axis, or voxel line) from a \code{values} object. The axis is specifed trough the definition of two of the following three coordinates: x, y, z, or with a single ray object for arbitrary directions.
@@ -399,12 +466,13 @@ add.array.values <- function(values, new.array, variable='New Data')
 #' @param x,y,z definition of the axis (only two coordinates should be defined). For example \code{x=4.4} and \code{z=0.5} specifies a profile along the y-axis passing through x=4.4 and z=0.5
 #' @param integrate perform an integration over the two coordinates (boolean, optional). Note: integration is not yet implemented around an arbitrary ray.
 #' @param ray The ray object, Note the ray is a data.frame defined by 6 components (X, Y, Z, xn, yn, zn), i.e. point coordinates + normalized vector direction.
-#' @param return.voxel.index Returns the index of the voxel crossed by the ray.
-#' @return a dataframe containing the specified profile, or the sequence of the voxel index crossed by the ray if return.voxel.index=TRUE.
-#' @family Values, Values Manipulation
-#' @todo Generation of multi-variable profiles (a list?). If no variable is specified all the available variable will be used. Integration around arbitrary ray.
+#' @param return.voxel.index Returns also the index of the voxel crossed by the ray (used only for a ray profile).
+#' @param return.xyz Returns also the x,y,z of the points along the ray (used only for a ray profile).
+#' @return a dataframe containing the specified profile.
+#' @family Values, Values Manipulation, Profiles
+#' @todo Generation of multi-variable profiles (a list?). If no variable is specified all the available variable will be used. Integration around arbitrary ray. Gestisci in maniera uniforme i casi ortogonali rispetto al caso generale "ray".
 #' @export
-get.profile <- function(values, variable=NULL, x=NULL, y=NULL, z=NULL, integrate=FALSE, ray=NULL, return.voxel.index=FALSE)
+get.profile <- function(values, variable=NULL, x=NULL, y=NULL, z=NULL, integrate=FALSE, ray=NULL, return.voxel.index=FALSE, return.xyz=FALSE)
 {
   
   # variable
@@ -460,58 +528,16 @@ get.profile <- function(values, variable=NULL, x=NULL, y=NULL, z=NULL, integrate
   
   # profilo su direzione arbitraria (ray-tracing)
   if(!is.null(ray)) {
-    R <- c(ray$X, ray$Y, ray$Z)
-    rn <- c(ray$xn, ray$yn, ray$zn)
-    px <- py <- pz <- list()
     
     # coordinate piani tra i voxels
-    dx <- mean(diff(values$x)); dy <- mean(diff(values$y)); dz <- mean(diff(values$z))
+    #dx <- mean(diff(values$x)); dy <- mean(diff(values$y)); dz <- mean(diff(values$z))
     xi <- create.intervals(values$x)
     yi <- create.intervals(values$y)
     zi <- create.intervals(values$z)
     
-    # calcola intersezione dei piani
-    if(rn[1]!=0) {
-      tx <- (xi - R[1])/rn[1]
-      px.x <- R[1]+tx*rn[1]
-      px.y <- R[2]+tx*rn[2]
-      px.z <- R[3]+tx*rn[3]
-      px <- data.frame(x=px.x, y=px.y, z=px.z, t=tx)
-    } else {
-      tx <-NULL
-      px <- data.frame(x=NA, y=NA, z=NA, t=NA)
-    }
-    if(rn[2]!=0) {
-      ty <- (yi - R[2])/rn[2]
-      py.x <- R[1]+ty*rn[1]
-      py.y <- R[2]+ty*rn[2]
-      py.z <- R[3]+ty*rn[3]
-      py <- data.frame(x=py.x, y=py.y, z=py.z, t=ty)  
-    } else {
-      ty <- NULL
-      py <- data.frame(x=NA, y=NA, z=NA, t=NA)
-    }
-    if(rn[3]!=0) {
-      tz <- (zi - R[3])/rn[3]
-      pz.x <- R[1]+tz*rn[1]
-      pz.y <- R[2]+tz*rn[2]
-      pz.z <- R[3]+tz*rn[3]
-      pz <- data.frame(x=pz.x, y=pz.y, z=pz.z, t=tz)    
-    } else {
-      tz <- NULL
-      pz <- data.frame(x=NA, y=NA, z=NA, t=NA)
-    }
+    # evaluate ray-tracing
+    p <- ray.tracing(ray, xi, yi, zi)
     
-    # merge di punti
-    p <- rbind(px, py, pz)
-    
-    # elimina punti fuori array
-    p <- subset(p, x>=min(xi, na.rm=TRUE) & x<=max(xi, na.rm=TRUE) &
-                  y>=min(yi, na.rm=TRUE) & y<=max(yi, na.rm=TRUE) &
-                  z>=min(zi, na.rm=TRUE) & z<=max(zi, na.rm=TRUE))
-    
-    # sorting dei punti
-    p <- p[order(p$t),]
     np <- nrow(p)-1
     
     # punti centrali dei segmenti
@@ -520,15 +546,20 @@ get.profile <- function(values, variable=NULL, x=NULL, y=NULL, z=NULL, integrate
     # identifica voxels
     voxel.index <- get.voxel.index(Xv=values$x, Yv=values$y, Zv=values$z, x=p.mid$x, y=p.mid$y, z=p.mid$z)
     
-    if(return.voxel.index) {return(voxel.index)}
-    
     coord.name <- 'r [mm]'
-    coord.value <- p.mid$t
+    coord.value <- p.mid$t - min(p$t) # la coordinata è zero all'ingresso
     profile.value <- values$values[voxel.index]
   }
 
   
   profile.df <- data.frame(variable=variable, axis=coord.name, depth=coord.value, value=profile.value, variable='variable')
+  
+  if(return.voxel.index & !is.null(ray)) {profile.df$voxel.index <- voxel.index}
+  if(return.xyz  & !is.null(ray)) {
+    profile.df$x <- p.mid$x
+    profile.df$y <- p.mid$y
+    profile.df$z <- p.mid$z
+  }
   
   return(profile.df)
 }

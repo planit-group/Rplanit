@@ -3,7 +3,8 @@
 \title{Get profile}
 \usage{
 get.profile(values, variable = NULL, x = NULL, y = NULL, z = NULL,
-  integrate = FALSE, ray = NULL, return.voxel.index = FALSE)
+  integrate = FALSE, ray = NULL, return.voxel.index = FALSE,
+  return.xyz = FALSE)
 }
 \arguments{
   \item{values}{the \code{values object}}
@@ -24,13 +25,14 @@ get.profile(values, variable = NULL, x = NULL, y = NULL, z = NULL,
   defined by 6 components (X, Y, Z, xn, yn, zn), i.e. point
   coordinates + normalized vector direction.}
 
-  \item{return.voxel.index}{Returns the index of the voxel
-  crossed by the ray.}
+  \item{return.voxel.index}{Returns also the index of the
+  voxel crossed by the ray (used only for a ray profile).}
+
+  \item{return.xyz}{Returns also the x,y,z of the points
+  along the ray (used only for a ray profile).}
 }
 \value{
-a dataframe containing the specified profile, or the
-sequence of the voxel index crossed by the ray if
-return.voxel.index=TRUE.
+a dataframe containing the specified profile.
 }
 \description{
 Get a profile (values along a specific axis, or voxel line)

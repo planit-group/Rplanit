@@ -462,7 +462,9 @@ add.field <- function(beams)
 #' @return data frame of rays. Each ray has 6 component: a point (X,Y,Z) on the plane passing through the isocenter, and a normalized vector for the direction (xn, yn, zn).
 #' @export
 #' @family Beams
-get.rays <- function(beams, s=4000, unique.rays=FALSE)
+get.rays <- function(beams,
+                     s=4000,
+                     unique.rays=FALSE)
 {
   
   X0 <- X1 <- X2 <- c(1,0,0)
@@ -521,5 +523,35 @@ get.rays <- function(beams, s=4000, unique.rays=FALSE)
     rays <- rays[!duplicated(rays),]
   }
   
+  return(rays)
+}
+
+
+#' Get entrance point in CT
+#' 
+#' Get the coordinates of the entrance point in the CT for the specified rays.
+#' 
+#' @param rays the rays data.frame
+#' @return data frame of rays in wich the coordinates of the entrance point are added (Xin, Yin, Zin).
+#' @export
+#' @family Beams
+get.ct.entrance.point <- function(rays, ct)
+{
+  
+  # coordinate piani esterni
+  xi <- range(create.intervals(ct$x))
+  yi <- range(create.intervals(ct$y))
+  zi <- range(create.intervals(ct$z))
+  
+  for(ii in 1:nrow(rays)) {
+    ray <- rays[ii,]
+    p <- ray.tracing(ray, xi, yi, zi)
+    
+    # trova ingresso
+    rays$Xin[ii] <- p$x[1]
+    rays$Yin[ii] <- p$y[1]
+    rays$Zin[ii] <- p$z[1]
+  }
+ 
   return(rays)
 }

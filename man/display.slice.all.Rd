@@ -7,7 +7,8 @@ display.slice.all(ct = NULL, contours = NULL, values = NULL,
   cont = FALSE, isoc = FALSE, xlim = NULL, ylim = NULL, zlim = NULL,
   vlim = NULL, file.name = NULL, width = 7, height = 7,
   linear.graymap = TRUE, window.center = 50, window.width = 800,
-  alpha.threshold = 0.7, invert.y.axis = FALSE, contour.color = "green")
+  alpha.lower = 0, alpha.upper = 1, invert.y.axis = FALSE,
+  contour.color = "green")
 }
 \arguments{
   \item{ct}{the ct object (optional, if plan is specified)}
@@ -65,11 +66,10 @@ display.slice.all(ct = NULL, contours = NULL, values = NULL,
   \item{window.width}{Width of the Hounsfiled window values
   to visualize. It is used if \code{linear.graymap=FALSE}.}
 
-  \item{alpha.threshold}{fraction of the values below which
-  apply transparency. The opacity (alpha) is evaluated as a
-  linear ramp (0 to 1) from 0 to \code{alpha.threshold} of
-  the values range, and then alpha=1 from
-  \code{alpha.threshold} to 1 of the values range.}
+  \item{alpha.lower,alpha.upperThe}{opacity (alpha) is
+  evaluated as a linear ramp (\code{alpha.lower} to
+  \code{alpha.upper}) from \code{alpha.lower} to
+  \code{alpha.upper} of the values range.}
 
   \item{invert.y.axis}{Invert the y axis.}
 
