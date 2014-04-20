@@ -5,7 +5,8 @@
 create.values(array.values = NULL, variables = "variable name", x, y, z)
 }
 \arguments{
-  \item{array}{the 3D array}
+  \item{array}{the 3D array. Optional. If it is not
+  specified an array of zeros is assumed.}
 
   \item{variables}{The name of the variable (can be a
   vector of names).}

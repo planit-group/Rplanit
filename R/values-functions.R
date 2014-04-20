@@ -5,7 +5,7 @@
 #' Create values object from array. Note: the value distributions are stored in a multidimensional array:
 #' values$values with dim(values$values) = c(Nv, Nx, Nz, Ny).
 #' 
-#' @param array the 3D array
+#' @param array the 3D array. Optional. If it is not specified an array of zeros is assumed.
 #' @param variables The name of the variable (can be a vector of names).
 #' @param x,y,z coordinate vectors
 #' @return a \code{values} object
