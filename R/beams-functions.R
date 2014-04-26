@@ -198,18 +198,29 @@ convert.fluence2mu <- function(beams, type='protonCnao')
 }
 
 
-#' Create an empty beams object
+#' Create an empty beam(s) object
 #' 
+#' The beam(s) object is a dataframe with columns:
+#' \itemize{
+#'  \item{"x_iso, y_iso, z_iso"}{Stuff}
+#'  \item{"parameter 2"}{Stuff}
+#' }
 #' @param nbeams The number of the beams
 #' @param with.spots Include spot coordinates
+#' @param x_iso,y_iso,z_iso Coordinates of the isocenter (mm).
+#' @param gantryAngle,patientAngle Gantry and patient support angles (degree).
+#' @param fluence The number of particles for the beam(s).
+#' @param energy The kinetic energy of the particles (MeV/u).
+#' @param deflX,deflY Deflections on the plane normal to the beam direction and passing through the isocenter (mm).
+#' @param x_s,y_s,z_s Spot coordinates, i.e. the position of the Bragg peak (mm).
 #' @family Beams
 #' @export
-create.beam <- function(nbeams=1, with.spots=FALSE)
+create.beam <- function(nbeams=1, with.spots=FALSE, x_iso=0, y_iso=0, z_iso=0, gantryAngle=0, patientAngle=0, fluence=1, energy=0, deflX=0, deflY=0, x_s=0, y_s=0, z_s=0)
 {
   if(with.spots) {
-    beam <- data.frame(x_iso=rep(0, nbeams), y_iso=0, z_iso=0, gantryAngle=0, patientAngle=0, fluence=1, energy=0, deflX=0, deflY=0, x_s=0, y_s=0, z_s=0)
+    beam <- data.frame(x_iso=rep(0, nbeams), x_iso=0, y_iso=0, z_iso=0, gantryAngle=0, patientAngle=0, fluence=1, energy=0, deflX=0, deflY=0, x_s=0, y_s=0, z_s=0)
   } else {
-    beam <- data.frame(x_iso=rep(0, nbeams), y_iso=0, z_iso=0, gantryAngle=0, patientAngle=0, fluence=1, energy=0, deflX=0, deflY=0)
+    beam <- data.frame(x_iso=rep(0, nbeams), x_iso=0, y_iso=0, z_iso=0, gantryAngle=0, patientAngle=0, fluence=1, energy=0, deflX=0, deflY=0)
   }
   return(beam)
 }

@@ -1,16 +1,37 @@
 \name{create.beam}
 \alias{create.beam}
-\title{Create an empty beams object}
+\title{Create an empty beam(s) object}
 \usage{
-create.beam(nbeams = 1, with.spots = FALSE)
+create.beam(nbeams = 1, with.spots = FALSE, x_iso = 0, y_iso = 0,
+  z_iso = 0, gantryAngle = 0, patientAngle = 0, fluence = 1,
+  energy = 0, deflX = 0, deflY = 0, x_s = 0, y_s = 0, z_s = 0)
 }
 \arguments{
   \item{nbeams}{The number of the beams}
 
   \item{with.spots}{Include spot coordinates}
+
+  \item{x_iso,y_iso,z_iso}{Coordinates of the isocenter
+  (mm).}
+
+  \item{gantryAngle,patientAngle}{Gantry and patient
+  support angles (degree).}
+
+  \item{fluence}{The number of particles for the beam(s).}
+
+  \item{energy}{The kinetic energy of the particles
+  (MeV/u).}
+
+  \item{deflX,deflY}{Deflections on the plane normal to the
+  beam direction and passing through the isocenter (mm).}
+
+  \item{x_s,y_s,z_s}{Spot coordinates, i.e. the position of
+  the Bragg peak (mm).}
 }
 \description{
-Create an empty beams object
+The beam(s) object is a dataframe with columns: \itemize{
+\item{"x_iso, y_iso, z_iso"}{Stuff} \item{"parameter
+2"}{Stuff} }
 }
 \seealso{
 Other Beams: \code{\link{add.field}};
