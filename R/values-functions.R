@@ -77,9 +77,10 @@ get.values <- function(plan)
 #' 
 #' Get the values matrices for a plan (Gate).
 #' @param plan.gate The plan object.
+#' @param center.coordinates The coordinates of the center of the values 3D distribution.
 #' @family Values
 #' @export
-get.values.gate <- function(plan.gate)
+get.values.gate <- function(plan.gate, center.coordinates=c(0,0,0))
 {
   values <- list()
   variables <- plan.gate$computingValues.gate
@@ -89,7 +90,17 @@ get.values.gate <- function(plan.gate)
     variable.file <- paste(plan.gate$name, '/output/', variable.file, sep='')
     values[[i]] <- read.3d.hdr(file.name=variable.file, variable=variables[i])
   }
-  return(merge.values(values.list=values))
+  values <- merge.values(values.list=values)
+  
+  # traslazione del centro
+  x.c <- sum(range(values$x))/2
+  y.c <- sum(range(values$y))/2
+  z.c <- sum(range(values$z))/2
+  values$x <- values$x + (center.coordinates[1]-x.c)
+  values$y <- values$y + (center.coordinates[1]-y.c)
+  values$z <- values$z + (center.coordinates[1]-z.c)
+  
+  return(values)
 }
 
 #' Get sparse array values (Gate)
