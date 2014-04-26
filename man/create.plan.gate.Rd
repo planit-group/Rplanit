@@ -2,15 +2,14 @@
 \alias{create.plan.gate}
 \title{Generate Plan template (Gate)}
 \usage{
-create.plan.gate(name = "gate.simulation", ctFile.gate = NULL,
-  ctWater = NULL, materialDatabase.gate = "./data/MyMaterials.db",
-  HUToMaterialFile = "data/ct-HU2mat.txt", origin.gate = c(0, 0, 0),
-  waterIonisationPotential.gate = 78,
-  computingValues.gate = "DoseToMaterial[Gy]", saveEveryNSeconds.gate = 200,
-  size.gate = "auto", position.gate = c(0, 0, 0), voxelSize.gate = c(2, 2,
-  2), beams = NULL, beamsFile.gate = "./data/beams.gate",
-  particleType = "proton",
-  sourceDescriptionFile.gate = "./data/ProtonSimple.txt",
+create.plan.gate(name = "gate.simulation", ctFile = NULL, ctWater = NULL,
+  ct = NULL, materialDatabase = "./data/MyMaterials.db",
+  HUToMaterialFile = "data/ct-HU2mat.txt", origin = c(0, 0, 0),
+  waterIonisationPotential = 78, computingValues = c("DoseToMaterial[Gy]"),
+  saveEveryNSeconds = 200, size = "auto", position = c(0, 0, 0),
+  voxelSize = c(2, 2, 2), beams = NULL,
+  beamsFile.gate = "./data/beams.gate", particleType = "proton",
+  sourceDescriptionFile = "./data/ProtonSimple.txt",
   totalNumberOfPrimaries = 0, K = NULL)
 }
 \description{

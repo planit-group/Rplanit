@@ -1,7 +1,7 @@
 # APPS -------------------------------------------------------------------------
 # (GUI ed altro)
 
-#' Values visualization WEB-GUI (dataframe ops)
+#' WEB-GUI (values)
 #' 
 #' @param plan The plan object
 #' @family Apps
@@ -30,6 +30,7 @@ values.app <- function(plan=NULL, values=NULL, ct=NULL, contours=NULL, sanitize=
       {
         # plot della distribuzione di dose
         output$plot.dose <- renderPlot({
+          if(input$Exit) {stopApp()}
           if(input$plane=='axial (z)') {z <- input$z; y <- NA; x <- NA}
           if(input$plane=='coronal (y)') {z <- NA; y <- input$y; x <- NA}
           if(input$plane=='sagittal (x)') {z <- NA; y <- NA; x <- input$x}
@@ -83,7 +84,11 @@ values.app <- function(plan=NULL, values=NULL, ct=NULL, contours=NULL, sanitize=
                       min = min(values$x), max = max(values$x), value = isocenter$x_iso),
           
           checkboxInput("invert.y.axis", "Invert y axis",
-                        value = TRUE)
+                        value = TRUE),
+          
+          hr(),
+          
+          actionButton('Exit', 'Exit')
           
           
         ),

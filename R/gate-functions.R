@@ -99,41 +99,42 @@ create.waterbox.gate <- function(Dx=100, Dy=100, Dz=100)
 #' @export
 #' @family PlanGate
 create.plan.gate <- function(name='gate.simulation',
-                             ctFile.gate=NULL,
+                             ctFile=NULL,
                              ctWater=NULL,
-                             materialDatabase.gate='./data/MyMaterials.db',
+                             ct=NULL,
+                             materialDatabase='./data/MyMaterials.db',
                              HUToMaterialFile='data/ct-HU2mat.txt',
-                             origin.gate=c(0,0,0),    
-                             waterIonisationPotential.gate=78,
-                             computingValues.gate='DoseToMaterial[Gy]',
-                             saveEveryNSeconds.gate=200,
-                             size.gate='auto',
-                             position.gate=c(0,0,0),
-                             voxelSize.gate=c(2,2,2),
+                             origin=c(0,0,0),    
+                             waterIonisationPotential=78,
+                             computingValues=c('DoseToMaterial[Gy]'),
+                             saveEveryNSeconds=200,
+                             size='auto',
+                             position=c(0,0,0),
+                             voxelSize=c(2,2,2),
                              beams=NULL,
                              beamsFile.gate='./data/beams.gate',
                              particleType='proton',
-                             sourceDescriptionFile.gate='./data/ProtonSimple.txt',
+                             sourceDescriptionFile='./data/ProtonSimple.txt',
                              totalNumberOfPrimaries=0,
                              K=NULL
                              )
 {
   plan <- list(name=name,
-               ctFile.gate=ctFile.gate,
+               ctFile=ctFile,
                ctWater=ctWater, # una semplice lista con la size del waterbox (Dx,Dy,Dz)
-               materialDatabase.gate=materialDatabase.gate,
+               materialDatabase=materialDatabase,
                HUToMaterialFile=HUToMaterialFile,
-               origin.gate=origin.gate,
-               waterIonisationPotential.gate=waterIonisationPotential.gate,
-               computingValues.gate=computingValues.gate,
-               saveEveryNSeconds.gate=saveEveryNSeconds.gate,
-               size.gate=size.gate,
-               position.gate=position.gate,
-               voxelSize.gate=voxelSize.gate,
+               origin=origin,
+               waterIonisationPotential=waterIonisationPotential,
+               computingValues=computingValues,
+               saveEveryNSeconds=saveEveryNSeconds,
+               size=size,
+               position=position,
+               voxelSize=voxelSize,
                beams=beams, # oggetto beams
                beamsFile.gate=beamsFile.gate, # file dei beams (formato gate)
                particleType=particleType,
-               sourceDescriptionFile.gate=sourceDescriptionFile.gate,
+               sourceDescriptionFile=sourceDescriptionFile,
                totalNumberOfPrimaries=totalNumberOfPrimaries,
                K=K # pesi di ciascun beam (usato solo per il calcolo dei bea indipendente nelle matrici sparse)    
   )
@@ -209,34 +210,34 @@ create.gate.structure <- function(plan)
   close(main.mac.template)
   
   # materiali
-  main.mac.txt <- sub('@materialDatabase.gate', plan$materialDatabase.gate, main.mac.txt)
-  main.mac.txt <- sub('@waterIonisationPotential.gate', plan$waterIonisationPotential.gate, main.mac.txt)
+  main.mac.txt <- sub('@materialDatabase', plan$materialDatabase, main.mac.txt)
+  main.mac.txt <- sub('@waterIonisationPotential', plan$waterIonisationPotential, main.mac.txt)
   
   # main.mac.txt <- sub('@physicsList.gate', plan$physicsList.gate, main.mac.txt)
-  main.mac.txt <- gsub('@saveEveryNSeconds.gate', plan$saveEveryNSeconds.gate, main.mac.txt)
+  main.mac.txt <- gsub('@saveEveryNSeconds', plan$saveEveryNSeconds, main.mac.txt)
 
   # actor: geometria
-  if(plan$size.gate!='auto') {
+  if(plan$size!='auto') {
     main.mac.txt <- sub('#/gate/actor/doseDistribution/setSize', '/gate/actor/doseDistribution/setSize', main.mac.txt)
-    main.mac.txt <- sub('@size.gate', paste(plan$size.gate, collapse=' '), main.mac.txt)
+    main.mac.txt <- sub('@size', paste(plan$size, collapse=' '), main.mac.txt)
   }
-  main.mac.txt <- sub('@position.gate', paste(plan$position.gate, collapse=' '), main.mac.txt)
-  main.mac.txt <- sub('@voxelSize.gate', paste(plan$voxelSize.gate, collapse=' '), main.mac.txt)
+  main.mac.txt <- sub('@position', paste(plan$position, collapse=' '), main.mac.txt)
+  main.mac.txt <- sub('@voxelSize', paste(plan$voxelSize, collapse=' '), main.mac.txt)
 
   # actor: dose
-  if(sum('DoseToMaterial[Gy]' %in% plan$computingValues.gate)>0) {
+  if(sum('DoseToMaterial[Gy]' %in% plan$computingValues)>0) {
     main.mac.txt <- sub('@enableDose', 'true', main.mac.txt)
   } else {
     main.mac.txt <- sub('@enableDose', 'false', main.mac.txt)
   }
 
-  if(sum('DoseToMaterial^2[Gy^2]' %in% plan$computingValues.gate)>0) {
+  if(sum('DoseToMaterial^2[Gy^2]' %in% plan$computingValues)>0) {
     main.mac.txt <- sub('@enableSquaredDose', 'true', main.mac.txt)
   } else {
     main.mac.txt <- sub('@enableSquaredDose', 'false', main.mac.txt)
   }
 
-  if(sum('DoseToMaterialUncertainty[Gy]' %in% plan$computingValues.gate)>0) {
+  if(sum('DoseToMaterialUncertainty[Gy]' %in% plan$computingValues)>0) {
     main.mac.txt <- sub('@enableUncertaintyDose', 'true', main.mac.txt)
   } else {
     main.mac.txt <- sub('@enableUncertaintyDose', 'false', main.mac.txt)
@@ -246,26 +247,26 @@ create.gate.structure <- function(plan)
 
 
   # actor: deposited energy
-  if(sum('DepositedEnergy[MeV]' %in% plan$computingValues.gate)>0) {
+  if(sum('DepositedEnergy[MeV]' %in% plan$computingValues)>0) {
     main.mac.txt <- sub('@enableEdep', 'true', main.mac.txt)
   } else {
     main.mac.txt <- sub('@enableEdep', 'false', main.mac.txt)
   }
 
-  if(sum('DepositedEnergy^2[MeV^2]' %in% plan$computingValues.gate)>0) {
+  if(sum('DepositedEnergy^2[MeV^2]' %in% plan$computingValues)>0) {
     main.mac.txt <- sub('@enableSquaredEdep', 'true', main.mac.txt)
   } else {
     main.mac.txt <- sub('@enableSquaredEdep', 'false', main.mac.txt)
   }
 
-  if(sum('DepositedEnergyUncertainty[MeV]' %in% plan$computingValues.gate)>0) {
+  if(sum('DepositedEnergyUncertainty[MeV]' %in% plan$computingValues)>0) {
     main.mac.txt <- sub('@enableUncertaintyEdep', 'true', main.mac.txt)
   } else {
     main.mac.txt <- sub('@enableUncertaintyEdep', 'false', main.mac.txt)
   }
 
   # actor: number of hits
-  if(sum('NumberOfHits' %in% plan$computingValues.gate)>0) {
+  if(sum('NumberOfHits' %in% plan$computingValues)>0) {
     main.mac.txt <- sub('@enableNumberOfHits', 'true', main.mac.txt)
   } else {
     main.mac.txt <- sub('@enableNumberOfHits', 'false', main.mac.txt)
@@ -388,8 +389,8 @@ run.gate.forward <- function(plan=plan, N=NULL, K=NULL, evaluate.sparse.arrays=F
       # run
       system(cmd, ignore.stdout=ignore.stdout, ignore.stderr=ignore.stderr)
       
-      vb <- get.values.gate(plan)
-      vs.tmp <- get.sparse.array.from.values(get.values.gate(plan))
+      vb <- get.values.gate.plan(plan)
+      vs.tmp <- get.sparse.array.from.values(vb)
       vs.tmp$beam.id <- b
       vs.tmp$Ne <- Ne[b]
       

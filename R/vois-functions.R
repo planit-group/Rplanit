@@ -105,7 +105,9 @@ get.voi.logical <- function(vois, voi=NULL) {
 #' 
 #' @family Contours
 #' @export
-get.contours <- function(plan) {
+get.contours <- function(plan) UseMethod('get.contours')
+
+get.contours.plankit.plan <- function(plan) {
   
   # recupera informazioni da plan
   file.CT <- plan$ctFile
@@ -190,6 +192,14 @@ get.contours <- function(plan) {
   
   return(contours.ct)
   
+}
+
+get.contours.gate.plan <- function(plan) {
+  if(is.null(plan$contours)) {
+    message('Contours not present in Gate plan')
+    return(NULL)
+  }
+  return(plan$contours)
 }
 
 

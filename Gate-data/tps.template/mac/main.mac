@@ -15,7 +15,7 @@
 # GEOMETRY
 #=====================================================
 
-/gate/geometry/setMaterialDatabase                 @materialDatabase.gate
+/gate/geometry/setMaterialDatabase                 @materialDatabase
 
 # WORLD
 /gate/world/setMaterial                      Vacuum
@@ -25,7 +25,7 @@
 /gate/world/placement/setTranslation         0 0 0 mm
 
 # Ionization potential of water
-/gate/geometry/setIonisationPotential Water @waterIonisationPotential.gate eV
+/gate/geometry/setIonisationPotential Water @waterIonisationPotential eV
 
 # PATIENT CT DATA (alternative to WaterBox)
 /control/execute                              mac/Voxel_Patient.mac
@@ -49,7 +49,7 @@
 
 /gate/actor/addActor               SimulationStatisticActor stat
 /gate/actor/stat/save              output/stat.txt
-/gate/actor/stat/saveEveryNSeconds @saveEveryNSeconds.gate
+/gate/actor/stat/saveEveryNSeconds @saveEveryNSeconds
 
 # ----------------------------------------------------
 # the following actor stores 3D distributions of
@@ -59,9 +59,9 @@
 /gate/actor/doseDistribution/save                  output/values.hdr
 /gate/actor/doseDistribution/attachTo    	   target
 /gate/actor/doseDistribution/stepHitType           random
-#/gate/actor/doseDistribution/setSize              @size.gate mm
-/gate/actor/doseDistribution/setPosition           @position.gate mm
-/gate/actor/doseDistribution/setVoxelSize          @voxelSize.gate mm
+#/gate/actor/doseDistribution/setSize              @size mm
+/gate/actor/doseDistribution/setPosition           @position mm
+/gate/actor/doseDistribution/setVoxelSize          @voxelSize mm
 /gate/actor/doseDistribution/enableEdep            @enableEdep
 /gate/actor/doseDistribution/enableSquaredEdep     @enableSquaredEdep
 /gate/actor/doseDistribution/enableUncertaintyEdep @enableUncertaintyEdep
@@ -69,7 +69,7 @@
 /gate/actor/doseDistribution/enableSquaredDose     @enableSquaredDose
 /gate/actor/doseDistribution/enableUncertaintyDose @enableUncertaintyDose
 /gate/actor/doseDistribution/enableNumberOfHits    @enableNumberOfHits
-/gate/actor/doseDistribution/saveEveryNSeconds     @saveEveryNSeconds.gate
+/gate/actor/doseDistribution/saveEveryNSeconds     @saveEveryNSeconds
 
 
 #=====================================================

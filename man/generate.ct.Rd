@@ -8,7 +8,7 @@ generate.ct(CT.df, deltaX, deltaY, deltaZ)
   \item{CT.df}{the dataframe in which are defined the
   volumes.}
 
-  \item{deltaX,}{deltaY, deltaZ are the dimensions of the
+  \item{deltaX,deltaY,deltaZ}{are the dimensions of the
   voxels.}
 }
 \value{

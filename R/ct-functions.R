@@ -1,16 +1,37 @@
 # CT ---------------------------------------------------------------------------
 
-#' recupera ct
-#' 
+#' Get ct object from plan
+#' @param plan The plan object
 #' @family CT
 #' @export
-get.ct <- function(plan)
+get.ct <- function(plan) UseMethod("get.ct")
 {
   #   if(is.null(plan[['outputValuesFile']])) {
   #     cat('The plan "', plan[['name']], '" has no values file.\n', sep='')
   #     return(NULL)
-  #   } 
+  #   }
+  
+  #return(read.3d(plan$ctFile))
+}
+
+get.ct.plankit.plan <- function(plan)
+{
   return(read.3d(plan$ctFile))
+}
+
+get.ct.gate.plan <- function(plan)
+{
+  if(!is.null(plan$ct)) {return(plan$ct)}
+  else if(!is.null(plan$ctFile)) {return(read.3d.hdr(file.name=plan$ctFile))}
+  else if(!is.null(plan$ctWater)) {
+    CT.df <- data.frame(x_min=-plan$ctWater$Dx/2, x_max=plan$ctWater$Dx/2,
+                        y_min=-plan$ctWater$Dy/2, y_max=plan$ctWater$Dy/2,
+                        z_min=-plan$ctWater$Dz/2, z_max=plan$ctWater$Dz/2,
+                        HU=1, voi='BODY')
+    ct <- generate.ct(CT.df=CT.df, deltaX=plan$voxelSize[1], deltaY=plan$voxelSize[2], deltaZ=plan$voxelSize[3])
+    return(ct)
+  }
+  stop('No method for class plan.gate')
 }
 
 

@@ -2,7 +2,7 @@
 \alias{get.values.for.beam}
 \title{Evaluate BeamLUT}
 \usage{
-get.values.for.beam(beam.index, fluence = NULL, plan,
+\method{get.values}{for.beam}(beam.index, fluence = NULL, plan,
   variables = "Dose[Gy]", temp.name = "temp", remove.temp = TRUE)
 }
 \arguments{

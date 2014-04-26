@@ -1,24 +1,25 @@
-\name{get.sparse.array.gate}
-\alias{get.sparse.array.gate}
-\title{Get sparse array values (Gate)}
+\name{get.values.gate.plan}
+\alias{get.values.gate.plan}
+\title{Get values object (Gate)}
 \usage{
-get.sparse.array.gate(plan.gate)
+\method{get.values}{gate.plan}(plan, center.coordinates = c(0, 0, 0))
 }
 \arguments{
   \item{plan.gate}{The plan object.}
+
+  \item{center.coordinates}{The coordinates of the center
+  of the values 3D distribution.}
 }
 \description{
-Get the sparse array evaluated for a plan (Gate). Note: the
-plan has to be evaluated via run.gate.forward() with the
-option evaluate.sparse.arrays=TRUE.
+Get the values matrices for a plan (Gate).
 }
 \seealso{
 Other Values: \code{\link{create.values}};
 \code{\link{get.dataframe.from.values}};
 \code{\link{get.sparse.array.from.values}};
+\code{\link{get.sparse.array.gate}};
 \code{\link{get.values.dataframe}};
 \code{\link{get.values.from.sparse.array}};
-\code{\link{get.values.gate.plan}};
 \code{\link{get.values.plankit.plan}};
 \code{\link{get.values}}; \code{\link{merge.values}};
 \code{\link{sanitize.values}}

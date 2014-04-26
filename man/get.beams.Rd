@@ -1,8 +1,8 @@
 \name{get.beams}
 \alias{get.beams}
-\title{recupera oggetto beams}
+\title{Get beams from plan}
 \usage{
-get.beams(plan, input = FALSE)
+get.beams(plan, ...)
 }
 \description{
 input serve a selezionare i beams usati come "input" per il

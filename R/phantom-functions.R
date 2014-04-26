@@ -4,7 +4,7 @@
 #' x_min, x_max, y_min, y_max, z_min, z_max, HU, voi.
 #' 
 #' @param CT.df the dataframe in which are defined the volumes.
-#' @param deltaX, deltaY, deltaZ are the dimensions of the voxels.
+#' @param deltaX,deltaY,deltaZ are the dimensions of the voxels.
 #' 
 #' @return a CT (values) object
 #' 

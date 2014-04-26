@@ -57,13 +57,21 @@ create.values <- function(array.values=NULL, variables='variable name', x, y, z)
 }
 
 
+#' Get values object
+#' 
+#' Get the values matrices for a plan.
+#' @param plan The plan object.
+#' @family Values
+#' @export
+get.values <- function(plan, ...) UseMethod("get.values")
+
 #' Get values object (PlanKIT)
 #' 
 #' Get the values matrices for a plan (PlanKIT).
 #' @param plan The plan object.
 #' @family Values
 #' @export
-get.values <- function(plan)
+get.values.plankit.plan <- function(plan)
 {
   if(is.null(plan[['outputValuesFile']])) {
     cat('The plan "', plan[['name']], '" has no values file.\n', sep='')
@@ -72,7 +80,6 @@ get.values <- function(plan)
   return(read.3d( paste(plan[['name']], '/', plan[['outputValuesFile']], sep='') ))
 }
 
-
 #' Get values object (Gate)
 #' 
 #' Get the values matrices for a plan (Gate).
@@ -80,14 +87,14 @@ get.values <- function(plan)
 #' @param center.coordinates The coordinates of the center of the values 3D distribution.
 #' @family Values
 #' @export
-get.values.gate <- function(plan.gate, center.coordinates=c(0,0,0))
+get.values.gate.plan <- function(plan, center.coordinates=c(0,0,0))
 {
   values <- list()
-  variables <- plan.gate$computingValues.gate
+  variables <- plan$computingValues
   for(i in 1:length(variables))
   {
     variable.file <- file.variable.gate(variables[i])
-    variable.file <- paste(plan.gate$name, '/output/', variable.file, sep='')
+    variable.file <- paste(plan$name, '/output/', variable.file, sep='')
     values[[i]] <- read.3d.hdr(file.name=variable.file, variable=variables[i])
   }
   values <- merge.values(values.list=values)
@@ -102,6 +109,7 @@ get.values.gate <- function(plan.gate, center.coordinates=c(0,0,0))
   
   return(values)
 }
+
 
 #' Get sparse array values (Gate)
 #' 

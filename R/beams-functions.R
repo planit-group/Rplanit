@@ -118,7 +118,7 @@ read.beams.fluka <- function(fluka.file)
 }
 
 
-#' recupera oggetto beams
+#' Get beams from plan
 #' 
 #' input serve a selezionare i beams usati come "input" per il calcolo
 #' di default si recuperano quelle in "output".
@@ -127,30 +127,29 @@ read.beams.fluka <- function(fluka.file)
 #' 
 #' @family Beams
 #' @export
-get.beams <- function(plan, input=FALSE)
-{
-  #if(!is.null(plan$outputBeamsFile)) {
-  #  beams.file <- get.filepath('outputBeamsFile', plan=plan)
-  #} else if(!is.null(plan$inputBeamsFile)) {
-  #  beams.file <- get.filepath('inputBeamsFile', plan=plan)
-  #}
-  
-  if(class(plan)=='list') {
-    message('getting beams (assuming plankit plan)...')
-    class(plan) <- 'plankit.plan'
-  }
+get.beams <- function(plan, ...) UseMethod('get.beams')
 
+get.beams.plankit.plan <- function(plan, input=FALSE)
+{
   if(!is.null(plan$beams)) {
     return(plan$beams)
-  } else if(class(plan)=='plankit.plan') {
+  } else {
     if(input){beams.file <- get.filepath('inputBeamsFile', plan=plan)}
     else {beams.file <- get.filepath('outputBeamsFile', plan=plan)}
     return(read.beams(beams.file))
-  } else if(class(plan)=='gate.plan') {
-    beams.file <- paste(plan$name, plan$beamsFile.gate, sep='/')
-    return(read.beams(beams.file))
   }
 
+}
+
+get.beams.gate.plan <- function(plan)
+{
+  if(!is.null(plan$beams)) {
+    return(plan$beams)
+  } else {
+    beams.file <- paste(plan$name, plan$beamsFile, sep='/')
+    return(read.beams(beams.file))
+  }
+  
 }
 
 

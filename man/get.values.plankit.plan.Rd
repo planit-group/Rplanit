@@ -1,11 +1,14 @@
-\name{sanitize.values}
-\alias{sanitize.values}
-\title{rimuove valori nulli non "fisici"}
+\name{get.values.plankit.plan}
+\alias{get.values.plankit.plan}
+\title{Get values object (PlanKIT)}
 \usage{
-sanitize.values(values)
+\method{get.values}{plankit.plan}(plan)
+}
+\arguments{
+  \item{plan}{The plan object.}
 }
 \description{
-rimuove valori nulli non "fisici"
+Get the values matrices for a plan (PlanKIT).
 }
 \seealso{
 Other Values: \code{\link{create.values}};
@@ -15,7 +18,7 @@ Other Values: \code{\link{create.values}};
 \code{\link{get.values.dataframe}};
 \code{\link{get.values.from.sparse.array}};
 \code{\link{get.values.gate.plan}};
-\code{\link{get.values.plankit.plan}};
-\code{\link{get.values}}; \code{\link{merge.values}}
+\code{\link{get.values}}; \code{\link{merge.values}};
+\code{\link{sanitize.values}}
 }
 

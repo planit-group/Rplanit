@@ -17,7 +17,9 @@ Other Values: \code{\link{create.values}};
 \code{\link{get.sparse.array.gate}};
 \code{\link{get.values.dataframe}};
 \code{\link{get.values.from.sparse.array}};
-\code{\link{get.values.gate}}; \code{\link{get.values}};
-\code{\link{merge.values}}; \code{\link{sanitize.values}}
+\code{\link{get.values.gate.plan}};
+\code{\link{get.values.plankit.plan}};
+\code{\link{get.values}}; \code{\link{merge.values}};
+\code{\link{sanitize.values}}
 }
 

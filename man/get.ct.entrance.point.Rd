@@ -2,7 +2,7 @@
 \alias{get.ct.entrance.point}
 \title{Get entrance point in CT}
 \usage{
-get.ct.entrance.point(rays, ct)
+\method{get.ct}{entrance.point}(rays, ct)
 }
 \arguments{
   \item{rays}{the rays data.frame}
