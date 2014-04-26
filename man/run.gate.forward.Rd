@@ -9,7 +9,8 @@ run.gate.forward(plan = plan, N = NULL, K = NULL,
   \item{plan}{The plan object (Gate)}
 
   \item{N}{The mumber of primary particles to simulate
-  (events)}
+  (events). If specified it overwrites the number specified
+  in the plan.}
 
   \item{evaluate.sparse.array}{Evaluate and save also a
   sparse array for the values (in which the information for
