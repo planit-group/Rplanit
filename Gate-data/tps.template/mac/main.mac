@@ -84,7 +84,7 @@
 #=====================================================
 
 /gate/source/addSource PBS TPSPencilBeam
-/gate/source/PBS/setParticleType proton
+/gate/source/PBS/setParticleType @particleType
 /gate/source/PBS/setTestFlag false
 /gate/source/PBS/setPlan @beams.gate
 #/gate/source/PBS/setNotAllowedFieldID 1

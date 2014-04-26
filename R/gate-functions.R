@@ -105,17 +105,17 @@ create.plan.gate <- function(name='gate.simulation',
                              HUToMaterialFile='data/ct-HU2mat.txt',
                              origin.gate=c(0,0,0),    
                              waterIonisationPotential.gate=78,
-			     computingValues.gate='DoseToMaterial[Gy]',
+                             computingValues.gate='DoseToMaterial[Gy]',
                              saveEveryNSeconds.gate=200,
                              size.gate='auto',
                              position.gate=c(0,0,0),
                              voxelSize.gate=c(2,2,2),
-			     beams=NULL,
+                             beams=NULL,
                              beamsFile.gate='./data/beams.gate',
-                             particleType.gate='proton',
+                             particleType='proton',
                              sourceDescriptionFile.gate='./data/ProtonSimple.txt',
                              totalNumberOfPrimaries=0,
-			     K=NULL
+                             K=NULL
                              )
 {
   plan <- list(name=name,
@@ -125,17 +125,17 @@ create.plan.gate <- function(name='gate.simulation',
                HUToMaterialFile=HUToMaterialFile,
                origin.gate=origin.gate,
                waterIonisationPotential.gate=waterIonisationPotential.gate,
-	       computingValues.gate=computingValues.gate,
+               computingValues.gate=computingValues.gate,
                saveEveryNSeconds.gate=saveEveryNSeconds.gate,
                size.gate=size.gate,
                position.gate=position.gate,
                voxelSize.gate=voxelSize.gate,
-	       beams=beams, # oggetto beams
-               beamsFile.gate=beamsFile.gate, # file dei beams
-               particleType.gate=particleType.gate,
+               beams=beams, # oggetto beams
+               beamsFile.gate=beamsFile.gate, # file dei beams (formato gate)
+               particleType=particleType,
                sourceDescriptionFile.gate=sourceDescriptionFile.gate,
                totalNumberOfPrimaries=totalNumberOfPrimaries,
-	       K=K # pesi di ciascun beam (usato solo per il calcolo dei bea indipendente nelle matrici sparse)    
+               K=K # pesi di ciascun beam (usato solo per il calcolo dei bea indipendente nelle matrici sparse)    
   )
   class(plan) <- 'gate.plan'
   return(plan)
@@ -270,6 +270,10 @@ create.gate.structure <- function(plan)
   } else {
     main.mac.txt <- sub('@enableNumberOfHits', 'false', main.mac.txt)
   }
+  
+  # particle type
+  main.mac.txt <- sub('@particleType', plan$particleType, main.mac.txt)
+  
 
   # SET BEAMS
   if(!is.null(plan$beams)) {
@@ -278,10 +282,11 @@ create.gate.structure <- function(plan)
     write.beams(beams=plan$beams, file.name=file.beams.gate, format='gate')
     
     main.mac.txt <- sub('@beams.gate', './data/beams.gate', main.mac.txt)
-    plan.gate$beams.gate <- './data/beams.gate'
+    plan$beams.gate <- './data/beams.gate'
   } else {
     main.mac.txt <- sub('@beams.gate', plan$beamsFile.gate, main.mac.txt)
   }
+
   
   # numero di eventi
   #main.mac.txt <- sub('@totalNumberOfPrimaries', plan$totalNumberOfPrimaries, main.mac.txt)
@@ -309,7 +314,7 @@ create.gate.structure <- function(plan)
 #' Evaluate forward planning (Gate)
 #' 
 #' @param plan The plan object (Gate)
-#' @param N The mumber of primary particles to simulate (events)
+#' @param N The mumber of primary particles to simulate (events). If specified it overwrites the number specified in the plan.
 #' @param evaluate.sparse.array Evaluate and save also a sparse array for the values (in which the information for the individual beam contribution is stored).
 #' @param outmessages Show the optuputs from the Gate simulation
 #' @return The updated plan object (Gate)
