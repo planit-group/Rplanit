@@ -404,7 +404,7 @@ display.slice.all <- function(ct=NULL,
   #suppressMessages(library(fields))
   
   # recupera oggetti da plan
-  if(is.null(values)) {values <- get.values(plan)}
+  if(is.null(values)) {message(class(plan)); values <- get.values(plan)}
   if(is.null(ct)) {ct <- get.ct(plan)}
   if(is.null(contours) & !is.null(plan)) {contours <- get.contours(plan)}
   #if(!use.contours) {contours <- NULL}

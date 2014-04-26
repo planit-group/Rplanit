@@ -1,54 +1,94 @@
 # APPS -------------------------------------------------------------------------
 # (GUI ed altro)
 
-#' WEB-GUI (values)
+#' Values eploration (Web App)
 #' 
+#' Start an interactive GUI (web app) to explore the evaluated values ditribution.
+#' It can use directly  a plan object as argument (deriving from it the corresponding values, ct and contours objects to visualize).
+#' It can accept also a list of
+#' plan objects, to explore simultaneusly different plans.
 #' @param plan The plan object
+#' @param values The values object (optional if plan is given)
+#' @param ct The CT object (optional)
+#' @param contours The contour object (optional)
 #' @family Apps
 #' @export
 #' @import shiny
 values.app <- function(plan=NULL, values=NULL, ct=NULL, contours=NULL, sanitize=TRUE) {
   
   if(!is.null(plan)) {
-    values <- get.values(plan)
-    ct <- get.ct(plan)
-    contours <- get.contours(plan)
-    isocenter <- get.isocenter(plan)
+    if(class(plan)=='list') {
+      values <- get.values(plan[[1]])
+      ct <- get.ct(plan[[1]])
+      contours <- get.contours(plan[[1]])
+      isocenter <- get.isocenter(plan[[1]])
+      plan.name <- rep('', length(plan))
+      for(i in 1:length(plan)) {
+        plan.name[i] <- plan[[i]]$name
+      }
+    } else {
+      values <- get.values(plan)
+      ct <- get.ct(plan)
+      contours <- get.contours(plan)
+      isocenter <- get.isocenter(plan)
+      plan.name <- plan$name
+    }
   } else {
     isocenter <- data.frame(x_iso=mean(values$x), y_iso=mean(values$y), z_iso=mean(values$z))
+    plan.name <- 'values'
   }
+  
+  i.plan <- 1 # indice del piano attuale da visualizzare
   
   if(sanitize) {
     values <- sanitize.values(values)
     ct <- sanitize.ct(ct)
   }
   
+  # APP
   runApp(
     list(
       
       server=function(input, output)
-      {
+      { 
         # plot della distribuzione di dose
         output$plot.dose <- renderPlot({
+          
+          # check per vedere se i.plan è cambiato
+          i.plan.new <- which(input$plan==plan.name)
+          if(i.plan.new!=i.plan) {
+            i.plan <- i.plan.new
+            values <- get.values(plan[[i.plan]])
+            ct <- get.ct(plan[[i.plan]])
+            contours <- get.contours(plan[[i.plan]])
+            isocenter <- get.isocenter(plan[[i.plan]])
+          }
+          
           if(input$Exit) {stopApp()}
           if(input$plane=='axial (z)') {z <- input$z; y <- NA; x <- NA}
           if(input$plane=='coronal (y)') {z <- NA; y <- input$y; x <- NA}
           if(input$plane=='sagittal (x)') {z <- NA; y <- NA; x <- input$x}
-          display.slice.all(values=values, ct=ct, contours=contours,
+          if(input$show.contours) {my.contours <- contours} else {my.contours <- NULL}
+          if(input$show.ct) {my.alpha <- input$alpha} else {my.alpha <- 1}
+          display.slice.all(values=values, ct=ct, contours=my.contours,
                             z=z, x=x, y=y, variable=input$variable,
-                            cont=input$show.isolevels, invert.y.axis=input$invert.y.axis)       
+                            cont=input$show.isolevels, invert.y.axis=input$invert.y.axis,
+                            alpha.lower=my.alpha)       
         })
       },
       
       ui=pageWithSidebar(
         # Application title
-        headerPanel('R-Planit interactive GUI'),
+        headerPanel('Values (R-Planit interactive GUI)'),
         
         # Sidebar
         sidebarPanel(
           
           # help message
-          h5(plan$name),
+          selectInput("plan", 
+                      label = "Plan:",
+                      choices = plan.name,
+                      selected = plan.name[1]),
           
           hr(),
           
@@ -61,6 +101,13 @@ values.app <- function(plan=NULL, values=NULL, ct=NULL, contours=NULL, sanitize=
           
           checkboxInput("show.isolevels", "Show isolevels",
                         value = FALSE),
+          checkboxInput("show.contours", "Show contours",
+                        value = TRUE),
+          checkboxInput("show.ct", "Show CT",
+                        value = TRUE),
+          sliderInput("alpha", 
+                      label = "alpha value:",
+                      min = 0, max = 1, value = 0.2),
           
           hr(),
           

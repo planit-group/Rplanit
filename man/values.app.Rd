@@ -1,14 +1,25 @@
 \name{values.app}
 \alias{values.app}
-\title{WEB-GUI (values)}
+\title{Values eploration (Web App)}
 \usage{
 values.app(plan = NULL, values = NULL, ct = NULL, contours = NULL,
   sanitize = TRUE)
 }
 \arguments{
   \item{plan}{The plan object}
+
+  \item{values}{The values object (optional if plan is
+  given)}
+
+  \item{ct}{The CT object (optional)}
+
+  \item{contours}{The contour object (optional)}
 }
 \description{
-WEB-GUI (values)
+Start an interactive GUI (web app) to explore the evaluated
+values ditribution. It can use directly a plan object as
+argument (deriving from it the corresponding values, ct and
+contours objects to visualize). It can accept also a list
+of plan objects, to explore simultaneusly different plans.
 }
 
