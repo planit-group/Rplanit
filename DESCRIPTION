@@ -22,4 +22,5 @@ Imports:
     reshape2,
     splancs,
     rgl (>= 0.93.991),
-    misc3d (>= 0.8-4)
+    misc3d (>= 0.8-4),
+    shiny (>= 0.9.1)
