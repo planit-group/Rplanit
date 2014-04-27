@@ -69,11 +69,15 @@ values.app <- function(plan=NULL, values=NULL, ct=NULL, contours=NULL, sanitize=
           if(input$plane=='coronal (y)') {z <- NA; y <- input$y; x <- NA}
           if(input$plane=='sagittal (x)') {z <- NA; y <- NA; x <- input$x}
           if(input$show.contours) {my.contours <- contours} else {my.contours <- NULL}
-          if(input$show.ct) {my.alpha <- input$alpha} else {my.alpha <- 1}
+          if(input$show.ct) {
+            my.alpha.lower <- input$alpha[1]; my.alpha.upper <- input$alpha[2]
+          } else {
+            my.alpha.lower <- 1; my.alpha.upper <- 1
+          }
           display.slice.all(values=values, ct=ct, contours=my.contours,
                             z=z, x=x, y=y, variable=input$variable,
                             cont=input$show.isolevels, invert.y.axis=input$invert.y.axis,
-                            alpha.lower=my.alpha)       
+                            alpha.lower=my.alpha.lower, alpha.upper=my.alpha.upper)       
         })
       },
       
@@ -107,7 +111,7 @@ values.app <- function(plan=NULL, values=NULL, ct=NULL, contours=NULL, sanitize=
                         value = TRUE),
           sliderInput("alpha", 
                       label = "alpha value:",
-                      min = 0, max = 1, value = 0.2),
+                      min = 0, max = 1, value = c(0.2,1)),
           
           hr(),
           
