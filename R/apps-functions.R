@@ -77,7 +77,7 @@ values.app <- function(plan=NULL, values=NULL, ct=NULL, contours=NULL, sanitize=
           display.slice.all(values=values, ct=ct, contours=my.contours,
                             z=z, x=x, y=y, variable=input$variable,
                             cont=input$show.isolevels, invert.y.axis=input$invert.y.axis,
-                            alpha.lower=my.alpha.lower, alpha.upper=my.alpha.upper)       
+                            alpha.lower=my.alpha.lower, alpha.upper=my.alpha.upper, HU.window=input$HU.window)       
         })
       },
       
@@ -105,13 +105,21 @@ values.app <- function(plan=NULL, values=NULL, ct=NULL, contours=NULL, sanitize=
           
           checkboxInput("show.isolevels", "Show isolevels",
                         value = FALSE),
-          checkboxInput("show.contours", "Show contours",
-                        value = TRUE),
-          checkboxInput("show.ct", "Show CT",
-                        value = TRUE),
           sliderInput("alpha", 
                       label = "alpha value:",
                       min = 0, max = 1, value = c(0.2,1)),
+          
+          hr(),
+          
+          # CT display
+          h5('CT display setting'),
+          checkboxInput("show.ct", "Show CT",
+                        value = TRUE),
+          checkboxInput("show.contours", "Show contours",
+                        value = TRUE),
+          sliderInput("HU.window", 
+                      label = "HU window:",
+                      min = min(ct$values), max = max(ct$values), value = c(-1000,3000)),
           
           hr(),
           
@@ -146,7 +154,7 @@ values.app <- function(plan=NULL, values=NULL, ct=NULL, contours=NULL, sanitize=
         
         # Show a plot of the generated distribution
         mainPanel(
-          plotOutput("plot.dose", width = "544px", height='544px')
+          plotOutput("plot.dose", width = "640px", height='640px')
         )
       )
       

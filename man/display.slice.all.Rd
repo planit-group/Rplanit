@@ -6,9 +6,8 @@ display.slice.all(ct = NULL, contours = NULL, values = NULL,
   variable = NULL, plan = NULL, x = NA, y = NA, z = NA,
   cont = FALSE, isoc = FALSE, xlim = NULL, ylim = NULL, zlim = NULL,
   vlim = NULL, file.name = NULL, width = 7, height = 7,
-  linear.graymap = TRUE, window.center = 50, window.width = 800,
-  alpha.lower = 0, alpha.upper = 1, invert.y.axis = FALSE,
-  contour.color = "green")
+  HU.window = c(-1000, 3000), alpha.lower = 0, alpha.upper = 1,
+  invert.y.axis = FALSE, contour.color = "green")
 }
 \arguments{
   \item{ct}{the ct object (optional, if plan is specified)}
@@ -55,16 +54,7 @@ display.slice.all(ct = NULL, contours = NULL, values = NULL,
   \item{width,height}{sizes of the figure to be saved
   (inches) (optional)}
 
-  \item{linear.graymap}{Uses a linear gray scale for the
-  visualization of the CT Hounsfield number. If it is set
-  to FALSE it uses a non linear mapping.}
-
-  \item{window.center}{Center of the Hounsfiled window
-  values to visualize. It is used if
-  \code{linear.graymap=FALSE}.}
-
-  \item{window.width}{Width of the Hounsfiled window values
-  to visualize. It is used if \code{linear.graymap=FALSE}.}
+  \item{HU.window}{HU window to visualize for the CT.}
 
   \item{alpha.lower,alpha.upperThe}{opacity (alpha) is
   evaluated as a linear ramp (\code{alpha.lower} to

@@ -126,6 +126,7 @@ display.slice <- function(values=NULL,
                           ylim=NULL,
                           zlim=NULL,
                           vlim=NULL,
+                          invert.y.axis=FALSE,
                           file.name=NULL,
                           width=7, height=7)
 {
@@ -164,6 +165,7 @@ display.slice <- function(values=NULL,
   if(is.null(ylim)) {ylim <- range(values$y, na.rm=TRUE)}
   if(is.null(zlim)) {zlim <- range(values$z, na.rm=TRUE)}
   if(is.null(vlim)) {vlim <- range(values$values, na.rm=TRUE)}
+  if(invert.y.axis) {ylim <- rev(ylim)}
   
   # slice...
   
@@ -270,12 +272,13 @@ display.slice <- function(values=NULL,
 }
 
 
-#' display della ct (usa la funzione display.slice)
+#' Display CT slices
 #' 
+#' Alias for display.slices().
 #' @family display slices
 #' @export
 #' @importFrom fields set.panel image.plot
-display.slice.ct <- function(ct, roi=NULL,
+display.slice.ct <- function(ct, contours=NULL,
                              x=NA, y=NA, z=NA,
                              Nx=NA, Ny=NA, Nz=NA,
                              plan=NULL,
@@ -283,9 +286,21 @@ display.slice.ct <- function(ct, roi=NULL,
                              ylim=NULL,
                              zlim=NULL,
                              vlim=NULL,
+                             HU.window=c(-1000,3000),
+                             invert.y.axis=FALSE,
                              file.name=NULL,
                              width=7, height=7)
-{ 
+{
+  
+  # estremi
+  if(is.null(xlim)) {xlim <- range(ct$x)}
+  if(is.null(ylim)) {ylim <- range(ct$y)}
+  if(is.null(zlim)) {zlim <- range(ct$z)}
+  if(is.null(vlim)) {vlim <- range(ct$values, na.rm=TRUE)}
+  if(invert.y.axis) {ylim <- rev(ylim)}
+  #vlim <- range(ct$values, na.rm=TRUE)
+  
+  
   # immagine ct
   slice <- display.slice(ct, variable='HounsfieldNumber',
                          Nx=Nx, Ny=Ny, Nz=Nz,
@@ -299,7 +314,7 @@ display.slice.ct <- function(ct, roi=NULL,
   Ny <- slice$Ny
   Nz <- slice$Nz
   
-  #vlim <- range(ct$values, na.rm=TRUE)
+
   
   # INIZIA FIGURA
   if(!is.null(file.name)) {
@@ -312,8 +327,9 @@ display.slice.ct <- function(ct, roi=NULL,
   set.panel(1,1) # 1X1 matrix of plots
   
   # contorni (solo per slice assiali)
-  if(!is.null(roi) & !is.na(Nz)) {
-    roi.s <- subset(roi, slice==(Nz-1)) # nota: il numero della slice dei contorni inizia da zero, mentre l'indice-slice della CT da 1.
+  if(!is.null(contours) & !is.na(Nz)) {
+    message('using contours...')
+    roi.s <- subset(contours, slice==(Nz-1)) # nota: il numero della slice dei contorni inizia da zero, mentre l'indice-slice della CT da 1.
     roi.names <- unique(roi.s$contour)
     N.roi <- length(roi.names)
     message('adding contours for: ', paste(roi.names, collapse=' '))
@@ -367,10 +383,7 @@ display.slice.ct <- function(ct, roi=NULL,
 #' @param vlim two element vector containing the value range to be displayed. Values outside the range are displayed as 'blank', i.e. no color tile (optional)
 #' @param file.name name of the file on which to save the figure. By default no file is written (optional)
 #' @param width,height sizes of the figure to be saved (inches) (optional)
-#' @param linear.graymap Uses a linear gray scale for the visualization of the CT Hounsfield number. If it is set to FALSE it uses a non linear mapping.
-#' @param window.center Center of the Hounsfiled window values to visualize. It is used if \code{linear.graymap=FALSE}.
-#' @param window.width Width of the Hounsfiled window values to visualize. It is used if \code{linear.graymap=FALSE}.
-#' 
+#' @param HU.window HU window to visualize for the CT.
 #' @param alpha.lower,alpha.upperThe opacity (alpha) is evaluated as a linear ramp (\code{alpha.lower} to \code{alpha.upper}) from \code{alpha.lower} to \code{alpha.upper} of the values range.
 #' 
 #' @param invert.y.axis Invert the y axis.
@@ -394,8 +407,7 @@ display.slice.all <- function(ct=NULL,
                               vlim=NULL,
                               file.name=NULL,
                               width=7, height=7,
-                              linear.graymap=TRUE,
-                              window.center=50, window.width=800,
+                              HU.window=c(-1000,3000),
                               alpha.lower=0,
                               alpha.upper=1,
                               invert.y.axis=FALSE,
@@ -479,24 +491,8 @@ display.slice.all <- function(ct=NULL,
   interval <- ((1:Nc)-1)/Nc
   interval.alpha <- c( rep(alpha.lower,round(Nc*alpha.lower)), seq(alpha.lower, alpha.upper, length.out=Nc.alpha), rep(alpha.upper,round(Nc-Nc*alpha.upper)) )
   col.val <- hsv( interval[Nc:1]*0.64, alpha=interval.alpha[1:Nc])
-  if(linear.graymap) {
-    col.ct <- gray( interval )
-  } else {
-    #nn <- 20
-    #interval.nl <- (atan(interval*nn-nn/2)+pi/2)/pi
-    #interval.nl <- (asin(interval*2-1)+pi/2)/pi    
-    # interval.nl <- ((sin((interval*pi-pi/2))+1)/2
-    Nc <- 4000 # da -1000 a 3000
-    interval <- ((1:Nc)-1)/Nc
-    wcenter <- window.center + 1000
-    wwidth <- window.width
-    
-    interval[1:(wcenter-wwidth/2)] <- 0
-    interval[(wcenter-wwidth/2+1):(wcenter+wwidth/2)] <- seq(0, 1, length.out=wwidth)
-    interval[(wcenter+wwidth/2+1):Nc] <- 1
-    
-    col.ct <- gray(interval)
-  }
+  col.ct <- colormap.ct(HU.range=range(ct$values), HU.window=HU.window)
+
   
   # estremi
   if(is.null(xlim)) {xlim <- range(values$x)}
@@ -1763,6 +1759,32 @@ display.profile <- function(profile.values,
 }
 
 # UTILITIES ====================================================================
+
+#' Generate colormap
+#' 
+#' @export
+colormap.ct <- function(HU.range=c(-1000, 3000), HU.window=c(-1000,3000))
+{
+  
+  Nc <- HU.range[2] - HU.range[1]
+  
+  interval <- ((1:Nc)-1)/Nc
+
+  interval <- ((1:Nc)-1)/Nc
+  wmin <- max(HU.window[1] - HU.range[1], 1)
+  wmax <- min(HU.window[2] - HU.range[1], Nc)
+  
+  message(wmin, ' ', wmax)
+  
+  interval[1:wmin] <- 0
+  interval[(wmin+1):(wmax)] <- seq(0, 1, length.out=(wmax-wmin))
+  interval[(wmax+1):Nc] <- 1
+  
+  col.ct <- gray(interval)
+
+  return(col.ct)
+}
+
 
 #' imposta stile generale per ggplot2
 #' @export
