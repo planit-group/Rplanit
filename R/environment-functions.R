@@ -58,11 +58,15 @@ setenv.rplanit <- function()
   Sys.setenv(PATH=path)
   
   # Survival
+  Sys.setenv(DATA=paste0(my.home, '/Survival-install/data/'))
+  path <- paste0(Sys.getenv('PATH'), ':', my.home, '/Survival-install')
+  ld_library_path <- paste0(Sys.getenv('LD_LIBRARY_PATH'), ':', my.home, '/Survival-install/lib')
+  Sys.setenv(PATH=path, LD_LIBRARY_PATH=ld_library_path)
   
   # NAMESPACE
   assign('dek.setenv', paste0(my.home, '/DEK-install/setenv.sh'), envir=dektoolsEnv)
   #assign('lem.setenv', paste0(my.home, '/Survival/setenv.sh'), envir=dektoolsEnv) 
-  assign('lem.setenv', '/opt/dek-tools/lem-setenv.sh', envir=dektoolsEnv)
+  assign('lem.setenv', paste0(my.home, '/Survival-install/setenv.sh'), envir=dektoolsEnv)
   assign('gate.setenv', paste0(my.home, '/Gate6.2-install/setenv.sh'), envir=dektoolsEnv)
   assign('gate.template', paste0(my.home, '/Gate6.2-install/tps.template'), envir=dektoolsEnv)
 }
@@ -184,6 +188,24 @@ install.plankit <- function()
   message('moving plankit in ', install.dir, ' ...')
   unlink(install.dir, recursive=TRUE)
   file.rename(from='DEK-install', to=install.dir)
+}
+
+#' Install Survival
+#' @export
+#' @family Install
+install.survival <- function()
+{
+  message('downloading survival...')
+  download.file(url='http://totlxl.to.infn.it/tools/Survival-install.tar.bz2', destfile='Survival-install.tar.bz2')
+  
+  message('uncompressing survival...')
+  system('tar jxf Survival-install.tar.bz2; rm Survival-install.tar.bz2', ignore.stdout=TRUE, ignore.stderr=TRUE)
+  
+  install.dir <- paste(Sys.getenv('HOME'), 'R', 'Survival-install', sep='/')
+  R.dir <- paste(Sys.getenv('HOME'), 'R/', sep='/')
+  message('moving survival in ', install.dir, ' ...')
+  unlink(install.dir, recursive=TRUE)
+  file.rename(from='Survival-install', to=install.dir)
 }
 
 # RUNNING ----------------------------------------------------------------------

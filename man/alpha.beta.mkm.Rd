@@ -7,7 +7,7 @@ alpha.beta.mkm(alphaX = 0.1295, betaX = 0.03085, rN = 4, rd = 0.31,
   betaX.min = NULL, betaX.max = NULL, betaX.N = NULL, rN.min = NULL,
   rN.max = NULL, rN.N = NULL, rd.min = NULL, rd.max = NULL,
   rd.N = NULL, cellType = NULL, particleType = "H", energies = NULL,
-  lets = NULL)
+  lets = NULL, ignore.stdout = TRUE, ignore.stderr = TRUE)
 }
 \arguments{
   \item{alphaX,betaX,rN,rd}{MKM "biological" parameter

@@ -399,12 +399,13 @@ alpha.beta.mkm <- function(alphaX=0.1295, betaX=0.03085, rN=4, rd=0.31,
                            rd.min=NULL, rd.max=NULL, rd.N=NULL,
                            cellType=NULL,
                            particleType='H',
-                           energies=NULL, lets=NULL)
+                           energies=NULL, lets=NULL,
+                           ignore.stdout=TRUE, ignore.stderr=TRUE)
 {
   model='MKM'
   calculusType='rapidMKM'
   
-  lem.setenv=get('lem.setenv', envir=dektoolsEnv)
+  #lem.setenv=get('lem.setenv', envir=dektoolsEnv)
   
   # nome cellType
   if(is.null(cellType)) {cellType <- paste('R', sprintf("%06d", round(runif(1,min=0,max=1e6))), sep='')}
@@ -419,10 +420,12 @@ alpha.beta.mkm <- function(alphaX=0.1295, betaX=0.03085, rN=4, rd=0.31,
   if(!is.null(energies)) {
     energyType <- 'energy'
     e <- paste(energies, collapse=' ')
-  } else {
+  } else if(!is.null(lets)) {
     lets <- lets[lets >= srim.let.min[particleType] &  lets <= srim.let.max[particleType]]
     energyType <- 'let'
     e <- paste(lets, collapse=' ')
+  } else {
+    stop('energies/lets not specified.')
   }
 
   # output file
@@ -431,10 +434,11 @@ alpha.beta.mkm <- function(alphaX=0.1295, betaX=0.03085, rN=4, rd=0.31,
 
   # costruzione linea di comando:
   s.args <- paste(cellType, model, calculusType, a, b, n, d, particleType, energyType, e)
-  cmd <- paste('.', lem.setenv, '; survival_alpha_beta_parameter_study', s.args)
-  # message(cmd)
+  # cmd <- paste('.', lem.setenv, '; survival_alpha_beta_parameter_study', s.args)
+  cmd <- paste('survival_alpha_beta_parameter_study', s.args)
+  if(!ignore.stdout) {message(cmd)}
 
-  t <- system.time(system(cmd, ignore.stdout=TRUE, ignore.stderr=TRUE))
+  t <- system.time(system(cmd, ignore.stdout=ignore.stdout, ignore.stderr=ignore.stderr))
   #message('time elapsed: ', t)
 
   # legge file temporaneo salvato
@@ -466,7 +470,7 @@ alpha.fun.mkm <- function(alphaX=0.1295, betaX=0.03085, rN=4, rd=0.31,
   model='MKM'
   calculusType='rapidMKM'
   
-  lem.setenv=get('lem.setenv', envir=dektoolsEnv)
+  #lem.setenv=get('lem.setenv', envir=dektoolsEnv)
 
   # nome cellType
   if(is.null(cellType)) {
@@ -508,7 +512,8 @@ alpha.fun.mkm <- function(alphaX=0.1295, betaX=0.03085, rN=4, rd=0.31,
 
   # costruzione linea di comando:
   s.args <- paste(cellType, model, calculusType, a, b, n, d, particleType, energyType, e)
-  cmd <- paste('.', lem.setenv, '; survival_alpha_beta_parameter_study', s.args)
+  #cmd <- paste('.', lem.setenv, '; survival_alpha_beta_parameter_study', s.args)
+  cmd <- paste('survival_alpha_beta_parameter_study', s.args)
   #print(cmd)
 
   t <- system.time(system(cmd, ignore.stdout=TRUE, ignore.stderr=TRUE))

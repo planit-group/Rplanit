@@ -8,6 +8,7 @@ install.gate()
 Install Gate
 }
 \seealso{
-Other Install: \code{\link{install.plankit}}
+Other Install: \code{\link{install.plankit}};
+\code{\link{install.survival}}
 }
 
