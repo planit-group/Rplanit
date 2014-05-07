@@ -510,6 +510,9 @@ display.slice.all <- function(ct=NULL,
   set.panel()
   par(oma=c(0,0,0,4)) # margin of 4 spaces width at right hand side
   set.panel(1,1) # 1X1 matrix of plots
+  
+  asp <- 1/abs( diff(range(values$x)) /  diff(range(values$y)) )
+  print(asp)
 
   # layer colorbar
   if(!is.na(Nz.values)) {
@@ -1760,21 +1763,37 @@ display.profile <- function(profile.values,
 
 # UTILITIES ====================================================================
 
-#' Generate colormap
+#' Generate gray colormap for Hounsfield numbers
 #' 
+#' @param HU.range The range c(HU.min, HU.max) of the Hounsfield numbers of the CT
+#' @param HU.windos The range c(HU.min, HU.max) to map to c(0,1) gray map.
 #' @export
 colormap.ct <- function(HU.range=c(-1000, 3000), HU.window=c(-1000,3000))
 {
   
-  Nc <- HU.range[2] - HU.range[1]
+  # controlla se la finestra è fuori range...
+  scaling.HU.window <- FALSE
+  if(HU.window[1]<HU.range[1]) {HU.window[1] <- HU.range[1]; scaling.HU.window <- TRUE}
+  if(HU.window[2]>HU.range[2]) {HU.window[2] <- HU.range[2]; scaling.HU.window <- TRUE}
+  if(scaling.HU.window) {message('HU.window scaled to HU.range')}
   
-  interval <- ((1:Nc)-1)/Nc
+
+  
+  Nc <- max(HU.range[2] - HU.range[1], 2)
 
   interval <- ((1:Nc)-1)/Nc
+  
+  if(diff(HU.range)==0) {
+    col.ct <- 0.5
+    return(col.ct)
+  }
+  
+  
   wmin <- max(HU.window[1] - HU.range[1], 1)
   wmax <- min(HU.window[2] - HU.range[1], Nc)
   
-  message(wmin, ' ', wmax)
+  #message(wmin, ' ', wmax)
+  #print(interval)
   
   interval[1:wmin] <- 0
   interval[(wmin+1):(wmax)] <- seq(0, 1, length.out=(wmax-wmin))

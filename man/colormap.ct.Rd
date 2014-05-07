@@ -1,10 +1,17 @@
 \name{colormap.ct}
 \alias{colormap.ct}
-\title{Generate colormap}
+\title{Generate gray colormap for Hounsfield numbers}
 \usage{
 colormap.ct(HU.range = c(-1000, 3000), HU.window = c(-1000, 3000))
 }
+\arguments{
+  \item{HU.range}{The range c(HU.min, HU.max) of the
+  Hounsfield numbers of the CT}
+
+  \item{HU.windos}{The range c(HU.min, HU.max) to map to
+  c(0,1) gray map.}
+}
 \description{
-Generate colormap
+Generate gray colormap for Hounsfield numbers
 }
 

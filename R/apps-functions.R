@@ -64,6 +64,9 @@ values.app <- function(plan=NULL, values=NULL, ct=NULL, contours=NULL, sanitize=
             isocenter <- get.isocenter(plan[[i.plan]])
           }
           
+          #my.width <- 640
+          #my.height <- 640
+          
           if(input$Exit) {stopApp()}
           if(input$plane=='axial (z)') {z <- input$z; y <- NA; x <- NA}
           if(input$plane=='coronal (y)') {z <- NA; y <- input$y; x <- NA}
@@ -119,7 +122,8 @@ values.app <- function(plan=NULL, values=NULL, ct=NULL, contours=NULL, sanitize=
                         value = TRUE),
           sliderInput("HU.window", 
                       label = "HU window:",
-                      min = min(ct$values), max = max(ct$values), value = c(-1000,3000)),
+                      # min = min(ct$values), max = max(ct$values), value = c(-1000,3000)),
+                      min = -1000, max = 3000, value = c(-1000,3000)),
           
           hr(),
           
@@ -154,7 +158,7 @@ values.app <- function(plan=NULL, values=NULL, ct=NULL, contours=NULL, sanitize=
         
         # Show a plot of the generated distribution
         mainPanel(
-          plotOutput("plot.dose", width = "640px", height='640px')
+          plotOutput("plot.dose", width='640px', height='640px')
         )
       )
       
