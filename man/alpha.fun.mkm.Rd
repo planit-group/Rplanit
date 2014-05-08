@@ -14,6 +14,7 @@ alpha_beta_parameter_study, predisposta per il calcolo MKM
 interpolazione di R)
 }
 \seealso{
-Other LEM/MKM Models: \code{\link{alpha.beta.mkm}}
+Other LEM/MKM Models: \code{\link{alpha.beta.lem}};
+\code{\link{alpha.beta.mkm}}
 }
 

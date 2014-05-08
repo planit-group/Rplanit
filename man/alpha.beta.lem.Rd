@@ -1,21 +1,22 @@
-\name{alpha.beta.mkm}
-\alias{alpha.beta.mkm}
-\title{Evaluation of alpha and beta LQ parameter (MKM)}
+\name{alpha.beta.lem}
+\alias{alpha.beta.lem}
+\title{Evaluation of alpha and beta LQ parameter (LEM)}
 \usage{
-alpha.beta.mkm(alphaX = 0.1295, betaX = 0.03085, rN = 4, rd = 0.31,
+alpha.beta.lem(alphaX = 0.1, betaX = 0.05, rN = 5, Dt = 30,
   alphaX.min = NULL, alphaX.max = NULL, alphaX.N = NULL,
   betaX.min = NULL, betaX.max = NULL, betaX.N = NULL, rN.min = NULL,
-  rN.max = NULL, rN.N = NULL, rd.min = NULL, rd.max = NULL,
-  rd.N = NULL, cellType = NULL, particleType = "H", energies = NULL,
-  lets = NULL, ignore.stdout = TRUE, ignore.stderr = TRUE)
+  rN.max = NULL, rN.N = NULL, Dt.min = NULL, Dt.max = NULL,
+  Dt.N = NULL, model = "LEMI", calculusType = "rapidScholz",
+  cellType = NULL, particleType = "H", energies = NULL, lets = NULL,
+  ignore.stdout = TRUE, ignore.stderr = TRUE)
 }
 \arguments{
-  \item{alphaX,betaX,rN,rd}{MKM "biological" parameter
+  \item{alphaX,betaX,rN,Dt}{LEM "biological" parameter
   associated to a specific biological tissue/cell line:
   \itemize{ \item{alphaX} LQ alpha parameter of the
   reference radiation [Gy^-1] \item{betaX} LQ beta
   parameter of the reference radiation [Gy^-2] \item{rN}
-  cell nucleus radius [um] \item{rd} domain radius [um] }}
+  cell nucleus radius [um] \item{Dt} threshold dose [Gy] }}
 
   \item{alphaX.min,alphaX.max}{range of variability for
   parameter \code{alphaX}}
@@ -32,12 +33,18 @@ alpha.beta.mkm(alphaX = 0.1295, betaX = 0.03085, rN = 4, rd = 0.31,
 
   \item{rN.N}{number of step for \code{rN}}
 
-  \item{rd.min,rN.max}{range of variability for parameter
-  \code{rd}}
+  \item{Dt.min,Dt.max}{range of variability for parameter
+  \code{Dt}}
 
-  \item{rd.N}{number of step for \code{rd}}
+  \item{Dt.N}{number of step for \code{Dt}}
 
   \item{cellType}{name of the tissue/cell line (optional)}
+
+  \item{model}{The specific LEM model (available: 'LEMI',
+  'LEMII', 'LEMIII')}
+
+  \item{calculusType}{Approximation used for the evaluation
+  (available: 'rapidSholz', 'rapidRusso')}
 
   \item{particel}{type. Available ions: 'H', 'He', 'Li',
   'Be', 'B,', 'C', 'N', 'O', 'F', 'Ne'.}
@@ -50,18 +57,17 @@ alpha.beta.mkm(alphaX = 0.1295, betaX = 0.03085, rN = 4, rd = 0.31,
 }
 \value{
 a data.frame containing all the information specified
-including the alpha and beta MKM evaluation (note, in the
-MKM implementation beta = betaX).
+including the alpha and beta LEM evaluation.
 }
 \description{
 The evaluation is performed for a monoenergetic ion. It
-uses a C++ MKM "rapid" implementation for the evaluation.
-It accepts a single set of MKM parameter (\code{alphaX},
-\code{betaX}, \code{rN}, \code{rd}), or alternatively a
+uses a C++ LEM "rapid" implementation for the evaluation.
+It accepts a single set of LEM parameter (\code{alphaX},
+\code{betaX}, \code{rN}, \code{Dt}), or alternatively a
 full range of variability (min,max) for each parameter.
 }
 \seealso{
-Other LEM/MKM Models: \code{\link{alpha.beta.lem}};
+Other LEM/MKM Models: \code{\link{alpha.beta.mkm}};
 \code{\link{alpha.fun.mkm}}
 }
 
