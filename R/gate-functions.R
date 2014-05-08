@@ -122,6 +122,7 @@ create.plan.gate <- function(name='gate.simulation',
   plan <- list(name=name,
                ctFile=ctFile,
                ctWater=ctWater, # una semplice lista con la size del waterbox (Dx,Dy,Dz)
+               ct=ct,           # possibilità di inserire direttamente un oggetto ct
                materialDatabase=materialDatabase,
                HUToMaterialFile=HUToMaterialFile,
                origin=origin,
@@ -136,7 +137,7 @@ create.plan.gate <- function(name='gate.simulation',
                particleType=particleType,
                sourceDescriptionFile=sourceDescriptionFile,
                totalNumberOfPrimaries=totalNumberOfPrimaries,
-               K=K # pesi di ciascun beam (usato solo per il calcolo dei bea indipendente nelle matrici sparse)    
+               K=K # pesi di ciascun beam (usato solo per il calcolo dei beam indipendente nelle matrici sparse)    
   )
   class(plan) <- 'gate.plan'
   return(plan)
@@ -159,6 +160,20 @@ set.ct.gate <- function(plan.gate) {
   vp.mac.txt <- paste(vp.mac.txt, collapse='\n')
   close(vp.mac.template)
   
+  # OGGETTO CT
+  if(!is.null(plan.gate$ct)) {
+    message('using ct in plan...')
+    write.analyze(values=ct, file.name=paste0(plan.gate$name, '/data/ct'))
+    vp.mac.txt <- gsub('#@ct', '', vp.mac.txt)
+    vp.mac.txt <- gsub('@myct.hdr', 'data/ct.hdr', vp.mac.txt)
+  }
+  else
+  # FILE CT
+  if(!is.null(plan.gate$ctFile)) {
+    vp.mac.txt <- gsub('#@ct', '', vp.mac.txt)
+    vp.mac.txt <- gsub('@myct.hdr', plan.gate$ctFile, vp.mac.txt)
+  }
+  else
   # WATERBOX
   if(!is.null(plan.gate$ctWater)) {
     message('setting water box...')
@@ -226,12 +241,14 @@ create.gate.structure <- function(plan)
 
   # actor: dose
   if(sum('DoseToMaterial[Gy]' %in% plan$computingValues)>0) {
+    message('computing DoseToMaterial[Gy]')
     main.mac.txt <- sub('@enableDose', 'true', main.mac.txt)
   } else {
     main.mac.txt <- sub('@enableDose', 'false', main.mac.txt)
   }
 
   if(sum('DoseToMaterial^2[Gy^2]' %in% plan$computingValues)>0) {
+    message('computing DoseToMaterial^2[Gy^2]')
     main.mac.txt <- sub('@enableSquaredDose', 'true', main.mac.txt)
   } else {
     main.mac.txt <- sub('@enableSquaredDose', 'false', main.mac.txt)

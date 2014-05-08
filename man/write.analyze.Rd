@@ -2,13 +2,13 @@
 \alias{write.analyze}
 \title{Write 3D array (analyze)}
 \usage{
-write.analyze(values = values, variable = variable, file.name = file.name,
-  gzipped = FALSE)
+write.analyze(values, variable = NULL, file.name, gzipped = FALSE)
 }
 \arguments{
   \item{values}{the \code{values} object}
 
-  \item{variable}{the variable name}
+  \item{variable}{the variable name (default: first
+  variable in values).}
 
   \item{file.name}{the file name. Two files will be
   produced: \code{<file.name>.hdr} and

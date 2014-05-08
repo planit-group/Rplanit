@@ -675,15 +675,15 @@ write.3d.array <- function(ct, file.name) {
 #' Note: with the analyze format only a single variable array from \code{values} can be saved in the same files.
 #' 
 #' @param values the \code{values} object
-#' @param variable the variable name
+#' @param variable the variable name (default: first variable in values).
 #' @param file.name the file name. Two files will be produced: \code{<file.name>.hdr} and \code{<file.name>.img}
 #' @param gzipped compress the file (boolean, optional)
 #' 
 #' @family Analyze Format
 #' @export
 #' @import oro.nifti
-write.analyze <- function(values=values, variable=variable,
-                          file.name=file.name, gzipped=FALSE)
+write.analyze <- function(values, variable=NULL,
+                          file.name, gzipped=FALSE)
 {
 
   # librerie
@@ -697,6 +697,7 @@ write.analyze <- function(values=values, variable=variable,
   dz <- mean(values$z[2:Nz]-values$z[1:(Nz-1)]) # assume spaziatura costante
 
   # estrai 3d array
+  if(is.null(variable)) {variable <- values$variables[1]}
   if(values$Nv > 1) {
     iv <- which(values$variable)
     array.3d <- values$values[iv,,,]

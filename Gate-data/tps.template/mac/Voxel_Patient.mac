@@ -2,6 +2,8 @@
 # VOXEL PATIENT
 #=====================================================
 
+/gate/geometry/setMaterialDatabase                 data/GateMaterials.db
+
 #=====================================================
 # Generate materials from Hounsfield units. 
 # Once the files ct-HUmaterials.db and ct-HU2mat.txt are
@@ -44,11 +46,11 @@
 
 
 # CT Patient target Volume
-#/gate/CT/daughters/name                        target
-#/gate/CT/daughters/insert                      ImageNestedParametrisedVolume
-#/gate/geometry/setMaterialDatabase             data/ct-HUmaterials.db
-#/gate/target/geometry/SetHUToMaterialFile      data/ct-HU2mat.txt
-#/gate/target/geometry/SetImage                 data/ct.hdr
+#@ct/gate/CT/daughters/name                        target
+#@ct/gate/CT/daughters/insert                      ImageNestedParametrisedVolume
+#@ct/gate/geometry/setMaterialDatabase             data/ct-HUmaterials.db
+#@ct/gate/target/geometry/SetHUToMaterialFile      data/ct-HU2mat.txt
+#@ct/gate/target/geometry/SetImage                 @myct.hdr
 
 
 # optional : dump used image
@@ -58,6 +60,6 @@
 # Put the following image point (in image coordinate, in mm) at the
 # world center
 
-#/gate/target/placement/setTranslation                  -17.70 -24.62 -39.69 mm
-#/gate/target/geometry/setOrigin                        0 0 1498.2 mm
-#/gate/target/geometry/TranslateTheImageAtThisIsoCenter 303.90 178.82 1664.49 mm
+#/gate/target/placement/setTranslation                  0 0 0 mm
+#/gate/target/geometry/setOrigin                        0 0 0 mm
+#/gate/target/geometry/TranslateTheImageAtThisIsoCenter 0 0 0 mm
