@@ -4,11 +4,12 @@
 \usage{
 create.plan.gate(name = "gate.simulation", ctFile = NULL, ctWater = NULL,
   ct = NULL, materialDatabase = "./data/MyMaterials.db",
-  HUToMaterialFile = "data/ct-HU2mat.txt", origin = c(0, 0, 0),
-  waterIonisationPotential = 78, computingValues = c("DoseToMaterial[Gy]"),
-  saveEveryNSeconds = 200, size = "auto", position = c(0, 0, 0),
-  voxelSize = c(2, 2, 2), beams = NULL,
-  beamsFile.gate = "./data/beams.gate", particleType = "proton",
+  HUToMaterialFile = "data/ct-HU2mat.txt", contours = NULL, origin = c(0,
+  0, 0), waterIonisationPotential = 78,
+  computingValues = c("DoseToMaterial[Gy]"), saveEveryNSeconds = 200,
+  size = "auto", position = c(0, 0, 0), computingGridvoxelSizes = c(2, 2,
+  2), beams = NULL, beamsFile.gate = "./data/beams.gate",
+  particleType = "proton",
   sourceDescriptionFile = "./data/ProtonSimple.txt",
   totalNumberOfPrimaries = 0, K = NULL)
 }

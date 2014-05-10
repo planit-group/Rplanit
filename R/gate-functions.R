@@ -104,13 +104,14 @@ create.plan.gate <- function(name='gate.simulation',
                              ct=NULL,
                              materialDatabase='./data/MyMaterials.db',
                              HUToMaterialFile='data/ct-HU2mat.txt',
+                             contours=NULL,
                              origin=c(0,0,0),    
                              waterIonisationPotential=78,
                              computingValues=c('DoseToMaterial[Gy]'),
                              saveEveryNSeconds=200,
                              size='auto',
                              position=c(0,0,0),
-                             voxelSize=c(2,2,2),
+                             computingGridVoxelSizes=c(2,2,2),
                              beams=NULL,
                              beamsFile.gate='./data/beams.gate',
                              particleType='proton',
@@ -125,13 +126,14 @@ create.plan.gate <- function(name='gate.simulation',
                ct=ct,           # possibilità di inserire direttamente un oggetto ct
                materialDatabase=materialDatabase,
                HUToMaterialFile=HUToMaterialFile,
+               contours=contours,
                origin=origin,
                waterIonisationPotential=waterIonisationPotential,
                computingValues=computingValues,
                saveEveryNSeconds=saveEveryNSeconds,
                size=size,
                position=position,
-               voxelSize=voxelSize,
+               computingGridVoxelSizes=computingGridVoxelSizes,
                beams=beams, # oggetto beams
                beamsFile.gate=beamsFile.gate, # file dei beams (formato gate)
                particleType=particleType,
@@ -237,7 +239,7 @@ create.gate.structure <- function(plan)
     main.mac.txt <- sub('@size', paste(plan$size, collapse=' '), main.mac.txt)
   }
   main.mac.txt <- sub('@position', paste(plan$position, collapse=' '), main.mac.txt)
-  main.mac.txt <- sub('@voxelSize', paste(plan$voxelSize, collapse=' '), main.mac.txt)
+  main.mac.txt <- sub('@voxelSize', paste(plan$computingGridVoxelSizes, collapse=' '), main.mac.txt)
 
   # actor: dose
   if(sum('DoseToMaterial[Gy]' %in% plan$computingValues)>0) {
@@ -303,6 +305,18 @@ create.gate.structure <- function(plan)
     plan$beams.gate <- './data/beams.gate'
   } else {
     main.mac.txt <- sub('@beams.gate', plan$beamsFile.gate, main.mac.txt)
+    
+    # NON ANCORA IMPLEMENTATO!!!------------------------------------------------
+    # beams <- read.beams.gate(plan)
+    stop('beams file reference not yet supported for gate (you have to use directly a beam object: plan$beams <- beams)...')
+  }
+  
+  # check rotazione supporto del paziente
+  patientAngle <- unique(plan$beams$patientAngle)
+  if(length(unique(patientAngle))>1) {
+    stop('multiple support patient angles not yet implemented in gate...')
+  } else {
+    main.mac.txt <- sub('@patientSupportAngle', -patientAngle, main.mac.txt)
   }
 
   

@@ -159,6 +159,8 @@ read.plan <- function(name)
 #' @export
 run.dek.inverse <- function(plan, outmessages=FALSE) {
   
+  message('running plankit inverse planning...')
+  
   # input files
   ctFile <- paste(getwd(), '/', plan[['ctFile']], sep='')
   hounsfieldToDensityFile <- paste(getwd(), '/', plan[['hounsfieldToDensityFile']], sep='')
@@ -263,6 +265,8 @@ run.dek.inverse <- function(plan, outmessages=FALSE) {
 #' @family PlanKIT
 #' @export 
 run.dek.forward <- function(plan, outmessages=FALSE) {
+  
+  message('running plankit forward planning....')
   
   # input files
   ctFile <- paste(getwd(), '/', plan$ctFile, sep='')
