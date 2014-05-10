@@ -9,7 +9,7 @@
 #' @return a CT (values) object
 #' 
 #' @export
-
+#' @family Phantoms
 generate.ct <- function(CT.df, deltaX, deltaY, deltaZ)
 {
   numberOfVolumes <- nrow(CT.df)
@@ -76,7 +76,7 @@ generate.ct <- function(CT.df, deltaX, deltaY, deltaZ)
 #' @return a contours object
 #' 
 #' @export
-
+#' @family Phantoms
 generate.contours <- function(contours.df, CT=NULL, z=NULL, tissue='R3PIDEd0.2v0+MKM')
 {
   numberOfvois <- nrow(contours.df)
@@ -130,7 +130,7 @@ generate.contours <- function(contours.df, CT=NULL, z=NULL, tissue='R3PIDEd0.2v0
 #' @param tissue the tissue name
 #' 
 #' @export
-#' 
+#' @family Phantoms
 generate.ct.contours <- function(CT.df, contours.df, deltaX, deltaY, deltaZ, name='waterbox', tissue='R3PIDEd0.2v0+MKM')
 {
   # crea struttura CT e la salva

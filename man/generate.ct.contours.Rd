@@ -39,4 +39,8 @@ definition of the volumes of the contours (contours.df).
 CT and contours are directly written in two files with
 names specfied by \code{name}.
 }
+\seealso{
+Other Phantoms: \code{\link{generate.contours}};
+\code{\link{generate.ct}}
+}
 

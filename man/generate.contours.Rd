@@ -28,4 +28,8 @@ identify the slices (axial slices), a reference CT.
 Alternatively the z vector can be used directly. Optionally
 a tissue name can be supplied.
 }
+\seealso{
+Other Phantoms: \code{\link{generate.ct.contours}};
+\code{\link{generate.ct}}
+}
 
