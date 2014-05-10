@@ -127,7 +127,7 @@ create.plan.gate <- function(name='gate.simulation',
                materialDatabase=materialDatabase,
                HUToMaterialFile=HUToMaterialFile,
                contours=contours,
-               origin=origin,
+               origin=origin, # viene usato solo se si specifica un file *.hdr per la CT. altrimenti si usa direttamente l'origine codificato in ct
                waterIonisationPotential=waterIonisationPotential,
                computingValues=computingValues,
                saveEveryNSeconds=saveEveryNSeconds,
@@ -168,12 +168,15 @@ set.ct.gate <- function(plan.gate) {
     write.analyze(values=ct, file.name=paste0(plan.gate$name, '/data/ct'))
     vp.mac.txt <- gsub('#@ct', '', vp.mac.txt)
     vp.mac.txt <- gsub('@myct.hdr', 'data/ct.hdr', vp.mac.txt)
+    #plan.gate$origin <- c(ct$x[1], ct$y[1], ct$z[1]) # usa l'origine della CT
+    #vp.mac.txt <- sub('@origin', paste(plan.gate$origin, collapse=' '), vp.mac.txt)
   }
   else
   # FILE CT
   if(!is.null(plan.gate$ctFile)) {
     vp.mac.txt <- gsub('#@ct', '', vp.mac.txt)
     vp.mac.txt <- gsub('@myct.hdr', plan.gate$ctFile, vp.mac.txt)
+    vp.mac.txt <- sub('@origin', paste(plan.gate$origin, collapse=' '), vp.mac.txt)
   }
   else
   # WATERBOX
@@ -296,6 +299,8 @@ create.gate.structure <- function(plan)
   
 
   # SET BEAMS
+  # nota: se non esiste l'oggetto beam occorrerebbe caricarlo e agganciarlo automaticamente...
+  # questo sia per la gestione della rotazione del supporto del paziente, sia per il calcolo dell'isocentro...
   if(!is.null(plan$beams)) {
     message('Using beams dataframe stored in plan for ', plan$name)
     file.beams.gate <- paste(plan$name, '/data/beams', sep='')
@@ -306,12 +311,12 @@ create.gate.structure <- function(plan)
   } else {
     main.mac.txt <- sub('@beams.gate', plan$beamsFile.gate, main.mac.txt)
     
-    # NON ANCORA IMPLEMENTATO!!!------------------------------------------------
-    # beams <- read.beams.gate(plan)
+    # NON ANCORA IMPLEMENTATO!!!
+    # plan$beams <- read.beams.gate(plan)
     stop('beams file reference not yet supported for gate (you have to use directly a beam object: plan$beams <- beams)...')
   }
   
-  # check rotazione supporto del paziente
+  # check e rotazione supporto del paziente
   patientAngle <- unique(plan$beams$patientAngle)
   if(length(unique(patientAngle))>1) {
     stop('multiple support patient angles not yet implemented in gate...')
@@ -319,6 +324,14 @@ create.gate.structure <- function(plan)
     main.mac.txt <- sub('@patientSupportAngle', -patientAngle, main.mac.txt)
   }
 
+  # traslazione dell'isocentro
+  isocenter <- unique(beams[c('x_iso', 'y_iso', 'z_iso')])
+  if(nrow(isocenter)>1) {
+    stop('multiple isocenters not yet supported in gate...')
+  } else {
+    traslazione <- c(sum(range(ct$x))/2-isocenter$x_iso, sum(range(ct$y))/2-isocenter$y_iso, sum(range(ct$z))/2-isocenter$z_iso)
+    main.mac.txt <- sub('@translation', paste(traslazione, collapse=' '), main.mac.txt)
+  }
   
   # numero di eventi
   #main.mac.txt <- sub('@totalNumberOfPrimaries', plan$totalNumberOfPrimaries, main.mac.txt)
