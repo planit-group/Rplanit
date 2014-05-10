@@ -2,13 +2,14 @@
 \alias{get.values.gate.plan}
 \title{Get values object (Gate)}
 \usage{
-\method{get.values}{gate.plan}(plan, center.coordinates = c(0, 0, 0))
+\method{get.values}{gate.plan}(plan, center.coordinates = NULL)
 }
 \arguments{
   \item{plan.gate}{The plan object.}
 
   \item{center.coordinates}{The coordinates of the center
-  of the values 3D distribution.}
+  of the values 3D distribution. If it is NULL, the center
+  of the CT is assumed.}
 }
 \description{
 Get the values matrices for a plan (Gate).

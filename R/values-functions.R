@@ -84,10 +84,10 @@ get.values.plankit.plan <- function(plan)
 #' 
 #' Get the values matrices for a plan (Gate).
 #' @param plan.gate The plan object.
-#' @param center.coordinates The coordinates of the center of the values 3D distribution.
+#' @param center.coordinates The coordinates of the center of the values 3D distribution. If it is NULL, the center of the CT is assumed.
 #' @family Values
 #' @export
-get.values.gate.plan <- function(plan, center.coordinates=c(0,0,0))
+get.values.gate.plan <- function(plan, center.coordinates=NULL)
 {
   values <- list()
   variables <- plan$computingValues
@@ -99,13 +99,22 @@ get.values.gate.plan <- function(plan, center.coordinates=c(0,0,0))
   }
   values <- merge.values(values.list=values)
   
+  # recupera le coordinate assolute dalla CT
+  if(is.null(center.coordinates)) {
+    ct <- get.ct(plan)
+    center.coordinates[1] <- sum(range(ct$x))/2
+    center.coordinates[2] <- sum(range(ct$y))/2
+    center.coordinates[3] <- sum(range(ct$z))/2
+    print(center.coordinates)
+  }
+  
   # traslazione del centro
   x.c <- sum(range(values$x))/2
   y.c <- sum(range(values$y))/2
   z.c <- sum(range(values$z))/2
   values$x <- values$x + (center.coordinates[1]-x.c)
-  values$y <- values$y + (center.coordinates[1]-y.c)
-  values$z <- values$z + (center.coordinates[1]-z.c)
+  values$y <- values$y + (center.coordinates[2]-y.c)
+  values$z <- values$z + (center.coordinates[3]-z.c)
   
   return(values)
 }
