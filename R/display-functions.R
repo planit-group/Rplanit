@@ -511,8 +511,8 @@ display.slice.all <- function(ct=NULL,
   par(oma=c(0,0,0,4)) # margin of 4 spaces width at right hand side
   set.panel(1,1) # 1X1 matrix of plots
   
-  asp <- 1/abs( diff(range(values$x)) /  diff(range(values$y)) )
-  print(asp)
+  #asp <- 1/abs( diff(range(values$x)) /  diff(range(values$y)) )
+  #print(asp)
 
   # layer colorbar
   if(!is.na(Nz.values)) {
