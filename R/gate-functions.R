@@ -324,13 +324,19 @@ create.gate.structure <- function(plan)
     main.mac.txt <- sub('@patientSupportAngle', -patientAngle, main.mac.txt)
   }
 
-  # traslazione dell'isocentro
+  # traslazione dell'isocentro -------------------------------------------------
   isocenter <- unique(beams[c('x_iso', 'y_iso', 'z_iso')])
   if(nrow(isocenter)>1) {
     stop('multiple isocenters not yet supported in gate...')
   } else {
     traslazione <- c(sum(range(ct$x))/2-isocenter$x_iso, sum(range(ct$y))/2-isocenter$y_iso, sum(range(ct$z))/2-isocenter$z_iso)
-    main.mac.txt <- sub('@translation', paste(traslazione, collapse=' '), main.mac.txt)
+    # rotazione traslazione
+    theta <- -patientAngle * (pi/180)
+    trasl.rot <- traslazione
+    #print(traslazione)
+    trasl.rot[1] <- traslazione[1]*cos(theta) + traslazione[3]*sin(theta)
+    trasl.rot[3] <- -traslazione[1]*sin(theta) + traslazione[3]*cos(theta)
+    main.mac.txt <- sub('@translation', paste(trasl.rot, collapse=' '), main.mac.txt)
   }
   
   # numero di eventi
