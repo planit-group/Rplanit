@@ -16,7 +16,11 @@ get.ct <- function(plan) UseMethod("get.ct")
 
 get.ct.plankit.plan <- function(plan)
 {
-  return(read.3d(plan$ctFile))
+  if(!is.null(plan$ct)) {
+    return(plan$ct)
+  } else {
+    return(read.3d(plan$ctFile))
+  }
 }
 
 get.ct.gate.plan <- function(plan)

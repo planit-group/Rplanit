@@ -2,7 +2,7 @@
 \alias{create.constraint}
 \title{Crea oggetto prescrizione (dataframe)}
 \usage{
-create.constraint(VOI = "PTV", VOIIndex = NA, type = "EXACT",
+create.constraint(N = 1, VOI = "PTV", VOIIndex = NA, type = "EXACT",
   variable = "Dose[Gy]", value = 2, volumeFraction = 1, weight = 1)
 }
 \description{

@@ -2,8 +2,8 @@
 \alias{create.plan}
 \title{Generate Plan template (PlanKIT)}
 \usage{
-create.plan(plan = NA, name = "test", ctFile = "ct.3d",
-  contoursFile = "c1.contours",
+create.plan(plan = NA, name = "test", ctFile = "ct.3d", ct = NULL,
+  contoursFile = "plan.contours", contours = NULL,
   hounsfieldToDensityFile = "fluka-schneider.HNToDensity.1d",
   hounsfieldToStoichiometryFile = "fluka-schneider.HNToStoichiometry.1d",
   computingGridVoxelSizes = c(2, 2, 2), computingGridCoverage = 0,

@@ -2,10 +2,13 @@
 \alias{create.field}
 \title{Crea oggetto field (dataframe ops)}
 \usage{
-create.field(targetVOI = "PTV", targetVOIIndex = NA, iecGantryAngle = 0,
-  iecPatientSupportAngle = 0, interSpotSpacing = c(1.5, 1.5, 1),
-  spotsExtensionOutsideTarget = 0, targetIsocenter.x = NA,
-  targetIsocenter.y = NA, targetIsocenter.z = NA)
+create.field(N = 1, targetVOI = "PTV", targetVOIIndex = NA,
+  iecGantryAngle = 0, iecPatientSupportAngle = 0,
+  interSpotSpacing = c(1.5, 1.5, 1), spotsExtensionOutsideTarget = 0,
+  targetIsocenter.x = NA, targetIsocenter.y = NA, targetIsocenter.z = NA)
+}
+\arguments{
+  \item{N}{number of fields}
 }
 \description{
 nota: si tratta di un dataframe: diversi fields sono

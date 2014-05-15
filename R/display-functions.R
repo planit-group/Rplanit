@@ -105,6 +105,7 @@ display.lut <- function(lut, variable=NULL, E=NULL, bw=FALSE, r.cut=NULL, cont=F
 #' @param bw display using gray color levels. It colud be used to display CT values (optional, boolean)
 #' @param xlim,ylim,zlim two element vectors containing the coordinate ranges to be displayed (optional)
 #' @param vlim two element vector containing the value range to be displayed. Values outside the range are displayed as 'blank', i.e. no color tile (optional)
+#' @param colors vector of color values (colormap)
 #' @param file.name name of the file on which to save the figure. By default no file is written (optional)
 #' @param width,height sizes of the figure to be saved (inches) (optional)
 #' 
@@ -126,6 +127,7 @@ display.slice <- function(values=NULL,
                           ylim=NULL,
                           zlim=NULL,
                           vlim=NULL,
+                          colors=NULL,
                           invert.y.axis=FALSE,
                           file.name=NULL,
                           width=7, height=7)
@@ -210,11 +212,15 @@ display.slice <- function(values=NULL,
   
   
   # colori
-  Nc <- 255
-  if(bw) {
-    cols <- gray( ((1:Nc)-1)/Nc )
+  if(!is.null(colors)) {
+    cols <- colors
   } else {
-    cols <- rainbow(Nc, start=0, end=0.6)[Nc:1]
+    Nc <- 255
+    if(bw) {
+      cols <- gray( ((1:Nc)-1)/Nc )
+    } else {
+      cols <- rainbow(Nc, start=0, end=0.6)[Nc:1]
+    }
   }
   
   # INIZIA FIGURA
@@ -301,6 +307,13 @@ display.slice.ct <- function(ct, contours=NULL,
   #vlim <- range(ct$values, na.rm=TRUE)
   
   
+  my.colors <- colormap.ct(HU.range=vlim, HU.window=HU.window)
+  
+  # INIZIA FIGURA
+  if(!is.null(file.name)) {
+    png(filename=file.name, width=width, height=height, res=300, units='in')
+  }
+  
   # immagine ct
   slice <- display.slice(ct, variable='HounsfieldNumber',
                          Nx=Nx, Ny=Ny, Nz=Nz,
@@ -309,17 +322,11 @@ display.slice.ct <- function(ct, contours=NULL,
                          xlim=xlim,
                          ylim=ylim,
                          zlim=zlim,
-                         vlim=vlim)
+                         vlim=vlim,
+                         colors=my.colors)
   Nx <- slice$Nx
   Ny <- slice$Ny
   Nz <- slice$Nz
-  
-
-  
-  # INIZIA FIGURA
-  if(!is.null(file.name)) {
-    png(filename=file.name, width=width, height=height, res=300, units='in')
-  }
   
   # panel
   set.panel()

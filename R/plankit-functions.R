@@ -69,7 +69,9 @@ available.constraint.types <- function()
 create.plan <- function(plan=NA,
                         name='test',
                         ctFile='ct.3d',
-                        contoursFile='c1.contours',
+                        ct=NULL,
+                        contoursFile='plan.contours',
+                        contours=NULL,
                         hounsfieldToDensityFile='fluka-schneider.HNToDensity.1d',
                         hounsfieldToStoichiometryFile='fluka-schneider.HNToStoichiometry.1d',
                         computingGridVoxelSizes=c(2,2,2),
@@ -161,18 +163,29 @@ run.dek.inverse <- function(plan, outmessages=FALSE) {
   
   message('running plankit inverse planning...')
   
-  # input files
-  ctFile <- paste(getwd(), '/', plan[['ctFile']], sep='')
-  hounsfieldToDensityFile <- paste(getwd(), '/', plan[['hounsfieldToDensityFile']], sep='')
-  hounsfieldToStoichiometryFile <- paste(getwd(), '/', plan[['hounsfieldToStoichiometryFile']], sep='')
-  contoursFile <- paste(getwd(), '/', plan[['contoursFile']], sep='')
-  plan.config <- paste(plan[['name']], '/plan.config', sep='')
-  
   # crea folder
   dir.create(plan$name, recursive=TRUE, showWarnings=FALSE)
   
   # rimuove contenuto del folder (il piano viene completamente sovrascritto)
   unlink(paste(plan$name, '/*', sep=''), recursive = FALSE, force = FALSE)
+  
+  # CT e CONTORNI
+  if(!is.null(plan[['ct']])) {
+    message('using ct object in plan...')
+    write.3d.array(ct=plan$ct, file.name=paste0(plan$name, '/ct.3d'))
+    plan$ctFile <- paste0(plan$name, '/ct.3d')
+  }
+  if(!is.null(plan[['contours']])) {
+    write.contours(contours=plan$contours, name=paste0(plan$name, '/plan'))
+    plan$contoursFile <- paste0(plan$name, '/plan.contours')
+  }
+  
+  # input files (path assoluti)
+  ctFile <- paste(getwd(), '/', plan[['ctFile']], sep='')
+  hounsfieldToDensityFile <- paste(getwd(), '/', plan[['hounsfieldToDensityFile']], sep='')
+  hounsfieldToStoichiometryFile <- paste(getwd(), '/', plan[['hounsfieldToStoichiometryFile']], sep='')
+  contoursFile <- paste(getwd(), '/', plan[['contoursFile']], sep='')
+  plan.config <- paste(plan[['name']], '/plan.config', sep='')
   
   # crea file prescrizione
   plan.prescription <- paste(plan$name, '/plan.prescription', sep='')
@@ -268,19 +281,36 @@ run.dek.forward <- function(plan, outmessages=FALSE) {
   
   message('running plankit forward planning....')
   
-  # input files
-  ctFile <- paste(getwd(), '/', plan$ctFile, sep='')
-  hounsfieldToDensityFile <- paste(getwd(), '/', plan$hounsfieldToDensityFile, sep='')
-  hounsfieldToStoichiometryFile <- paste(getwd(), '/', plan$hounsfieldToStoichiometryFile, sep='')
-  contoursFile <- paste(getwd(), '/', plan$contoursFile, sep='')
-  plan.config <- paste(plan[['name']], '/plan.config', sep='')
-  
-  
   # crea folder
   dir.create(plan[['name']], recursive=TRUE, showWarnings=FALSE)
   
   # rimuove contenuto del folder (il piano viene completamente sovrascritto)
   unlink(paste(plan$name, '/*', sep=''), recursive = FALSE, force = FALSE)
+  
+  
+  # CT e CONTORNI
+  if(!is.null(plan[['ct']])) {
+    write.3d.array(ct=plan$ct, file.name=paste0(plan$name, '/ct.3d'))
+    plan$ctFile <- paste0(plan$name, '/ct.3d')
+  }
+  if(!is.null(plan[['contours']])) {
+    write.contours(contours=plan$contours, name=paste0(plan$name, '/plan'))
+    plan$contoursFile <- paste0(plan$name, '/plan.contours')
+  }
+  
+  # BEAMS
+  if(!is.null(plan[['beams']])) {
+    write.beams(beams=plan[['beams']], format='plankit', file.name=paste0(plan$name, '/plan'))
+    plan$inputBeamsFile <- paste0(plan$name, '/plan.beams')
+  }
+  
+  # input files (path assoluti)
+  ctFile <- paste(getwd(), '/', plan$ctFile, sep='')
+  hounsfieldToDensityFile <- paste(getwd(), '/', plan$hounsfieldToDensityFile, sep='')
+  hounsfieldToStoichiometryFile <- paste(getwd(), '/', plan$hounsfieldToStoichiometryFile, sep='')
+  contoursFile <- paste(getwd(), '/', plan$contoursFile, sep='')
+  plan.config <- paste(plan[['name']], '/plan.config', sep='')
+  inputBeamsFile <- paste(getwd(), '/', plan$inputBeamsFile, sep='')
   
   # crea file plan.config
   con <- file(plan.config, "w") # open for writing in text mode
@@ -302,12 +332,9 @@ run.dek.forward <- function(plan, outmessages=FALSE) {
   if(!is.null(plan$inputBeamsFile)) {
     inputBeamsFile <- paste(getwd(), '/', plan$inputBeamsFile, sep='')
     writeLines(paste('inputBeamsFile = ', inputBeamsFile, '\n'), con=con, sep='')
-  } else if(!is.null(plan$beams)) {
-    write.beams(beams=plan$beams, file.name=paste0(plan$name, '/plan'), format='plankit')
-    writeLines(paste('inputBeamsFile = plan.beams\n'), con=con, sep='')
   }
   
-  # output
+  # beams output
   if(is.null(plan[['outputBeamsFile']])) {
     outputBeamsFile <- 'plan.beams'
     plan[['outputBeamsFile']] <- outputBeamsFile

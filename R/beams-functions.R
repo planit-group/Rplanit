@@ -4,11 +4,13 @@
 #' 
 #' nota: si tratta di un dataframe: diversi fields sono semplicemente aggiunti
 #' appendendo delle righe al dataframe...
+#' @param N number of fields
 #' 
 #' @family Beams
 #' @export
 #' 
-create.field <- function(targetVOI='PTV',
+create.field <- function(N=1,
+                         targetVOI='PTV',
                          targetVOIIndex=NA,
                          iecGantryAngle=0,
                          iecPatientSupportAngle=0,
@@ -18,7 +20,8 @@ create.field <- function(targetVOI='PTV',
                          targetIsocenter.y=NA,
                          targetIsocenter.z=NA) 
 {  
-  field <- data.frame(targetVOI=targetVOI,
+  field <- data.frame(field=1:N,
+                      targetVOI=targetVOI,
                       targetVOIIndex=targetVOIIndex,
                       iecGantryAngle=iecGantryAngle,
                       iecPatientSupportAngle=iecPatientSupportAngle,

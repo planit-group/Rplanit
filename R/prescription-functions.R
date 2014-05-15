@@ -9,7 +9,8 @@
 #' @family Prescription
 #' @export
 #' 
-create.constraint <- function(VOI='PTV',
+create.constraint <- function(N=1,
+                              VOI='PTV',
                               VOIIndex=NA,
                               type='EXACT',
                               variable='Dose[Gy]',
@@ -17,13 +18,15 @@ create.constraint <- function(VOI='PTV',
                               volumeFraction=1.0,
                               weight=1.0)
 {
-  constraint <- data.frame(VOI=VOI,
+  constraint <- data.frame(constraint=1:N,
+                           VOI=VOI,
                            VOIIndex=VOIIndex,
                            type=type,
                            variable=variable,
                            value=value,
                            volumeFraction=volumeFraction,
-                           weight=weight)
+                           weight=weight,
+                           stringsAsFactors=FALSE)
   return(constraint)
 }
 
