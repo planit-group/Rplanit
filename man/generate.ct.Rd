@@ -2,7 +2,7 @@
 \alias{generate.ct}
 \title{Generate a CT phantom}
 \usage{
-generate.ct(CT.df, deltaX, deltaY, deltaZ)
+generate.ct(CT.df, deltaX = 1, deltaY = 1, deltaZ = 1)
 }
 \arguments{
   \item{CT.df}{the dataframe in which are defined the

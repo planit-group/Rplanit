@@ -10,7 +10,7 @@
 #' 
 #' @export
 #' @family Phantoms
-generate.ct <- function(CT.df, deltaX, deltaY, deltaZ)
+generate.ct <- function(CT.df, deltaX=1, deltaY=1, deltaZ=1)
 {
   numberOfVolumes <- nrow(CT.df)
   
