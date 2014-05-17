@@ -535,21 +535,21 @@ get.profile <- function(values, variable=NULL, x=NULL, y=NULL, z=NULL, integrate
   # calcola profili
   if(!is.null(Nx) & !is.null(Ny)) {
     if(integrate) {
-      profile.value <- apply(values$values, c(3), sum) * dx * dy
+      profile.value <- apply(values$values, c(3), sum) #* dx * dy
     } else {
       profile.value <- values$values[Nx,Ny,]
     }
   }
   if(!is.null(Nx) & !is.null(Nz)) {
     if(integrate) {
-      profile.value <- apply(values$values, c(2), sum) * dx * dz
+      profile.value <- apply(values$values, c(2), sum) #* dx * dz
     } else {
       profile.value <- values$values[Nx,,Nz]
     }
   }
   if(!is.null(Ny) & !is.null(Nz)) {
     if(integrate) {
-      profile.value <- apply(values$values, c(1), sum) * dy * dz
+      profile.value <- apply(values$values, c(1), sum) #* dy * dz
     } else {
       profile.value <- values$values[,Ny,Nz]
     }
@@ -580,8 +580,9 @@ get.profile <- function(values, variable=NULL, x=NULL, y=NULL, z=NULL, integrate
     profile.value <- values$values[voxel.index]
   }
 
-  
-  profile.df <- data.frame(variable=variable, axis=coord.name, depth=coord.value, value=profile.value, variable='variable')
+  #print(profile.value)
+  #profile.df <- data.frame(variable=variable, axis=coord.name, depth=coord.value, value=profile.value, variable='variable')
+  profile.df <- data.frame(variable=variable, axis=coord.name, depth=coord.value, value=profile.value)
   
   if(return.voxel.index & !is.null(ray)) {profile.df$voxel.index <- voxel.index}
   if(return.xyz  & !is.null(ray)) {
