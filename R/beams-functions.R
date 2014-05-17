@@ -220,9 +220,9 @@ convert.fluence2mu <- function(beams, type='protonCnao')
 create.beam <- function(nbeams=1, with.spots=FALSE, x_iso=0, y_iso=0, z_iso=0, gantryAngle=0, patientAngle=0, fluence=1, energy=0, deflX=0, deflY=0, x_s=0, y_s=0, z_s=0)
 {
   if(with.spots) {
-    beam <- data.frame(x_iso=rep(0, nbeams), x_iso=0, y_iso=0, z_iso=0, gantryAngle=0, patientAngle=0, fluence=1, energy=0, deflX=0, deflY=0, x_s=0, y_s=0, z_s=0)
+    beam <- data.frame(x_iso=rep(0, nbeams), y_iso=0, z_iso=0, gantryAngle=0, patientAngle=0, fluence=fluence, energy=energy, deflX=0, deflY=0, x_s=0, y_s=0, z_s=0)
   } else {
-    beam <- data.frame(x_iso=rep(0, nbeams), x_iso=0, y_iso=0, z_iso=0, gantryAngle=0, patientAngle=0, fluence=1, energy=0, deflX=0, deflY=0)
+    beam <- data.frame(x_iso=rep(0, nbeams),  y_iso=0, z_iso=0, gantryAngle=0, patientAngle=0, fluence=fluence, energy=energy, deflX=0, deflY=0)
   }
   return(beam)
 }
