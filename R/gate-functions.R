@@ -27,9 +27,9 @@ available.variables.gate <- function()
 #' @family PlanGate
 file.variable.gate <- function(variable)
 {
-  file.names <- c('values-Dose', # dose 2 water
-                  'values-Dose-Squared',
-                  'values-Dose-Uncertainty',
+  file.names <- c('values-DoseToWater', # dose 2 water
+                  'values-DoseToWater-Squared',
+                  'values-DoseToWater-Uncertainty',
                   'values-Dose', # dose 2 material
                   'values-Dose-Squared',
                   'values-Dose-Uncertainty',
@@ -163,9 +163,9 @@ set.ct.gate <- function(plan.gate) {
   close(vp.mac.template)
   
   # OGGETTO CT
-  if(!is.null(plan.gate$ct)) {
+  if(!is.null(plan.gate[['ct']])) {
     message('using ct in plan...')
-    write.analyze(values=ct, file.name=paste0(plan.gate$name, '/data/ct'))
+    write.analyze(values=plan.gate[['ct']], file.name=paste0(plan.gate$name, '/data/ct'))
     vp.mac.txt <- gsub('#@ct', '', vp.mac.txt)
     vp.mac.txt <- gsub('@myct.hdr', 'data/ct.hdr', vp.mac.txt)
     #plan.gate$origin <- c(ct$x[1], ct$y[1], ct$z[1]) # usa l'origine della CT
@@ -173,7 +173,7 @@ set.ct.gate <- function(plan.gate) {
   }
   else
   # FILE CT
-  if(!is.null(plan.gate$ctFile)) {
+  if(!is.null(plan.gate[['ctFile']])) {
     vp.mac.txt <- gsub('#@ct', '', vp.mac.txt)
     vp.mac.txt <- gsub('@myct.hdr', plan.gate$ctFile, vp.mac.txt)
     vp.mac.txt <- sub('@origin', paste(plan.gate$origin, collapse=' '), vp.mac.txt)
@@ -265,8 +265,27 @@ create.gate.structure <- function(plan)
     main.mac.txt <- sub('@enableUncertaintyDose', 'false', main.mac.txt)
   }
 
-  # da inserire: dose 2 water
-
+  # dose 2 water
+  if(sum('Dose[Gy]' %in% plan$computingValues)>0) {
+    message('computing Dose[Gy]')
+    main.mac.txt <- sub('@enableDoseToWater', 'true', main.mac.txt)
+  } else {
+    main.mac.txt <- sub('@enableDoseToWater', 'false', main.mac.txt)
+  }
+  
+  if(sum('Dose^2[Gy^2]' %in% plan$computingValues)>0) {
+    message('computing Dose^2[Gy^2]')
+    main.mac.txt <- sub('@enableSquaredDoseToWater', 'true', main.mac.txt)
+  } else {
+    main.mac.txt <- sub('@enableSquaredDoseToWater', 'false', main.mac.txt)
+  }
+  
+  if(sum('DoseUncertainty[Gy]' %in% plan$computingValues)>0) {
+    message('computing Dose Uncertainty [Gy]')
+    main.mac.txt <- sub('@enableUncertaintyDoseToWater', 'true', main.mac.txt)
+  } else {
+    main.mac.txt <- sub('@enableUncertaintyDoseToWater', 'false', main.mac.txt)
+  }
 
   # actor: deposited energy
   if(sum('DepositedEnergy[MeV]' %in% plan$computingValues)>0) {
@@ -307,7 +326,7 @@ create.gate.structure <- function(plan)
     write.beams(beams=plan$beams, file.name=file.beams.gate, format='gate')
     
     main.mac.txt <- sub('@beams.gate', './data/beams.gate', main.mac.txt)
-    plan$beams.gate <- './data/beams.gate'
+    plan$beamsFile.gate <- './data/beams.gate'
   } else {
     main.mac.txt <- sub('@beams.gate', plan$beamsFile.gate, main.mac.txt)
     
@@ -325,11 +344,18 @@ create.gate.structure <- function(plan)
   }
 
   # traslazione dell'isocentro -------------------------------------------------
-  isocenter <- unique(beams[c('x_iso', 'y_iso', 'z_iso')])
+  isocenter <- unique(plan$beams[c('x_iso', 'y_iso', 'z_iso')])
   if(nrow(isocenter)>1) {
     stop('multiple isocenters not yet supported in gate...')
   } else {
-    traslazione <- c(sum(range(ct$x))/2-isocenter$x_iso, sum(range(ct$y))/2-isocenter$y_iso, sum(range(ct$z))/2-isocenter$z_iso)
+    
+    if(!is.null(plan$ct)) {
+      middle <- c(sum(range(plan[['ct']]$x))/2, sum(range(plan[['ct']]$y))/2, sum(range(plan[['ct']]$z))/2)
+    } else {
+      middle <- c(0,0,0)
+    }
+    
+    traslazione <- c(middle[1]-isocenter$x_iso, middle[2]-isocenter$y_iso, middle[3]-isocenter$z_iso)
     # rotazione traslazione
     theta <- -patientAngle * (pi/180)
     trasl.rot <- traslazione
