@@ -827,3 +827,50 @@ get.coordinates <- function(voxel.index, x, y, z)
 
   return(data.frame(x=X, y=Y, z=Z))
 }
+
+#' Evaluate the equivalent path length
+#'
+#' The evaluation is performed by matching the two cumulative distributions.
+#' @param r0 vector of incremental coordinates in the reference "equivalent" material
+#' @param v0 vector of values in the reference material evaluated at r0
+#' @param r1 vector of incremental coordinates in the actual material
+#' @param v1 vector of values in the actual material evaluated at r1
+#' @param add.extrapolation evaluate the extrapolation values using a linear fit over EPL(r). If it is FALSE, it will use 1 as angular coefficient (i.e. it will assume that the teo materials are equal outside the specified coordinates: EPL = r) 
+#' @return a function r0=r0(r1): the epl in the reference material as a function of the length in the actual material.
+#' @family Values Utilities
+#' @export
+evaluate.epl <- function(r0, v0, r1, v1, add.extrapolation=FALSE)
+{
+  dr0 <- diff(create.intervals(r0))
+  dr1 <- diff(create.intervals(r1))
+  v0.cum <- cumsum(v0*dr0); v0.cum.fun <- approxfun(x=r0, y=v0.cum, rule=2)
+  v1.cum <- cumsum(v1*dr1); v1.cum.fun <- approxfun(x=r1, y=v1.cum, rule=2)
+  
+  r <- sort(unique(c(r0, r1)))
+  epl <- rep(0, length(r))
+  v0.cum.r <- v0.cum.fun(r)
+  v1.cum.r <- v1.cum.fun(r)
+
+  for(i in 1:length(r)) {
+    epl[i] <- mean(r[(v1.cum.r[i]-v0.cum.r)^2==min((v1.cum.r[i]-v0.cum.r)^2)])
+  }
+  
+  if(add.extrapolation) {
+    r1.fit <- lm(epl~r)
+    r.l <- -1e14
+    r.u <- 1e14
+    epl.l <- r1.fit$coefficients[1] + r1.fit$coefficients[2]*r.l
+    epl.u <- r1.fit$coefficients[1] + r1.fit$coefficients[2]*r.u
+    epl <- c(epl.l, epl, epl.u)
+    r <- c(r.l, r, r.u)
+  } else {
+    r.l <- -1e14
+    r.u <- 1e14
+    epl.l <- epl[1] +1*r.l
+    epl.u <- epl[length(epl)] + 1*r.u
+    epl <- c(epl.l, epl, epl.u)
+    r <- c(r.l, r, r.u)
+  }
+
+  return(approxfun(x=r, y=epl, rule=2))
+}

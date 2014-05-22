@@ -2,8 +2,8 @@
 \alias{get.values.for.beam}
 \title{Evaluate BeamLUT}
 \usage{
-\method{get.values}{for.beam}(beam.index, fluence = NULL, plan,
-  variables = "Dose[Gy]", temp.name = "temp", remove.temp = TRUE)
+\method{get.values}{for.beam}(beams = NULL, beam.index, fluence = NULL,
+  plan, variables = "Dose[Gy]", temp.name = "temp", remove.temp = TRUE)
 }
 \arguments{
   \item{beam.index}{index of the beam (it can be a vector

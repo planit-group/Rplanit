@@ -339,11 +339,14 @@ write.lut <- function(lut.array, variables=NULL, E=NULL, x=NULL, y=NULL, zn=NULL
 #' @return a values object
 #' @family BeamLUT
 #' @export
-get.values.for.beam <- function(beam.index, fluence=NULL, plan, variables='Dose[Gy]', temp.name='temp', remove.temp=TRUE)
+get.values.for.beam <- function(beams=NULL, beam.index, fluence=NULL, plan, variables='Dose[Gy]', temp.name='temp', remove.temp=TRUE)
 {
   # recupera e seleziona beams
-  beams <- get.beams(plan)
-  beams <- beams[beam.index, ]
+  if(is.null(beams)) {
+    beams <- get.beams(plan)
+    beams <- beams[beam.index, ]
+  }
+  
   temp.beamfile <- paste(temp.name, '.beams', sep='')
   if(!is.null(fluence)) {beams$fluence=fluence; print(beams)} # sovrascrive fluenze
   write.beams(beams, temp.name)
@@ -351,6 +354,7 @@ get.values.for.beam <- function(beam.index, fluence=NULL, plan, variables='Dose[
   # crea piano pre la selezione dei beam e calcola forward.planning
   plan.b <- plan
   plan.b$name <- temp.name
+  plan.b['beams'] <- list(NULL) # disinnesca i beam (se per caso ci sono...)
   plan.b$inputBeamsFile <- temp.beamfile
   plan.b$computingValues <- paste(variables, collapse=' ')
   plan.b.out <- run.dek.forward(plan.b, outmessages=FALSE)
