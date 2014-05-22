@@ -339,6 +339,7 @@ display.slice.ct <- function(ct, contours=NULL,
     roi.s <- subset(contours, slice==(Nz-1)) # nota: il numero della slice dei contorni inizia da zero, mentre l'indice-slice della CT da 1.
     roi.names <- unique(roi.s$contour)
     N.roi <- length(roi.names)
+    if(N.roi>0) {
     message('adding contours for: ', paste(roi.names, collapse=' '))
     my.lwd <- rep(2, N.roi)
     for(i in 1:N.roi) {
@@ -352,6 +353,7 @@ display.slice.ct <- function(ct, contours=NULL,
         rsp <- rbind(rsp, rsp[1,])
         lines(rsp$x, rsp$y, col='green', lwd=my.lwd[i])
       }
+    }
     }
   }
   
@@ -568,6 +570,7 @@ display.slice.all <- function(ct=NULL,
     roi.s <- subset(contours, slice==(Nz.ct-1)) # nota: il numero della slice dei contorni inizia da zero, mentre l'indice-slice della CT da 1.
     roi.names <- unique(roi.s$contour)
     N.roi <- length(roi.names)
+    if(N.roi>0) {
     message('adding contours for: ', paste(roi.names, collapse=' '))
     my.lwd <- rep(2, N.roi)
     for(i in 1:N.roi) {
@@ -580,6 +583,7 @@ display.slice.all <- function(ct=NULL,
         rsp <- subset(rs, polygon==pol[j])
         lines(rsp$x, rsp$y, col=contour.color, lwd=my.lwd[i])
       }
+    }
     }
   }
   
