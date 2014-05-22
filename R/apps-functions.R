@@ -55,6 +55,7 @@ values.app <- function(plan=NULL, values=NULL, ct=NULL, contours=NULL, sanitize=
         output$plot.dose <- renderPlot({
           
           # check per vedere se i.plan è cambiato
+          if(!is.null(plan)){
           i.plan.new <- which(input$plan==plan.name)
           if(i.plan.new!=i.plan) {
             i.plan <- i.plan.new
@@ -62,7 +63,7 @@ values.app <- function(plan=NULL, values=NULL, ct=NULL, contours=NULL, sanitize=
             ct <- get.ct(plan[[i.plan]])
             contours <- get.contours(plan[[i.plan]])
             isocenter <- get.isocenter(plan[[i.plan]])
-          }
+          }}
           
           #my.width <- 640
           #my.height <- 640
