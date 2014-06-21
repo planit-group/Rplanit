@@ -1204,7 +1204,7 @@ display.dvh2d <- function(values=values, vois=vois, variables=c('Dose[Gy]', 'Dos
 #' @param legend.position The position of the legend. legend.position = 0 means no legend.
 #' 
 #' 
-#' @import ggplot2 gtable
+#' @import ggplot2 gtable grid
 #' @export
 display.dvh2d.multiple <- function(values=values, vois=vois, variables=c('Dose[Gy]', 'Dose[Gy]'), voi=voi,
 				   alpha=0.2, means=FALSE, x.lim=NULL, y.lim=NULL,
