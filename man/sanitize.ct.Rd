@@ -2,7 +2,7 @@
 \alias{sanitize.ct}
 \title{rimuove valori fuori range della ct}
 \usage{
-sanitize.ct(ct, HU.min = -1000, HU.max = 3000)
+sanitize.ct(ct, HU.min = -1000, HU.max = 3000, threshold.air = NULL)
 }
 \description{
 rimuove valori fuori range della ct

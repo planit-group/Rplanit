@@ -1635,6 +1635,7 @@ render.voi.isosurfaces <- function(vois=vois, voi=PTV, file.name=NULL, add=FALSE
 #' (questo magari lo riformulerò quando userò immagini 4D...)
 #' 
 #' @export
+#' @import tkrplot
 
 display.slices.interactive <- function(values=values, variables=NULL, gray=FALSE)
 {
@@ -1860,7 +1861,7 @@ display.beams <- function(beams,
   }
   
   # aggiunge field ID
-  beams <- add.field(beams)
+  if(!('field' %in% colnames(beams))) {beams <- add.field(beams)}
   
   # digits
   beams$energy.f <- as.factor(round(beams$energy, digits=1))

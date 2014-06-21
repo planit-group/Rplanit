@@ -43,9 +43,10 @@ get.ct.gate.plan <- function(plan)
 #' 
 #' @family CT
 #' @export
-sanitize.ct <- function(ct, HU.min=-1000, HU.max=3000)
+sanitize.ct <- function(ct, HU.min=-1000, HU.max=3000, threshold.air=NULL)
 {
   ct$values[ct$values<HU.min] <- HU.min
   ct$values[ct$values>HU.max] <- HU.max
+  if(!is.null(threshold.air)) {ct$values[ct$values<=threshold.air] <- HU.min}
   return(ct)
 }

@@ -208,11 +208,13 @@ read.3d.dicom <- function(dicom.folder, exclude=NULL, recursive=TRUE, verbose=TR
   Nv <- 1
   
   # coordinates
+  
+  dxy <- as.numeric(unlist(strsplit(paste(dcm.info$`0028-0030-PixelSpacing`, collapse=' '), split=' ', fixed=TRUE)))
+  
   vo <- as.numeric(unlist(strsplit(paste(dcm.info$`0020-0032-ImagePositionPatient`, collapse=' '), split=' ', fixed=TRUE)))
   voxel.origin <- c(mean(vo[seq(1, length(dxy)-2, by=3)]),
                     mean(vo[seq(2, length(dxy)-1, by=3)]),
                     mean(vo[seq(3, length(dxy), by=3)]))
-  dxy <- as.numeric(unlist(strsplit(paste(dcm.info$`0028-0030-PixelSpacing`, collapse=' '), split=' ', fixed=TRUE)))
   dx <- mean(dxy[seq(1, length(dxy)-1, by=2)])
   dy <- mean(dxy[seq(2, length(dxy), by=2)])
   x <- seq(from=voxel.origin[1], by=dx, length.out=Nx)

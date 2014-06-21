@@ -31,7 +31,7 @@ create.field <- function(N=1,
                       spotsExtensionOutsideTarget=spotsExtensionOutsideTarget,
                       targetIsocenter.x=targetIsocenter.x,
                       targetIsocenter.y=targetIsocenter.y,
-                      targetIsocenter.z=targetIsocenter.z)
+                      targetIsocenter.z=targetIsocenter.z, stringsAsFactors=FALSE)
   #class(field) <- 'field.plankit'
   return(field)
 }
