@@ -208,7 +208,7 @@ get.contours.gate.plan <- function(plan) {
 #' Evaluate the volume defined by its contours.
 #' 
 #' @param contours the contours dataframe
-#' @voi the voi(s). If it is not specified, the volume of all VOIs is evaluated (optional)
+#' @param voi the voi(s). If it is not specified, the volume of all VOIs is evaluated (optional)
 #' 
 #' @export
 #' @importFrom splancs areapl

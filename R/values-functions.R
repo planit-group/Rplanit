@@ -499,7 +499,7 @@ ray.tracing <- function(ray, xi, yi, zi, values=NULL) {
 #' @param return.xyz Returns also the x,y,z of the points along the ray (used only for a ray profile).
 #' @return a dataframe containing the specified profile.
 #' @family Values, Values Manipulation, Profiles
-#' @todo Generation of multi-variable profiles (a list?). If no variable is specified all the available variable will be used. Integration around arbitrary ray. Gestisci in maniera uniforme i casi ortogonali rispetto al caso generale "ray".
+#' TODO: Generation of multi-variable profiles (a list?). If no variable is specified all the available variable will be used. Integration around arbitrary ray. Gestisci in maniera uniforme i casi ortogonali rispetto al caso generale "ray".
 #' @export
 get.profile <- function(values, variable=NULL, x=NULL, y=NULL, z=NULL, integrate=FALSE, ray=NULL, return.voxel.index=FALSE, return.xyz=FALSE)
 {
