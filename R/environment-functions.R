@@ -18,7 +18,7 @@ setenv.rplanit <- function()
 {
   # HOME
   #my.home <- paste(Sys.getenv('HOME'), 'R', sep='/')
-  my.home <- paste0(path.expand(Sys.getenv('R_LIBS_USER')), '/')
+  my.home <- get.install.path()
   
   # Gate
   Sys.setenv(DYLD_LIBRARY_PATH=paste(my.home, 'Gate6.2-install/root_v5.34/lib', sep='/'),
@@ -102,6 +102,17 @@ get.dektools.env <- function()
 }
 
 
+#'Get installing folder
+#'
+#'Get the path to the folder where external precompiled packages (such as plankit, survivals and gate) are/will be installed.
+#'@export
+#'@family Environmen
+get.install.path <- function()
+{
+  # usa la variabile d'ambiente $R_LIBS_USER
+  return(paste0(path.expand(Sys.getenv('R_LIBS_USER')), '/'))
+}
+
 #'Check the configuration of PlanKIT
 #'
 #'If the check fails it generates an error.
@@ -160,7 +171,9 @@ check.gate <- function(use.warning=FALSE)
 #' @family Install
 install.gate <- function()
 {
-  my.home <- paste0(path.expand(Sys.getenv('R_LIBS_USER')), '/')
+  # installing path
+  my.home <- get.install.path()
+  dir.create(my.home, showWarnings=FALSE)
   
   # check del sistema operativo
   my.system <- Sys.info()['sysname']
@@ -187,7 +200,9 @@ install.gate <- function()
 #' @family Install
 install.plankit <- function()
 {
-  my.home <- paste0(path.expand(Sys.getenv('R_LIBS_USER')), '/')
+  # installing path
+  my.home <- get.install.path()
+  dir.create(my.home, showWarnings=FALSE)
   
   # check del sistema operativo
   my.system <- Sys.info()['sysname']
@@ -214,7 +229,9 @@ install.plankit <- function()
 #' @family Install
 install.survival <- function()
 {
-  my.home <- paste0(path.expand(Sys.getenv('R_LIBS_USER')), '/')
+  # installing path
+  my.home <- get.install.path()
+  dir.create(my.home, showWarnings=FALSE)
   
   # check del sistema operativo
   my.system <- Sys.info()['sysname']
