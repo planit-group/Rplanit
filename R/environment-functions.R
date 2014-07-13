@@ -17,7 +17,8 @@ dektoolsEnv <- new.env()
 setenv.rplanit <- function()
 {
   # HOME
-  my.home <- paste(Sys.getenv('HOME'), 'R', sep='/')
+  #my.home <- paste(Sys.getenv('HOME'), 'R', sep='/')
+  my.home <- paste0(path.expand(Sys.getenv('R_LIBS_USER')), '/')
   
   # Gate
   Sys.setenv(DYLD_LIBRARY_PATH=paste(my.home, 'Gate6.2-install/root_v5.34/lib', sep='/'),
@@ -159,6 +160,8 @@ check.gate <- function(use.warning=FALSE)
 #' @family Install
 install.gate <- function()
 {
+  my.home <- paste0(path.expand(Sys.getenv('R_LIBS_USER')), '/')
+  
   # check del sistema operativo
   my.system <- Sys.info()['sysname']
   if(my.system=='Linux') {
@@ -173,8 +176,7 @@ install.gate <- function()
   message('uncompressing gate...')
   system('tar jxf Gate6.2-install.tar.bz2; rm Gate6.2-install.tar.bz2', ignore.stdout=TRUE, ignore.stderr=TRUE)
   
-  install.dir <- paste(Sys.getenv('HOME'), 'R', 'Gate6.2-install', sep='/')
-  R.dir <- paste(Sys.getenv('HOME'), 'R/', sep='/')
+  install.dir <- paste(my.home, 'Gate6.2-install', sep='/')
   message('moving gate in ', install.dir, ' ...')
   unlink(install.dir, recursive=TRUE)
   file.rename(from='Gate6.2-install', to=install.dir)
@@ -185,6 +187,8 @@ install.gate <- function()
 #' @family Install
 install.plankit <- function()
 {
+  my.home <- paste0(path.expand(Sys.getenv('R_LIBS_USER')), '/')
+  
   # check del sistema operativo
   my.system <- Sys.info()['sysname']
   if(my.system=='Linux') {
@@ -199,8 +203,7 @@ install.plankit <- function()
   message('uncompressing plankit...')
   system('tar jxf DEK-install.tar.bz2; rm DEK-install.tar.bz2', ignore.stdout=TRUE, ignore.stderr=TRUE)
   
-  install.dir <- paste(Sys.getenv('HOME'), 'R', 'DEK-install', sep='/')
-  R.dir <- paste(Sys.getenv('HOME'), 'R/', sep='/')
+  install.dir <- paste(my.home, 'DEK-install', sep='/')
   message('moving plankit in ', install.dir, ' ...')
   unlink(install.dir, recursive=TRUE)
   file.rename(from='DEK-install', to=install.dir)
@@ -211,6 +214,8 @@ install.plankit <- function()
 #' @family Install
 install.survival <- function()
 {
+  my.home <- paste0(path.expand(Sys.getenv('R_LIBS_USER')), '/')
+  
   # check del sistema operativo
   my.system <- Sys.info()['sysname']
   if(my.system=='Linux') {
@@ -229,8 +234,7 @@ install.survival <- function()
   message('uncompressing survival...')
   system(paste0('tar jxf Survival-install.tar.bz2; rm Survival-install.tar.bz2'), ignore.stdout=TRUE, ignore.stderr=TRUE)
   
-  install.dir <- paste(Sys.getenv('HOME'), 'R', 'Survival-install', sep='/')
-  R.dir <- paste(Sys.getenv('HOME'), 'R/', sep='/')
+  install.dir <- paste(my.home, 'Survival-install', sep='/')
   message('moving survival in ', install.dir, ' ...')
   unlink(install.dir, recursive=TRUE)
   file.rename(from='Survival-install', to=install.dir)
