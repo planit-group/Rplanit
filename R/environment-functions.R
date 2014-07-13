@@ -227,7 +227,7 @@ install.survival <- function()
   download.file(url=paste0('http://totlxl.to.infn.it/tools/', survival_package, '.bz2'), destfile='Survival-install.tar.bz2')
   
   message('uncompressing survival...')
-  system(paste0('tar jxf ', survival_package, '.bz2; rm ', survival_package), ignore.stdout=TRUE, ignore.stderr=TRUE)
+  system(paste0('tar jxf Survival-install.tar.bz2; rm Survival-install.tar.bz2'), ignore.stdout=TRUE, ignore.stderr=TRUE)
   
   install.dir <- paste(Sys.getenv('HOME'), 'R', 'Survival-install', sep='/')
   R.dir <- paste(Sys.getenv('HOME'), 'R/', sep='/')
