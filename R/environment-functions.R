@@ -215,30 +215,19 @@ install.survival <- function()
   my.system <- Sys.info()['sysname']
   if(my.system=='Linux') {
     message('installing compiled survival for Linux...')
-    survival_package <- 'Survival-install.tar.bz2'
+    survival_package <- 'Survival-install.tar'
   } else if(my.system=='Darwin') {
     message('installing compiled survival for Mac (Darwin)...')
-<<<<<<< HEAD
     survival_package <- 'Survival-install.mac.tar'
-=======
-    survival_package <- 'Survival-install.mac.tar.bz2'
->>>>>>> 92526aa193957ac110fcc7418a7e78c87587550f
   } else {
     stop(paste0('error: there is no precopiled available for your system (', my.system, ')'))
   }
   
   message('downloading survival...')
-<<<<<<< HEAD
   download.file(url=paste0('http://totlxl.to.infn.it/tools/', survival_package, '.bz2'), destfile='Survival-install.tar.bz2')
   
   message('uncompressing survival...')
   system(paste0('tar jxf ', survival_package, '.bz2; rm ', survival_package), ignore.stdout=TRUE, ignore.stderr=TRUE)
-=======
-  download.file(url=paste0('http://totlxl.to.infn.it/tools/', survival_package), destfile='Survival-install.tar.bz2')
-  
-  message('uncompressing survival...')
-  system(paste0('tar jxf ', survival_package, '; rm ', survival_package), ignore.stdout=TRUE, ignore.stderr=TRUE)
->>>>>>> 92526aa193957ac110fcc7418a7e78c87587550f
   
   install.dir <- paste(Sys.getenv('HOME'), 'R', 'Survival-install', sep='/')
   R.dir <- paste(Sys.getenv('HOME'), 'R/', sep='/')
