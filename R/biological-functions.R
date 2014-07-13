@@ -435,7 +435,7 @@ alpha.beta.mkm <- function(alphaX=0.1295, betaX=0.03085, rN=4, rd=0.31,
   # costruzione linea di comando:
   s.args <- paste(cellType, model, calculusType, a, b, n, d, particleType, energyType, e)
   # cmd <- paste('.', lem.setenv, '; survival_alpha_beta_parameter_study', s.args)
-  cmd <- paste('survival_alpha_beta_parameter_study', s.args)
+  cmd <- paste('survival', s.args)
   if(!ignore.stdout) {message(cmd)}
 
   t <- system.time(system(cmd, ignore.stdout=ignore.stdout, ignore.stderr=ignore.stderr))
@@ -526,7 +526,7 @@ alpha.beta.lem <- function(alphaX=0.1, betaX=0.05, rN=5, Dt=30,
   # costruzione linea di comando:
   s.args <- paste(cellType, model, calculusType, a, b, n, d, particleType, energyType, e)
   # cmd <- paste('.', lem.setenv, '; survival_alpha_beta_parameter_study', s.args)
-  cmd <- paste('survival_alpha_beta_parameter_study', s.args)
+  cmd <- paste('survival', s.args)
   if(!ignore.stdout) {message(cmd)}
   
   t <- system.time(system(cmd, ignore.stdout=ignore.stdout, ignore.stderr=ignore.stderr))
@@ -604,7 +604,7 @@ alpha.fun.mkm <- function(alphaX=0.1295, betaX=0.03085, rN=4, rd=0.31,
   # costruzione linea di comando:
   s.args <- paste(cellType, model, calculusType, a, b, n, d, particleType, energyType, e)
   #cmd <- paste('.', lem.setenv, '; survival_alpha_beta_parameter_study', s.args)
-  cmd <- paste('survival_alpha_beta_parameter_study', s.args)
+  cmd <- paste('survival', s.args)
   #print(cmd)
 
   t <- system.time(system(cmd, ignore.stdout=TRUE, ignore.stderr=TRUE))
