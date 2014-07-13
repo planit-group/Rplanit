@@ -164,7 +164,7 @@ install.gate <- function()
   if(my.system=='Linux') {
     message('installing compiled plakit for Linux...')
   } else {
-    stop(paste0('error: there is no precopiled available for your system (', my.system, ')'))
+    stop(paste0('error: there is no precompiled available for your system (', my.system, ')'))
   }
   
   message('downloading gate...')
@@ -190,7 +190,7 @@ install.plankit <- function()
   if(my.system=='Linux') {
     message('installing compiled plakit for Linux...')
   } else {
-    stop(paste0('error: there is no precopiled available for your system (', my.system, ')'))
+    stop(paste0('error: there is no precompiled available for your system (', my.system, ')'))
   }
   
   message('downloading plankit...')
@@ -220,7 +220,7 @@ install.survival <- function()
     message('installing compiled survival for Mac (Darwin)...')
     survival_package <- 'Survival-install.mac.tar'
   } else {
-    stop(paste0('error: there is no precopiled available for your system (', my.system, ')'))
+    stop(paste0('error: there is no precompiled available for your system (', my.system, ')'))
   }
   
   message('downloading survival...')
