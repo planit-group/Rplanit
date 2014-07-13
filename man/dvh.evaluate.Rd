@@ -19,8 +19,11 @@ dvh.evaluate(values = NULL, vois = NULL, voi = "PTV", variable = NULL,
   representing voxels were the specified variable is not
   defined (optional, boolean)}
 
-  \item{with0}{put explicitly in the DVH a point at (0,1)
-  (optional, boolean)}
+  \item{with0}{put explicitly in the DVH a point at (0,
+  max(volume)). It is possible to specify directly the min
+  value to use for this DVH point, in this case if with.0
+  is a number !=0, the point will be at (with.0,
+  max(volume)) (optional)}
 }
 \value{
 The \code{dvh} object; a list consisting of:
@@ -31,7 +34,7 @@ The \code{dvh} object; a list consisting of:
 voxels of the VOI}
 }
 \description{
-Evaluate the DVH for a single VOI and a specified variable
+Evaluate the DVH for a single VOI and a specified variable.
 }
 \seealso{
 Other DVH: \code{\link{dvh.evaluate.all}};

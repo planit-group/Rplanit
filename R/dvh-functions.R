@@ -3,14 +3,14 @@
 
 #' Evaluate DVH
 #' 
-#' Evaluate the DVH for a single VOI and a specified variable
+#' Evaluate the DVH for a single VOI and a specified variable.
 #' 
 #' @param values the \code{values} object
 #' @param vois the \code{vois} object
 #' @param voi the VOI name
 #' @param variable the name of the variable (optional if \code{values} contains only one variable)
 #' @param with.na leave explicitly NA values in DVH representing voxels were the specified variable is not defined (optional, boolean)
-#' @param with0 put explicitly in the DVH a point at (0,1) (optional, boolean)
+#' @param with0 put explicitly in the DVH a point at (0, max(volume)). It is possible to specify directly the min value to use for this DVH point, in this case if with.0 is a number !=0, the point will be at (with.0, max(volume)) (optional)
 #' @return The \code{dvh} object; a list consisting of:
 #' \item{value}{vector containing the value data}
 #' \item{valume}{vector containing the volume fractions}
@@ -55,8 +55,10 @@ dvh.evaluate <- function(values=NULL, vois=NULL, voi='PTV', variable=NULL, with.
     voi.values <- voi.values[!is.na(voi.values)]
   }
   if(with.0) {
-    volume <- c(1, volume)
-    voi.values <- c(0, voi.values)
+    #volume <- c(1, volume)
+    if(is.numeric(with.0)) {message('using with.0: ', with.0); min.voi.values <- with.0} else {min.voi.values <- 0}
+    volume <- c(max(volume), volume)
+    voi.values <- c(min.voi.values, voi.values)
   }
   
   return(list(value=voi.values, volume=volume, volume.tot=volume.tot, variable=variable, voi=voi, Nvoxel=Nvoxel))

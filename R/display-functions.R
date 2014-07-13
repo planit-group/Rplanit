@@ -1294,11 +1294,11 @@ display.dvh2d.multiple <- function(values=values, vois=vois, variables=c('Dose[G
                                    particleType=as.character(model.cMKM$particleType[iMKM]),
                                    lets=seq(letd.min, letd.max, length.out=30))
       MKM.df.tmp$id <- model.cMKM$id[iMKM]
-      MKM.df.tmp$alpha.X <- model.cMKM$alpha.X[iMKM]
+      MKM.df.tmp$alpha.X <- model.cMKM$alpha.X[iMKM] # NOTA: OCCORRE RISISTEMRE UN PO' LE NOTAZIONI...
       if(iMKM==1) {MKM.df <- MKM.df.tmp} else {MKM.df <- rbind(MKM.df, MKM.df.tmp)}
     }
     if(RBE.alpha) {
-      MKM.df$alpha <- MKM.df$alpha/MKM.df$alpha.X		      
+      MKM.df$alpha <- MKM.df$alpha/MKM.df$alpha.X	# sostituisce per far prima	      
     }
     p1 <- p1 + geom_line(data=MKM.df, aes(x=let, y=alpha, colour=id, group=id))
   }
