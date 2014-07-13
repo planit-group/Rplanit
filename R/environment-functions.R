@@ -106,7 +106,7 @@ get.dektools.env <- function()
 #'If the check fails it generates an error.
 #'@param use.warning if TRUE it uses warning instead of an error.
 #'@export
-#'@faily Environment
+#'@family Environment
 check.plankit <- function(use.warning=FALSE)
 {
   dek.setenv <- get('dek.setenv', envir=dektoolsEnv)
@@ -126,7 +126,7 @@ check.plankit <- function(use.warning=FALSE)
 #'If the check fails it generates an error.
 #'#'@param use.warning if TRUE it uses warning instead of an error.
 #'@export
-#'@faily Environment
+#'@family Environment
 check.gate <- function(use.warning=FALSE)
 {
   gate.setenv <- get('gate.setenv', envir=dektoolsEnv)
@@ -159,6 +159,14 @@ check.gate <- function(use.warning=FALSE)
 #' @family Install
 install.gate <- function()
 {
+  # check del sistema operativo
+  my.system <- Sys.info()['sysname']
+  if(my.system=='Linux') {
+    message('installing compiled plakit for Linux...')
+  } else {
+    stop(paste0('error: there is no precopiled available for your system (', my.system, ')'))
+  }
+  
   message('downloading gate...')
   download.file(url='http://totlxl.to.infn.it/tools/Gate6.2-install.tar.bz2', destfile='Gate6.2-install.tar.bz2')
   
@@ -177,6 +185,14 @@ install.gate <- function()
 #' @family Install
 install.plankit <- function()
 {
+  # check del sistema operativo
+  my.system <- Sys.info()['sysname']
+  if(my.system=='Linux') {
+    message('installing compiled plakit for Linux...')
+  } else {
+    stop(paste0('error: there is no precopiled available for your system (', my.system, ')'))
+  }
+  
   message('downloading plankit...')
   download.file(url='http://totlxl.to.infn.it/tools/DEK-install.tar.bz2', destfile='DEK-install.tar.bz2')
   
@@ -195,11 +211,23 @@ install.plankit <- function()
 #' @family Install
 install.survival <- function()
 {
+  # check del sistema operativo
+  my.system <- Sys.info()['sysname']
+  if(my.system=='Linux') {
+    message('installing compiled survival for Linux...')
+    survival_package <- 'Survival-install.tar.bz2'
+  } else if(my.system=='Darwin') {
+    message('installing compiled survival for Mac (Darwin)...')
+    survival_package <- 'Survival-install.mac.tar'
+  } else {
+    stop(paste0('error: there is no precopiled available for your system (', my.system, ')'))
+  }
+  
   message('downloading survival...')
-  download.file(url='http://totlxl.to.infn.it/tools/Survival-install.tar.bz2', destfile='Survival-install.tar.bz2')
+  download.file(url=paste0('http://totlxl.to.infn.it/tools/', survival_package, '.bz2'), destfile='Survival-install.tar.bz2')
   
   message('uncompressing survival...')
-  system('tar jxf Survival-install.tar.bz2; rm Survival-install.tar.bz2', ignore.stdout=TRUE, ignore.stderr=TRUE)
+  system(paste0('tar jxf ', survival_package, '.bz2; rm ', survival_package), ignore.stdout=TRUE, ignore.stderr=TRUE)
   
   install.dir <- paste(Sys.getenv('HOME'), 'R', 'Survival-install', sep='/')
   R.dir <- paste(Sys.getenv('HOME'), 'R/', sep='/')
