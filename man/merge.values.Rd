@@ -12,7 +12,7 @@ merge.values(values.list)
 A values object
 }
 \description{
-Merge a list of values objects in a single object. It assumes that the variable names are unique.
+Merge a list of values objects in a single object. It assumes that the variable names are not overlapping among different values objects.
 }
 \seealso{
 Other Values: \code{\link{create.values}};

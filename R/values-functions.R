@@ -53,6 +53,9 @@ create.values <- function(array.values=NULL, variables='variable name', x, y, z)
     }
   }
   
+  # definisci classe
+  class(values) <- 'values'
+  
   return(values)
 }
 
@@ -148,12 +151,12 @@ get.values.dataframe <- function(plan)
 }
 
 
-#' genera struttura dataframe da oggetto values
+#' Generate data.frame from values object
 #' 
-#' l'estrazione viene fatta sui VOI specificati
-#' ogni riga corrisponde ad un voxel.
-#' nel dataframe ogni voxel è associato a un VOI.
-#' voxel associati a più voi vengono ripetuti su più righe.
+#' Uses only voxels belogning to the specified VOIs.
+#' Each row of the output data.frame is a single voxel.
+#' Each voxel is associated to a VOI.
+#' Voxels assiciated to different VOIs are replicated on different rows.
 #' 
 #' @family Values
 #' @export
@@ -319,7 +322,7 @@ sanitize.values <- function(values)
 
 #' Merge a list of values
 #' 
-#' Merge a list of values objects in a single object. It assumes that the variable names are unique.
+#' Merge a list of values objects in a single object. It assumes that the variable names are not overlapping among different values objects.
 #' @param values.list A list of values objects.
 #' @return A values object
 #' @family Values
@@ -393,8 +396,12 @@ get.array.values <- function(values, variable)
 }
 
 
-#' aggiungi array di una nuova variabile all'oggetto values
+#' Add an array to values
 #' 
+#' Add an array of a new variable to a \code{values} object.
+#' @param values the \code{values} object
+#' @param new.array the array to be added
+#' @param variable the name of the new variable
 #' @family Values Manipulation
 #' @export
 add.array.values <- function(values, new.array, variable='New Data')

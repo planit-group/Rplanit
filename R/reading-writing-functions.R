@@ -113,8 +113,10 @@ read.3d <- function(file.name,
   Ny <- length(y)
   Nz <- length(z)
   
-  # crea struttura array
-  return(list(values=Values.3d, x=x, y=y, z=z, Nx=Nx, Ny=Ny, Nz=Nz, Nv=Nv, variables=variables, file=file.name))
+  # crea oggetto values
+  values <- list(values=Values.3d, x=x, y=y, z=z, Nx=Nx, Ny=Ny, Nz=Nz, Nv=Nv, variables=variables, file=file.name)
+  class(values) <- 'values'
+  return(values)
 }
 
 
@@ -148,8 +150,10 @@ read.3d.hdr <- function(file.name, variable='Dose[Gy]', voxel.origin=c(0,0,0))
   y <- seq(from=voxel.origin[2], by=dy, length.out=Ny)
   z <- seq(from=voxel.origin[3], by=dz, length.out=Nz)
   
-  # crea struttura array
-  return(list(values=Values.3d, x=x, y=y, z=z, Nx=Nx, Ny=Ny, Nz=Nz, Nv=Nv, variables=variable, file=file.name))
+  # crea oggetto values
+  values <- list(values=Values.3d, x=x, y=y, z=z, Nx=Nx, Ny=Ny, Nz=Nz, Nv=Nv, variables=variables, file=file.name)
+  class(values) <- 'values'
+  return(values)
 }
 
 
@@ -221,8 +225,10 @@ read.3d.dicom <- function(dicom.folder, exclude=NULL, recursive=TRUE, verbose=TR
   y <- seq(from=voxel.origin[2], by=dy, length.out=Ny)
   z <- sort(zz)
   
-  # crea struttura array
-  return(list(values=Values.3d, x=x, y=y, z=z, Nx=Nx, Ny=Ny, Nz=Nz, Nv=Nv, variables=variable, file=dicom.folder))
+  # crea oggetto values
+  values <- list(values=Values.3d, x=x, y=y, z=z, Nx=Nx, Ny=Ny, Nz=Nz, Nv=Nv, variables=variables, file=file.name)
+  class(values) <- 'values'
+  return(values)
 }
 
 #' Legge file in formato "3d" e restituisce un dataframe
@@ -388,7 +394,6 @@ read.3d.spliced <- function(file.name,
     if(i==1) {values <- values.s} else {values <- rbind(values, values.s)}
   }
   rm(values.s, Values.3d.s, Values.3d)
-  
   
   return(values)
 
