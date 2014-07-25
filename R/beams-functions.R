@@ -8,7 +8,6 @@
 #' 
 #' @family Beams
 #' @export
-#' 
 create.field <- function(N=1,
                          targetVOI='PTV',
                          targetVOIIndex=NA,
