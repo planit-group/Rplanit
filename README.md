@@ -1,6 +1,6 @@
 # Rplanit
 
-Radiotherapy with Ion beams: planning, simulations and analysis
+Radiotherapy with ion beams: planning, simulations and analysis
 
 *Author*: Andrea Attili
 
