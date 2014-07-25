@@ -53,14 +53,14 @@ $ sudo apt-get install liblog4cxx10-dev
 ```
 > install.plankit(<lincence number>) # please read the note below.
 > install.gate()
-> install.surival()
+> install.survival()
 ```
 * To update everything to the latest version, the last commands should be runned again:
 ```
 > install_github("Rplanit", username="planit-group", dependencies=TRUE)
 > install.plankit(<lincence number>) # please read the note below.
 > install.gate()
-> install.surival()
+> install.survival()
 > # et voila
 ```
 
