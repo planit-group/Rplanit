@@ -1,6 +1,6 @@
 # Rplanit
 
-RT Ion planning simulations and analysis
+Radiotherapy with Ion beams: planning, simulations and analysis
 
 *Author*: Andrea Attili
 
@@ -12,9 +12,10 @@ of radiobiological evaluations and display possibilities.
 
 
 ## Installation
+Note: it is assumed that the camputer is connected to the web...
 
 ### Ubuntu (12.04 64bit)
-* The following libraries need to be installed from the Ubuntu repository:
+* The following libraries need to be installed from the Ubuntu repository (from the terminal shell prompt):
 ```
 $ sudo apt-get install libcurl4-openssl-dev
 $ sudo apt-get install tk8.5-dev
@@ -53,9 +54,15 @@ $ sudo apt-get install liblog4cxx10-dev
 > install.plankit(<lincence number>) # please read the note below.
 > install.gate()
 > instal.surival()
+```
+* To update everything to the latest version, the last commands should be runned again:
+```
+> install_github("Rplanit", username="planit-group", dependencies=TRUE)
+> install.plankit(<lincence number>) # please read the note below.
+> install.gate()
+> instal.surival()
 > # et voila
 ```
-* To update everything to the latest version, the last commands should be runned again.
 
 #### Important Note
-While _Rplanit_, _Gate_ and _Survivals_ are open-source, the TPS kernel, _PlanKIT_ is proprietary by INFN/IBA. To use it for research purposes please contact Andrea Attili (attili@to.infn.it) to obtain the licence number and have access to the binaries.
+While _Rplanit_, _Gate_ and _Survivals_ are open-source, the TPS kernel, _PlanKIT_, is proprietary by INFN/IBA. To use it for research purposes please contact Andrea Attili (attili@to.infn.it) to obtain the licence number and have access to the binaries.
