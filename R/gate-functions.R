@@ -96,6 +96,7 @@ create.waterbox.gate <- function(Dx=100, Dy=100, Dz=100)
 #' 
 #' Generate a default (empty) template of the Plan, to be used with Gate.
 #' (documentation for the parameters coming soon...)
+#' @return A plan (plankit.gate object)
 #' @export
 #' @family PlanGate
 create.plan.gate <- function(name='gate.simulation',

@@ -61,7 +61,7 @@ available.constraint.types <- function()
 #' Generate Plan template (PlanKIT)
 #' 
 #' Generate a default (empty) template of the Plan to be used with PlanKIT.
-#' @return A Plan object (list).
+#' @return A Plan (plankit.plan object).
 #' 
 #' @family Plan
 #' @export
