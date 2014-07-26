@@ -15,7 +15,7 @@ create.plan(plan = NA, name = "test", ctFile = "ct.3d", ct = NULL,
   inputBeamsFile = NULL, beams = NULL)
 }
 \value{
-A Plan object (list).
+A Plan (plankit.plan object).
 }
 \description{
 Generate a default (empty) template of the Plan to be used with PlanKIT.

@@ -14,6 +14,9 @@ create.plan.gate(name = "gate.simulation", ctFile = NULL, ctWater = NULL,
   sourceDescriptionFile = "./data/ProtonSimple.txt",
   totalNumberOfPrimaries = 0, K = NULL)
 }
+\value{
+A plan (plankit.gate object)
+}
 \description{
 Generate a default (empty) template of the Plan, to be used with Gate.
 (documentation for the parameters coming soon...)

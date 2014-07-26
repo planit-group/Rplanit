@@ -3,7 +3,7 @@
 \alias{merge.values}
 \title{Merge a list of values}
 \usage{
-merge.values(values.list)
+\method{merge}{values}(values.list)
 }
 \arguments{
 \item{values.list}{A list of values objects.}
