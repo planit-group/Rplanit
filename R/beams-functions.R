@@ -1,6 +1,6 @@
 # BEAMS ------------------------------------------------------------------------
 
-#' Crea oggetto field (dataframe ops)
+#' Create a field object (dataframe)
 #' 
 #' nota: si tratta di un dataframe: diversi fields sono semplicemente aggiunti
 #' appendendo delle righe al dataframe...
