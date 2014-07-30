@@ -6,14 +6,25 @@
 create.field(N = 1, targetVOI = "PTV", targetVOIIndex = NA,
   iecGantryAngle = 0, iecPatientSupportAngle = 0,
   interSpotSpacing = c(1.5, 1.5, 1), spotsExtensionOutsideTarget = 0,
-  targetIsocenter.x = NA, targetIsocenter.y = NA, targetIsocenter.z = NA)
+  targetIsocenter = c(NA, NA, NA))
 }
 \arguments{
-\item{N}{number of fields}
+\item{N}{number of fields.}
+
+\item{targetVOIIndex}{the index of the target VOI.}
+
+\item{iecGantryAngle}{gantry angle.}
+
+\item{iecPatientSupportAngle}{patient support angle.}
+
+\item{interSpotSpacing}{spacing among spots along the three axis of the beam port (mm).}
+
+\item{spotsExtensionOutsideTarget}{thickness of the extension of the spot coverage outside the target VOI.}
+
+\item{targetIsocenter}{coordinates of the isocenter of the target VOI.}
 }
 \description{
-nota: si tratta di un dataframe: diversi fields sono semplicemente aggiunti
-appendendo delle righe al dataframe...
+The field object is a dataframe. Different fields are added by apending rows to the dataframe. Each of the following parameter is a dataframe column.
 }
 \seealso{
 Other Beams: \code{\link{add.field}};

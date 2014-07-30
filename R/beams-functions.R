@@ -2,9 +2,14 @@
 
 #' Create a field object (dataframe)
 #' 
-#' nota: si tratta di un dataframe: diversi fields sono semplicemente aggiunti
-#' appendendo delle righe al dataframe...
-#' @param N number of fields
+#' The field object is a dataframe. Different fields are added by apending rows to the dataframe. Each of the following parameter is a dataframe column.
+#' @param N number of fields.
+#' @param targetVOIIndex the index of the target VOI.
+#' @param iecGantryAngle gantry angle.
+#' @param iecPatientSupportAngle patient support angle.
+#' @param interSpotSpacing spacing among spots along the three axis of the beam port (mm).
+#' @param spotsExtensionOutsideTarget thickness of the extension of the spot coverage outside the target VOI.
+#' @param targetIsocenter coordinates of the isocenter of the target VOI.
 #' 
 #' @family Beams
 #' @export
@@ -15,9 +20,8 @@ create.field <- function(N=1,
                          iecPatientSupportAngle=0,
                          interSpotSpacing=c(1.5,1.5,1),
                          spotsExtensionOutsideTarget=0,
-                         targetIsocenter.x=NA,
-                         targetIsocenter.y=NA,
-                         targetIsocenter.z=NA) 
+                         targetIsocenter=c(NA,NA,NA)
+                         ) 
 {  
   field <- data.frame(field=1:N,
                       targetVOI=targetVOI,
@@ -28,9 +32,9 @@ create.field <- function(N=1,
                       interSpotSpacing.y=interSpotSpacing[2],
                       interSpotSpacing.z=interSpotSpacing[3],
                       spotsExtensionOutsideTarget=spotsExtensionOutsideTarget,
-                      targetIsocenter.x=targetIsocenter.x,
-                      targetIsocenter.y=targetIsocenter.y,
-                      targetIsocenter.z=targetIsocenter.z, stringsAsFactors=FALSE)
+                      targetIsocenter.x=targetIsocenter[1],
+                      targetIsocenter.y=targetIsocenter[2],
+                      targetIsocenter.z=targetIsocenter[3], stringsAsFactors=FALSE)
   #class(field) <- 'field.plankit'
   return(field)
 }
