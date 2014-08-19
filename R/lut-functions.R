@@ -327,7 +327,7 @@ write.lut <- function(lut.array, variables=NULL, E=NULL, x=NULL, y=NULL, zn=NULL
 
 #' Evaluate BeamLUT 
 #' 
-#' Evaluate the beamLUT of the selected beam(s) for the specific plan.
+#' Evaluate from scratch the beamLUT of the selected beam(s) for the specific plan.
 #' The beam(s) can be one or more (by using a vector of indices). If the beams are more than one, the corresponding beamLUT is given by the net contribution of all the specified beams
 #' Optionally it is possible to specify also the fluences (i.e. the number of particles) for each beam.
 #' @param beam.index index of the beam (it can be a vector if indices)
@@ -401,5 +401,29 @@ write.beamLUT <- function(plan, threshold=0, threshold.variable='Dose[Gy]', vari
       write.table(df.s, file=file.name, col.names=FALSE, row.names=FALSE, append=append)
     
   }
+}
+
+#' Read the beamLUTs (pure-dek)
+#' 
+#' @param beamLUT.name the prefix of the beamLUT files. The complete filenames are expected to be: <beamLUT.name>_<beamIndex>.beamLUT
+read.beamLUT <- function(beamLUT.name, Nx, Ny, Nz)
+{
+  beamLUT.files <- Sys.glob(paste0(beamLUT.name, '*.beamLUT'))
+  if(length(beamLUT.files)==0) {stop(paste0(beamLUT.name, '*.beamLUT not found!'))}
+  
+  for(b in 1:length(beamLUT.files)) {
+    message('reading beamLUT: ', beamLUT.files[b])
+    beamLUT.tmp <- read.table(beamLUT.files[b], skip=1, header=TRUE, check.names=FALSE)
+    if(b==1) {
+      beamLUT <- rep(beamLUT.tmp, length(beamLUT.files)) # predisponde porzione di memoria contigua...
+      beamLUT <- beamLUT.tmp
+    } else {
+      beamLUT <- rbind(beamLUT, beamLUT.tmp)
+    }
+  }
+  
+  message('evaluationg voxelsIDs...')
+  beamLUT$voxelID <- beamLUT$i + beamLUT$j*Nx + beamLUT$k*(Nx*Ny) + 1
+  return(beamLUT)
 }
 

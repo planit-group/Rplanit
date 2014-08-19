@@ -23,7 +23,7 @@
 a values object
 }
 \description{
-Evaluate the beamLUT of the selected beam(s) for the specific plan.
+Evaluate from scratch the beamLUT of the selected beam(s) for the specific plan.
 The beam(s) can be one or more (by using a vector of indices). If the beams are more than one, the corresponding beamLUT is given by the net contribution of all the specified beams
 Optionally it is possible to specify also the fluences (i.e. the number of particles) for each beam.
 }

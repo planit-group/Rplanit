@@ -53,12 +53,18 @@ read.beams <- function(beams.file)
   beams <- read.table(beams.file, skip=1)
   
   # mette i nomi delle colonne
-  if(ncol(beams)==12) {
-    names(beams) <- c('x_iso', 'y_iso', 'z_iso', 'gantryAngle', 'patientAngle', 'fluence', 'energy', 'deflX', 'deflY', 'x_s', 'y_s', 'z_s')
+  if(ncol(beams)==14) {
+    names(beams) <- c('particle', 'LUT',  'x_iso', 'y_iso', 'z_iso', 'gantryAngle', 'patientAngle', 'fluence', 'energy', 'deflX', 'deflY', 'x_s', 'y_s', 'z_s')
     message('Spot positions present...')
+  } else if(ncol(beams)==11) {
+    names(beams) <- c('particle', 'LUT', 'x_iso', 'y_iso', 'z_iso', 'gantryAngle', 'patientAngle', 'fluence', 'energy', 'deflX', 'deflY')
+    message('Spot positions NOT present...')
+  } else if(ncol(beams)==12) {
+    names(beams) <- c('x_iso', 'y_iso', 'z_iso', 'gantryAngle', 'patientAngle', 'fluence', 'energy', 'deflX', 'deflY', 'x_s', 'y_s', 'z_s')
+    message('Spot positions present (old format)...')
   } else if(ncol(beams)==9) {
     names(beams) <- c('x_iso', 'y_iso', 'z_iso', 'gantryAngle', 'patientAngle', 'fluence', 'energy', 'deflX', 'deflY')
-    message('Spot positions NOT present...')
+    message('Spot positions NOT present (old format)...')
   }
   #class(beams) <- 'beams'
   return(beams)
