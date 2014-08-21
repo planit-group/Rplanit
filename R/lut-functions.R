@@ -393,7 +393,7 @@ write.beamLUT <- function(plan, threshold=0, threshold.variable='Dose[Gy]', vari
   for(b in 1:nrow(beams)) {
     message('writing beam ', b)
     vb <- get.values.for.beam(beam.index=beams$beamID[b], fluence=1, plan=plan, variables=variables)
-    df.s <- get.sparse.array.from.values(values=vb, variable=variable, threshold=threshold)
+    df.s <- sparse.array.from.values(values=vb, variable=variable, threshold=threshold)
     #df.s$value <- df.s$value/beams$fluence[b]
     df.s$beamID <- beams$beamID[b]
     

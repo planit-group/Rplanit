@@ -14,13 +14,13 @@ Note: the plan has to be evaluated via run.gate.forward() with the option evalua
 }
 \seealso{
 Other Values: \code{\link{create.values}};
-  \code{\link{get.dataframe.from.values}};
-  \code{\link{get.sparse.array.from.values}};
+  \code{\link{dataframe.from.values}};
   \code{\link{get.values.dataframe}};
-  \code{\link{get.values.from.sparse.array}};
   \code{\link{get.values.gate.plan}};
   \code{\link{get.values.plankit.plan}};
   \code{\link{get.values}}; \code{\link{merge.values}};
-  \code{\link{sanitize.values}}
+  \code{\link{sanitize.values}};
+  \code{\link{sparse.array.from.values}};
+  \code{\link{values.from.sparse.array}}
 }
 

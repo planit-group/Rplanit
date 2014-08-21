@@ -467,7 +467,7 @@ run.gate.forward <- function(plan=plan, N=NULL, K=NULL, evaluate.sparse.arrays=F
       system(cmd, ignore.stdout=ignore.stdout, ignore.stderr=ignore.stderr)
       
       vb <- get.values.gate.plan(plan)
-      vs.tmp <- get.sparse.array.from.values(vb)
+      vs.tmp <- sparse.array.from.values(vb)
       vs.tmp$beam.id <- b
       vs.tmp$Ne <- Ne[b]
       

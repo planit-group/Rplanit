@@ -1097,8 +1097,8 @@ display.dvh2d <- function(values=values, vois=vois, variables=c('Dose[Gy]', 'Dos
   #library(gtable)
   
   # crea d.f
-  df1 <- get.dataframe.from.values(values=values, vois=vois, variables=variables[1], rois=voi)
-  df2 <- get.dataframe.from.values(values=values, vois=vois, variables=variables[2], rois=voi)
+  df1 <- dataframe.from.values(values=values, vois=vois, variables=variables[1], rois=voi)
+  df2 <- dataframe.from.values(values=values, vois=vois, variables=variables[2], rois=voi)
   
   d.f <- data.frame(x=df1$value, y=df2$value)
   
@@ -1231,11 +1231,11 @@ display.dvh2d.multiple <- function(values=values, vois=vois, variables=c('Dose[G
     if(Nvois>1) {my.vois <- vois[[i]]} else {my.vois <- vois}
     if(Nvoi>1) {my.voi <- voi[i]} else {my.voi <- voi}
     
-    df1 <- get.dataframe.from.values(values=my.values,
+    df1 <- dataframe.from.values(values=my.values,
                                      vois=my.vois,
                                      variables=variables[1],
                                      rois=my.voi)
-    df2 <- get.dataframe.from.values(values=my.values,
+    df2 <- dataframe.from.values(values=my.values,
                                      vois=my.vois,
                                      variables=variables[2],
                                      rois=my.voi)

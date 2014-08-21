@@ -139,8 +139,9 @@ get.sparse.array.gate <- function(plan.gate)
 
 #' recupera matrice di valori in formato dataframe
 #' 
+#' Obsoleto
 #' @family Values
-#' @export
+#'
 get.values.dataframe <- function(plan)
 {
   if(is.null(plan[['outputValuesFile']])) {
@@ -160,7 +161,7 @@ get.values.dataframe <- function(plan)
 #' 
 #' @family Values
 #' @export
-get.dataframe.from.values <- function(values=values, vois=vois, variables=NULL, rois=NULL)
+dataframe.from.values <- function(values=values, vois=vois, variables=NULL, rois=NULL)
 {
   # identifica i vois da mettere nel dataframe
   if(is.null(rois)) {
@@ -221,7 +222,7 @@ get.dataframe.from.values <- function(values=values, vois=vois, variables=NULL, 
 #' 
 #' @family Values
 #' @export
-get.sparse.array.from.values <- function(values, variable='Dose[Gy]', threshold=0)
+sparse.array.from.values <- function(values, variable='Dose[Gy]', threshold=0)
 {
   # identifica variabile
   if(values$Nv>1) {
@@ -261,7 +262,7 @@ get.sparse.array.from.values <- function(values, variable='Dose[Gy]', threshold=
 #' @family Values
 #' @export
 #' 
-get.values.from.sparse.array <- function(sparse.array, variables=NULL, x, y, z)
+values.from.sparse.array <- function(sparse.array, variables=NULL, x, y, z)
 {
   values <- list()
   
@@ -774,7 +775,7 @@ generate.values.from.events <- function(Xe, Ye, Ze,
   if(sparse.matrix) {
     return(XYZ)
   } else {
-    return(get.values.from.sparse.array(sparse.array=XYZ, variables=variable, x=x, y=y, z=z))
+    return(values.from.sparse.array(sparse.array=XYZ, variables=variable, x=x, y=y, z=z))
   }
 }
   
