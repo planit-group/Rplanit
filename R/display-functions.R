@@ -892,7 +892,7 @@ display.dvh <- function(dvh, plan=NULL,
     # riduce il numero di punti...
     if(decimate) {
       nr <- nrow(df.tmp)
-      if(nr>=max.v) {
+      if(nr>max.v+2) {
         #message('decimating dvh...')
         index <- c(1, sort(sample(x=2:(nr-1), size=max.v)), nr)
         df.tmp <- df.tmp[index,]
@@ -1032,7 +1032,7 @@ display.dvh.combined <- function(dvh,
     # riduce il numero di punti...
     if(decimate) {
       nr <- nrow(df.tmp)
-      if(nr>=max.v) {
+      if(nr>max.v+2) {
         #message('decimating dvh...')
         index <- c(1, sort(sample(x=2:(nr-1), size=max.v)), nr)
         df.tmp <- df.tmp[index,]
