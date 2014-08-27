@@ -406,6 +406,8 @@ write.beamLUT <- function(plan, threshold=0, threshold.variable='Dose[Gy]', vari
 #' Read the beamLUTs (pure-dek)
 #' 
 #' @param beamLUT.name the prefix of the beamLUT files. The complete filenames are expected to be: <beamLUT.name>_<beamIndex>.beamLUT
+#' @family BeamLUT
+#' @export
 read.beamLUT <- function(beamLUT.name, Nx, Ny, Nz)
 {
   beamLUT.files <- Sys.glob(paste0(beamLUT.name, '*.beamLUT'))
@@ -422,8 +424,137 @@ read.beamLUT <- function(beamLUT.name, Nx, Ny, Nz)
     }
   }
   
-  message('evaluationg voxelsIDs...')
+  # beamID start from 1...
+  beamLUT$beamID <- beamLUT$beamID + 1
+  
+  # calcola i voxelID...
   beamLUT$voxelID <- beamLUT$i + beamLUT$j*Nx + beamLUT$k*(Nx*Ny) + 1
   return(beamLUT)
+}
+
+#' Get Dose from beamLUTs (pure-dek)
+#' 
+#' Get the net Dose distribution (values object) from the beamLUTs.
+#' @param beamLUTs the beamLUTs data frame.
+#' @param beams the beams data frame.
+#' @param x,y,z the coordinates of the 3D array.
+#' @param variable to override the default name of the variable ('Dose[Gy]').
+#' @return a values object.
+#' @family BeamLUT
+#' @export
+get.dose.beamLUT <- function(beamLUTs, beams, x, y, z, variable='Dose[Gy]')
+{
+  dose <- array(0, dim=c(length(x), length(y), length(z)))
+  
+  # calcolo con ciclo
+  #Nb <- nrow(beams)
+  #for(b in 1:Nb) {
+  #  message('evaluating dose for beam ', b)
+  #  beamLUT <- subset(beamLUTs, beamID==b)
+  #  dose[beamLUT$voxelID] <- dose[beamLUT$voxelID] +  beamLUT$`DosePerEvent[Gy/primary]` * beams$fluence[b]
+  #}
+  
+  # calcolo con aggregate
+  dose.bl <- beamLUTs$`DosePerEvent[Gy/primary]` * beams$fluence[beamLUTs$beamID]
+  dose.bl <- aggregate(list(dose=dose.bl), by = list(voxelID=beamLUTs$voxelID), sum)
+  dose[dose.bl$voxelID] = dose.bl$dose
+  
+  
+  return(create.values(array.values = dose, variables = variable, x = x, y = y, z = z))
+}
+
+#' Get dose averaged LET from beamLUTs (pure-dek)
+#' 
+#' Get the net dose averged LET distribution (values object) from the beamLUTs.
+#' @param beamLUTs the beamLUTs data frame.
+#' @param beams the beams data frame.
+#' @param x,y,z the coordinates of the 3D array.
+#' @param variable to override the default name of the variable ('DoseAveragedLET[keV/um]').
+#' @return a values object.
+#' @family BeamLUT
+#' @export
+get.letd.beamLUT <- function(beamLUTs, beams, x, y, z, variable='DoseAveragedLET[keV/um]')
+{
+  letd <- array(NA, dim=c(length(x), length(y), length(z)))
+  
+  endens.bl <- beamLUTs$`EnergyDensityPerEvent[keV/(um^3*primary)]` * beams$fluence[beamLUTs$beamID]
+  letd.bl <- beamLUTs$`DoseWeightedEnergyDensityPerEvent[keV^2/(um^4*primary)]` * beams$fluence[beamLUTs$beamID]
+
+  letd.bl <- aggregate(list(endens=endens.bl, letd=letd.bl), by = list(voxelID=beamLUTs$voxelID), sum)
+  letd[letd.bl$voxelID] = letd.bl$letd/letd.bl$endens
+  
+  return(create.values(array.values = letd, variables = variable, x = x, y = y, z = z))
+}
+
+#' Get RBE from beamLUTs (pure-dek)
+#' 
+#' Get the net RBE distribution (values object) from the beamLUTs.
+#' @param beamLUTs the beamLUTs data frame.
+#' @param beams the beams data frame.
+#' @param x,y,z the coordinates of the 3D array.
+#' @param alphaX,betaX the Linear-Quadratic parameters of the reference radiation (they can be two arrays/vectors)
+#' @param variable to override the default name of the variable ('RBE').
+#' @return a values object.
+#' @family BeamLUT
+#' @export
+get.rbe.beamLUT <- function(beamLUTs, beams, x, y, z, variable='RBE', alphaX, betaX)
+{
+  rbe <- array(NA, dim=c(length(x), length(y), length(z)))
+  
+  dose.bl <- beamLUTs$`DosePerEvent[Gy/primary]` * beams$fluence[beamLUTs$beamID]
+  alpha.bl <- beamLUTs$`LethAlphaPerEvent[1/primary]` * beams$fluence[beamLUTs$beamID]
+  beta.bl <- beamLUTs$`SqrtLethBetaPerEvent[1/primary]` * beams$fluence[beamLUTs$beamID]
+  
+  rbe.bl <- aggregate(list(dose=dose.bl, alpha=alpha.bl, beta=beta.bl), by = list(voxelID=beamLUTs$voxelID), sum)
+  rbe.bl$alpha <- rbe.bl$alpha/rbe.bl$dose
+  rbe.bl$beta <- rbe.bl$beta^2/rbe.bl$dose^2
+  rbe[rbe.bl$voxelID] = rbe.evaluate(alpha=rbe.bl$alpha, beta=rbe.bl$beta, dose=rbe.bl$dose, alphaX=alphaX, betaX=betaX)
+  
+  return(create.values(array.values = rbe, variables = variable, x = x, y = y, z = z))
+}
+
+#' Get alpha/beta from beamLUTs (pure-dek)
+#' 
+#' Get the net alpha and beta Linear-Quadratic parameters distribution (values object) from the beamLUTs.
+#' @param beamLUTs the beamLUTs data frame.
+#' @param beams the beams data frame.
+#' @param x,y,z the coordinates of the 3D array.
+#' @param variable name vector to override the default name of the variables (c('Alpha[Gy^(-1)]', 'Beta[Gy^(-2)]')).
+#' @return a values object.
+#' @family BeamLUT
+#' @export
+get.alpha.beta.beamLUT <- function(beamLUTs, beams, x, y, z, variables=c('Alpha[Gy^(-1)]', 'Beta[Gy^(-2)]'))
+{
+  alpha <- beta <- array(NA, dim=c(length(x), length(y), length(z)))
+  
+  dose.bl <- beamLUTs$`DosePerEvent[Gy/primary]` * beams$fluence[beamLUTs$beamID]
+  alpha.bl <- beamLUTs$`LethAlphaPerEvent[1/primary]` * beams$fluence[beamLUTs$beamID]
+  beta.bl <- beamLUTs$`SqrtLethBetaPerEvent[1/primary]` * beams$fluence[beamLUTs$beamID]
+  
+  alpha.beta.bl <- aggregate(list(dose=dose.bl, alpha=alpha.bl, beta=beta.bl), by = list(voxelID=beamLUTs$voxelID), sum)
+  alpha[alpha.beta.bl$voxelID] = alpha.beta.bl$alpha/alpha.beta.bl$dose
+  beta[alpha.beta.bl$voxelID] = alpha.beta.bl$beta^2/alpha.beta.bl$dose^2
+  
+  return(add.array.values(values=create.values(array.values = alpha, variables = variables[1], x = x, y = y, z = z),
+                   new.array=beta, variable=variables[2]))
+}
+
+#' Get equivalent dose from beamLUTs (pure-dek)
+#' 
+#' Get the net equivalent (biological) dose distribution (values object) from the beamLUTs.
+#' @param beamLUTs the beamLUTs data frame.
+#' @param beams the beams data frame.
+#' @param x,y,z the coordinates of the 3D array.
+#' @param alphaX,betaX the Linear-Quadratic parameters of the reference radiation (they can be two arrays/vectors)
+#' @param variable to override the default name of the variable ('Dose[Gy]').
+#' @return a values object.
+#' @family BeamLUT
+#' @export
+get.bdose.beamLUT <- function(beamLUTs, beams, x, y, z, variable='BiologicalDose[Gy(RBE)]', alphaX, betaX)
+{
+  rbe <- get.rbe.beamLUT(beamLUTs = beamLUTs, beams = beams, x = x, y = x, z = z, alphaX = alphaX, betaX = betaX)
+  dose <- get.dose.beamLUT(beamLUTs = beamLUTs, beams = beams, x = x, y = x, z = z)
+  
+  return(create.values(array.values = rbe$values*dose$values, variables = variable, x = x, y = y, z = z))
 }
 
