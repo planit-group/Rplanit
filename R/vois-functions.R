@@ -114,6 +114,8 @@ get.voi.logical <- function(vois, voi=NULL) {
 #' @export
 get.contours <- function(plan) UseMethod('get.contours')
 
+#' @family Contours
+#' @export
 get.contours.plankit.plan <- function(plan) {
   
   # recupera informazioni da plan

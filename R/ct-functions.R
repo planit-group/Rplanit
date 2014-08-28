@@ -14,6 +14,8 @@ get.ct <- function(plan) UseMethod("get.ct")
   #return(read.3d(plan$ctFile))
 }
 
+#' @family CT
+#' @export
 get.ct.plankit.plan <- function(plan)
 {
   if(!is.null(plan[['ct']])) {
@@ -23,6 +25,8 @@ get.ct.plankit.plan <- function(plan)
   }
 }
 
+#' @family CT
+#' @export
 get.ct.gate.plan <- function(plan)
 {
   if(!is.null((plan[['ct']]))) {return(plan[['ct']])}

@@ -157,6 +157,8 @@ get.beams.plankit.plan <- function(plan, input=FALSE)
 
 }
 
+#' @family Beams
+#' @export
 get.beams.gate.plan <- function(plan)
 {
   if(!is.null(plan$beams)) {
