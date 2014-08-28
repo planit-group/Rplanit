@@ -367,7 +367,14 @@ run.dek.forward <- function(plan, outmessages=FALSE) {
   writeLines(paste('computingGridVoxelSizes = ', p.computingGridVoxelSizes, '\n', collapse=' '), con=con, sep='')
   writeLines(paste('computingGridCoverage = ', plan[['computingGridCoverage']], '\n'), con=con, sep='')
   writeLines(paste('computingGridCoverageBoundary = ', plan[['computingGridCoverageBoundary']], '\n'), con=con, sep='')
-  writeLines(paste('computingValues = ', plan[['computingValues']], '\n'), con=con, sep='')
+  
+  # computing values
+  writeLines('computingValues =', con=con, sep='')
+  for(indexCV in 1:length(plan[['computingValues']])) {
+    writeLines(paste0(' ', plan[['computingValues']][indexCV]), con=con, sep='')
+  }
+  writeLines('\n', con=con, sep='')
+  
   writeLines(paste('cutOffRadius = ', plan[['cutOffRadius']], '\n'), con=con, sep='')
   writeLines(paste('cutEnergyFraction = ', plan[['cutEnergyFraction']], '\n'), con=con, sep='')
   

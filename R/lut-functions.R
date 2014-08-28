@@ -432,7 +432,7 @@ read.beamLUT <- function(beamLUT.name, Nx, Ny, Nz)
     message('reading beamLUT: ', beamLUT.files[b])
     beamLUT.tmp <- read.table(beamLUT.files[b], skip=1, header=TRUE, check.names=FALSE)
     if(b==1) {
-      beamLUT <- rep(beamLUT.tmp, length(beamLUT.files)) # predisponde porzione di memoria contigua...
+      #beamLUT <- rep(beamLUT.tmp, length(beamLUT.files)) # predispone porzione di memoria contigua...
       beamLUT <- beamLUT.tmp
     } else {
       beamLUT <- rbind(beamLUT, beamLUT.tmp)
