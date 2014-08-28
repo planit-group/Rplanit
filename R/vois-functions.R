@@ -68,11 +68,11 @@ get.voiindex <- function(voi, file.contours=NULL, contours=NULL)
 #' @export
 get.vois <- function(plan)
 {
-  if(is.null(plan[['voisFile']])) {
+  if(is.null(plan[['outputVoisFile']])) {
     cat('The plan "', plan[['name']], '" has no vois file.\n', sep='')
     return(NULL)
   } 
-  return(read.vois.array( paste(plan[['name']], '/', plan[['voisFile']], sep='') ))
+  return(read.vois.array(plan[['outputVoisFile']]))
 }
 
 
