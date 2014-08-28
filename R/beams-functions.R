@@ -250,17 +250,17 @@ create.beam <- function(nbeams=1, with.spots=FALSE, x_iso=0, y_iso=0, z_iso=0, g
 #' @family Beams
 #' @export
 #' 
-write.beams <- function(beams, file.name, format='plankit', ion='1H', add.extension=TRUE)
+write.beams <- function(beams, file.name, format='puredek', ion='1H', add.extension=TRUE)
 {
   
   # PlanKIT
-  if(format=='plankit') {
+  if(format=='plankit' | format=='puredek') {
     if(add.extension) {file.name <- paste(file.name, '.beams', sep='')}
     N <- nrow(beams)
     con <- file(file.name, "w")
     writeLines(paste(N), con=con)
     close(con)
-    write.table(beams, file=file.name, append=TRUE, col.names=FALSE, row.names=FALSE)
+    write.table(beams, file=file.name, append=TRUE, col.names=FALSE, row.names=FALSE, quote=FALSE)
   }
   
   # Gate
