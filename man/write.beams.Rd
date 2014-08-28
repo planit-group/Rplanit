@@ -3,7 +3,7 @@
 \alias{write.beams}
 \title{Write beams (RTIonPlan)}
 \usage{
-write.beams(beams, file.name, format = "plankit", ion = "1H",
+write.beams(beams, file.name, format = "puredek", ion = "1H",
   add.extension = TRUE)
 }
 \arguments{

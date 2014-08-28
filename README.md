@@ -49,20 +49,20 @@ $ sudo apt-get install liblog4cxx10-dev
 ```
 > library(Rplanit)
 ```
-* To install _PlanKIT_ (the Treatment Planning System kernel), _Gate_ (to perform Monte Carlo simulations) and _Survival_ (the code for the radiobiological simulations):
+* To install _Pure-dek_ (the Treatment Planning System kernel), _Gate_ (to perform Monte Carlo simulations) and _Survival_ (the code for the radiobiological simulations):
 ```
-> install.plankit(<lincence number>) # please read the note below.
+> install.puredek(<lincence number>) # please read the note below.
 > install.gate()
 > install.survival()
 ```
 * To update everything to the latest version, the last commands should be runned again:
 ```
 > install_github("Rplanit", username="planit-group", dependencies=TRUE)
-> install.plankit(<lincence number>) # please read the note below.
+> install.puredek(<lincence number>) # please read the note below.
 > install.gate()
 > install.survival()
 > # et voila
 ```
 
 #### Important Note
-While _Rplanit_, _Gate_ and _Survivals_ are open-source, the TPS kernel, _PlanKIT_, is proprietary by INFN/IBA. To use it for research purposes please contact Andrea Attili (attili@to.infn.it) to obtain the licence number and have access to the binaries.
+While _Rplanit_, _Gate_ and _Survivals_ are open-source, the TPS kernel, _Pure-dek_ is a fork of a previous kernel proprietary by INFN/IBA. To use it for research purposes please contact Andrea Attili (attili@to.infn.it).
