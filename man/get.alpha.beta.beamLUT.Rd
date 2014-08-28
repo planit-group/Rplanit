@@ -23,6 +23,7 @@ Get the net alpha and beta Linear-Quadratic parameters distribution (values obje
 }
 \seealso{
 Other BeamLUT: \code{\link{get.bdose.beamLUT}};
+  \code{\link{get.beamLUTs}};
   \code{\link{get.dose.beamLUT}};
   \code{\link{get.letd.beamLUT}};
   \code{\link{get.rbe.beamLUT}};

@@ -325,6 +325,21 @@ write.lut <- function(lut.array, variables=NULL, E=NULL, x=NULL, y=NULL, zn=NULL
 
 # BEAM_LUT ---------------------------------------------------------------------
 
+#' Get beamLUTs
+#' 
+#' Get the evaluated beamLUTs from the plan
+#' @param plan The plan object.
+#' @export
+#' @family BeamLUT
+get.beamLUTs <- function(plan) {
+  if(is.null(plan[['outputBeamLUTFile']])) {
+    stop('beamLUTs not present in plan ', plan[['name']], '. To evaluate the beamLUT set the plan with saveBeamLUTs=TRUE.')
+  } else {
+    values <- get.values(plan)
+    return(read.beamLUT(beamLUT.name = plan[['outputBeamLUTFile']], Nx = values$Nx, Ny = values$Ny, Nz = values$Nz))
+  }
+}
+
 #' Evaluate BeamLUT 
 #' 
 #' Evaluate from scratch the beamLUT of the selected beam(s) for the specific plan.

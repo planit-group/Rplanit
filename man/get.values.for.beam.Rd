@@ -30,6 +30,7 @@ Optionally it is possible to specify also the fluences (i.e. the number of parti
 \seealso{
 Other BeamLUT: \code{\link{get.alpha.beta.beamLUT}};
   \code{\link{get.bdose.beamLUT}};
+  \code{\link{get.beamLUTs}};
   \code{\link{get.dose.beamLUT}};
   \code{\link{get.letd.beamLUT}};
   \code{\link{get.rbe.beamLUT}};

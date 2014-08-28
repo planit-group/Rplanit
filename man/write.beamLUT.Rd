@@ -14,6 +14,7 @@ le lut sono calcolate su tutto il volume usato in "plan"
 \seealso{
 Other BeamLUT: \code{\link{get.alpha.beta.beamLUT}};
   \code{\link{get.bdose.beamLUT}};
+  \code{\link{get.beamLUTs}};
   \code{\link{get.dose.beamLUT}};
   \code{\link{get.letd.beamLUT}};
   \code{\link{get.rbe.beamLUT}};

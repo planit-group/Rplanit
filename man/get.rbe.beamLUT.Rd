@@ -25,6 +25,7 @@ Get the net RBE distribution (values object) from the beamLUTs.
 \seealso{
 Other BeamLUT: \code{\link{get.alpha.beta.beamLUT}};
   \code{\link{get.bdose.beamLUT}};
+  \code{\link{get.beamLUTs}};
   \code{\link{get.dose.beamLUT}};
   \code{\link{get.letd.beamLUT}};
   \code{\link{get.values.for.beam}};
