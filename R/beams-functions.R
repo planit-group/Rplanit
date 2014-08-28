@@ -143,6 +143,8 @@ read.beams.fluka <- function(fluka.file)
 #' @export
 get.beams <- function(plan, ...) UseMethod('get.beams')
 
+#' @family Beams
+#' @export
 get.beams.plankit.plan <- function(plan, input=FALSE)
 {
   if(!is.null(plan$beams)) {
