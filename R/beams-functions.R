@@ -14,6 +14,7 @@
 #' @family Beams
 #' @export
 create.field <- function(N=1,
+                         beamLine='protonSimple',
                          targetVOI='PTV',
                          targetVOIIndex=NA,
                          iecGantryAngle=0,
@@ -24,6 +25,7 @@ create.field <- function(N=1,
                          ) 
 {  
   field <- data.frame(field=1:N,
+                      beamLine=beamLine,
                       targetVOI=targetVOI,
                       targetVOIIndex=targetVOIIndex,
                       iecGantryAngle=iecGantryAngle,
@@ -54,10 +56,10 @@ read.beams <- function(beams.file)
   
   # mette i nomi delle colonne
   if(ncol(beams)==14) {
-    names(beams) <- c('particle', 'LUT',  'x_iso', 'y_iso', 'z_iso', 'gantryAngle', 'patientAngle', 'fluence', 'energy', 'deflX', 'deflY', 'x_s', 'y_s', 'z_s')
+    names(beams) <- c('particle', 'beamLine',  'x_iso', 'y_iso', 'z_iso', 'gantryAngle', 'patientAngle', 'fluence', 'energy', 'deflX', 'deflY', 'x_s', 'y_s', 'z_s')
     message('Spot positions present...')
   } else if(ncol(beams)==11) {
-    names(beams) <- c('particle', 'LUT', 'x_iso', 'y_iso', 'z_iso', 'gantryAngle', 'patientAngle', 'fluence', 'energy', 'deflX', 'deflY')
+    names(beams) <- c('particle', 'beamLine', 'x_iso', 'y_iso', 'z_iso', 'gantryAngle', 'patientAngle', 'fluence', 'energy', 'deflX', 'deflY')
     message('Spot positions NOT present...')
   } else if(ncol(beams)==12) {
     names(beams) <- c('x_iso', 'y_iso', 'z_iso', 'gantryAngle', 'patientAngle', 'fluence', 'energy', 'deflX', 'deflY', 'x_s', 'y_s', 'z_s')
