@@ -3,8 +3,8 @@
 \alias{create.field}
 \title{Create a field object (dataframe)}
 \usage{
-create.field(N = 1, targetVOI = "PTV", targetVOIIndex = NA,
-  iecGantryAngle = 0, iecPatientSupportAngle = 0,
+create.field(N = 1, beamLine = "protonSimple", targetVOI = "PTV",
+  targetVOIIndex = NA, iecGantryAngle = 0, iecPatientSupportAngle = 0,
   interSpotSpacing = c(1.5, 1.5, 1), spotsExtensionOutsideTarget = 0,
   targetIsocenter = c(NA, NA, NA))
 }

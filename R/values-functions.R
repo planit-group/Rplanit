@@ -80,7 +80,7 @@ get.values.plankit.plan <- function(plan)
     cat('The plan "', plan[['name']], '" has no values file.\n', sep='')
     return(NULL)
   } 
-  return(read.3d( paste(plan[['name']], '/', plan[['outputValuesFile']], sep='') ))
+  return(read.3d(plan[['outputValuesFile']]))
 }
 
 #' Get values object (Gate)

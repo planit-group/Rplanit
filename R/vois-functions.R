@@ -5,35 +5,42 @@
 #
 #' Get the VOI index from the contours file
 #' 
-#' @param voi the VOI name
-#' @param file.contours the contours file
+#' @param voi the VOI name.
+#' @param contours a contours object (data frame).
+#' @param file.contours the contours file.
 #' @return the VOI index
 #' 
 #' @family VOIs
 #' @export
-get.voiindex <- function(voi, file.contours=NULL)
+get.voiindex <- function(voi, file.contours=NULL, contours=NULL)
 {
   
-  # header
-  file.con <- file(file.contours, "rb") # read binary
-  myline <- readLines(file.con, n=1)
-  myline.splitted <- unlist(strsplit(myline[1], ' +'))
-  Nc <- as.numeric(myline.splitted[1])
-  con.names <- myline.splitted[2:length(myline.splitted)]
-  close(file.con)
-  
-  # splitta tessuto+modello
-  con <- tis <- con.names
-  Nc <- length(con.names)
-  con.name <- strsplit(con.names, '_', fixed=TRUE)
-  for (i in 1:Nc) {
-    con[i] <- unlist(con.name[i])[1]
-    tis[i] <- unlist(con.name[i])[2]
+  if(!is.null(contours)) {
+    v <- unique(contours$id[contours$contour==voi])
+    if(length(v)==0) {stop('selected voi not present in contours.')} else {return(v)}
   }
-  
-  
-  v <- which(con==voi)
-  return(v-1)
+  else if(!is.null(file.contours)) {
+    # header
+    file.con <- file(file.contours, "rb") # read binary
+    myline <- readLines(file.con, n=1)
+    myline.splitted <- unlist(strsplit(myline[1], ' +'))
+    Nc <- as.numeric(myline.splitted[1])
+    con.names <- myline.splitted[2:length(myline.splitted)]
+    close(file.con)
+    
+    # splitta tessuto+modello
+    con <- tis <- con.names
+    Nc <- length(con.names)
+    con.name <- strsplit(con.names, '_', fixed=TRUE)
+    for (i in 1:Nc) {
+      con[i] <- unlist(con.name[i])[1]
+      tis[i] <- unlist(con.name[i])[2]
+    }
+    
+    
+    v <- which(con==voi)
+    return(v-1)
+  }
   
 }
 

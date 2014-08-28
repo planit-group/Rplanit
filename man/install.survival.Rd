@@ -10,6 +10,7 @@ Install Survival
 }
 \seealso{
 Other Install: \code{\link{install.gate}};
-  \code{\link{install.plankit}}
+  \code{\link{install.plankit}};
+  \code{\link{install.puredek}}
 }
 

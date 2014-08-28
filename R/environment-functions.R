@@ -50,12 +50,11 @@ setenv.rplanit <- function()
                 ':', my.home, '/Gate6.2-install/sanitize-hdr', sep='')
   Sys.setenv(LD_LIBRARY_PATH=ld_library_path, MANPATH=manpath, PATH=path)
   
-  # PlanKIT
-  Sys.setenv(PATH_TO_DISPLAY=paste0(my.home, '/DEK-install/Display/'),
-             LOG4CXX_CONFIGURATION=paste0(my.home, '/DEK-install/log4cxx.properties'),
-             PATH_TO_WEPL=paste0(my.home, '/DEK-install/Beams/'),
-             PATH_TO_LUT=paste0(my.home, '/DEK-install/LUT/'))
-  path <- paste0(Sys.getenv('PATH'), ':', my.home, '/DEK-install')
+  # Pure-dek
+  Sys.setenv(LOG4CXX_CONFIGURATION=paste0(my.home, '/Pure-dek-install/log4cxx.properties'),
+             PATH_TO_WEPL=paste0(my.home, '/Pure-dek-install/Beams/'),
+             PATH_TO_LUT=paste0(my.home, '/Pure-dek-install/LUT/'))
+  path <- paste0(Sys.getenv('PATH'), ':', my.home, '/Pure-dek-install')
   Sys.setenv(PATH=path)
   
   # Survival
@@ -195,10 +194,17 @@ install.gate <- function()
   file.rename(from='Gate6.2-install', to=install.dir)
 }
 
-#' Install PlanKIT
+
+#' Install Plankit (obsolete)
 #' @export
 #' @family Install
 install.plankit <- function()
+{stop('install.plankit() is obsolete... Use install.puredek() instead ;)')}
+
+#' Install Pure-dek
+#' @export
+#' @family Install
+install.puredek <- function()
 {
   # installing path
   my.home <- get.install.path()
@@ -212,16 +218,16 @@ install.plankit <- function()
     stop(paste0('error: there is no precompiled available for your system (', my.system, ')'))
   }
   
-  message('downloading plankit...')
-  download.file(url='http://totlxl.to.infn.it/tools/DEK-install.tar.bz2', destfile='DEK-install.tar.bz2')
+  message('downloading pure-dek...')
+  download.file(url='http://totlxl.to.infn.it/tools/Pure-dek-install.tar.bz2', destfile='Pure-dek-install.tar.bz2')
   
-  message('uncompressing plankit...')
-  system('tar jxf DEK-install.tar.bz2; rm DEK-install.tar.bz2', ignore.stdout=TRUE, ignore.stderr=TRUE)
+  message('uncompressing pure-dek...')
+  system('tar jxf Pure-dek-install.tar.bz2; rm Pure-dek-install.tar.bz2', ignore.stdout=TRUE, ignore.stderr=TRUE)
   
-  install.dir <- paste(my.home, 'DEK-install', sep='/')
-  message('moving plankit in ', install.dir, ' ...')
+  install.dir <- paste(my.home, 'Pure-dek-install', sep='/')
+  message('moving pure-dek in ', install.dir, ' ...')
   unlink(install.dir, recursive=TRUE)
-  file.rename(from='DEK-install', to=install.dir)
+  file.rename(from='Pure-dek-install', to=install.dir)
 }
 
 #' Install Survival

@@ -20,7 +20,7 @@ available.beamlines <- function()
   
 
 
-#' Available variables (PlanKIT)
+#' Available variables (Pure-dek)
 #' 
 #' The available variables name identifiers that can be evaluated with PlanKIT
 #' @return A list of the available variables
@@ -43,7 +43,7 @@ available.variables <- function()
   )
 }
 
-#' Available constraints (PlanKIT)
+#' Available constraints (Pure-dek)
 #' 
 #' The available constraint types name identifiers tha can be used in the optimization procedure of PlanKIT
 #' @return A list of the available variables
@@ -58,7 +58,7 @@ available.constraint.types <- function()
 
 # PLAN -------------------------------------------------------------------------
 
-#' Generate Plan template (PlanKIT)
+#' Generate Plan template (Pure-dek)
 #' 
 #' Generate a default (empty) template of the Plan to be used with PlanKIT.
 #' @return A Plan (plankit.plan object).
@@ -77,8 +77,8 @@ create.plan <- function(plan=NA,
                         computingGridVoxelSizes=c(2,2,2),
                         computingGridCoverage=0,
                         computingGridCoverageBoundary=0,
-                        beamLine='protonCnao',
-                        computingValues='Dose[Gy]',
+                        beamLines=NULL,
+                        computingValues=c('Dose[Gy]'),
                         cutOffRadius=100,
                         cutEnergyFraction=0.01,
                         fields=NULL,
@@ -86,6 +86,11 @@ create.plan <- function(plan=NA,
                         maxOptimizationIterations=50,
                         outputBeamsFile=NULL,
                         inputBeamsFile=NULL,
+                        saveBeamLUTs=FALSE,
+                        outputBeamLUTFile=NULL,
+                        inputBeamLUTFile=NULL,
+                        outputVoisFile=NULL,
+                        outputValuesFile=NULL,
                         beams=NULL)
 {
   plan <- list(name=name,
@@ -96,7 +101,7 @@ create.plan <- function(plan=NA,
                computingGridVoxelSizes=computingGridVoxelSizes,
                computingGridCoverage=computingGridCoverage,
                computingGridCoverageBoundary=computingGridCoverageBoundary,
-               beamLine=beamLine,
+               beamLines=beamLines,
                computingValues=computingValues,
                cutOffRadius=cutOffRadius,
                cutEnergyFraction=cutEnergyFraction,
@@ -105,6 +110,11 @@ create.plan <- function(plan=NA,
                maxOptimizationIterations=maxOptimizationIterations,
                outputBeamsFile=outputBeamsFile,
                inputBeamsFile=inputBeamsFile,
+               saveBeamLUTs=saveBeamLUTs,
+               outputBeamLUTFile=outputBeamLUTFile,
+               inputBeamLUTFile=inputBeamLUTFile,
+               outputVoisFile=NULL,
+               outputValuesFile=NULL,
                beams=beams # include possibilità di includere direttamente un beams object.
   )
   class(plan) <- 'plankit.plan'
@@ -150,18 +160,18 @@ read.plan <- function(name)
 # PLANKIT ----------------------------------------------------------------------
 
 
-#' Inverse planning (PlanKIT)
+#' Inverse planning (Pure-dek)
 #' 
-#' Perform an inverse planning with PlanKIT.
+#' Perform an inverse planning with Pure-dek.
 #' @param plan the Plan object.
-#' @param outmessages if TRUE, it displays the messages from PlanKIT output.
+#' @param outmessages if TRUE, it displays the messages from Pure-dek output.
 #' @return a Plan Object (including data/information of the evaluated output of the inverse planning, e.g. beams, values, vois, etc.)
 #' 
 #' @family PlanKIT
 #' @export
 run.dek.inverse <- function(plan, outmessages=FALSE) {
   
-  message('running plankit inverse planning...')
+  message('running pure-dek inverse planning...')
   
   # crea folder
   dir.create(plan$name, recursive=TRUE, showWarnings=FALSE)
@@ -172,20 +182,22 @@ run.dek.inverse <- function(plan, outmessages=FALSE) {
   # CT e CONTORNI
   if(!is.null(plan[['ct']])) {
     message('using ct object in plan...')
-    write.3d.array(ct=plan$ct, file.name=paste0(plan$name, '/ct.3d'))
-    plan$ctFile <- paste0(plan$name, '/ct.3d')
+    write.3d.array(ct=plan[['ct']], file.name=paste0(plan[['name']], '/ct.3d'))
+    plan[['ctFile']] <- paste0(plan[['name']], '/ct.3d')
   }
   if(!is.null(plan[['contours']])) {
-    write.contours(contours=plan$contours, name=paste0(plan$name, '/plan'))
-    plan$contoursFile <- paste0(plan$name, '/plan.contours')
+    write.contours(contours=plan$contours, name=paste0(plan[['name']], '/plan'))
+    plan[['contoursFile']] <- paste0(plan[['name']], '/plan.contours')
   }
   
-  # input files (path assoluti)
-  ctFile <- paste(getwd(), '/', plan[['ctFile']], sep='')
-  hounsfieldToDensityFile <- paste(getwd(), '/', plan[['hounsfieldToDensityFile']], sep='')
-  hounsfieldToStoichiometryFile <- paste(getwd(), '/', plan[['hounsfieldToStoichiometryFile']], sep='')
-  contoursFile <- paste(getwd(), '/', plan[['contoursFile']], sep='')
-  plan.config <- paste(plan[['name']], '/plan.config', sep='')
+  # input files (path assoluti) -> non ce n'è assolutamente bisogno...
+  #ctFile <- paste(getwd(), '/', plan[['ctFile']], sep='')
+  #hounsfieldToDensityFile <- paste(getwd(), '/', plan[['hounsfieldToDensityFile']], sep='')
+  #hounsfieldToStoichiometryFile <- paste(getwd(), '/', plan[['hounsfieldToStoichiometryFile']], sep='')
+  #contoursFile <- paste(getwd(), '/', plan[['contoursFile']], sep='')
+
+  # input beamLUT files
+  if(!is.null(plan[['inputBeamLUTFile']])) {stop('Usage of external beamLUTs from file not yet implemented.')}
   
   # crea file prescrizione
   plan.prescription <- paste(plan$name, '/plan.prescription', sep='')
@@ -201,66 +213,97 @@ run.dek.inverse <- function(plan, outmessages=FALSE) {
               quote=FALSE)
   
   # crea file plan.config
+  plan.config <- paste(plan[['name']], '/plan.config', sep='')
   con <- file(plan.config, "w") # open for writing in text mode
   
-  writeLines(paste('ctFile = ', ctFile, '\n'), con=con, sep='')
-  writeLines(paste('hounsfieldToDensityFile = ', hounsfieldToDensityFile, '\n'), con=con, sep='')
-  writeLines(paste('hounsfieldToStoichiometryFile = ', hounsfieldToStoichiometryFile, '\n'), con=con, sep='')
-  writeLines(paste('contoursFile = ', contoursFile, '\n'), con=con, sep='')
+  # CT/Contorni
+  writeLines(paste('ctFile = ', plan[['ctFile']], '\n'), con=con, sep='')
+  writeLines(paste('hounsfieldToDensityFile = ', plan[['hounsfieldToDensityFile']], '\n'), con=con, sep='')
+  writeLines(paste('hounsfieldToStoichiometryFile = ', plan[['hounsfieldToStoichiometryFile']], '\n'), con=con, sep='')
+  writeLines(paste('contoursFile = ', plan[['contoursFile']], '\n'), con=con, sep='')
+  
+  # calcolo
   p.computingGridVoxelSizes <- paste(plan[['computingGridVoxelSizes']], collapse=' ')
   writeLines(paste('computingGridVoxelSizes = ', p.computingGridVoxelSizes, '\n', collapse=' '), con=con, sep='')
   writeLines(paste('computingGridCoverage = ', plan[['computingGridCoverage']], '\n'), con=con, sep='')
   writeLines(paste('computingGridCoverageBoundary = ', plan[['computingGridCoverageBoundary']], '\n'), con=con, sep='')
-  writeLines(paste('beamLine = ', plan[['beamLine']], '\n'), con=con, sep='')
-  writeLines(paste('computingValues = ', plan[['computingValues']], '\n'), con=con, sep='')
+  
+  # beamLines (opzionale, ora le beamline sono specificate in field)
+  if(!is.null(plan[['beamLines']])) {
+    warning('beamlines for inverse planning should be specified in fields.')
+    for(indexBL in 1:length(plan[['beamLines']])){
+      writeLines(paste('beamLine = ', plan[['beamLines']][indexBL], '\n'), con=con, sep='')
+    }
+  }
+  
+  # computing values
+  writeLines('computingValues =', con=con, sep='')
+  for(indexCV in 1:length(plan[['computingValues']])) {
+    writeLines(paste0(' ', plan[['computingValues']][indexCV]), con=con, sep='')
+  }
+  writeLines('\n', con=con, sep='')
+  
   writeLines(paste('cutOffRadius = ', plan[['cutOffRadius']], '\n'), con=con, sep='')
   writeLines(paste('cutEnergyFraction = ', plan[['cutEnergyFraction']], '\n'), con=con, sep='')
   
   # fields
   fields <- plan[['fields']]
-  for(i in 1:nrow(fields)) {
-    if(is.na(fields$targetVOIIndex[i])) {
-      fields$targetVOIIndex[i] <- get.voiindex(fields$targetVOI[i],
-                                               file.contours=plan$contoursFile)
+  if(!is.null(fields)) {
+    for(i in 1:nrow(fields)) {
+      if(is.na(fields$targetVOIIndex[i])) {
+        fields$targetVOIIndex[i] <- get.voiindex(fields$targetVOI[i],
+                                                 file.contours=plan[['contoursFile']], contours=plan[['contours']])
+      }
+      writeLines(paste('beamLine = ', fields[i,'beamLine'], '\n'), con=con, sep='')
+      writeLines(paste('targetVOIIndex = ', fields[i,'targetVOIIndex'], '\n'), con=con, sep='')
+      writeLines(paste('iecGantryAngle = ', fields[i,'iecGantryAngle'], '\n'), con=con, sep='')
+      writeLines(paste('iecPatientSupportAngle = ', fields[i,'iecPatientSupportAngle'], '\n'), con=con, sep='')
+      writeLines(paste('interSpotSpacing = ', fields[i,'interSpotSpacing.x'], fields[i,'interSpotSpacing.y'], fields[i,'interSpotSpacing.z'], '\n'), con=con, sep='')
+      writeLines(paste('spotsExtensionOutsideTarget = ', fields[i,'spotsExtensionOutsideTarget'], '\n'), con=con, sep='')
+      if(!is.na(fields[i,'targetIsocenter.x']) &  !is.na(fields[i,'targetIsocenter.y']) & !is.na(fields[i,'targetIsocenter.z'])) {
+        writeLines(paste('isocenter =', fields[i,'targetIsocenter.x'], fields[i,'targetIsocenter.y'], fields[i,'targetIsocenter.z'], '\n'), con=con, sep=' ')
+      }
     }
-    writeLines(paste('targetVOIIndex = ', fields[i,'targetVOIIndex'], '\n'), con=con, sep='')
-    writeLines(paste('iecGantryAngle = ', fields[i,'iecGantryAngle'], '\n'), con=con, sep='')
-    writeLines(paste('iecPatientSupportAngle = ', fields[i,'iecPatientSupportAngle'], '\n'), con=con, sep='')
-    writeLines(paste('interSpotSpacing = ', fields[i,'interSpotSpacing.x'], fields[i,'interSpotSpacing.y'], fields[i,'interSpotSpacing.z'], '\n'), con=con, sep='')
-    writeLines(paste('spotsExtensionOutsideTarget = ', fields[i,'spotsExtensionOutsideTarget'], '\n'), con=con, sep='')
-    if(!is.na(fields[i,'targetIsocenter.x']) &  !is.na(fields[i,'targetIsocenter.y']) & !is.na(fields[i,'targetIsocenter.z'])) {
-      writeLines(paste('isocenter =', fields[i,'targetIsocenter.x'], fields[i,'targetIsocenter.y'], fields[i,'targetIsocenter.z'], '\n'), con=con, sep=' ')
-    }
+    plan$fields <- fields
   }
-  plan$fields <- fields
+  
+  # input beams
+  if(!is.null(plan[['beams']])) {
+    write.beams(beams=plan[['beams']], format='plankit', file.name=paste0(plan$name, '/plan'))
+    plan$inputBeamsFile <- paste0(plan[['name']], '/plan.beams')
+  } else if(!is.null(plan[['inputBeamsFile']])) {
+    writeLines(paste('inputBeamsFile = ', plan[['inputBeamsFile']], '\n'), con=con, sep='')
+  }
   
   # optimization
-  writeLines('prescriptionFile = plan.prescription\n', con=con, sep='')
+  writeLines(paste('prescriptionFile = ', plan.prescription, '\n'), con=con, sep='')
   writeLines(paste('maxOptimizationIterations = ', plan[['maxOptimizationIterations']], '\n'), con=con, sep='')
   
-  # output
-  if(is.null(plan[['outputBeamsFile']])) {
-    outputBeamsFile <- 'plan.beams'
-    plan[['outputBeamsFile']] <- outputBeamsFile
-  } else {
-    outputBeamsFile <- paste(getwd(), '/', plan[['outputBeamsFile']], sep='')
+  # output BeamLUTs
+  if(plan[['saveBeamLUTs']]) {
+    plan[['outputBeamLUTFile']] <- paste0(plan[['name']], '/plan')
+    writeLines(paste0('outputBeamLUTFile = ', plan[['outputBeamLUTFile']], '\n'), con=con, sep='')
   }
   
-  plan[['voisFile']] <- 'vois.3d'
-  plan[['outputValuesFile']] <- 'values.3d'
-  
-  writeLines(paste('outputBeamsFile = ', outputBeamsFile, '\n'), con=con, sep='')
+  # output Beams (è fisso)
+  plan[['outputBeamsFile']] <- paste0(plan[['name']], '/plan.beams')
+  writeLines(paste0('outputBeamsFile = ', plan[['outputBeamsFile']], '\n'), con=con, sep='')
   writeLines('printSpotPositions = y\n', con=con, sep='')
-  writeLines('voisFile = vois.3d\n', con=con, sep='')
-  writeLines('outputValuesFile = values.3d\n', con=con, sep='')
+
+  # output Vois (è fisso)
+  plan[['outputVoisFile']] <- paste0(plan[['name']], '/vois.3d')
+  writeLines(paste0('voisFile = ', plan[['outputVoisFile']], '\n'), con=con, sep='')
+  
+  # output Values (è fisso)
+  plan[['outputValuesFile']] <- paste0(plan[['name']], '/values.3d')
+  writeLines(paste0('outputValuesFile = ', plan[['outputValuesFile']], '\n'), con=con, sep='')
   
   close(con)
   
   # chiamata di sistema
   if(outmessages) {ignore.stdout=FALSE; ignore.stderr=FALSE} else {ignore.stdout=TRUE; ignore.stderr=TRUE}
-  #dek.setenv <- get('dek.setenv', envir=dektoolsEnv)
-  #cmd <- paste('. ', dek.setenv, '; cd ', plan[['name']], '; dek plan.config')
-  cmd <- paste('cd ', plan$name, '; dek plan.config')
+  cmd <- paste0('pure-dek ',  plan[['name']], '/plan.config') # runna da fuori la cartella.
+  message('executing: ', cmd)
   system(cmd, ignore.stdout=ignore.stdout, ignore.stderr=ignore.stderr)
   
   save.plan(plan)
@@ -279,84 +322,91 @@ run.dek.inverse <- function(plan, outmessages=FALSE) {
 #' @export 
 run.dek.forward <- function(plan, outmessages=FALSE) {
   
-  message('running plankit forward planning....')
+  message('running pure-dek forward planning....')
   
   # crea folder
   dir.create(plan[['name']], recursive=TRUE, showWarnings=FALSE)
   
   # rimuove contenuto del folder (il piano viene completamente sovrascritto)
   unlink(paste(plan$name, '/*', sep=''), recursive = FALSE, force = FALSE)
-  
-  
+    
   # CT e CONTORNI
   if(!is.null(plan[['ct']])) {
-    write.3d.array(ct=plan$ct, file.name=paste0(plan$name, '/ct.3d'))
-    plan$ctFile <- paste0(plan$name, '/ct.3d')
+    message('using ct object in plan...')
+    write.3d.array(ct=plan[['ct']], file.name=paste0(plan[['name']], '/ct.3d'))
+    plan[['ctFile']] <- paste0(plan[['name']], '/ct.3d')
   }
   if(!is.null(plan[['contours']])) {
-    write.contours(contours=plan$contours, name=paste0(plan$name, '/plan'))
-    plan$contoursFile <- paste0(plan$name, '/plan.contours')
+    write.contours(contours=plan$contours, name=paste0(plan[['name']], '/plan'))
+    plan[['contoursFile']] <- paste0(plan[['name']], '/plan.contours')
   }
   
-  # BEAMS
+  # input beamLUT files
+  if(!is.null(plan[['inputBeamLUTFile']])) {stop('Usage of external beamLUTs from file not yet implemented.')}
+  
+  # BEAMS (carica beams)
   if(!is.null(plan[['beams']])) {
-    write.beams(beams=plan[['beams']], format='plankit', file.name=paste0(plan$name, '/plan'))
-    plan$inputBeamsFile <- paste0(plan$name, '/plan.beams')
+    write.beams(beams=plan[['beams']], format='plankit', file.name=paste0(plan[['name']], '/plan'))
+    plan[['inputBeamsFile']] <- paste0(plan[['name']], '/plan.beams')
+  } else {
+    plan[['beams']] <- read.beams(plan[['inputBeamsFile']]) # carica comunque i beams
   }
-  
-  # input files (path assoluti)
-  ctFile <- paste(getwd(), '/', plan$ctFile, sep='')
-  hounsfieldToDensityFile <- paste(getwd(), '/', plan$hounsfieldToDensityFile, sep='')
-  hounsfieldToStoichiometryFile <- paste(getwd(), '/', plan$hounsfieldToStoichiometryFile, sep='')
-  contoursFile <- paste(getwd(), '/', plan$contoursFile, sep='')
-  plan.config <- paste(plan[['name']], '/plan.config', sep='')
-  inputBeamsFile <- paste(getwd(), '/', plan$inputBeamsFile, sep='')
   
   # crea file plan.config
+  plan.config <- paste(plan[['name']], '/plan.config', sep='')
   con <- file(plan.config, "w") # open for writing in text mode
   
-  writeLines(paste('ctFile = ', ctFile, '\n'), con=con, sep='')
-  writeLines(paste('hounsfieldToDensityFile = ', hounsfieldToDensityFile, '\n'), con=con, sep='')
-  writeLines(paste('hounsfieldToStoichiometryFile = ', hounsfieldToStoichiometryFile, '\n'), con=con, sep='')
-  writeLines(paste('contoursFile = ', contoursFile, '\n'), con=con, sep='')
+  # CT e contorni
+  writeLines(paste('ctFile = ', plan[['ctFile']], '\n'), con=con, sep='')
+  writeLines(paste('hounsfieldToDensityFile = ', plan[['hounsfieldToDensityFile']], '\n'), con=con, sep='')
+  writeLines(paste('hounsfieldToStoichiometryFile = ', plan[['hounsfieldToStoichiometryFile']], '\n'), con=con, sep='')
+  writeLines(paste('contoursFile = ', plan[['contoursFile']], '\n'), con=con, sep='')
+  
+  # calcolo
   p.computingGridVoxelSizes <- paste(plan[['computingGridVoxelSizes']], collapse=' ')
   writeLines(paste('computingGridVoxelSizes = ', p.computingGridVoxelSizes, '\n', collapse=' '), con=con, sep='')
   writeLines(paste('computingGridCoverage = ', plan[['computingGridCoverage']], '\n'), con=con, sep='')
   writeLines(paste('computingGridCoverageBoundary = ', plan[['computingGridCoverageBoundary']], '\n'), con=con, sep='')
-  writeLines(paste('beamLine = ', plan[['beamLine']], '\n'), con=con, sep='')
   writeLines(paste('computingValues = ', plan[['computingValues']], '\n'), con=con, sep='')
   writeLines(paste('cutOffRadius = ', plan[['cutOffRadius']], '\n'), con=con, sep='')
   writeLines(paste('cutEnergyFraction = ', plan[['cutEnergyFraction']], '\n'), con=con, sep='')
   
+  # beamLines (se si legge da beams, queste devono essere pre-caricate)
+  plan[['beamLines']] <- unique(c(as.character(plan[['beamLines']]), as.character(plan[['beams']]$beamLine))) # aggiunge quelle definite in beams
+  if(!is.null(plan[['beamLines']])) {
+    for(indexBL in 1:length(plan[['beamLines']])){
+      writeLines(paste('beamLine = ', plan[['beamLines']][indexBL], '\n'), con=con, sep='')
+    }
+  }
+  
   # beams input
-  if(!is.null(plan$inputBeamsFile)) {
-    inputBeamsFile <- paste(getwd(), '/', plan$inputBeamsFile, sep='')
-    writeLines(paste('inputBeamsFile = ', inputBeamsFile, '\n'), con=con, sep='')
+  writeLines(paste('inputBeamsFile = ', plan[['inputBeamsFile']], '\n'), con=con, sep='')
+
+  # output BeamLUTs
+  if(plan[['saveBeamLUTs']]) {
+    plan[['outputBeamLUTFile']] <- paste0(plan[['name']], '/plan')
+    writeLines(paste0('outputBeamLUTFile = ', plan[['outputBeamLUTFile']], '\n'), con=con, sep='')
   }
   
-  # beams output
-  if(is.null(plan[['outputBeamsFile']])) {
-    outputBeamsFile <- 'plan.beams'
-    plan[['outputBeamsFile']] <- outputBeamsFile
-  } else {
-    outputBeamsFile <- paste(getwd(), '/', plan[['outputBeamsFile']], sep='')
-  }
-  
-  plan$voisFile <- 'vois.3d'
-  plan$outputValuesFile <- 'values.3d'
-  
-  writeLines(paste('outputBeamsFile = ', outputBeamsFile, '\n'), con=con, sep='')
+  # output Beams (è fisso)
+  plan[['outputBeamsFile']] <- paste0(plan[['name']], '/plan.beams')
+  writeLines(paste0('outputBeamsFile = ', plan[['outputBeamsFile']], '\n'), con=con, sep='')
   writeLines('printSpotPositions = y\n', con=con, sep='')
-  writeLines('voisFile = vois.3d\n', con=con, sep='')
-  writeLines('outputValuesFile = values.3d\n', con=con, sep='')
+  
+  # output Vois (è fisso)
+  plan[['outputVoisFile']] <- paste0(plan[['name']], '/vois.3d')
+  writeLines(paste0('voisFile = ', plan[['outputVoisFile']], '\n'), con=con, sep='')
+  
+  # output Values (è fisso)
+  plan[['outputValuesFile']] <- paste0(plan[['name']], '/values.3d')
+  writeLines(paste0('outputValuesFile = ', plan[['outputValuesFile']], '\n'), con=con, sep='')
   
   close(con)
   
   # chiamata di sistema
   if(outmessages) {ignore.stdout=FALSE; ignore.stderr=FALSE} else {ignore.stdout=TRUE; ignore.stderr=TRUE}
-  #dek.setenv <- get('dek.setenv', envir=dektoolsEnv)
-  #cmd <- paste('. ', dek.setenv, '; cd ', plan[['name']], '; dek plan.config')
-  cmd <- paste('cd ', plan$name, '; dek plan.config')
+  cmd <- paste0('pure-dek ',  plan[['name']], '/plan.config') # runna da fuori la cartella.
+  message('executing: ', cmd)
   system(cmd, ignore.stdout=ignore.stdout, ignore.stderr=ignore.stderr)
   
   save.plan(plan)
@@ -376,14 +426,14 @@ run.dek.forward <- function(plan, outmessages=FALSE) {
 #' @family Utilities
 get.filepath <- function(object, plan=plan) {
   if(object=='ctFile') {fp <- plan$ctFile}
-  else if(object=='contoursFile') {fp <- plan$contoursFile}
-  else if(object=='hounsfieldToDensityFile') {fp <- plan$hounsfieldToDensityFile}
-  else if(object=='hounsfieldToStoichiometryFile') {fp <- plan$hounsfieldToStoichiometryFile}
-  else if(object=='prescriptionFile') {fp <- paste(plan$name, 'plan.prescription', sep='/')}
-  else if(object=='voisFile') {fp <- paste(plan$name, 'vois.3d', sep='/')}
-  else if(object=='outputValuesFile') {fp <- paste(plan$name, 'values.3d', sep='/')}
-  else if(object=='inputBeamsFile') {fp <- plan$inputBeamsFile}
-  else if(object=='outputBeamsFile') {fp <- paste(plan$name, plan$outputBeamsFile, sep='/')}
+  else if(object=='contoursFile') {fp <- plan[['contoursFile']]}
+  else if(object=='hounsfieldToDensityFile') {fp <- plan[['hounsfieldToDensityFile']]}
+  else if(object=='hounsfieldToStoichiometryFile') {fp <- plan[['hounsfieldToStoichiometryFile']]}
+  else if(object=='prescriptionFile') {fp <- paste(plan[['name']], 'plan.prescription', sep='/')}
+  else if(object=='voisFile') {fp <- plan[['voisFile']]}
+  else if(object=='outputValuesFile') {fp <- plan[['outputValuesFile']]}
+  else if(object=='inputBeamsFile') {fp <- plan[['inputBeamsFile']]}
+  else if(object=='outputBeamsFile') {fp <- plan[['outputBeamsFile']]}
   else{message('no valid file identification.')}
   return(fp)
 }

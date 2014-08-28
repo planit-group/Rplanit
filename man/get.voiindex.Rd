@@ -3,12 +3,14 @@
 \alias{get.voiindex}
 \title{Get the VOI index from the contours file}
 \usage{
-get.voiindex(voi, file.contours = NULL)
+get.voiindex(voi, file.contours = NULL, contours = NULL)
 }
 \arguments{
-\item{voi}{the VOI name}
+\item{voi}{the VOI name.}
 
-\item{file.contours}{the contours file}
+\item{contours}{a contours object (data frame).}
+
+\item{file.contours}{the contours file.}
 }
 \value{
 the VOI index
