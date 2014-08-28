@@ -1,7 +1,7 @@
 Package: Rplanit
 Type: Package
 Title: Radiotherapy with ion beams - planning, simulations and analysis
-Version: 1.1
+Version: 1.2
 Date: 2014-03-26
 Author: Andrea Attili
 Maintainer: Andrea Attili <attili@to.infn.it>
