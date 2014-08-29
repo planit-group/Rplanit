@@ -337,7 +337,7 @@ get.beamLUTs <- function(plan, preallocate=FALSE) {
     stop('beamLUTs not present in plan ', plan[['name']], '. To evaluate the beamLUT set the plan with saveBeamLUTs=TRUE.')
   } else {
     values <- get.values(plan)
-    return(read.beamLUT(beamLUT.name = plan[['outputBeamLUTFile']], Nx = values$Nx, Ny = values$Ny, Nz = values$Nz))
+    return(read.beamLUT(beamLUT.name = plan[['outputBeamLUTFile']], Nx = values$Nx, Ny = values$Ny, Nz = values$Nz, preallocate = preallocate))
   }
 }
 
@@ -440,33 +440,23 @@ read.beamLUT <- function(beamLUT.name, Nx, Ny, Nz, dose.threshold=0, preallocate
   message('found ', total.voxels, ' elements in beamLUTs (not filtered.)')
   message('reading ', Nb, ' beamLUTs... ')
   
-  pb <- txtProgressBar(min = 0, max = Nb, style = 3)
+  # metodo "pulito" con plyr
+  # library(plyr)
+  # my.read.table <- function(...) {read.table(..., skip=1)}
+  # BL <- ldply(beamLUT.files, .fun = my.read.table, .progress = 'text')
+  
+
   if(preallocate) {
-    # crea dataframe vuoto
-    beamLUT.tmp <- read.table(beamLUT.files[1], skip=1, header=TRUE, check.names=FALSE)
-    beamLUT.tmp <- beamLUT.tmp[1,] # prende prima riga
-    beamLUT <- data.frame(matrix(0, nrow = total.voxels$V1, ncol = ncol(beamLUT.tmp)))
+    # sistema con concatenazione...
+    temp.file <- paste0('tmp-', round(runif(1)*1e8), '.beamLUT')
+    cmd <- paste0('tail -q -n +3 ', beamLUT.name, '*.beamLUT > ', temp.file)
+    system(cmd)
+    beamLUT.tmp <- read.table(beamLUT.files[1], skip = 1, header = TRUE, check.names=FALSE)
+    beamLUT <- read.table(temp.file, header = FALSE)
     names(beamLUT) <- names(beamLUT.tmp)
-    #return(beamLUT)
-    
-    
-    index <- 1
-    for(b in 1:Nb) {
-      #message('reading beamLUT: ', beamLUT.files[b])
-      beamLUT.tmp <- read.table(beamLUT.files[b], skip=1, header=TRUE, check.names=FALSE)
-      Nv.tmp <- nrow(beamLUT.tmp)
-      beamLUT[index:(index+Nv.tmp-1),] <- beamLUT.tmp
-      index <- index + Nv.tmp
-      
-      #if(b==1) {
-      #beamLUT <- rep(beamLUT.tmp, length(beamLUT.files)) # predispone porzione di memoria contigua...
-      #  beamLUT <- beamLUT.tmp
-      #} else {
-      #  beamLUT <- rbind(beamLUT, beamLUT.tmp)
-      #}
-      setTxtProgressBar(pb, b)
-    } 
+    file.remove(temp.file)
   } else {
+    pb <- txtProgressBar(min = 0, max = Nb, style = 3)
     for(b in 1:Nb) {
       #message('reading beamLUT: ', beamLUT.files[b])
       beamLUT.tmp <- read.table(beamLUT.files[b], skip=1, header=TRUE, check.names=FALSE)      
@@ -476,9 +466,10 @@ read.beamLUT <- function(beamLUT.name, Nx, Ny, Nz, dose.threshold=0, preallocate
         beamLUT <- rbind(beamLUT, beamLUT.tmp)
       }
       setTxtProgressBar(pb, b)
-    }    
+    }
+    close(pb)
   }
-  close(pb)
+
   
   # filtro dose.thresold
   beamLUT <- subset(beamLUT, `DosePerEvent[Gy/primary]` > dose.threshold)
