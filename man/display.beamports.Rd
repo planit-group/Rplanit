@@ -3,13 +3,15 @@
 \alias{display.beamports}
 \title{Beam-port splot}
 \usage{
-display.beamports(beams, plan = NULL, show.plot = TRUE, file.name = NULL,
-  height = 7, width = 7)
+display.beamports(beams, plan = NULL, numeric = FALSE, show.plot = TRUE,
+  file.name = NULL, height = 7, width = 7)
 }
 \arguments{
 \item{beams}{beams dataframe.}
 
 \item{plan}{The plan object.}
+
+\item{numeric}{Display a numeric ID for the fields (default uses a beamLine+angles code).}
 
 \item{shot.plot}{Show plot.}
 

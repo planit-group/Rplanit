@@ -1836,8 +1836,9 @@ my.ggplot.theme <- function(size=16)
 
 #' Beam statistics plot
 #' 
-#' @param beams beams dataframe.
+#' @param beams The beams dataframe.
 #' @param plan The plan object.
+#' @param numeric Display a numeric ID for the fields (default uses a beamLine+angles code).
 #' @param shot.plot Show plot.
 #' @param file.name File name for saving the plot.
 #' @param height The height of the saved plot image (inches).
@@ -1849,6 +1850,7 @@ my.ggplot.theme <- function(size=16)
 
 display.beams <- function(beams,
                           plan=NULL,
+                          numeric=FALSE,
                           show.plot=TRUE,
                           file.name=NULL,
                           height=7,
@@ -1861,7 +1863,7 @@ display.beams <- function(beams,
   }
   
   # aggiunge field ID
-  if(!('field' %in% colnames(beams))) {beams <- add.field(beams)}
+  if(!('field' %in% colnames(beams))) {beams <- add.field(beams, numeric=numeric)}
   
   # digits
   beams$energy.f <- as.factor(round(beams$energy, digits=1))
@@ -1934,6 +1936,7 @@ display.rays <- function(rays, alpha=1, ray.length=1, add=FALSE)
 #' 
 #' @param beams beams dataframe.
 #' @param plan The plan object.
+#' @param numeric Display a numeric ID for the fields (default uses a beamLine+angles code).
 #' @param shot.plot Show plot.
 #' @param file.name File name for saving the plot.
 #' @param height The height of the saved plot image (inches).
@@ -1944,6 +1947,7 @@ display.rays <- function(rays, alpha=1, ray.length=1, add=FALSE)
 #' @family Beams
 display.beamports <- function(beams,
                           plan=NULL,
+                          numeric=FALSE,
                           show.plot=TRUE,
                           file.name=NULL,
                           height=7,
@@ -1956,7 +1960,7 @@ display.beamports <- function(beams,
   }
   
   # aggiunge field ID
-  beams <- add.field(beams)
+  beams <- add.field(beams, numeric=numeric)
   
   beams.a <- aggregate(list(Npart=beams$fluence), list(deflX=beams$deflX, deflY=beams$deflY, beam.port=beams$field), sum)
   

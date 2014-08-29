@@ -3,10 +3,12 @@
 \alias{get.beamLUTs}
 \title{Get beamLUTs}
 \usage{
-get.beamLUTs(plan)
+get.beamLUTs(plan, preallocate = FALSE)
 }
 \arguments{
 \item{plan}{The plan object.}
+
+\item{preallocate}{Preallocate memory (parameter passed to read.beamLUT().)}
 }
 \description{
 Get the evaluated beamLUTs from the plan

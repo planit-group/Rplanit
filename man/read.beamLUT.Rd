@@ -3,10 +3,15 @@
 \alias{read.beamLUT}
 \title{Read the beamLUTs (pure-dek)}
 \usage{
-read.beamLUT(beamLUT.name, Nx, Ny, Nz)
+read.beamLUT(beamLUT.name, Nx, Ny, Nz, dose.threshold = 0,
+  preallocate = FALSE)
 }
 \arguments{
 \item{beamLUT.name}{the prefix of the beamLUT files. The complete filenames are expected to be: <beamLUT.name>_<beamIndex>.beamLUT}
+
+\item{Nx,Ny,Nz}{the dimensions of the target 3D array (to evaluate an absolute voxelID)}
+
+\item{dose.threshold}{additional dose threshold to filter elements with dose <= dose.threshold.}
 }
 \description{
 Read the beamLUTs (pure-dek)

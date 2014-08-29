@@ -329,9 +329,10 @@ write.lut <- function(lut.array, variables=NULL, E=NULL, x=NULL, y=NULL, zn=NULL
 #' 
 #' Get the evaluated beamLUTs from the plan
 #' @param plan The plan object.
+#' @param preallocate Preallocate memory (parameter passed to read.beamLUT().)
 #' @export
 #' @family BeamLUT
-get.beamLUTs <- function(plan) {
+get.beamLUTs <- function(plan, preallocate=FALSE) {
   if(is.null(plan[['outputBeamLUTFile']])) {
     stop('beamLUTs not present in plan ', plan[['name']], '. To evaluate the beamLUT set the plan with saveBeamLUTs=TRUE.')
   } else {
@@ -421,23 +422,66 @@ write.beamLUT <- function(plan, threshold=0, threshold.variable='Dose[Gy]', vari
 #' Read the beamLUTs (pure-dek)
 #' 
 #' @param beamLUT.name the prefix of the beamLUT files. The complete filenames are expected to be: <beamLUT.name>_<beamIndex>.beamLUT
+#' @param Nx,Ny,Nz the dimensions of the target 3D array (to evaluate an absolute voxelID)
+#' @param dose.threshold additional dose threshold to filter elements with dose <= dose.threshold.
 #' @family BeamLUT
 #' @export
-read.beamLUT <- function(beamLUT.name, Nx, Ny, Nz)
+read.beamLUT <- function(beamLUT.name, Nx, Ny, Nz, dose.threshold=0, preallocate=FALSE)
 {
   beamLUT.files <- Sys.glob(paste0(beamLUT.name, '*.beamLUT'))
   if(length(beamLUT.files)==0) {stop(paste0(beamLUT.name, '*.beamLUT not found!'))}
+  Nb <- length(beamLUT.files)
   
-  for(b in 1:length(beamLUT.files)) {
-    message('reading beamLUT: ', beamLUT.files[b])
-    beamLUT.tmp <- read.table(beamLUT.files[b], skip=1, header=TRUE, check.names=FALSE)
-    if(b==1) {
-      #beamLUT <- rep(beamLUT.tmp, length(beamLUT.files)) # predispone porzione di memoria contigua...
-      beamLUT <- beamLUT.tmp
-    } else {
-      beamLUT <- rbind(beamLUT, beamLUT.tmp)
-    }
+  # ciclo preliminare per contare tutti i voxels
+  total.voxels <- 0
+  for(b in 1:Nb) {
+    total.voxels <- total.voxels + read.table(file = beamLUT.files[b], header = FALSE, nrow = 1)[1]
   }
+  message('found ', total.voxels, ' elements in beamLUTs (not filtered.)')
+  message('reading ', Nb, ' beamLUTs... ')
+  
+  pb <- txtProgressBar(min = 0, max = Nb, style = 3)
+  if(preallocate) {
+    # crea dataframe vuoto
+    beamLUT.tmp <- read.table(beamLUT.files[1], skip=1, header=TRUE, check.names=FALSE)
+    beamLUT.tmp <- beamLUT.tmp[1,] # prende prima riga
+    beamLUT <- data.frame(matrix(0, nrow = total.voxels$V1, ncol = ncol(beamLUT.tmp)))
+    names(beamLUT) <- names(beamLUT.tmp)
+    #return(beamLUT)
+    
+    
+    index <- 1
+    for(b in 1:Nb) {
+      #message('reading beamLUT: ', beamLUT.files[b])
+      beamLUT.tmp <- read.table(beamLUT.files[b], skip=1, header=TRUE, check.names=FALSE)
+      Nv.tmp <- nrow(beamLUT.tmp)
+      beamLUT[index:(index+Nv.tmp-1),] <- beamLUT.tmp
+      index <- index + Nv.tmp
+      
+      #if(b==1) {
+      #beamLUT <- rep(beamLUT.tmp, length(beamLUT.files)) # predispone porzione di memoria contigua...
+      #  beamLUT <- beamLUT.tmp
+      #} else {
+      #  beamLUT <- rbind(beamLUT, beamLUT.tmp)
+      #}
+      setTxtProgressBar(pb, b)
+    } 
+  } else {
+    for(b in 1:Nb) {
+      #message('reading beamLUT: ', beamLUT.files[b])
+      beamLUT.tmp <- read.table(beamLUT.files[b], skip=1, header=TRUE, check.names=FALSE)      
+      if(b==1) {
+        beamLUT <- beamLUT.tmp
+      } else {
+        beamLUT <- rbind(beamLUT, beamLUT.tmp)
+      }
+      setTxtProgressBar(pb, b)
+    }    
+  }
+  close(pb)
+  
+  # filtro dose.thresold
+  beamLUT <- subset(beamLUT, `DosePerEvent[Gy/primary]` > dose.threshold)
   
   # beamID start from 1...
   beamLUT$beamID <- beamLUT$beamID + 1

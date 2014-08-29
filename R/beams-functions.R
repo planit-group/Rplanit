@@ -464,18 +464,21 @@ get.isocenter <- function(plan)
 #' An unique field ID is associated to a unique combination of gantry and patient angle.
 #' 
 #' @param beams the beams data.frame
+#' @param numeric use a numeric ID for the field
 #' 
 #' @export
 #' @family Beams
-add.field <- function(beams)
+add.field <- function(beams, numeric=TRUE)
 {
   # check per vedere se esiste già il campo field
   if('field' %in% names(beams)) {
     beams <- beams[, !names(beams)=='field']
   }
   
-  beams$field <- interaction(beams[c('gantryAngle', 'patientAngle')])
-  levels(beams$field) <- 1:length(levels(beams$field))
+  beams$field <- interaction(beams[c('beamLine', 'gantryAngle', 'patientAngle')])
+  if(numeric) {
+    levels(beams$field) <- 1:length(levels(beams$field))
+  }
   
   return(beams)
 }

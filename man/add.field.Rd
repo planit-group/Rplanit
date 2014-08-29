@@ -3,10 +3,12 @@
 \alias{add.field}
 \title{Add field ID column to beams}
 \usage{
-add.field(beams)
+add.field(beams, numeric = TRUE)
 }
 \arguments{
 \item{beams}{the beams data.frame}
+
+\item{numeric}{use a numeric ID for the field}
 }
 \description{
 An unique field ID is associated to a unique combination of gantry and patient angle.
