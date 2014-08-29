@@ -3,7 +3,7 @@
 \alias{get.alpha.beta.beamLUT}
 \title{Get alpha/beta from beamLUTs (pure-dek)}
 \usage{
-get.alpha.beta.beamLUT(beamLUTs, beams, x, y, z,
+get.alpha.beta.beamLUT(beamLUTs, beams, x = NULL, y = NULL, z = NULL,
   variables = c("Alpha[Gy^(-1)]", "Beta[Gy^(-2)]"))
 }
 \arguments{
@@ -16,10 +16,10 @@ get.alpha.beta.beamLUT(beamLUTs, beams, x, y, z,
 \item{variable}{name vector to override the default name of the variables (c('Alpha[Gy^(-1)]', 'Beta[Gy^(-2)]')).}
 }
 \value{
-a values object.
+A values object (if  x, y and z are specified), otherwise a sparse array.
 }
 \description{
-Get the net alpha and beta Linear-Quadratic parameters distribution (values object) from the beamLUTs.
+Get the net alpha and beta Linear-Quadratic parameters distribution (values object or sparse array) from the beamLUTs.
 }
 \seealso{
 Other BeamLUT: \code{\link{get.bdose.beamLUT}};

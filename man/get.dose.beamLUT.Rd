@@ -3,7 +3,8 @@
 \alias{get.dose.beamLUT}
 \title{Get Dose from beamLUTs (pure-dek)}
 \usage{
-get.dose.beamLUT(beamLUTs, beams, x, y, z, variable = "Dose[Gy]")
+get.dose.beamLUT(beamLUTs, beams, x = NULL, y = NULL, z = NULL,
+  variable = "Dose[Gy]")
 }
 \arguments{
 \item{beamLUTs}{the beamLUTs data frame.}
@@ -15,10 +16,10 @@ get.dose.beamLUT(beamLUTs, beams, x, y, z, variable = "Dose[Gy]")
 \item{variable}{to override the default name of the variable ('Dose[Gy]').}
 }
 \value{
-a values object.
+a values object (if  x, y and z are specified), otherwise a sparse array.
 }
 \description{
-Get the net Dose distribution (values object) from the beamLUTs.
+Get the net Dose distribution (values object or sparse array) from the beamLUTs. If coordinates x, y and z are specified it returns a complete values object
 }
 \seealso{
 Other BeamLUT: \code{\link{get.alpha.beta.beamLUT}};

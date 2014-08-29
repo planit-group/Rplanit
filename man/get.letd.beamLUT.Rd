@@ -3,7 +3,7 @@
 \alias{get.letd.beamLUT}
 \title{Get dose averaged LET from beamLUTs (pure-dek)}
 \usage{
-get.letd.beamLUT(beamLUTs, beams, x, y, z,
+get.letd.beamLUT(beamLUTs, beams, x = NULL, y = NULL, z = NULL,
   variable = "DoseAveragedLET[keV/um]")
 }
 \arguments{
@@ -16,10 +16,10 @@ get.letd.beamLUT(beamLUTs, beams, x, y, z,
 \item{variable}{to override the default name of the variable ('DoseAveragedLET[keV/um]').}
 }
 \value{
-a values object.
+A values object (if  x, y and z are specified), otherwise a sparse array.
 }
 \description{
-Get the net dose averged LET distribution (values object) from the beamLUTs.
+Get the net dose averged LET distribution (values object or sparse array) from the beamLUTs.
 }
 \seealso{
 Other BeamLUT: \code{\link{get.alpha.beta.beamLUT}};

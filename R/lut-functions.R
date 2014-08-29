@@ -484,72 +484,72 @@ read.beamLUT <- function(beamLUT.name, Nx, Ny, Nz, dose.threshold=0, preallocate
 
 #' Get Dose from beamLUTs (pure-dek)
 #' 
-#' Get the net Dose distribution (values object) from the beamLUTs.
+#' Get the net Dose distribution (values object or sparse array) from the beamLUTs. If coordinates x, y and z are specified it returns a complete values object
 #' @param beamLUTs the beamLUTs data frame.
 #' @param beams the beams data frame.
 #' @param x,y,z the coordinates of the 3D array.
 #' @param variable to override the default name of the variable ('Dose[Gy]').
-#' @return a values object.
+#' @return a values object (if  x, y and z are specified), otherwise a sparse array.
 #' @family BeamLUT
 #' @export
-get.dose.beamLUT <- function(beamLUTs, beams, x, y, z, variable='Dose[Gy]')
+get.dose.beamLUT <- function(beamLUTs, beams, x=NULL, y=NULL, z=NULL, variable='Dose[Gy]')
 {
-  dose <- array(0, dim=c(length(x), length(y), length(z)))
-  
-  # calcolo con ciclo
-  #Nb <- nrow(beams)
-  #for(b in 1:Nb) {
-  #  message('evaluating dose for beam ', b)
-  #  beamLUT <- subset(beamLUTs, beamID==b)
-  #  dose[beamLUT$voxelID] <- dose[beamLUT$voxelID] +  beamLUT$`DosePerEvent[Gy/primary]` * beams$fluence[b]
-  #}
-  
+
   # calcolo con aggregate
   dose.bl <- beamLUTs$`DosePerEvent[Gy/primary]` * beams$fluence[beamLUTs$beamID]
   dose.bl <- aggregate(list(dose=dose.bl), by = list(voxelID=beamLUTs$voxelID), sum)
-  dose[dose.bl$voxelID] = dose.bl$dose
-  
-  
-  return(create.values(array.values = dose, variables = variable, x = x, y = y, z = z))
+    
+  if(is.null(x) | is.null(y) | is.null(z)) { # matrice sparsa
+    names(dose.bl) <- c('voxelID', variable)
+    return(dose.bl)
+  } else { # oggetto values completo
+    dose <- array(0, dim=c(length(x), length(y), length(z)))
+    dose[dose.bl$voxelID] = dose.bl$dose
+    return(create.values(array.values = dose, variables = variable, x = x, y = y, z = z))
+  }
 }
 
 #' Get dose averaged LET from beamLUTs (pure-dek)
 #' 
-#' Get the net dose averged LET distribution (values object) from the beamLUTs.
+#' Get the net dose averged LET distribution (values object or sparse array) from the beamLUTs.
 #' @param beamLUTs the beamLUTs data frame.
 #' @param beams the beams data frame.
 #' @param x,y,z the coordinates of the 3D array.
 #' @param variable to override the default name of the variable ('DoseAveragedLET[keV/um]').
-#' @return a values object.
+#' @return A values object (if  x, y and z are specified), otherwise a sparse array.
 #' @family BeamLUT
 #' @export
-get.letd.beamLUT <- function(beamLUTs, beams, x, y, z, variable='DoseAveragedLET[keV/um]')
-{
-  letd <- array(NA, dim=c(length(x), length(y), length(z)))
-  
+get.letd.beamLUT <- function(beamLUTs, beams, x=NULL, y=NULL, z=NULL, variable='DoseAveragedLET[keV/um]')
+{ 
   endens.bl <- beamLUTs$`EnergyDensityPerEvent[keV/(um^3*primary)]` * beams$fluence[beamLUTs$beamID]
   letd.bl <- beamLUTs$`DoseWeightedEnergyDensityPerEvent[keV^2/(um^4*primary)]` * beams$fluence[beamLUTs$beamID]
-
   letd.bl <- aggregate(list(endens=endens.bl, letd=letd.bl), by = list(voxelID=beamLUTs$voxelID), sum)
-  letd[letd.bl$voxelID] = letd.bl$letd/letd.bl$endens
-  
-  return(create.values(array.values = letd, variables = variable, x = x, y = y, z = z))
+
+  if(is.null(x) | is.null(y) | is.null(z)) {
+    letd.bl <- data.frame(letd.bl$voxelID, letd.bl$letd/letd.bl$endens)    
+    names(letd.bl) <- c('voxelID', variable)
+    return(letd.bl)
+  } else {
+    letd <- array(NA, dim=c(length(x), length(y), length(z)))
+    letd[letd.bl$voxelID] = letd.bl$letd/letd.bl$endens
+    return(create.values(array.values = letd, variables = variable, x = x, y = y, z = z))
+  }
 }
 
 #' Get RBE from beamLUTs (pure-dek)
 #' 
-#' Get the net RBE distribution (values object) from the beamLUTs.
+#' Get the net RBE distribution (values object or sparse array) from the beamLUTs.
 #' @param beamLUTs the beamLUTs data frame.
 #' @param beams the beams data frame.
 #' @param x,y,z the coordinates of the 3D array.
 #' @param alphaX,betaX the Linear-Quadratic parameters of the reference radiation (they can be two arrays/vectors)
 #' @param variable to override the default name of the variable ('RBE').
-#' @return a values object.
+#' @return A values object (if  x, y and z are specified), otherwise a sparse array.
 #' @family BeamLUT
 #' @export
-get.rbe.beamLUT <- function(beamLUTs, beams, x, y, z, variable='RBE', alphaX, betaX)
+get.rbe.beamLUT <- function(beamLUTs, beams, x=NULL, y=NULL, z=NULL, variable='RBE', alphaX, betaX)
 {
-  rbe <- array(NA, dim=c(length(x), length(y), length(z)))
+  
   
   dose.bl <- beamLUTs$`DosePerEvent[Gy/primary]` * beams$fluence[beamLUTs$beamID]
   alpha.bl <- beamLUTs$`LethAlphaPerEvent[1/primary]` * beams$fluence[beamLUTs$beamID]
@@ -558,35 +558,47 @@ get.rbe.beamLUT <- function(beamLUTs, beams, x, y, z, variable='RBE', alphaX, be
   rbe.bl <- aggregate(list(dose=dose.bl, alpha=alpha.bl, beta=beta.bl), by = list(voxelID=beamLUTs$voxelID), sum)
   rbe.bl$alpha <- rbe.bl$alpha/rbe.bl$dose
   rbe.bl$beta <- rbe.bl$beta^2/rbe.bl$dose^2
-  rbe[rbe.bl$voxelID] = rbe.evaluate(alpha=rbe.bl$alpha, beta=rbe.bl$beta, dose=rbe.bl$dose, alphaX=alphaX, betaX=betaX)
   
-  return(create.values(array.values = rbe, variables = variable, x = x, y = y, z = z))
+  if(is.null(x) | is.null(y) | is.null(z)) {
+    rbe.bl <- data.frame(rbe.bl$voxelID, rbe.evaluate(alpha=rbe.bl$alpha, beta=rbe.bl$beta, dose=rbe.bl$dose, alphaX=alphaX, betaX=betaX))    
+    names(rbe.bl) <- c('voxelID', variable)
+    return(rbe.bl)
+  } else {
+    rbe <- array(NA, dim=c(length(x), length(y), length(z)))
+    rbe[rbe.bl$voxelID] = rbe.evaluate(alpha=rbe.bl$alpha, beta=rbe.bl$beta, dose=rbe.bl$dose, alphaX=alphaX, betaX=betaX)
+    return(create.values(array.values = rbe, variables = variable, x = x, y = y, z = z))
+  }
 }
 
 #' Get alpha/beta from beamLUTs (pure-dek)
 #' 
-#' Get the net alpha and beta Linear-Quadratic parameters distribution (values object) from the beamLUTs.
+#' Get the net alpha and beta Linear-Quadratic parameters distribution (values object or sparse array) from the beamLUTs.
 #' @param beamLUTs the beamLUTs data frame.
 #' @param beams the beams data frame.
 #' @param x,y,z the coordinates of the 3D array.
 #' @param variable name vector to override the default name of the variables (c('Alpha[Gy^(-1)]', 'Beta[Gy^(-2)]')).
-#' @return a values object.
+#' @return A values object (if  x, y and z are specified), otherwise a sparse array.
 #' @family BeamLUT
 #' @export
-get.alpha.beta.beamLUT <- function(beamLUTs, beams, x, y, z, variables=c('Alpha[Gy^(-1)]', 'Beta[Gy^(-2)]'))
-{
-  alpha <- beta <- array(NA, dim=c(length(x), length(y), length(z)))
-  
+get.alpha.beta.beamLUT <- function(beamLUTs, beams, x=NULL, y=NULL, z=NULL, variables=c('Alpha[Gy^(-1)]', 'Beta[Gy^(-2)]'))
+{  
   dose.bl <- beamLUTs$`DosePerEvent[Gy/primary]` * beams$fluence[beamLUTs$beamID]
   alpha.bl <- beamLUTs$`LethAlphaPerEvent[1/primary]` * beams$fluence[beamLUTs$beamID]
   beta.bl <- beamLUTs$`SqrtLethBetaPerEvent[1/primary]` * beams$fluence[beamLUTs$beamID]
   
   alpha.beta.bl <- aggregate(list(dose=dose.bl, alpha=alpha.bl, beta=beta.bl), by = list(voxelID=beamLUTs$voxelID), sum)
-  alpha[alpha.beta.bl$voxelID] = alpha.beta.bl$alpha/alpha.beta.bl$dose
-  beta[alpha.beta.bl$voxelID] = alpha.beta.bl$beta^2/alpha.beta.bl$dose^2
+
   
-  return(add.array.values(values=create.values(array.values = alpha, variables = variables[1], x = x, y = y, z = z),
-                   new.array=beta, variable=variables[2]))
+  if(is.null(x) | is.null(y) | is.null(z)) {
+    alpha.beta.bl <- data.frame(alpha.beta.bl$voxelID, alpha.beta.bl$alpha/alpha.beta.bl$dose, alpha.beta.bl$beta^2/alpha.beta.bl$dose^2)
+    names(alpha.beta.bl) <- c('voxelID', variables)
+    return(alpha.beta.bl)
+  } else {
+    alpha <- beta <- array(NA, dim=c(length(x), length(y), length(z)))
+    alpha[alpha.beta.bl$voxelID] = alpha.beta.bl$alpha/alpha.beta.bl$dose
+    beta[alpha.beta.bl$voxelID] = alpha.beta.bl$beta^2/alpha.beta.bl$dose^2
+    return(add.array.values(values=create.values(array.values = alpha, variables = variables[1], x = x, y = y, z = z), new.array=beta, variable=variables[2]))
+  }
 }
 
 #' Get equivalent dose from beamLUTs (pure-dek)

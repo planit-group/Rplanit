@@ -3,7 +3,8 @@
 \alias{get.rbe.beamLUT}
 \title{Get RBE from beamLUTs (pure-dek)}
 \usage{
-get.rbe.beamLUT(beamLUTs, beams, x, y, z, variable = "RBE", alphaX, betaX)
+get.rbe.beamLUT(beamLUTs, beams, x = NULL, y = NULL, z = NULL,
+  variable = "RBE", alphaX, betaX)
 }
 \arguments{
 \item{beamLUTs}{the beamLUTs data frame.}
@@ -17,10 +18,10 @@ get.rbe.beamLUT(beamLUTs, beams, x, y, z, variable = "RBE", alphaX, betaX)
 \item{variable}{to override the default name of the variable ('RBE').}
 }
 \value{
-a values object.
+A values object (if  x, y and z are specified), otherwise a sparse array.
 }
 \description{
-Get the net RBE distribution (values object) from the beamLUTs.
+Get the net RBE distribution (values object or sparse array) from the beamLUTs.
 }
 \seealso{
 Other BeamLUT: \code{\link{get.alpha.beta.beamLUT}};
