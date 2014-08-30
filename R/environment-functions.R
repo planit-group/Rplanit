@@ -172,7 +172,7 @@ install.gate <- function()
 {
   # installing path
   my.home <- get.install.path()
-  dir.create(my.home, recursive=TRUE, showWarnings=FALSE)
+  #dir.create(my.home, recursive=TRUE, showWarnings=FALSE)
   
   # check del sistema operativo
   my.system <- Sys.info()['sysname']
@@ -208,18 +208,22 @@ install.puredek <- function()
 {
   # installing path
   my.home <- get.install.path()
-  dir.create(my.home, recursive=TRUE, showWarnings=FALSE)
+  #dir.create(my.home, recursive=TRUE, showWarnings=FALSE)
   
   # check del sistema operativo
   my.system <- Sys.info()['sysname']
   if(my.system=='Linux') {
-    message('installing compiled plakit for Linux...')
+    message('installing compiled Pure-dek for Linux...')
+    puredek_package <- 'Pure-dek-install.tar.bz2'
+  } else if(my.system=='Darwin') {
+    message('installing compiled Pure-dek for Mac (Darwin)...')
+    puredek_package <- 'Pure-dek-install.mac.tar.bz2'
   } else {
     stop(paste0('error: there is no precompiled available for your system (', my.system, ')'))
   }
   
   message('downloading pure-dek...')
-  download.file(url='http://totlxl.to.infn.it/tools/Pure-dek-install.tar.bz2', destfile='Pure-dek-install.tar.bz2')
+  download.file(url=paste0('http://totlxl.to.infn.it/tools/', puredek_package), destfile='Pure-dek-install.tar.bz2')
   
   message('uncompressing pure-dek...')
   system('tar jxf Pure-dek-install.tar.bz2; rm Pure-dek-install.tar.bz2', ignore.stdout=TRUE, ignore.stderr=TRUE)
@@ -237,7 +241,7 @@ install.survival <- function()
 {
   # installing path
   my.home <- get.install.path()
-  dir.create(my.home, recursive=TRUE, showWarnings=FALSE)
+  #dir.create(my.home, recursive=TRUE, showWarnings=FALSE)
   
   # check del sistema operativo
   my.system <- Sys.info()['sysname']
