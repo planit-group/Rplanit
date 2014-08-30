@@ -30,6 +30,18 @@ $ sudo apt-get install liblog4cxx10-dev
 * Install the latest version of R (for Ubuntu 12.04) following the instruction at this [link](http://livesoncoffee.wordpress.com/2012/12/09/installing-r-on-ubuntu-12-04/).
 * Optional (but recommended): install the latest version of RStudio from this [link](http://www.rstudio.com/products/rstudio/download/).
 
+### Ubuntu (14.04 64bit)
+* The following libraries need to be installed from the Ubuntu repository (from the terminal shell prompt):
+```
+$ sudo apt-get install libcurl4-openssl-dev
+$ sudo apt-get install tk8.6-dev
+$ sudo apt-get install libsdl1.2-dev
+$ sudo apt-get install mesa-common-dev
+$ sudo apt-get install liblog4cxx10-dev
+```
+* Install the latest version of R (for Ubuntu 14.04) following the instruction at this [link](http://www.sysads.co.uk/2014/06/install-r-base-3-1-0-ubuntu-14-04/).
+* Optional (but recommended): install the latest version of RStudio from this [link](http://www.rstudio.com/products/rstudio/download/).
+
 
 ### Mac OSX (Darwin)
 * Install Xcode and XQuartz from the Apple site.
