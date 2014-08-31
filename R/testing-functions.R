@@ -62,7 +62,7 @@ demo.puredek <- function(plan.name='test-plan', particle='proton', dose=1, outme
   tt <- system.time(plan.out <- run.dek.inverse(plan, outmessages=outmessages)); 
   
   # genera un report
-  generate.report(plan.out, N.slice = 1)
+  generate.report(plan.out, N.slice = 1, html=TRUE)
   browseURL('file://report_temp.html')
   
   message('planning computing time:')

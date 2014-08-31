@@ -80,7 +80,7 @@ $ sudo apt-get install liblog4cxx10-dev
 * To check that everything is working properly, run the following commands (from the R prompt)
 ```
 > library(Rplanit) # to load the library, if not yet in memory.
-> demo.puredek()
+> plan.out <- demo.puredek()
 > demo.survival()
 ```
 
