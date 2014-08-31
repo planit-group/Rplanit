@@ -172,7 +172,7 @@ install.gate <- function()
 {
   # installing path
   my.home <- get.install.path()
-  #dir.create(my.home, recursive=TRUE, showWarnings=FALSE)
+  dir.create(my.home, recursive=TRUE, showWarnings=FALSE)
   
   # check del sistema operativo
   my.system <- Sys.info()['sysname']
@@ -208,7 +208,7 @@ install.puredek <- function()
 {
   # installing path
   my.home <- get.install.path()
-  #dir.create(my.home, recursive=TRUE, showWarnings=FALSE)
+  dir.create(my.home, recursive=TRUE, showWarnings=FALSE)
   
   # check del sistema operativo
   my.system <- Sys.info()['sysname']
@@ -241,7 +241,7 @@ install.survival <- function()
 {
   # installing path
   my.home <- get.install.path()
-  #dir.create(my.home, recursive=TRUE, showWarnings=FALSE)
+  dir.create(my.home, recursive=TRUE, showWarnings=FALSE)
   
   # check del sistema operativo
   my.system <- Sys.info()['sysname']
