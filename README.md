@@ -6,7 +6,7 @@ Radiotherapy with ion beams: planning, simulations and analysis
 
 *Maintainer*: Andrea Attili <attili@to.infn.it>
 
-*Description*: A collection of methods and procedures to perform simulations and
+*Description*: A collection of methods andprocedures to perform simulations and
 analysis related to radiotherapy treatment planning (with ion beams). It includes a set
 of radiobiological evaluations and display possibilities.
 
@@ -76,5 +76,13 @@ $ sudo apt-get install liblog4cxx10-dev
 > # et voila
 ```
 
-#### Important Note
+### Check
+* To check that everything is working properly, run the following commands (from the R prompt)
+```
+> library(Rplanit) # to load the library, if not yet in memory.
+> demo.puredek()
+> demo.survival()
+```
+
+### Important Note
 While _Rplanit_, _Gate_ and _Survivals_ are open-source, the TPS kernel, _Pure-dek_ is a fork of a previous kernel proprietary by INFN/IBA. To use it for research purposes please contact Andrea Attili (attili@to.infn.it).

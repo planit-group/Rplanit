@@ -19,7 +19,6 @@ generate.report <- function(plan, file.name='report', N.slice=6, html=FALSE)
   
 text.rmd <- "
 ```{r echo=FALSE, results='hide', message=FALSE}
-library(dektools)
 plan <- read.plan('@plan.name@')
   
 ct <- get.ct(plan)
@@ -59,7 +58,7 @@ hist(ct$values, breaks=100, freq=FALSE, xlab=ct$variable, main='Histogram of Hou
 ```{r fig.width=ct.fig.x, fig.height=ct.fig.y, echo=FALSE, results='hide', message=FALSE}
 z.slice <- seq(z.min, z.max, length.out=N.slice+2)[2:(N.slice+1)]
 for(i in 1:N.slice) {
-display.slice.ct(ct, roi=contours, z=z.slice[i])
+display.slice.ct(ct, contours=contours, z=z.slice[i])
 }
 ```
   
@@ -78,12 +77,14 @@ kable(contours.uni.vol, format='markdown')
 Fields
 --------------------------------------------------------
 Fields (beam-ports) information:
-- Beamline model: `r plan$beamLine`
 - Number of fields (beam-ports): `r nrow(plan$fields)`
+- Beamline model: ` `r unique(beams$beamLine)` `
+- Primary particles: ` `r unique(beams$particle)` `
+
 
 ```{r echo=FALSE, results='asis'}
-fields.table <- plan$fields[c('targetVOI', 'iecGantryAngle', 'iecPatientSupportAngle', 'interSpotSpacing.x', 'interSpotSpacing.y', 'interSpotSpacing.z', 'spotsExtensionOutsideTarget')]
-names(fields.table) <- c('target VOI', 'Gantry Angle [deg]', 'Patient Support Angle [deg]', 'Spot Spacing x', 'Spot Spacing y', 'Spot Spacing z', 'Spots Extension [mm]')
+fields.table <- plan$fields[c('beamLine', 'targetVOI', 'iecGantryAngle', 'iecPatientSupportAngle', 'interSpotSpacing.x', 'interSpotSpacing.y', 'interSpotSpacing.z', 'spotsExtensionOutsideTarget')]
+names(fields.table) <- c('Beamline', 'Target VOI', 'Gantry Angle [deg]', 'Patient Support Angle [deg]', 'Spot Spacing x', 'Spot Spacing y', 'Spot Spacing z', 'Spots Extension [mm]')
 kable(fields.table, format='markdown')
 ```
 (Note: spot spacing value is relative to the beam spot standard deviation.)
@@ -94,6 +95,9 @@ Fields (beam-ports) statistics:
 
 ```{r fig.width=8, fig.height=(2+0.15*length(unique(beams$energy))), echo=FALSE, results='hide', message=FALSE}
 display.beams(beams)
+```
+```{r fig.width=8, fig.height=8, echo=FALSE, results='hide', message=FALSE}
+display.beamports(beams)
 ```
 
   
@@ -163,7 +167,8 @@ kable(prescription.table, format='markdown')
   
   # converti in html
   if(html) {
-    markdownToHTML(file=my.file.name.md)
+    # markdownToHTML(file=my.file.name.md)
+    knit2html(input = my.file.name.md)
   }
   
   
