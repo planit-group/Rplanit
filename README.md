@@ -6,7 +6,7 @@ Radiotherapy with ion beams: planning, simulations and analysis
 
 *Maintainer*: Andrea Attili <attili@to.infn.it>
 
-*Description*: A collection of methods andprocedures to perform simulations and
+*Description*: A collection of methods and procedures to perform simulations and
 analysis related to radiotherapy treatment planning (with ion beams). It includes a set
 of radiobiological evaluations and display possibilities.
 
