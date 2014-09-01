@@ -117,7 +117,7 @@ for(j in 1:N.variables) {
                       contours=contours,
                       values=values,
                       variable=values$variables[j],
-                      cont=FALSE,
+                      cont=TRUE,
                       z=z.slice[i])
   } 
 }
