@@ -70,6 +70,7 @@ $ sudo apt-get install liblog4cxx10-dev
 * To update everything to the latest version, the last commands should be runned again:
 ```
 > install_github("Rplanit", username="planit-group", dependencies=TRUE)
+> library(Rplanit)
 > install.puredek(<lincence number>) # please read the note below.
 > install.gate()
 > install.survival()
