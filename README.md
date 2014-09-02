@@ -46,6 +46,7 @@ $ sudo apt-get install liblog4cxx10-dev
 ### Mac OSX (Darwin)
 * Install Xcode and XQuartz from the Apple site.
 * Install the GSL libraries form source ([instructions](http://www.brianomeara.info/tutorials/brownie/gsl)). Alternatively it should be possible to install the binaries using Mac Ports.
+* Install the log4cxx libraries from source [link](http://apache.fis.uniroma2.it/logging/log4cxx/0.10.0/apache-log4cxx-0.10.0.tar.gz ). (The installing procedure is similar to the GSL libraryies)
 * Install the latest version of R from the official [web site](http://cran.rstudio.com/).
 * Optional (but recommended): install the latest version of RStudio from this [link](http://www.rstudio.com/products/rstudio/download/).
 
