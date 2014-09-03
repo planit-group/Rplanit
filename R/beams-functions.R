@@ -134,11 +134,9 @@ read.beams.fluka <- function(fluka.file)
 
 #' Get beams from plan
 #' 
-#' input serve a selezionare i beams usati come "input" per il calcolo
-#' di default si recuperano quelle in "output".
-#' in teoria sarebbero identici tranne casi particolari per il posizionamento
-#' degli spot (se è stata cambiata CT tra inv e fwd planning).
-#' 
+#' Get the beams object associated to the plan. There are two type of beams: input and output. Inputs beams indicates the beams used for a forward planning, or for the initial condition of the optimization procedure in the inverse planning. Output beams indicates the beams evaluated in the inverse planning.
+#' @param plan The plan object.
+#' @param input If TRUE the input beams are retrieved.
 #' @family Beams
 #' @export
 get.beams <- function(plan, ...) UseMethod('get.beams')

@@ -60,6 +60,8 @@ setenv.rplanit <- function()
   Sys.setenv(LD_LIBRARY_PATH=libs) # Linux
   dyld.libs <- paste0(Sys.getenv('DYLD_LIBRARY_PATH'), ':', my.home, '/Pure-dek-install/ext-libs')
   Sys.setenv(DYLD_LIBRARY_PATH=dyld.libs) # mac...
+  #dyld.libs <- paste0(Sys.getenv('DYLD_FALLBACK_LIBRARY_PATH'), ':', my.home, '/Pure-dek-install/ext-libs')
+  #Sys.setenv(DYLD_FALLBACK_LIBRARY_PATH=dyld.libs) # mac (alternativa)...
   
   # Survival
   Sys.setenv(DATA=paste0(my.home, '/Survival-install/data/'))

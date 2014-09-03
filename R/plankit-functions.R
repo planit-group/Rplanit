@@ -345,11 +345,14 @@ run.dek.forward <- function(plan, outmessages=FALSE) {
   if(!is.null(plan[['inputBeamLUTFile']])) {stop('Usage of external beamLUTs from file not yet implemented.')}
   
   # BEAMS (carica beams)
+  # assume che l'oggetto beams (se presente) sia il file beams di ingresso.
   if(!is.null(plan[['beams']])) {
-    write.beams(beams=plan[['beams']], format='plankit', file.name=paste0(plan[['name']], '/plan'))
-    plan[['inputBeamsFile']] <- paste0(plan[['name']], '/plan.beams')
+    write.beams(beams=plan[['beams']], format='plankit', file.name=paste0(plan[['name']], '/input'))
+    plan[['inputBeamsFile']] <- paste0(plan[['name']], '/input.beams')
   } else {
-    plan[['beams']] <- read.beams(plan[['inputBeamsFile']]) # carica comunque i beams
+    plan[['beams']] <- read.beams(plan[['inputBeamsFile']]) # carica comunque i beams e scrive il file input
+    write.beams(beams=plan[['beams']], format='plankit', file.name=paste0(plan[['name']], '/input'))
+    plan[['inputBeamsFile']] <- paste0(plan[['name']], '/input.beams')
   }
   
   # crea file plan.config
@@ -396,7 +399,7 @@ run.dek.forward <- function(plan, outmessages=FALSE) {
   }
   
   # output Beams (è fisso)
-  plan[['outputBeamsFile']] <- paste0(plan[['name']], '/plan.beams')
+  plan[['outputBeamsFile']] <- paste0(plan[['name']], '/output.beams')
   writeLines(paste0('outputBeamsFile = ', plan[['outputBeamsFile']], '\n'), con=con, sep='')
   writeLines('printSpotPositions = y\n', con=con, sep='')
   
