@@ -56,7 +56,8 @@ setenv.rplanit <- function()
              PATH_TO_LUT=paste0(my.home, '/Pure-dek-install/LUT/'))
   path <- paste0(Sys.getenv('PATH'), ':', my.home, '/Pure-dek-install')
   Sys.setenv(PATH=path)
-  libs <- paste0(Sys.getenv('LD_LIBRARY_PATH'), ':', my.home, '/Pure-dek-install/ext-libs') 
+  libs <- paste0(Sys.getenv('LD_LIBRARY_PATH'), ':', my.home, '/Pure-dek-install/ext-libs')
+  Sys.setenv(LD_LIBRARY_PATH=libs)
   
   # Survival
   Sys.setenv(DATA=paste0(my.home, '/Survival-install/data/'))
