@@ -270,7 +270,7 @@ run.dek.inverse <- function(plan, outmessages=FALSE) {
           writeLines(paste('isocenter =', fields[i,'targetIsocenter.x'], fields[i,'targetIsocenter.y'], fields[i,'targetIsocenter.z'], '\n'), con=con, sep=' ')
         }
       }
-      planplan[['fields']] <- fields
+      plan[['fields']] <- fields
     }
   } else { # -> definisce esplicitamente le beamLines da beams
     # beamLines (se si legge da beams, queste devono essere pre-caricate)
