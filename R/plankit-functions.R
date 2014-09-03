@@ -189,15 +189,20 @@ run.dek.inverse <- function(plan, outmessages=FALSE) {
     write.contours(contours=plan$contours, name=paste0(plan[['name']], '/plan'))
     plan[['contoursFile']] <- paste0(plan[['name']], '/plan.contours')
   }
-  
-  # input files (path assoluti) -> non ce n'è assolutamente bisogno...
-  #ctFile <- paste(getwd(), '/', plan[['ctFile']], sep='')
-  #hounsfieldToDensityFile <- paste(getwd(), '/', plan[['hounsfieldToDensityFile']], sep='')
-  #hounsfieldToStoichiometryFile <- paste(getwd(), '/', plan[['hounsfieldToStoichiometryFile']], sep='')
-  #contoursFile <- paste(getwd(), '/', plan[['contoursFile']], sep='')
 
   # input beamLUT files
   if(!is.null(plan[['inputBeamLUTFile']])) {stop('Usage of external beamLUTs from file not yet implemented.')}
+  
+  # BEAMS (carica beams, se sono definiti)
+  # assume che l'oggetto beams (se presente) sia il file beams di ingresso.
+  if(!is.null(plan[['beams']])) {
+    write.beams(beams=plan[['beams']], format='plankit', file.name=paste0(plan[['name']], '/input'))
+    plan[['inputBeamsFile']] <- paste0(plan[['name']], '/input.beams')
+  } else if(!is.null(plan[['inputBeamsFile']])) {
+    plan[['beams']] <- read.beams(plan[['inputBeamsFile']]) # carica comunque i beams e riscrive un file input nuovo
+    write.beams(beams=plan[['beams']], format='plankit', file.name=paste0(plan[['name']], '/input'))
+    plan[['inputBeamsFile']] <- paste0(plan[['name']], '/input.beams')
+  }
   
   # crea file prescrizione
   plan.prescription <- paste(plan$name, '/plan.prescription', sep='')
@@ -247,31 +252,36 @@ run.dek.inverse <- function(plan, outmessages=FALSE) {
   writeLines(paste('cutEnergyFraction = ', plan[['cutEnergyFraction']], '\n'), con=con, sep='')
   
   # fields
-  fields <- plan[['fields']]
-  if(!is.null(fields)) {
-    for(i in 1:nrow(fields)) {
-      if(is.na(fields$targetVOIIndex[i])) {
-        fields$targetVOIIndex[i] <- get.voiindex(fields$targetVOI[i],
-                                                 file.contours=plan[['contoursFile']], contours=plan[['contours']])
+  if(!is.null(plan[['fields']])) { # -> definisce direttamente i fields
+    fields <- plan[['fields']]
+    if(!is.null(fields)) {
+      for(i in 1:nrow(fields)) {
+        if(is.na(fields$targetVOIIndex[i])) {
+          fields$targetVOIIndex[i] <- get.voiindex(fields$targetVOI[i],
+                                                   file.contours=plan[['contoursFile']], contours=plan[['contours']])
+        }
+        writeLines(paste('beamLine = ', fields[i,'beamLine'], '\n'), con=con, sep='')
+        writeLines(paste('targetVOIIndex = ', fields[i,'targetVOIIndex'], '\n'), con=con, sep='')
+        writeLines(paste('iecGantryAngle = ', fields[i,'iecGantryAngle'], '\n'), con=con, sep='')
+        writeLines(paste('iecPatientSupportAngle = ', fields[i,'iecPatientSupportAngle'], '\n'), con=con, sep='')
+        writeLines(paste('interSpotSpacing = ', fields[i,'interSpotSpacing.x'], fields[i,'interSpotSpacing.y'], fields[i,'interSpotSpacing.z'], '\n'), con=con, sep='')
+        writeLines(paste('spotsExtensionOutsideTarget = ', fields[i,'spotsExtensionOutsideTarget'], '\n'), con=con, sep='')
+        if(!is.na(fields[i,'targetIsocenter.x']) &  !is.na(fields[i,'targetIsocenter.y']) & !is.na(fields[i,'targetIsocenter.z'])) {
+          writeLines(paste('isocenter =', fields[i,'targetIsocenter.x'], fields[i,'targetIsocenter.y'], fields[i,'targetIsocenter.z'], '\n'), con=con, sep=' ')
+        }
       }
-      writeLines(paste('beamLine = ', fields[i,'beamLine'], '\n'), con=con, sep='')
-      writeLines(paste('targetVOIIndex = ', fields[i,'targetVOIIndex'], '\n'), con=con, sep='')
-      writeLines(paste('iecGantryAngle = ', fields[i,'iecGantryAngle'], '\n'), con=con, sep='')
-      writeLines(paste('iecPatientSupportAngle = ', fields[i,'iecPatientSupportAngle'], '\n'), con=con, sep='')
-      writeLines(paste('interSpotSpacing = ', fields[i,'interSpotSpacing.x'], fields[i,'interSpotSpacing.y'], fields[i,'interSpotSpacing.z'], '\n'), con=con, sep='')
-      writeLines(paste('spotsExtensionOutsideTarget = ', fields[i,'spotsExtensionOutsideTarget'], '\n'), con=con, sep='')
-      if(!is.na(fields[i,'targetIsocenter.x']) &  !is.na(fields[i,'targetIsocenter.y']) & !is.na(fields[i,'targetIsocenter.z'])) {
-        writeLines(paste('isocenter =', fields[i,'targetIsocenter.x'], fields[i,'targetIsocenter.y'], fields[i,'targetIsocenter.z'], '\n'), con=con, sep=' ')
+      planplan[['fields']] <- fields
+    }
+  } else { # -> definisce esplicitamente le beamLines da beams
+    # beamLines (se si legge da beams, queste devono essere pre-caricate)
+    plan[['beamLines']] <- unique(c(as.character(plan[['beamLines']]), as.character(plan[['beams']]$beamLine))) # aggiunge quelle definite in beams
+    if(!is.null(plan[['beamLines']])) {
+      for(indexBL in 1:length(plan[['beamLines']])){
+        writeLines(paste('beamLine = ', plan[['beamLines']][indexBL], '\n'), con=con, sep='')
       }
     }
-    plan$fields <- fields
-  }
-  
-  # input beams
-  if(!is.null(plan[['beams']])) {
-    write.beams(beams=plan[['beams']], format='plankit', file.name=paste0(plan$name, '/plan'))
-    plan$inputBeamsFile <- paste0(plan[['name']], '/plan.beams')
-  } else if(!is.null(plan[['inputBeamsFile']])) {
+    
+    # scrive esplicitamente di usare il file degli input beams.
     writeLines(paste('inputBeamsFile = ', plan[['inputBeamsFile']], '\n'), con=con, sep='')
   }
   
@@ -286,7 +296,7 @@ run.dek.inverse <- function(plan, outmessages=FALSE) {
   }
   
   # output Beams (è fisso)
-  plan[['outputBeamsFile']] <- paste0(plan[['name']], '/plan.beams')
+  plan[['outputBeamsFile']] <- paste0(plan[['name']], '/output.beams')
   writeLines(paste0('outputBeamsFile = ', plan[['outputBeamsFile']], '\n'), con=con, sep='')
   writeLines('printSpotPositions = y\n', con=con, sep='')
 
