@@ -316,6 +316,8 @@ run.dek.inverse <- function(plan, outmessages=FALSE) {
   message('executing: ', cmd)
   system(cmd, ignore.stdout=ignore.stdout, ignore.stderr=ignore.stderr)
   
+  # incolla i beams calcolati nel piano
+  plan[['beams']] <- read.beams(beams.file = plan[['outputBeamsFile']])
   save.plan(plan)
   
   return(plan)
@@ -429,6 +431,8 @@ run.dek.forward <- function(plan, outmessages=FALSE) {
   message('executing: ', cmd)
   system(cmd, ignore.stdout=ignore.stdout, ignore.stderr=ignore.stderr)
   
+  # incolla i beams di output (= input) nel piano (già fatto automaticamente)
+  # plan[['beams']] <- read.beams(beams.file = plan[['outputBeamsFile']])
   save.plan(plan)
   
   return(plan)

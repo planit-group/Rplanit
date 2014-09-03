@@ -145,7 +145,7 @@ get.beams <- function(plan, ...) UseMethod('get.beams')
 #' @export
 get.beams.plankit.plan <- function(plan, input=FALSE)
 {
-  if(!is.null(plan$beams)) {
+  if(!is.null(plan$beams)) { # rimane qui un problema di identificazione di cosa sono i beams...
     return(plan$beams)
   } else {
     if(input){beams.file <- get.filepath('inputBeamsFile', plan=plan)}
