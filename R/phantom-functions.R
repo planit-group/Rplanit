@@ -66,7 +66,7 @@ generate.ct <- function(CT.df, deltaX=1, deltaY=1, deltaZ=1)
 #' It generates a contours object from the definition of the VOIs.
 #' The VOIs are box-shaped an are defined in a data.frame with columns:
 #' x_min, x_max, y_min, y_max, z_min, z_max, voi. Each row correspond to a VOI.
-#' It needs, to identify the slices (axial slices), a reference CT. Alternatively the z vector can be used directly. Optionally a tissue name can be supplied.
+#' It needs, to identify the slices (axial slices), a reference CT. Alternatively the z vector can be used directly. Optionally a tissue name can be supplied. Note: if a box-shaped voulume is defined inside another one and has the same name (voi tag) of the latter, then the resulting volume will be a box with an hole inside.
 #' 
 #' @param contours.df the dataframe in which the definition of the volumes is stored.
 #' @param CT a CT object.
@@ -79,7 +79,10 @@ generate.ct <- function(CT.df, deltaX=1, deltaY=1, deltaZ=1)
 #' @family Phantoms
 generate.contours <- function(contours.df, CT=NULL, z=NULL, tissue='R3PIDEd0.2v0+MKM')
 {
-  numberOfvois <- nrow(contours.df)
+  #numberOfvois <- nrow(contours.df)
+  vois <- unique(contours.df$voi)
+  numberOfvois <- length(vois)
+  
   
   if(!is.null(CT)) {
     numberOfZ <- CT$Nz
@@ -88,17 +91,27 @@ generate.contours <- function(contours.df, CT=NULL, z=NULL, tissue='R3PIDEd0.2v0
     numberOfZ <- length(z)
   }
   
-  vois <- paste(contours.df$voi, '_', tissue, sep='')
+  #vois <- paste(contours.df$voi, '_', tissue, sep='')
+  #vois.tissue <- paste(vois, tissue, sep='_')
   
   for(i in 1:numberOfvois) {
+    cc <- subset(contours.df, voi==vois[i])
     id.polygon <- 0
     for(iz in 1:numberOfZ) {
-      if(z[iz]>=contours.df$z_min[i] & z[iz]<=contours.df$z_max[i]) {
-        xc <- c(contours.df$x_min[i], contours.df$x_max[i], contours.df$x_max[i], contours.df$x_min[i])
-        yc <- c(contours.df$y_min[i], contours.df$y_min[i], contours.df$y_max[i], contours.df$y_max[i])
-	contours.tmp <- data.frame(id=i-1, polygon=id.polygon, slice=iz-1, x=xc, y=yc, z=z[iz], contour=contours.df$voi[i], tissue=tissue, type=contours.df$voi[i])
-        id.polygon <- id.polygon+1
-        if(i==1 & id.polygon==1) {contours <- contours.tmp} else {contours <- rbind(contours, contours.tmp)}
+      cc.z <- subset(cc, z[iz]>=z_min & z[iz]<=z_max)
+      if(nrow(cc.z)>0) {
+        #print(cc.z)
+        for(j in 1:nrow(cc.z)) {
+          xc <- c(cc.z$x_min[j], cc.z$x_max[j], cc.z$x_max[j], cc.z$x_min[j])
+          yc <- c(cc.z$y_min[j], cc.z$y_min[j], cc.z$y_max[j], cc.z$y_max[j])
+          contour.tmp <- data.frame(id=i-1, polygon=id.polygon,
+                                     slice=iz-1, x=xc, y=yc, z=z[iz],
+                                     contour=vois[i], tissue=tissue[1], type=vois[i])
+          id.polygon <- id.polygon + 1
+          if(j==1) {contour <- contour.tmp} else {contour <- rbind(contour, contour.tmp)}
+        }
+        #print(contour)
+        if(i==1 & id.polygon==1) {contours <- contour} else {contours <- rbind(contours, contour)}
       }
     }
   }

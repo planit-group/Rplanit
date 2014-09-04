@@ -22,7 +22,7 @@ a contours object
 It generates a contours object from the definition of the VOIs.
 The VOIs are box-shaped an are defined in a data.frame with columns:
 x_min, x_max, y_min, y_max, z_min, z_max, voi. Each row correspond to a VOI.
-It needs, to identify the slices (axial slices), a reference CT. Alternatively the z vector can be used directly. Optionally a tissue name can be supplied.
+It needs, to identify the slices (axial slices), a reference CT. Alternatively the z vector can be used directly. Optionally a tissue name can be supplied. Note: if a box-shaped voulume is defined inside another one and has the same name (voi tag) of the latter, then the resulting volume will be a box with an hole inside.
 }
 \seealso{
 Other Phantoms: \code{\link{generate.ct.contours}};
