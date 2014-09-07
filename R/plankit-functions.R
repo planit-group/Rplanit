@@ -323,11 +323,11 @@ run.dek.inverse <- function(plan, outmessages=FALSE) {
   return(plan)
 }
 
-#' Forward planning (PlanKIT)
+#' Forward planning (Pure-dek)
 #' 
-#' Perform a forward planning with PlanKIT.
+#' Perform a forward planning with Pure-dek. It assumes that the beams are defined in theplan object, checking in this order: beams, inoutBeamsFile, outputBeamsFile.
 #' @param plan the Plan object. It should include also the specification of the beams (i.e. the "RTIonPlan").
-#' @param outmessages if TRUE, it displays the messages from the PlanKIT output.
+#' @param outmessages if TRUE, it displays the messages from the Pure-dek output.
 #' @return a Plan Object (including data/information of the evaluated output of the forward planning, e.g. values, vois, etc.)
 #' 
 #' @family PlanKIT
@@ -357,14 +357,21 @@ run.dek.forward <- function(plan, outmessages=FALSE) {
   if(!is.null(plan[['inputBeamLUTFile']])) {stop('Usage of external beamLUTs from file not yet implemented.')}
   
   # BEAMS (carica beams)
-  # assume che l'oggetto beams (se presente) sia il file beams di ingresso.
+  # assume che l'oggetto beams sia presente
+  # Cerca nell'ordine: beams, inputBeamsFile, outputBeamsFile
   if(!is.null(plan[['beams']])) {
     write.beams(beams=plan[['beams']], format='plankit', file.name=paste0(plan[['name']], '/input'))
     plan[['inputBeamsFile']] <- paste0(plan[['name']], '/input.beams')
-  } else {
+  } else if(!is.null(plan[['inputBeamsFile']])) {
     plan[['beams']] <- read.beams(plan[['inputBeamsFile']]) # carica comunque i beams e scrive il file input
     write.beams(beams=plan[['beams']], format='plankit', file.name=paste0(plan[['name']], '/input'))
     plan[['inputBeamsFile']] <- paste0(plan[['name']], '/input.beams')
+  } else if(!is.null(plan[['outputBeamsFile']])) {
+    plan[['beams']] <- read.beams(plan[['outputBeamsFile']]) # carica comunque i beams e scrive il file input
+    write.beams(beams=plan[['beams']], format='plankit', file.name=paste0(plan[['name']], '/input'))
+    plan[['inputBeamsFile']] <- paste0(plan[['name']], '/input.beams')
+  } else {
+    stop('beams not defined in plan: ', plan$name)
   }
   
   # crea file plan.config
