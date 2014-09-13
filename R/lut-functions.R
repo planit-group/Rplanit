@@ -11,7 +11,7 @@ read.lut <- function(lut.name, dataframe=FALSE)
 
   library(reshape)
   
-  lut.file <- paste(lut.name, '/', lut.name, '.lut.4d', sep='')
+  lut.file <- paste(lut.name, '.lut.4d', sep='')
   #lut.file <- lut.name
   
   # legge file 4d
@@ -138,7 +138,7 @@ read.lut <- function(lut.name, dataframe=FALSE)
 get.zBP.fun <- function(lut.name, EBP=FALSE)
 {
   
-  zBP.file <- paste(lut.name, '/', lut.name, '.zBraggPeaks.1d', sep='')
+  zBP.file <- paste(lut.name, '.zBraggPeaks.1d', sep='')
   
   # legge file 1d
   message('reading lut:', zBP.file)
