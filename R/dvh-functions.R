@@ -11,6 +11,7 @@
 #' @param variable the name of the variable (optional if \code{values} contains only one variable)
 #' @param with.na leave explicitly NA values in DVH representing voxels were the specified variable is not defined (optional, boolean)
 #' @param with0 put explicitly in the DVH a point at (0, max(volume)). It is possible to specify directly the min value to use for this DVH point, in this case if with.0 is a number !=0, the point will be at (with.0, max(volume)) (optional)
+#' @param name Overwrite the default name derived from the voi name.
 #' @return The \code{dvh} object; a list consisting of:
 #' \item{value}{vector containing the value data}
 #' \item{valume}{vector containing the volume fractions}
@@ -20,7 +21,7 @@
 #' 
 #' @family DVH
 #' @export
-dvh.evaluate <- function(values=NULL, vois=NULL, voi='PTV', variable=NULL, with.na=FALSE, with.0=FALSE)
+dvh.evaluate <- function(values=NULL, vois=NULL, voi='PTV', variable=NULL, with.na=FALSE, with.0=FALSE, name=NULL)
 {
   
   # variable
@@ -61,7 +62,10 @@ dvh.evaluate <- function(values=NULL, vois=NULL, voi='PTV', variable=NULL, with.
     voi.values <- c(min.voi.values, voi.values)
   }
   
-  return(list(value=voi.values, volume=volume, volume.tot=volume.tot, variable=variable, voi=voi, Nvoxel=Nvoxel))
+  # sovrascrive il nome del voi
+  if(is.null(name)) {name <- voi}
+    
+  return(list(value=voi.values, volume=volume, volume.tot=volume.tot, variable=variable, voi=name, Nvoxel=Nvoxel))
 }
 
 

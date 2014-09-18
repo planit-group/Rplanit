@@ -4,7 +4,7 @@
 \title{Evaluate DVH}
 \usage{
 dvh.evaluate(values = NULL, vois = NULL, voi = "PTV", variable = NULL,
-  with.na = FALSE, with.0 = FALSE)
+  with.na = FALSE, with.0 = FALSE, name = NULL)
 }
 \arguments{
 \item{values}{the \code{values} object}
@@ -18,6 +18,8 @@ dvh.evaluate(values = NULL, vois = NULL, voi = "PTV", variable = NULL,
 \item{with.na}{leave explicitly NA values in DVH representing voxels were the specified variable is not defined (optional, boolean)}
 
 \item{with0}{put explicitly in the DVH a point at (0, max(volume)). It is possible to specify directly the min value to use for this DVH point, in this case if with.0 is a number !=0, the point will be at (with.0, max(volume)) (optional)}
+
+\item{name}{Overwrite the default name derived from the voi name.}
 }
 \value{
 The \code{dvh} object; a list consisting of:
