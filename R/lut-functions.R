@@ -8,8 +8,6 @@
 #' @export
 read.lut <- function(lut.name, dataframe=FALSE)
 {
-
-  library(reshape)
   
   lut.file <- paste(lut.name, '.lut.4d', sep='')
   #lut.file <- lut.name

@@ -542,12 +542,15 @@ alpha.beta.lem <- function(alphaX=0.1, betaX=0.05, rN=5, Dt=30,
 }
 
 
-#' calcolo alpha_beta_parameter_study MKM
+#' Evaluate alpha function (MKM)
 #' 
-#' utilizza il main main_alpha_beta_parameter._study.cc
-#' crea una stringa di argomenti da passare a alpha_beta_parameter_study, predisposta
-#' per il calcolo MKM "rapido".
-#' In output ritorna la funzione alpha.mkm (funzione interpolazione di R)
+#' Returns a function alpha(LET) or alpha(specific energy), using the MKM model. The functions is an interpolation functions that uses a set of alpha values evaluated over the defined set of LETs (or specific energies).
+#' 
+#' @param alphaX,betaX,rN,rd The radiobiological parameter of the MKM.
+#' @param cellType Optionally you can associate a cell name tag (I have to figure yet what use to do with that).
+#' @param particleType The particle specification ('H', 'He', 'Li', 'Be', 'B', 'C', 'N', 'O', 'F')
+#' @param energies,lets A vector of specific energies (MeV/u) or LETs (keV/um).
+#' @param use.limits Filters the energies or the LETs values to rule out values too high or too low.
 #' 
 #' @family LEM/MKM Models
 #' @export
@@ -556,7 +559,7 @@ alpha.fun.mkm <- function(alphaX=0.1295, betaX=0.03085, rN=4, rd=0.31,
                       cellType=NULL,
                       particleType='H',
                       energies=NULL, lets=NULL,
-                      use.limits=FALSE)
+                      use.limits=FALSE, outmessages=FALSE)
 {
   model='MKM'
   calculusType='rapidMKM'
@@ -607,6 +610,8 @@ alpha.fun.mkm <- function(alphaX=0.1295, betaX=0.03085, rN=4, rd=0.31,
   cmd <- paste('survival', s.args)
   #print(cmd)
 
+  if(outmessages) {ignore.stdout=FALSE; ignore.stderr=FALSE} else {ignore.stdout=TRUE; ignore.stderr=TRUE}
+  
   t <- system.time(system(cmd, ignore.stdout=TRUE, ignore.stderr=TRUE))
   #message('time elapsed: ', t)
 
