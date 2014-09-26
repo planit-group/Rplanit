@@ -148,7 +148,7 @@ generate.ct.contours <- function(CT.df, contours.df, deltaX, deltaY, deltaZ, nam
 {
   # crea struttura CT e la salva
   CT.values <- generate.ct(CT.df, deltaX, deltaY, deltaZ)
-  write.3d.array(CT.values, paste(name, '.3d', sep=''))
+  write.3d.array(values=CT.values, paste(name, '.3d', sep=''))
 
   # Calcola i contorni e li salva
   contours <- generate.contours(CT=CT.values, contours.df=contours.df, tissue=tissue)

@@ -5,8 +5,7 @@
 \usage{
 create.plan(plan = NA, name = "test", ctFile = "ct.3d", ct = NULL,
   contoursFile = "plan.contours", contours = NULL,
-  hounsfieldToDensityFile = "fluka-schneider.HNToDensity.1d",
-  hounsfieldToStoichiometryFile = "fluka-schneider.HNToStoichiometry.1d",
+  hounsfieldToDensityFile = NULL, hounsfieldToStoichiometryFile = NULL,
   computingGridVoxelSizes = c(2, 2, 2), computingGridCoverage = 0,
   computingGridCoverageBoundary = 0, beamLines = NULL,
   computingValues = c("Dose[Gy]"), cutOffRadius = 100,

@@ -624,26 +624,26 @@ read.1d <- function(file.name, melted=FALSE) {
 }
 
 
-#' Write 3D array (PlanKIT)
+#' Write 3D array (Pure-dek)
 #' 
-#' Write a \code{values} object in a file using the PlanKIT format (*.3d)
+#' Write a \code{values} object in a file using the pure-dek format (*.3d)
 #' 
-#' @param ct the \code{values} object
+#' @param values the \code{values} object
 #' @param file.name the file name
 #' 
 #' @family R/W Array
 #' @export
-write.3d.array <- function(ct, file.name) {
+write.3d.array <- function(values, file.name) {
   
-  Nx <- ct[['Nx']]
-  Ny <- ct[['Ny']]
-  Nz <- ct[['Nz']]
-  Nv <- ct[['Nv']]
-  variables <- ct[['variables']]
+  Nx <- values[['Nx']]
+  Ny <- values[['Ny']]
+  Nz <- values[['Nz']]
+  Nv <- values[['Nv']]
+  variables <- values[['variables']]
   
-  x <- ct[['x']]
-  y <- ct[['y']]
-  z <- ct[['z']]
+  x <- values[['x']]
+  y <- values[['y']]
+  z <- values[['z']]
   
   dx <- (x[Nx]-x[1])/(Nx-1) # assume spaziatura costante
   dy <- (y[Ny]-y[1])/(Ny-1) # assume spaziatura costante
@@ -668,7 +668,7 @@ write.3d.array <- function(ct, file.name) {
   
   # scrive dati binari
   con <- file(file.name, "ab") # open for writing in text mode
-  writeBin(as.double(ct[['values']]),con=con)
+  writeBin(as.double(values[['values']]),con=con)
   close(con)
 }
 
