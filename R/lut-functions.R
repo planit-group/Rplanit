@@ -129,8 +129,11 @@ read.lut <- function(lut.name, dataframe=FALSE)
 }
 
 
-#' Legge file zBP vs. E e ritorna una funzione d'interpolazione
+#' Return a function z.BP(E)
 #' 
+#' z.BP is the depth of the Bragg peak as a function of Energy (E). Normally the energy is intended as the specific energy (MeV/u). The function is obtained by interpolating the data contained in the file <lut.name>.zBraggPeaks.1d.
+#' @param lut.name The name of the lut.
+#' @param EBP Return E(z.BP) instead of z.BP(E) if true.
 #' @family LUT
 #' @export
 get.zBP.fun <- function(lut.name, EBP=FALSE)
