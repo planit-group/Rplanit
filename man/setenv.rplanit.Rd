@@ -12,6 +12,7 @@ Set the esystem environment variables for Plankit, Gate and Survival.
 Other Environment: \code{\link{check.gate}};
   \code{\link{check.plankit}};
   \code{\link{get.dektools.env}};
-  \code{\link{set.dektools.env}}
+  \code{\link{set.dektools.env}};
+  \code{\link{set.lut.folder}}
 }
 

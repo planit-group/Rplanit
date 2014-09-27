@@ -16,6 +16,7 @@ If the check fails it generates an error.
 Other Environment: \code{\link{check.plankit}};
   \code{\link{get.dektools.env}};
   \code{\link{set.dektools.env}};
+  \code{\link{set.lut.folder}};
   \code{\link{setenv.rplanit}}
 }
 

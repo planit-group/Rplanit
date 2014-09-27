@@ -22,6 +22,7 @@ Set Environment Variables
 Other Environment: \code{\link{check.gate}};
   \code{\link{check.plankit}};
   \code{\link{get.dektools.env}};
+  \code{\link{set.lut.folder}};
   \code{\link{setenv.rplanit}}
 }
 

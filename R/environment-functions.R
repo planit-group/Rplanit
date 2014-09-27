@@ -168,6 +168,22 @@ check.gate <- function(use.warning=FALSE)
   }
 }
 
+#' Set LUT folder
+#' 
+#' Set the LUT (look up table) folder to be used in pure-dek computations.
+#' 
+#' @param lut.folder The lut.folder. If it is not defined the lut folder is set to the default one (the pure-dek local installation.)
+#' @export
+#' @family Environment
+set.lut.folder <- function(lut.folder=NULL)
+{
+  if(is.null(lut.folder)) {
+    my.home <- get.install.path()
+    lut.folder <- paste0(my.home, '/Pure-dek-install/LUT/')
+  }
+  
+  Sys.setenv(PATH_TO_LUT=lut.folder)
+}
 
 # INSTALLING -------------------------------------------------------------------
 
