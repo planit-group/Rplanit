@@ -11,7 +11,7 @@
 #' @param E the energy of the beam (if it is not specified, the mean energy of the available energies is used). The energy displayed is approximated to the nearest available in the lut.
 #' @param bw display using gray color levels (optional, boolean)
 #' @param r.cut cut-off radius (optional)
-#' @param display contour levels (optional, boolean)
+#' @param cint display contour levels (optional, boolean)
 #' @param z.absolute display absolute z (optional, boolean)
 #' @export
 display.lut <- function(lut, variable=NULL, E=NULL, bw=FALSE, r.cut=NULL, cont=FALSE, z.absolute=FALSE)

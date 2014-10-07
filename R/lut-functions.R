@@ -1,9 +1,11 @@
 # LUT --------------------------------------------------------------------------
 
 
-#' Legge LUT
+#' Read LUT
 #'
-#' Legge pencil-LUT da un file .4d e restituisce un oggetto lut (opzionalmente un dataframe)
+#' Read pencil-LUT.
+#' @param lut.name the name (prefix of the file name) of the lut (i.e. not including the file name extension.)
+#' @parame dataframe return a dataframe.
 #' @family LUT
 #' @export
 read.lut <- function(lut.name, dataframe=FALSE)
@@ -11,6 +13,12 @@ read.lut <- function(lut.name, dataframe=FALSE)
   
   lut.file <- paste(lut.name, '.lut.4d', sep='')
   #lut.file <- lut.name
+  
+  # legge lutMeta. Serve per identificare i tessuti.
+  N.tissues <- read.table(file = paste0(lut.name, '.lutMeta'), skip = 4, nrows = 1)
+  tissues <- as.vector(read.table(file = paste0(lut.name, '.lutMeta'), skip = 5, nrows = as.numeric(N.tissues))[1])
+  message('Found ', N.tissues, ' tissues...')
+  print(tissues)
   
   # legge file 4d
   message('reading lut:', lut.file)
@@ -102,6 +110,25 @@ read.lut <- function(lut.name, dataframe=FALSE)
   z.BP <- get.zBP.fun(lut.name)
   #z.BP <- 1
   
+  # aggiunge tag per i diversi tessuti
+  # alpha
+  v.tissues <- which(variables=='LethAlphaPerEvent[1/primary]')
+  if(length(v.tissues)>0) {
+    for(i in seq_along(v.tissues)) {
+      variables[v.tissues[i]] <- paste(variables[v.tissues[i]], tissues[i,1], sep=' ')
+    }
+  }
+  # beta
+  v.tissues <- which(variables=='SqrtLethBetaPerEvent[1/primary]')
+  if(length(v.tissues)>0) {
+    for(i in seq_along(v.tissues)) {
+      variables[v.tissues[i]] <- paste(variables[v.tissues[i]], tissues[i,1], sep=' ')
+    }
+  }
+  print(variables)
+
+  
+  
   # ritorna lista+array
   if(!dataframe) {
     return(list(values=Values.4d, E=E, x=X, y=Y, z=Z, z.BP=z.BP, NE=NE, Nx=NX, Ny=NY, Nz=NZ, Nv=NV, variables=variables))
@@ -176,23 +203,31 @@ get.zBP.fun <- function(lut.name, EBP=FALSE)
 }
 
 
-#' aggiungi alpha alla lut
+#' Add alpha values to lUT
 #' 
-#' la formula: LethAlphaPerEvent / DosePerEvent
+#' Add variable Alpha[Gy^(-1)] = LethAlphaPerEvent / DosePerEvent
 #' 
+#' @param lut the lut object
+#' @param tissue.number the number of the tissue stored in the LUT (start from 1)
 #' @family LUT
 #' @export
-lut.add.alpha <- function(lut)
+lut.add.alpha <- function(lut, tissue.number=1, tissue=NULL)
 {
+  if(!is.null(tissue)) {
+    variable.alpha <- paste('LethAlphaPerEvent[1/primary]', tissue, sep=' ')
+  } else {
+    variable.alpha <- lut$variables[which(lut$variables=='LethAlphaPerEvent[1/primary]')[tissue.number]]
+    tissue <- tissue.number
+  }
   message('evaluating alpha... ')
   if(class(lut)=='data.frame'){
-    a <- subset(lut, variable=='LethAlphaPerEvent[1/primary]')
+    a <- subset(lut, variable==variable.alpha)
     d <- subset(lut, variable=='DosePerEvent[Gy/primary]')
     a$value <- a$value / d$value
     a$variable <- 'Alpha[Gy^(-1)]'
     return(rbind(lut, a))
   } else {
-    Na <- which(lut$variables=='LethAlphaPerEvent[1/primary]')
+    Na <- which(lut$variables==variable.alpha)
     Nd <- which(lut$variables=='DosePerEvent[Gy/primary]')
     a <- lut$values[Na,,,,, drop=FALSE]
     d <- lut$values[Nd,,,,, drop=FALSE]
@@ -202,7 +237,7 @@ lut.add.alpha <- function(lut)
     a <- aperm(a, c(2,3,4,5,1))
     av <- array(c(av,a), c(lut$NE, lut$Nx, lut$Ny, lut$Nz, lut$Nv+1) )
     lut$values <- aperm(av, c(5,1,2,3,4))
-    lut$variables[lut$Nv+1] <- 'Alpha[Gy^(-1)]'
+    lut$variables[lut$Nv+1] <- paste('Alpha[Gy^(-1)]', tissue)
     lut$Nv <- lut$Nv+1
     return(lut)
   }
@@ -449,9 +484,11 @@ read.beamLUT <- function(beamLUT.name, Nx, Ny, Nz, dose.threshold=0, preallocate
 
   if(preallocate) {
     # sistema con concatenazione...
+    message('preallocating...')
     temp.file <- paste0('tmp-', round(runif(1)*1e8), '.beamLUT')
-    cmd <- paste0('tail -q -n +3 ', beamLUT.name, '*.beamLUT > ', temp.file)
+    cmd <- paste0('tail -q -n +3 ', beamLUT.name, '*.beamLUT > ', temp.file) # nota: su mac questo comando può dare errore se i file sono troppi
     system(cmd)
+    message('reading...')
     beamLUT.tmp <- read.table(beamLUT.files[1], skip = 1, header = TRUE, check.names=FALSE)
     beamLUT <- read.table(temp.file, header = FALSE)
     names(beamLUT) <- names(beamLUT.tmp)
