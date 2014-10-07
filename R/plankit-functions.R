@@ -239,7 +239,8 @@ run.dek.inverse <- function(plan, outmessages=FALSE) {
   # calcolo
   p.computingGridVoxelSizes <- paste(plan[['computingGridVoxelSizes']], collapse=' ')
   writeLines(paste('computingGridVoxelSizes = ', p.computingGridVoxelSizes, '\n', collapse=' '), con=con, sep='')
-  writeLines(paste('computingGridCoverage = ', plan[['computingGridCoverage']], '\n'), con=con, sep='')
+  coverage <- paste0(plan[['computingGridCoverage']], collapse=' ')
+  writeLines(paste('computingGridCoverage = ', coverage, '\n'), con=con, sep='')
   writeLines(paste('computingGridCoverageBoundary = ', plan[['computingGridCoverageBoundary']], '\n'), con=con, sep='')
 
   # beamLines (opzionale, ora le beamline sono specificate in field)
@@ -396,7 +397,8 @@ run.dek.forward <- function(plan, outmessages=FALSE) {
   # calcolo
   p.computingGridVoxelSizes <- paste(plan[['computingGridVoxelSizes']], collapse=' ')
   writeLines(paste('computingGridVoxelSizes = ', p.computingGridVoxelSizes, '\n', collapse=' '), con=con, sep='')
-  writeLines(paste('computingGridCoverage = ', plan[['computingGridCoverage']], '\n'), con=con, sep='')
+  coverage <- paste0(plan[['computingGridCoverage']], collapse=' ')
+  writeLines(paste('computingGridCoverage = ', coverage, '\n'), con=con, sep='')
   writeLines(paste('computingGridCoverageBoundary = ', plan[['computingGridCoverageBoundary']], '\n'), con=con, sep='')
 
   # computing values
