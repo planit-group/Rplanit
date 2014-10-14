@@ -5,31 +5,31 @@
 #'
 #' Read pencil-LUT.
 #' @param lut.name the name (prefix of the file name) of the lut (i.e. not including the file name extension.)
-#' @parame dataframe return a dataframe.
+#' @param dataframe return a dataframe.
 #' @family LUT
 #' @export
 read.lut <- function(lut.name, dataframe=FALSE)
 {
-  
+
   lut.file <- paste(lut.name, '.lut.4d', sep='')
   #lut.file <- lut.name
-  
+
   # legge lutMeta. Serve per identificare i tessuti.
   N.tissues <- read.table(file = paste0(lut.name, '.lutMeta'), skip = 4, nrows = 1)
   tissues <- as.vector(read.table(file = paste0(lut.name, '.lutMeta'), skip = 5, nrows = as.numeric(N.tissues))[1])
   message('Found ', N.tissues, ' tissues...')
   print(tissues)
-  
+
   # legge file 4d
   message('reading lut:', lut.file)
-  
+
   # apri connsessione
   file.4d <- file(lut.file, "rb") # read binary
-  
+
   # leggi l'header
   message('reading header...')
   myline <- readLines(file.4d, n=10) # legge le prime 10 linee, ogni linea e' un elemento del vettore
-  
+
   # parsing dell'header
   # splitta la stringa in sottostringhe delimitate da uno o piu' spazi (regexpr: " +")
 
@@ -41,7 +41,7 @@ read.lut <- function(lut.name, dataframe=FALSE)
   cat(NE, E.name, E.type, '\n')
   myline.splitted <- unlist(strsplit(myline[2], ' +'))
   E <- as.numeric(myline.splitted)
-  
+
   # X[mm]
   myline.splitted <- unlist(strsplit(myline[3], ' +'))
   NX <- as.numeric(myline.splitted[1])
@@ -50,7 +50,7 @@ read.lut <- function(lut.name, dataframe=FALSE)
   cat(NX, X.name, X.type, '\n')
   myline.splitted <- unlist(strsplit(myline[4], ' +'))
   X <- as.numeric(myline.splitted)
-  
+
   # Y[mm]
   myline.splitted <- unlist(strsplit(myline[5], ' +'))
   NY <- as.numeric(myline.splitted[1])
@@ -59,7 +59,7 @@ read.lut <- function(lut.name, dataframe=FALSE)
   cat(NY, Y.name, Y.type, '\n')
   myline.splitted <- unlist(strsplit(myline[6], ' +'))
   Y <- as.numeric(myline.splitted)
-  
+
   # Z[mm]
   myline.splitted <- unlist(strsplit(myline[7], ' +'))
   NZ <- as.numeric(myline.splitted[1])
@@ -67,28 +67,28 @@ read.lut <- function(lut.name, dataframe=FALSE)
   Z.type <- myline.splitted[3]
   cat(NZ, Z.name, Z.type, '\n')
   myline.splitted <- unlist(strsplit(myline[8], ' +'))
-  Z <- as.numeric(myline.splitted)  
-  
+  Z <- as.numeric(myline.splitted)
+
   # Variables
   myline.splitted <- unlist(strsplit(myline[9], ' +'))
   NV <- as.numeric(myline.splitted[1])
   variables <- myline.splitted[2:length(myline.splitted)]
-  
+
   # Format
   myline.splitted <- unlist(strsplit(myline[10], ' +'))
   values.format <- myline.splitted[1]
-  
+
   Ntot <- NE * NX * NY * NZ * NV
   cat('number of voxels:', NV, 'x', NE, 'x', NX, 'x', NY, 'x', NZ, '=', Ntot, '\n')
   cat('dependent variables:', variables, '\n')
   cat('values format:', values.format,'\n')
-  
+
   # trasforma intervalli in coordinate puntuali
   if(E.type=='INTERVAL') {E <- (E[1:NE] + E[2:(NE+1)])/2}
   if(X.type=='INTERVAL') {X <- (X[1:NX] + X[2:(NX+1)])/2}
   if(Y.type=='INTERVAL') {Y <- (Y[1:NY] + Y[2:(NY+1)])/2}
   if(Z.type=='INTERVAL') {Z <- (Z[1:NZ] + Z[2:(NZ+1)])/2}
-  
+
   # crea e legge array (4d+1)
   if(values.format=='BINARY') {
     message('reading binary data...')
@@ -100,16 +100,16 @@ read.lut <- function(lut.name, dataframe=FALSE)
     Values.4d <- array(myvector, dim=c(NV, NE, NX, NY, NZ))
     rm(myvector)
   }
- 
+
   # chiudi connessione
   close(file.4d)
 
   #return(Values.4d)
-  
+
   # z.BP per calcolare Z assoluti
   z.BP <- get.zBP.fun(lut.name)
   #z.BP <- 1
-  
+
   # aggiunge tag per i diversi tessuti
   # alpha
   v.tissues <- which(variables=='LethAlphaPerEvent[1/primary]')
@@ -127,13 +127,13 @@ read.lut <- function(lut.name, dataframe=FALSE)
   }
   print(variables)
 
-  
-  
+
+
   # ritorna lista+array
   if(!dataframe) {
     return(list(values=Values.4d, E=E, x=X, y=Y, z=Z, z.BP=z.BP, NE=NE, Nx=NX, Ny=NY, Nz=NZ, Nv=NV, variables=variables))
   }
-  
+
   # crea dataframe strutturato
   message('melting data into data.frame...')
   Values <- melt(Values.4d)
@@ -142,7 +142,7 @@ read.lut <- function(lut.name, dataframe=FALSE)
     Values <- cbind(1, Values)
   }
   names(Values) <- c('variable', 'E', 'x', 'y', 'z', 'value')
-  
+
   Values$variable <- as.factor(sapply(Values$variable, function(v) variables[v]))
 
   Values$E <- (sapply(Values$E, function(v) E[v]))
@@ -151,13 +151,13 @@ read.lut <- function(lut.name, dataframe=FALSE)
   Values$z <- (sapply(Values$z, function(v) Z[v]))
   Values$z.Bp <- z.BP(Values$E)
   Values$za <- Values$z * Values$z.Bp
-  
-  return(Values)  
+
+  return(Values)
 }
 
 
 #' Return a function z.BP(E)
-#' 
+#'
 #' z.BP is the depth of the Bragg peak as a function of Energy (E). Normally the energy is intended as the specific energy (MeV/u). The function is obtained by interpolating the data contained in the file <lut.name>.zBraggPeaks.1d.
 #' @param lut.name The name of the lut.
 #' @param EBP Return E(z.BP) instead of z.BP(E) if true.
@@ -165,9 +165,9 @@ read.lut <- function(lut.name, dataframe=FALSE)
 #' @export
 get.zBP.fun <- function(lut.name, EBP=FALSE)
 {
-  
+
   zBP.file <- paste(lut.name, '.zBraggPeaks.1d', sep='')
-  
+
   # legge file 1d
   message('reading lut:', zBP.file)
   file.1d <- file(zBP.file, "rb")
@@ -180,11 +180,11 @@ get.zBP.fun <- function(lut.name, EBP=FALSE)
   cat(NE.BP, E.BP.name, E.BP.type, '\n')
   myline.splitted <- unlist(strsplit(myline[2], ' +'))
   E.BP <- as.numeric(myline.splitted)
-  
+
   # Format
   myline.splitted <- unlist(strsplit(myline[4], ' +'))
   values.format <- myline.splitted[1]
-  
+
   if(values.format=='BINARY') {
     message('reading binary data...')
     z.BP <- array(readBin(file.1d, numeric(), Ntot), dim=c(NE.BP))
@@ -192,9 +192,9 @@ get.zBP.fun <- function(lut.name, EBP=FALSE)
     message('reading ascii data...')
     z.BP <- as.numeric(unlist(strsplit(readLines(file.1d), ' +')))
   }
-  
+
   close(file.1d)
-  
+
    if(EBP) {
      return(approxfun(z.BP, E.BP))
    } else {
@@ -204,9 +204,9 @@ get.zBP.fun <- function(lut.name, EBP=FALSE)
 
 
 #' Add alpha values to lUT
-#' 
+#'
 #' Add variable Alpha[Gy^(-1)] = LethAlphaPerEvent / DosePerEvent
-#' 
+#'
 #' @param lut the lut object
 #' @param tissue.number the number of the tissue stored in the LUT (start from 1)
 #' @family LUT
@@ -245,7 +245,7 @@ lut.add.alpha <- function(lut, tissue.number=1, tissue=NULL)
 
 
 #' aggiungi beta alla lut
-#' 
+#'
 #' la formula: LethAlphaPerEvent / DosePerEvent
 #' @family LUT
 #' @export
@@ -362,7 +362,7 @@ write.lut <- function(lut.array, variables=NULL, E=NULL, x=NULL, y=NULL, zn=NULL
 # BEAM_LUT ---------------------------------------------------------------------
 
 #' Get beamLUTs
-#' 
+#'
 #' Get the evaluated beamLUTs from the plan
 #' @param plan The plan object.
 #' @param preallocate Preallocate memory (parameter passed to read.beamLUT().)
@@ -377,8 +377,8 @@ get.beamLUTs <- function(plan, preallocate=FALSE) {
   }
 }
 
-#' Evaluate BeamLUT 
-#' 
+#' Evaluate BeamLUT
+#'
 #' Evaluate from scratch the beamLUT of the selected beam(s) for the specific plan.
 #' The beam(s) can be one or more (by using a vector of indices). If the beams are more than one, the corresponding beamLUT is given by the net contribution of all the specified beams
 #' Optionally it is possible to specify also the fluences (i.e. the number of particles) for each beam.
@@ -398,11 +398,11 @@ get.values.for.beam <- function(beams=NULL, beam.index, fluence=NULL, plan, vari
     beams <- get.beams(plan)
     beams <- beams[beam.index, ]
   }
-  
+
   temp.beamfile <- paste(temp.name, '.beams', sep='')
   if(!is.null(fluence)) {beams$fluence=fluence; print(beams)} # sovrascrive fluenze
   write.beams(beams, temp.name)
-  
+
   # crea piano pre la selezione dei beam e calcola forward.planning
   plan.b <- plan
   plan.b$name <- temp.name
@@ -419,44 +419,44 @@ get.values.for.beam <- function(beams=NULL, beam.index, fluence=NULL, plan, vari
     unlink(temp.beamfile)
     unlink(temp.name, recursive=TRUE)
   }
-  
+
   # ritorna values
   return(vb)
 }
 
 
-#' scrive le matrici V_{b,v} (beamLUT) 
-#' 
+#' scrive le matrici V_{b,v} (beamLUT)
+#'
 #' nota: è usata la "threshold.variable" (normalmente la dose) per fissare la soglia
 #' le lut sono normalizzate per singolo primario
 #' le lut sono calcolate su tutto il volume usato in "plan"
-#' 
+#'
 #' @family BeamLUT
 #' @export
 write.beamLUT <- function(plan, threshold=0, threshold.variable='Dose[Gy]', variable='Dose[Gy]', file.name)
 {
-  
+
   beams <- get.beams(plan)
   beams$beamID <- 1:nrow(beams)
   #beams <- subset(beams, fluence>0)
-  
+
   if(threshold.variable==variable) {variables=variable} else {variables=c(threshold.variable, variable)}
-  
+
   for(b in 1:nrow(beams)) {
     message('writing beam ', b)
     vb <- get.values.for.beam(beam.index=beams$beamID[b], fluence=1, plan=plan, variables=variables)
     df.s <- sparse.array.from.values(values=vb, variable=variable, threshold=threshold)
     #df.s$value <- df.s$value/beams$fluence[b]
     df.s$beamID <- beams$beamID[b]
-    
+
       if(b==1) {append=FALSE} else {append=TRUE}
       write.table(df.s, file=file.name, col.names=FALSE, row.names=FALSE, append=append)
-    
+
   }
 }
 
 #' Read the beamLUTs (pure-dek)
-#' 
+#'
 #' @param beamLUT.name the prefix of the beamLUT files. The complete filenames are expected to be: <beamLUT.name>_<beamIndex>.beamLUT
 #' @param Nx,Ny,Nz the dimensions of the target 3D array (to evaluate an absolute voxelID)
 #' @param dose.threshold additional dose threshold to filter elements with dose <= dose.threshold.
@@ -467,7 +467,7 @@ read.beamLUT <- function(beamLUT.name, Nx, Ny, Nz, dose.threshold=0, preallocate
   beamLUT.files <- Sys.glob(paste0(beamLUT.name, '*.beamLUT'))
   if(length(beamLUT.files)==0) {stop(paste0(beamLUT.name, '*.beamLUT not found!'))}
   Nb <- length(beamLUT.files)
-  
+
   # ciclo preliminare per contare tutti i voxels
   total.voxels <- 0
   for(b in 1:Nb) {
@@ -475,12 +475,12 @@ read.beamLUT <- function(beamLUT.name, Nx, Ny, Nz, dose.threshold=0, preallocate
   }
   message('found ', total.voxels, ' elements in beamLUTs (not filtered.)')
   message('reading ', Nb, ' beamLUTs... ')
-  
+
   # metodo "pulito" con plyr
   # library(plyr)
   # my.read.table <- function(...) {read.table(..., skip=1)}
   # BL <- ldply(beamLUT.files, .fun = my.read.table, .progress = 'text')
-  
+
 
   if(preallocate) {
     # sistema con concatenazione...
@@ -497,7 +497,7 @@ read.beamLUT <- function(beamLUT.name, Nx, Ny, Nz, dose.threshold=0, preallocate
     pb <- txtProgressBar(min = 0, max = Nb, style = 3)
     for(b in 1:Nb) {
       #message('reading beamLUT: ', beamLUT.files[b])
-      beamLUT.tmp <- read.table(beamLUT.files[b], skip=1, header=TRUE, check.names=FALSE)      
+      beamLUT.tmp <- read.table(beamLUT.files[b], skip=1, header=TRUE, check.names=FALSE)
       if(b==1) {
         beamLUT <- beamLUT.tmp
       } else {
@@ -508,20 +508,20 @@ read.beamLUT <- function(beamLUT.name, Nx, Ny, Nz, dose.threshold=0, preallocate
     close(pb)
   }
 
-  
+
   # filtro dose.thresold
   beamLUT <- subset(beamLUT, `DosePerEvent[Gy/primary]` > dose.threshold)
-  
+
   # beamID start from 1...
   beamLUT$beamID <- beamLUT$beamID + 1
-  
+
   # calcola i voxelID...
   beamLUT$voxelID <- beamLUT$i + beamLUT$j*Nx + beamLUT$k*(Nx*Ny) + 1
   return(beamLUT)
 }
 
 #' Get Dose from beamLUTs (pure-dek)
-#' 
+#'
 #' Get the net Dose distribution (values object or sparse array) from the beamLUTs. If coordinates x, y and z are specified it returns a complete values object
 #' @param beamLUTs the beamLUTs data frame.
 #' @param beams the beams data frame.
@@ -536,7 +536,7 @@ get.dose.beamLUT <- function(beamLUTs, beams, x=NULL, y=NULL, z=NULL, variable='
   # calcolo con aggregate
   dose.bl <- beamLUTs$`DosePerEvent[Gy/primary]` * beams$fluence[beamLUTs$beamID]
   dose.bl <- aggregate(list(dose=dose.bl), by = list(voxelID=beamLUTs$voxelID), sum)
-    
+
   if(is.null(x) | is.null(y) | is.null(z)) { # matrice sparsa
     names(dose.bl) <- c('voxelID', variable)
     return(dose.bl)
@@ -548,7 +548,7 @@ get.dose.beamLUT <- function(beamLUTs, beams, x=NULL, y=NULL, z=NULL, variable='
 }
 
 #' Get dose averaged LET from beamLUTs (pure-dek)
-#' 
+#'
 #' Get the net dose averged LET distribution (values object or sparse array) from the beamLUTs.
 #' @param beamLUTs the beamLUTs data frame.
 #' @param beams the beams data frame.
@@ -558,13 +558,13 @@ get.dose.beamLUT <- function(beamLUTs, beams, x=NULL, y=NULL, z=NULL, variable='
 #' @family BeamLUT
 #' @export
 get.letd.beamLUT <- function(beamLUTs, beams, x=NULL, y=NULL, z=NULL, variable='DoseAveragedLET[keV/um]')
-{ 
+{
   endens.bl <- beamLUTs$`EnergyDensityPerEvent[keV/(um^3*primary)]` * beams$fluence[beamLUTs$beamID]
   letd.bl <- beamLUTs$`DoseWeightedEnergyDensityPerEvent[keV^2/(um^4*primary)]` * beams$fluence[beamLUTs$beamID]
   letd.bl <- aggregate(list(endens=endens.bl, letd=letd.bl), by = list(voxelID=beamLUTs$voxelID), sum)
 
   if(is.null(x) | is.null(y) | is.null(z)) {
-    letd.bl <- data.frame(letd.bl$voxelID, letd.bl$letd/letd.bl$endens)    
+    letd.bl <- data.frame(letd.bl$voxelID, letd.bl$letd/letd.bl$endens)
     names(letd.bl) <- c('voxelID', variable)
     return(letd.bl)
   } else {
@@ -575,7 +575,7 @@ get.letd.beamLUT <- function(beamLUTs, beams, x=NULL, y=NULL, z=NULL, variable='
 }
 
 #' Get RBE from beamLUTs (pure-dek)
-#' 
+#'
 #' Get the net RBE distribution (values object or sparse array) from the beamLUTs.
 #' @param beamLUTs the beamLUTs data frame.
 #' @param beams the beams data frame.
@@ -587,18 +587,19 @@ get.letd.beamLUT <- function(beamLUTs, beams, x=NULL, y=NULL, z=NULL, variable='
 #' @export
 get.rbe.beamLUT <- function(beamLUTs, beams, x=NULL, y=NULL, z=NULL, variable='RBE', alphaX, betaX)
 {
-  
-  
+
+
   dose.bl <- beamLUTs$`DosePerEvent[Gy/primary]` * beams$fluence[beamLUTs$beamID]
   alpha.bl <- beamLUTs$`LethAlphaPerEvent[1/primary]` * beams$fluence[beamLUTs$beamID]
   beta.bl <- beamLUTs$`SqrtLethBetaPerEvent[1/primary]` * beams$fluence[beamLUTs$beamID]
-  
+
   rbe.bl <- aggregate(list(dose=dose.bl, alpha=alpha.bl, beta=beta.bl), by = list(voxelID=beamLUTs$voxelID), sum)
+  i.dose <- rbe.bl$dose>0
   rbe.bl$alpha <- rbe.bl$alpha/rbe.bl$dose
   rbe.bl$beta <- rbe.bl$beta^2/rbe.bl$dose^2
-  
+
   if(is.null(x) | is.null(y) | is.null(z)) {
-    rbe.bl <- data.frame(rbe.bl$voxelID, rbe.evaluate(alpha=rbe.bl$alpha, beta=rbe.bl$beta, dose=rbe.bl$dose, alphaX=alphaX, betaX=betaX))    
+    rbe.bl <- data.frame(rbe.bl$voxelID, rbe.evaluate(alpha=rbe.bl$alpha, beta=rbe.bl$beta, dose=rbe.bl$dose, alphaX=alphaX, betaX=betaX))
     names(rbe.bl) <- c('voxelID', variable)
     return(rbe.bl)
   } else {
@@ -609,7 +610,7 @@ get.rbe.beamLUT <- function(beamLUTs, beams, x=NULL, y=NULL, z=NULL, variable='R
 }
 
 #' Get alpha/beta from beamLUTs (pure-dek)
-#' 
+#'
 #' Get the net alpha and beta Linear-Quadratic parameters distribution (values object or sparse array) from the beamLUTs.
 #' @param beamLUTs the beamLUTs data frame.
 #' @param beams the beams data frame.
@@ -619,14 +620,14 @@ get.rbe.beamLUT <- function(beamLUTs, beams, x=NULL, y=NULL, z=NULL, variable='R
 #' @family BeamLUT
 #' @export
 get.alpha.beta.beamLUT <- function(beamLUTs, beams, x=NULL, y=NULL, z=NULL, variables=c('Alpha[Gy^(-1)]', 'Beta[Gy^(-2)]'))
-{  
+{
   dose.bl <- beamLUTs$`DosePerEvent[Gy/primary]` * beams$fluence[beamLUTs$beamID]
   alpha.bl <- beamLUTs$`LethAlphaPerEvent[1/primary]` * beams$fluence[beamLUTs$beamID]
   beta.bl <- beamLUTs$`SqrtLethBetaPerEvent[1/primary]` * beams$fluence[beamLUTs$beamID]
-  
+
   alpha.beta.bl <- aggregate(list(dose=dose.bl, alpha=alpha.bl, beta=beta.bl), by = list(voxelID=beamLUTs$voxelID), sum)
 
-  
+
   if(is.null(x) | is.null(y) | is.null(z)) {
     alpha.beta.bl <- data.frame(alpha.beta.bl$voxelID, alpha.beta.bl$alpha/alpha.beta.bl$dose, alpha.beta.bl$beta^2/alpha.beta.bl$dose^2)
     names(alpha.beta.bl) <- c('voxelID', variables)
@@ -640,7 +641,7 @@ get.alpha.beta.beamLUT <- function(beamLUTs, beams, x=NULL, y=NULL, z=NULL, vari
 }
 
 #' Get equivalent dose from beamLUTs (pure-dek)
-#' 
+#'
 #' Get the net equivalent (biological) dose distribution (values object) from the beamLUTs.
 #' @param beamLUTs the beamLUTs data frame.
 #' @param beams the beams data frame.
@@ -652,9 +653,9 @@ get.alpha.beta.beamLUT <- function(beamLUTs, beams, x=NULL, y=NULL, z=NULL, vari
 #' @export
 get.bdose.beamLUT <- function(beamLUTs, beams, x, y, z, variable='BiologicalDose[Gy(RBE)]', alphaX, betaX)
 {
-  rbe <- get.rbe.beamLUT(beamLUTs = beamLUTs, beams = beams, x = x, y = x, z = z, alphaX = alphaX, betaX = betaX)
-  dose <- get.dose.beamLUT(beamLUTs = beamLUTs, beams = beams, x = x, y = x, z = z)
-  
+  rbe <- get.rbe.beamLUT(beamLUTs = beamLUTs, beams = beams, x = x, y = y, z = z, alphaX = alphaX, betaX = betaX)
+  dose <- get.dose.beamLUT(beamLUTs = beamLUTs, beams = beams, x = x, y = y, z = z)
+
   return(create.values(array.values = rbe$values*dose$values, variables = variable, x = x, y = y, z = z))
 }
 
