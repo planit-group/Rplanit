@@ -14,6 +14,7 @@ volume.contours(contours, voi = NULL)
 Evaluate the volume defined by its contours.
 }
 \seealso{
-Other Contours: \code{\link{get.contours}}
+Other Contours: \code{\link{get.contours}};
+  \code{\link{sanitize.contours}}
 }
 

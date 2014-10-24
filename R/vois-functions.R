@@ -255,6 +255,41 @@ volume.contours <- function(contours, voi=NULL)
   return(volume.df) 
 }
 
+#' Correct consistency of contours
+#' 
+#' Check and correct the consistency of a contours object (such as not uniform and/or ordered polygon numbering, negative index, etc.)
+#' 
+#' @param contours the contours dataframe
+#' 
+#' @export
+#' @family Contours
+sanitize.contours <- function(contours) {
+  
+  # uniformizza id
+  ids <- sort(unique(contours$id))
+  contours$id <- sapply(contours$id, function(v) which(v==ids)-1)
+  
+  # ordina
+  contours <- contours[with(contours, order(id)), ]
+  
+  # ciclo sui voi
+  for(iid in 1:length(ids)) {
+    contour.name <- unique(contours$contour[contours$id==(iid-1)])
+    message('sanitizing contour: ', contour.name)
+    contours.voi <- subset(contours, contour==contour.name)
+    
+    # uniformizza poligoni
+    polygons <- sort(unique(contours.voi$polygon))
+    contours.voi$polygon <- sapply(contours.voi$polygon, function(v) which(v==polygons)-1)
+    
+    if(iid==1) {cc <- contours.voi} else {cc <- rbind(cc, contours.voi)}
+  }
+  
+  # check corrispondenza z <-> slice rispetto alla CT (DA FARE!)
+  
+  return(cc)
+}
+
 # R/W CONTOURS -----------------------------------------------------------------
 
 
@@ -336,8 +371,19 @@ read.contours <- function(file.contours, file.CT) {
   # body
   contours.ct <- read.table(file.contours, skip=1)
   names(contours.ct) <- c('id', 'polygon', 'slice', 'x', 'y')
+  
+  # check per inconsistenze nella tabella
+  i.wrong <- which(contours.ct$slice <0) # indici di punti "strani"
+  Nwrong <- length(i.wrong)
+  if(Nwrong>0) {
+    warning('warning: unusual data in contours file... removing them.')
+    print(summary(contours.ct))
+    contours.ct <- contours.ct[-i.wrong,]
+  }
+    
   contours.ct$z <- (sapply(contours.ct$slice, function(v) z[v+1]))
   contours.ct$contour <- factor(sapply(contours.ct$id, function(v) con.names[v+1]), levels=con.names)
+  
   
   # identifica tessuto+modello
   con.names <- levels(contours.ct$contour)

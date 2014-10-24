@@ -22,6 +22,7 @@ A \code{contours} dataframe consisting of:
 Get the contours dataframe from the \code{plan} object.
 }
 \seealso{
-Other Contours: \code{\link{volume.contours}}
+Other Contours: \code{\link{sanitize.contours}};
+  \code{\link{volume.contours}}
 }
 
