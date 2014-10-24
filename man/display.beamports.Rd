@@ -4,7 +4,7 @@
 \title{Beam-port splot}
 \usage{
 display.beamports(beams, plan = NULL, numeric = FALSE, show.plot = TRUE,
-  file.name = NULL, height = 7, width = 7)
+  file.name = NULL, height = 7, width = 7, dpi = 300)
 }
 \arguments{
 \item{beams}{beams dataframe.}
@@ -18,6 +18,8 @@ display.beamports(beams, plan = NULL, numeric = FALSE, show.plot = TRUE,
 \item{height}{The height of the saved plot image (inches).}
 
 \item{width}{The width of the saved plot image (inches).}
+
+\item{dpi}{The dpi of the saved image.}
 
 \item{shot.plot}{Show plot.}
 }

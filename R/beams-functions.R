@@ -262,7 +262,21 @@ write.beams <- function(beams, file.name, format='puredek', ion='1H', add.extens
     con <- file(file.name, "w")
     writeLines(paste(N), con=con)
     close(con)
-    write.table(beams, file=file.name, append=TRUE, col.names=FALSE, row.names=FALSE, quote=FALSE)
+    
+    # elimina colonna fields
+    index.field <- which(names(beams)=='field')
+    if(length(index.field>0)) {beams <- beams[,-index.field]}
+    
+    # riordina le colonne per essere consistente con pure-dek
+    if(ncol(beams)==14) {
+      beams.ord <- beams[c("particle", "beamLine", "x_iso", "y_iso", "z_iso", "gantryAngle", "patientAngle", "fluence", "energy", "deflX", "deflY", "x_s", "y_s", "z_s")]
+    } else if(ncol(beams)==11) {
+      beams.ord <- beams[c("particle", "beamLine", "x_iso", "y_iso", "z_iso", "gantryAngle", "patientAngle", "fluence", "energy", "deflX", "deflY")]
+    } else {
+      warning('Warning, number of columns in beams data.frame anomalous...')
+    }
+    
+    write.table(beams.ord, file=file.name, append=TRUE, col.names=FALSE, row.names=FALSE, quote=FALSE)
   }
   
   # Gate

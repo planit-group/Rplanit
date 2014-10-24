@@ -3,9 +3,9 @@
 # LUT DISPLAY FUNCTIONS --------------------------------------------------------
 
 #' 2D display of the beam-lut
-#' 
-#' The \code{lut} object use a structure similar to the "values" object. For example the different quantities are stored in a 5D array, \code{lut$values[i,j,k,l]}. The indices of the array correspond to: variable, energy, x, y, normalized z.  
-#' 
+#'
+#' The \code{lut} object use a structure similar to the "values" object. For example the different quantities are stored in a 5D array, \code{lut$values[i,j,k,l]}. The indices of the array correspond to: variable, energy, x, y, normalized z.
+#'
 #' @param lut the Look Up Table object
 #' @param variable the specific variable to be displayed (not needed if values contains only one variable, or if the variable is the first of the list)
 #' @param E the energy of the beam (if it is not specified, the mean energy of the available energies is used). The energy displayed is approximated to the nearest available in the lut.
@@ -17,9 +17,9 @@
 display.lut <- function(lut, variable=NULL, E=NULL, bw=FALSE, r.cut=NULL, cont=FALSE, z.absolute=FALSE)
 {
   #suppressMessages(library(fields))
-  
+
   #cat(dim(lut$values), '\n')
-  
+
   # variable
   v <- NULL
   if(!is.null(variable)) {v <- which(lut$variables==variable)}
@@ -28,14 +28,14 @@ display.lut <- function(lut, variable=NULL, E=NULL, bw=FALSE, r.cut=NULL, cont=F
   message('displaying ', variable, ' (', v, ')...')
   lut$values <- lut$values[v,,,,,drop=FALSE]
   #cat(dim(lut$values), '\n')
-  
+
   # energy
   if(is.null(E)) {E <- mean(lut$E)}
   message('plotting E=',E)
   NE <- which(abs(lut$E-E) == min(abs(lut$E-E)))[1]
   lut$values <- lut$values[1,NE,,,]
   #cat(dim(lut$values), '\n')
-  
+
   # plane
   if(lut$Ny==1) {
     message('radial lut')
@@ -44,7 +44,7 @@ display.lut <- function(lut, variable=NULL, E=NULL, bw=FALSE, r.cut=NULL, cont=F
     Ny <- which(abs(lut$y) == min(abs(lut$y)))[1]
     lut$values <- lut$values[,Ny,]
   }
-  
+
   # cut-off
   if(!is.null(r.cut)) {
     message('using r.cut=',r.cut)
@@ -52,14 +52,14 @@ display.lut <- function(lut, variable=NULL, E=NULL, bw=FALSE, r.cut=NULL, cont=F
     lut$values <- lut$values[index.x,]
     lut$x <- lut$x[index.x]
   }
-  
+
   # Z
   if(z.absolute) {
     Z <- lut$z * lut$z.BP(E)
   } else {
     Z <- lut$z
   }
-  
+
   # colori
   Nc <- 255
   if(bw) {
@@ -67,7 +67,7 @@ display.lut <- function(lut, variable=NULL, E=NULL, bw=FALSE, r.cut=NULL, cont=F
   } else {
     cols <- rainbow(Nc, start=0, end=0.6)[Nc:1]
   }
-  
+
   # plot immagine
   main <- paste('E = ', E, ' MeV/u\n', variable, sep='')
   subt <- ''
@@ -75,7 +75,7 @@ display.lut <- function(lut, variable=NULL, E=NULL, bw=FALSE, r.cut=NULL, cont=F
   if(z.absolute) {my.ylab <- 'z [mm]'} else {my.ylab <- 'z/zBp'}
   fields::image.plot(lut$x, Z, lut$values, col=cols,
              main=main, sub=subt, xlab=my.xlab, ylab=my.ylab)
-  
+
   # plot contorni
   if(cont==TRUE) {
     contour(lut$x, Z, lut$values, add=TRUE)
@@ -87,14 +87,14 @@ display.lut <- function(lut, variable=NULL, E=NULL, bw=FALSE, r.cut=NULL, cont=F
 
 
 #' Display a 2D slice
-#' 
+#'
 #' Display an arbitrary 2D slice (axial, coronal, sagittal) of the values stored in a \code{values} object.
-#' 
+#'
 #' If slice index and slice coordinate are not specified, but the plan is specified, the displayed slice is axial and at the isocenter of the plan.
 #' If slice index, slice coordinate and plan are not specified, the displayed slice is axial and at the middle of the z range.
-#' 
-#' If the plan is specified, it is possible to not specify the values object. In this case the one associated to the plan is used. 
-#' 
+#'
+#' If the plan is specified, it is possible to not specify the values object. In this case the one associated to the plan is used.
+#'
 #' @param values the values object (optional if plan is defined)
 #' @param variable the specific variable to be displayed (not needed if values contains only one variable, or if the variable is the first of the list)
 #' @param Nx,Ny,Nz slice index to be displayed. Only one of them should be defined, corresponding to an axial, coronal or sagittal slice (optional)
@@ -108,9 +108,9 @@ display.lut <- function(lut, variable=NULL, E=NULL, bw=FALSE, r.cut=NULL, cont=F
 #' @param colors vector of color values (colormap)
 #' @param file.name name of the file on which to save the figure. By default no file is written (optional)
 #' @param width,height sizes of the figure to be saved (inches) (optional)
-#' 
+#'
 #' @return used slice (index and coordinates) data.frame. It is used to make further combination with other plots and procedures (e.g. \code{display.slice.all})
-#' 
+#'
 #' @family display slices
 #' @export
 #' @importFrom fields set.panel image.plot
@@ -133,10 +133,10 @@ display.slice <- function(values=NULL,
                           width=7, height=7)
 {
   #suppressMessages(library(fields))
-  
+
   # recupera values da plan se values=NULLs
   if(is.null(values)) {values <- get.values(plan)}
-  
+
   # variable
   v <- NULL
   if(!is.null(variable)) {v <- which(values$variables==variable)}
@@ -144,7 +144,7 @@ display.slice <- function(values=NULL,
   variable <- values$variable[v]
   message('displaying ', variable, ' ...')
   if(values$Nv>1) {values$values <- values$values[v,,,]}
-  
+
   # recupera isocentro
   isocenter <- NULL
   Nx.iso <- Ny.iso <- Nz.iso <- NA
@@ -157,30 +157,30 @@ display.slice <- function(values=NULL,
     Nx.iso <- identify.slice(x_iso, values$x)
     Ny.iso <- identify.slice(y_iso, values$y)
     Nz.iso <- identify.slice(z_iso, values$z)
-    
+
     message('isocenter: (', x_iso, ",", y_iso, ",", z_iso, ')')
     message('isocenter voxel: (', Nx.iso, ",", Ny.iso, ",", Nz.iso, ')')
   }
-  
+
   # estremi
   if(is.null(xlim)) {xlim <- range(values$x, na.rm=TRUE)}
   if(is.null(ylim)) {ylim <- range(values$y, na.rm=TRUE)}
   if(is.null(zlim)) {zlim <- range(values$z, na.rm=TRUE)}
   if(is.null(vlim)) {vlim <- range(values$values, na.rm=TRUE)}
   if(invert.y.axis) {ylim <- rev(ylim)}
-  
+
   # slice...
-  
+
   # coordinate specificate
   if(!is.na(x)) {Nx <- identify.slice(x, values$x)}
   if(!is.na(y)) {Ny <- identify.slice(y, values$y)}
   if(!is.na(z)) {Nz <- identify.slice(z, values$z)}
-  
+
   # coordinate non specificate, indici specificati
   if(!is.na(Nx) & is.na(x)) {x <- values$x[Nx]}
   if(!is.na(Ny) & is.na(y)) {y <- values$y[Ny]}
   if(!is.na(Nz) & is.na(z)) {z <- values$z[Nz]}
-  
+
   # niente di specificato
   if(is.na(Nx) & is.na(Ny) & is.na(Nz)
      & is.na(x) & is.na(y) & is.na(z)) {
@@ -194,23 +194,23 @@ display.slice <- function(values=NULL,
       z <- values$z[Nz]
     }
   }
-  
+
   if(!is.null(isocenter)) {
     if(!is.na(Nx)) {if(Nx==Nx.iso) ISOCENTER <- TRUE}
     if(!is.na(Ny)) {if(Ny==Ny.iso) ISOCENTER <- TRUE}
     if(!is.na(Nz)) {if(Nz==Nz.iso) ISOCENTER <- TRUE}
   }
-  
+
   message('plotting voxels: (', Nx, ",", Ny, ",", Nz, ')')
   message('plotting coord.: (', x, ",", y, ",", z, ')')
-  
+
   # text
   if(!is.null(plan)) {main <- paste(plan$name, '\n', variable, sep='')} else {main <- variable}
   if(!is.na(z)) {subt <- paste('slice at z =', z, 'mm')}
   else if(!is.na(y)) {subt <- paste('slice at y =', y, 'mm')}
   else if(!is.na(x)) {subt <- paste('slice at x =', x, 'mm')}
-  
-  
+
+
   # colori
   if(!is.null(colors)) {
     cols <- colors
@@ -222,17 +222,17 @@ display.slice <- function(values=NULL,
       cols <- rainbow(Nc, start=0, end=0.6)[Nc:1]
     }
   }
-  
+
   # INIZIA FIGURA
   if(!is.null(file.name)) {
     png(filename=file.name, width=width, height=height, res=300, units='in')
   }
-  
+
   # panel
   set.panel()
   par(oma=c(0,0,0,4)) # margin of 4 spaces width at right hand side
   set.panel(1,1) # 1X1 matrix of plots
-  
+
   # plot immagine
   if(!is.na(Nz)) {
     image.plot(values$x, values$y, as.matrix(values$values[,,Nz]), col=cols,
@@ -241,21 +241,21 @@ display.slice <- function(values=NULL,
   } else if(!is.na(Ny)) {
     image.plot(values$x, values$z, as.matrix(values$values[,Ny,]), col=cols,
                xlim=xlim, ylim=zlim, zlim=vlim,
-               main=main, sub=subt, xlab='x [mm]', ylab='z [mm]')  
+               main=main, sub=subt, xlab='x [mm]', ylab='z [mm]')
   } else if(!is.na(Nx)) {
     image.plot(values$y, values$z, as.matrix(values$values[Nx,,]), col=cols,
                xlim=ylim, ylim=zlim, zlim=vlim,
-               main=main, sub=subt, xlab='y [mm]', ylab='z [mm]')  
+               main=main, sub=subt, xlab='y [mm]', ylab='z [mm]')
   }
-  
+
   # plot contorni
   if(cont==TRUE) {
     if(!is.na(Nz)) {contour(values$x, values$y, values$values[,,Nz], add=TRUE)}
     else if(!is.na(Ny)) {contour(values$x, values$z, values$values[,Ny,], add=TRUE)}
     else if(!is.na(Nx)) {contour(values$y, values$z, values$values[Nx,,], add=TRUE)}
   }
-  
-  
+
+
   # plot isocentro
   if(isoc) {
     points(isocenter$x_iso, isocenter$y_iso)
@@ -264,22 +264,22 @@ display.slice <- function(values=NULL,
       abline(h=isocenter$y_iso, lty=2)
     }
   }
-  
+
   par(oma=c( 0,0,0,1))# reset margin to be much smaller.
-  #image.plot(legend.only=TRUE, zlim=vlim, col=cols) 
-  
+  #image.plot(legend.only=TRUE, zlim=vlim, col=cols)
+
   set.panel()
-  
+
   # FINISCE FIGURA
   if(!is.null(file.name)) {dev.off(); message('figure saved in ', file.name)}
-  
+
   # ritorna informazioni sulla slice
   return(data.frame(Nx=Nx, Ny=Ny, Nz=Nz, x=x, y=y, z=z))
 }
 
 
 #' Display CT slices
-#' 
+#'
 #' Alias for display.slices().
 #' @family display slices
 #' @export
@@ -297,7 +297,7 @@ display.slice.ct <- function(ct, contours=NULL,
                              file.name=NULL,
                              width=7, height=7)
 {
-  
+
   # estremi
   if(is.null(xlim)) {xlim <- range(ct$x)}
   if(is.null(ylim)) {ylim <- range(ct$y)}
@@ -305,15 +305,15 @@ display.slice.ct <- function(ct, contours=NULL,
   if(is.null(vlim)) {vlim <- range(ct$values, na.rm=TRUE)}
   if(invert.y.axis) {ylim <- rev(ylim)}
   #vlim <- range(ct$values, na.rm=TRUE)
-  
-  
+
+
   my.colors <- colormap.ct(HU.range=vlim, HU.window=HU.window)
-  
+
   # INIZIA FIGURA
   if(!is.null(file.name)) {
     png(filename=file.name, width=width, height=height, res=300, units='in')
   }
-  
+
   # immagine ct
   slice <- display.slice(ct, variable='HounsfieldNumber',
                          Nx=Nx, Ny=Ny, Nz=Nz,
@@ -327,12 +327,12 @@ display.slice.ct <- function(ct, contours=NULL,
   Nx <- slice$Nx
   Ny <- slice$Ny
   Nz <- slice$Nz
-  
+
   # panel
   set.panel()
   par(oma=c(0,0,0,4)) # margin of 4 spaces width at right hand side
   set.panel(1,1) # 1X1 matrix of plots
-  
+
   # contorni (solo per slice assiali)
   if(!is.null(contours) & !is.na(Nz)) {
     message('using contours...')
@@ -356,28 +356,28 @@ display.slice.ct <- function(ct, contours=NULL,
     }
     }
   }
-  
+
   par(oma=c(0,0,0,1))# reset margin to be much smaller.
-  #image.plot(legend.only=TRUE, zlim=vlim, col=col.val) 
-  
+  #image.plot(legend.only=TRUE, zlim=vlim, col=col.val)
+
   set.panel()
-  
+
   # FINISCE FIGURA
   if(!is.null(file.name)) {dev.off(); message('figure saved in ', file.name)}
-  
+
   return(slice)
 }
 
 
 #' Display a 2D slice superimposed to the CT
-#' 
+#'
 #' Display an arbitrary 2D slice (axial, coronal, sagittal) of the values stored in a \code{values} object. The slice is superimposed to the associated CT slice. Optionally ROI contours can be also displayed.
-#' 
+#'
 #' If slice index and slice coordinate are not specified, but the plan is specified, the displayed slice is axial and at the isocenter of the plan.
 #' If slice index, slice coordinate and plan are not specified, the displayed slice is axial and at the middle of the z range.
-#' 
-#' If the plan is specified, it is possible to not specify some or all of the following objects: values, CT and contours. In this case the missing ones are replaced with those associated to the plan. 
-#' 
+#'
+#' If the plan is specified, it is possible to not specify some or all of the following objects: values, CT and contours. In this case the missing ones are replaced with those associated to the plan.
+#'
 #' @param ct the ct object (optional, if plan is specified)
 #' @param contours the contours object (optional)
 #' @param values the values object (optional, if plan is specified)
@@ -394,10 +394,11 @@ display.slice.ct <- function(ct, contours=NULL,
 #' @param width,height sizes of the figure to be saved (inches) (optional)
 #' @param HU.window HU window to visualize for the CT.
 #' @param alpha.lower,alpha.upperThe opacity (alpha) is evaluated as a linear ramp (\code{alpha.lower} to \code{alpha.upper}) from \code{alpha.lower} to \code{alpha.upper} of the values range.
-#' 
+#'
 #' @param invert.y.axis Invert the y axis.
 #' @param contour.color The color used for the contour of the VOI.
-#' 
+#' @param dpi dpi of the saved image.
+#'
 #' @family display slices
 #' @export
 #' @importFrom fields set.panel image.plot
@@ -420,18 +421,19 @@ display.slice.all <- function(ct=NULL,
                               alpha.lower=0,
                               alpha.upper=1,
                               invert.y.axis=FALSE,
-                              contour.color='green')
+                              contour.color='green',
+                              dpi=300)
 {
   #suppressMessages(library(fields))
-  
+
   # recupera oggetti da plan
   if(is.null(values)) {message(class(plan)); values <- get.values(plan)}
   if(is.null(ct)) {ct <- get.ct(plan)}
   if(is.null(contours) & !is.null(plan)) {contours <- get.contours(plan)}
   #if(!use.contours) {contours <- NULL}
-  
+
   Nx.ct <- Ny.ct <- Nz.ct <- Nx.values <- Ny.values <- Nz.values <- NA
-  
+
   # recupera isocentro
   isocenter <- NULL
   x_iso <- y_iso <- x_iso <- NA
@@ -443,7 +445,7 @@ display.slice.all <- function(ct=NULL,
     z_iso <- isocenter$z_iso
     message('isocenter: (', x_iso, ",", y_iso, ",", z_iso, ')')
   }
-  
+
   # coordinate specificate
   if(!is.na(x)) {
     Nx.values <- identify.slice(x, values$x)
@@ -457,7 +459,7 @@ display.slice.all <- function(ct=NULL,
     Nz.values <- identify.slice(z, values$z)
     Nz.ct <- identify.slice(z, ct$z)
   }
-  
+
   # niente di specificato
   if(is.na(x) & is.na(y) & is.na(z)) {
     if(!is.null(plan)) {
@@ -465,35 +467,35 @@ display.slice.all <- function(ct=NULL,
       z <- z_iso
       ISOCENTER <- TRUE
     } else {
-      z <- mean(values$z)  
+      z <- mean(values$z)
     }
     Nz.values <- identify.slice(z, values$z)
     Nz.ct  <- identify.slice(z, ct$z)
   }
-  
+
   if(!is.null(isocenter)) {
     #if(!is.na(x_iso)) {if(x==x_iso) ISOCENTER <- TRUE}
     #if(!is.na(y_iso)) {if(y==y_iso) ISOCENTER <- TRUE}
     #if(!is.na(z_iso)) {if(z==z_iso) ISOCENTER <- TRUE}
   }
-  
+
   message('plotting at coord.: (', x, ",", y, ",", z, ')')
   message('ct voxels: (', Nx.ct, ",", Ny.ct, ",", Nz.ct, ')')
   message('values voxels: (', Nx.ct, ",", Ny.ct, ",", Nz.ct, ')')
-  
+
   # variable
   v <- which(values$variables==variable)
   if(length(v)==0) {v <- 1}
   variable <- values$variable[v]
   message('displaying ', variable, '...')
   if(values$Nv>1) {values$values <- values$values[v,,,]}
-  
+
   # text
   if(!is.null(plan)) {main <- paste(plan$name, '\n', variable, sep='')} else {main <- variable}
   if(!is.na(z)) {subt <- paste('slice at z =', z, 'mm')}
   else if(!is.na(y)) {subt <- paste('slice at y =', y, 'mm')}
   else if(!is.na(x)) {subt <- paste('slice at x =', x, 'mm')}
-  
+
   # colori
   Nc <- 255
   Nc.alpha <- round(Nc*(alpha.upper-alpha.lower))
@@ -502,24 +504,24 @@ display.slice.all <- function(ct=NULL,
   col.val <- hsv( interval[Nc:1]*0.64, alpha=interval.alpha[1:Nc])
   col.ct <- colormap.ct(HU.range=range(ct$values), HU.window=HU.window)
 
-  
+
   # estremi
   if(is.null(xlim)) {xlim <- range(values$x)}
   if(is.null(ylim)) {ylim <- range(values$y)}
   if(is.null(zlim)) {zlim <- range(values$z)}
   if(is.null(vlim)) {vlim <- range(values$values, na.rm=TRUE)}
-  
+
   if(invert.y.axis) {ylim <- rev(ylim)}
-  
+
   # INIZIA FIGURA
   if(!is.null(file.name)) {
-    png(filename=file.name, width=width, height=height, res=300, units='in')
+    png(filename=file.name, width=width, height=height, res=dpi, units='in')
   }
 
   set.panel()
   par(oma=c(0,0,0,4)) # margin of 4 spaces width at right hand side
   set.panel(1,1) # 1X1 matrix of plots
-  
+
   #asp <- 1/abs( diff(range(values$x)) /  diff(range(values$y)) )
   #print(asp)
 
@@ -537,33 +539,33 @@ display.slice.all <- function(ct=NULL,
                xlim=ylim, ylim=zlim, zlim=vlim,
                main=main, sub=subt, xlab='y [mm]', ylab='z [mm]')
   }
-  
+
   # layer ct
   if(!is.na(Nz.ct)) {
     image(ct$x, ct$y, as.matrix(ct$values[,,Nz.ct]), col=col.ct, xlim=xlim, ylim=ylim, add=TRUE)
   } else if(!is.na(Ny.ct)) {
     image(ct$x, ct$z, as.matrix(ct$values[,Ny.ct,]), col=col.ct, xlim=xlim, ylim=zlim, add=TRUE)
   } else if(!is.na(Nx.ct)) {
-    image(ct$y, ct$z, as.matrix(ct$values[Nx.ct,,]), col=col.ct, xlim=ylim, ylim=zlim, add=TRUE)  
+    image(ct$y, ct$z, as.matrix(ct$values[Nx.ct,,]), col=col.ct, xlim=ylim, ylim=zlim, add=TRUE)
   }
-  
+
   # layer values
   if(!is.na(Nz.values)) {
     image(values$x, values$y, values$values[,,Nz.values], col=col.val, add=TRUE, xlim=xlim, ylim=ylim, zlim=vlim)
   } else if(!is.na(Ny.values)) {
-    image(values$x, values$z, values$values[,Ny.values,], col=col.val, add=TRUE, xlim=xlim, ylim=zlim, zlim=vlim)  
+    image(values$x, values$z, values$values[,Ny.values,], col=col.val, add=TRUE, xlim=xlim, ylim=zlim, zlim=vlim)
   } else if(!is.na(Nx.values)) {
-    image(values$y, values$z, values$values[Nx.values,,], col=col.val, add=TRUE, xlim=ylim, ylim=zlim, zlim=vlim)  
+    image(values$y, values$z, values$values[Nx.values,,], col=col.val, add=TRUE, xlim=ylim, ylim=zlim, zlim=vlim)
   }
-  
-  
-  # layer contorni  
+
+
+  # layer contorni
   if(cont==TRUE) {
     if(!is.na(Nz.values)) {contour(values$x, values$y, values$values[,,Nz.values], add=TRUE, xlim=xlim, ylim=ylim, zlim=vlim)}
     else if(!is.na(Ny.values)) {contour(values$x, values$z, values$values[,Ny.values,], add=TRUE, xlim=xlim, ylim=zlim, zlim=vlim)}
     else if(!is.na(Nx.values)) {contour(values$y, values$z, values$values[Nx.values,,], add=TRUE, xlim=ylim, ylim=zlim, zlim=vlim)}
   }
-  
+
   # layer roi (solo slice assiali)
   if(!is.null(contours) & !is.na(Nz.values)) {
     message('using voi contours...')
@@ -586,7 +588,7 @@ display.slice.all <- function(ct=NULL,
     }
     }
   }
-  
+
   # layer isocentro
   if(isoc) {
     points(isocenter$x_iso, isocenter$y_iso)
@@ -597,80 +599,80 @@ display.slice.all <- function(ct=NULL,
   }
 
   par(oma=c( 0,0,0,1))# reset margin to be much smaller.
-  fields::image.plot(legend.only=TRUE, zlim=vlim, col=col.val) 
+  fields::image.plot(legend.only=TRUE, zlim=vlim, col=col.val)
 
   fields::set.panel()
 
   # FINISCE FIGURA
   if(!is.null(file.name)) {dev.off(); message('figure saved in ', file.name)}
-  
+
 }
 
 
 #' fa un dump del file .3d in una serie di immagini png corrispondenti a ciascuna
 #' slice in z.
-#' 
+#'
 #' @family display slices
 #' @export
 dumpslices.3d.2.png <- function(file.name,
                                 x.min=-Inf, x.max=+Inf,
                                 y.min=-Inf, y.max=+Inf,
                                 z.min=-Inf, z.max=+Inf) {
-  
+
   cat('reading values:', file.name, '\n')
-  
+
   ###############
   # leggi file 3d
   ###############
-  
+
   # apri connsessione
   file.3d <- file(file.name, "rb") # read binary
-  
+
   # leggi l'header
   cat('reading header...\n')
   myline <- readLines(file.3d, n=8) # legge le prime 8 linee, ogni linea e' un elemento del vettore
-  
+
   # parsing dell'header
   # splitta la stringa in sottostringhe delimitate da uno o piu' spazi (regexpr: " +")
   myline.splitted <- unlist(strsplit(myline[1], ' +'))
   Nx <- as.numeric(myline.splitted[1])
   myline.splitted <- unlist(strsplit(myline[2], ' +'))
   x <- as.numeric(myline.splitted)
-  
+
   myline.splitted <- unlist(strsplit(myline[3], ' +'))
   Ny <- as.numeric(myline.splitted[1])
   myline.splitted <- unlist(strsplit(myline[4], ' +'))
   y <- as.numeric(myline.splitted)
-  
+
   myline.splitted <- unlist(strsplit(myline[5], ' +'))
   Nz <- as.numeric(myline.splitted[1])
   myline.splitted <- unlist(strsplit(myline[6], ' +'))
   z <- as.numeric(myline.splitted)
-  
+
   myline.splitted <- unlist(strsplit(myline[7], ' +'))
   Nv <- as.numeric(myline.splitted[1])
   values <- myline.splitted[2:length(myline.splitted)]
-  
+
   Ntot <- Nx * Ny * Nz * Nv
   cat('number of voxels:', Nv, 'x', Nx, 'x', Ny, 'x', Nz, '=', Ntot, '\n')
   cat('variables:', values, '\n')
-  
+
   # trasforma intervalli in coordinate puntuali
   x <- (x[1:Nx] + x[2:(Nx+1)])/2
   y <- (y[1:Ny] + y[2:(Ny+1)])/2
   z <- (z[1:Nz] + z[2:(Nz+1)])/2
-  
+
   # crea e legge array (4d)
   cat('reading binary data...\n')
   Values.3d <- array(readBin(file.3d, numeric(), Ntot), dim=c(Nv, Nx, Ny, Nz))
-  
-  
+
+
   #######################
   # selezione sottovolume
   #######################
-  
+
   cat('selecting subvolume...\n')
-  
+
   # trova estremi nelle coordinate disponibili
   xx.min <- min(x[x>=x.min])
   yy.min <- min(y[y>=y.min])
@@ -678,44 +680,44 @@ dumpslices.3d.2.png <- function(file.name,
   xx.max <- max(x[x<=x.max])
   yy.max <- max(y[y<=y.max])
   zz.max <- max(z[z<=z.max])
-  
+
   i.min <- which(x==xx.min)
   j.min <- which(y==yy.min)
   k.min <- which(z==zz.min)
   i.max <- which(x==xx.max)
   j.max <- which(y==yy.max)
   k.max <- which(z==zz.max)
-  
+
   cat('subvolume: (', xx.min, ', ', xx.max, ') ',
       '(', yy.min, ', ', yy.max, ') ',
       '(', yy.min, ', ', yy.max, ')\n', sep='')
   cat('indexes: (', i.min, ', ', i.max, ') ',
       '(', j.min, ', ', j.max, ') ',
       '(', k.min, ', ', k.max, ')\n', sep='')
-  
+
   # seleziona sottoarray
   Values.3d <- Values.3d[ , i.min:i.max, j.min:j.max, k.min:k.max]
-  
+
   # trim delle coordinate
   x <- x[x>=xx.min & x<=xx.max]
   y <- y[y>=yy.min & y<=yy.max]
   z <- z[z>=zz.min & z<=zz.max]
-  
+
   Nx <- length(x)
   Ny <- length(y)
   Nz <- length(z)
-  
-  
+
+
   ######################
   # salva png nel folder
   ######################
-  
+
   cat('saving slices to pngs...\n')
   library(png)
-  
+
   myfolder <- paste(file.name, '.slices.png', sep='')
   dir.create(myfolder)
-  
+
   for (v in 1:Nv) {
     cat('saving pngs for variable:', values[v], '...\n')
     for (k in 1:Nz) {
@@ -743,13 +745,13 @@ dumpslices.3d.2.png <- function(file.name,
 #' procedura per creare un display complessivo da un "plan"
 display.all.plan <- function(plan)
 {
-  
+
   # recupera dati
   .ct <- get.ct(plan)
   .roi <- get.contours(plan)
   .values <- get.values(plan)
   .vois <- get.vois(plan)
-  
+
   # display
   for(v in 1:.values$Nv) {
     display.slice.all(ct=.ct,
@@ -766,10 +768,10 @@ display.all.plan <- function(plan)
 
 #' plot del dvh per una variabile specifica
 display.dvh.old <- function(dvh, plan=NULL, Diff=FALSE) {
-  
+
   # check per vedere se è una lista
   if (class(dvh[[1]]) != "numeric") {N <- length(dvh)} else {N <- 1}
-  
+
   # text
   if(N==1) {
     if(!is.null(plan)) {main <- paste(plan$name, '-', dvh$voi)}
@@ -781,7 +783,7 @@ display.dvh.old <- function(dvh, plan=NULL, Diff=FALSE) {
     palette(rainbow(round(N*1.5))) # prende solo la prima parte del rainbow
     my.cols <- palette()[1:N]
   }
-  
+
   # plot
   if(N==1) {
     if(!Diff) {
@@ -804,10 +806,10 @@ display.dvh.old <- function(dvh, plan=NULL, Diff=FALSE) {
       message('error: inconsistent variables...')
       return()
     } else {message('dvhs variable: ', unique(variables))}
-    
+
     # Add extra space to right of plot area; change clipping to figure
     par(mar=c(5.1, 4.1, 4.1, 8.1), xpd=TRUE)
-    
+
     plot(dvh[[1]]$value, dvh[[1]]$volume,
          type='l', col=my.cols[1],
          xlim=c(val.min, val.max),
@@ -822,9 +824,9 @@ display.dvh.old <- function(dvh, plan=NULL, Diff=FALSE) {
 
 
 #' Display DVHs
-#' 
+#'
 #' Display a single DVH or a list of DVHs
-#' 
+#'
 #'  @param dvh single DVH (created via \code{\link{dvh.evaluate}}) or a list of DVHs
 #'  @param plan plan object (optional)
 #'  @param Diff display "differential" DVH (boolean, optional)
@@ -837,9 +839,9 @@ display.dvh.old <- function(dvh, plan=NULL, Diff=FALSE) {
 #'  @param height,weight sizes (inches) of the figure to be saved in the file (optional)
 #'  @param fixed.scale Forces a common fixed scale when faceting (if there are different variables).
 #'  @param return.dataframe Return the data.frame of the DVH(s).
-#'  
+#'
 #'  @return If \code{show.plot} is \code{FALSE}, it returns a ggplot2 plot structure to be used for further processing. If \code{return.dataframe = TRUE} it returns the generated data.frame of the DVH(s).
-#'  
+#'
 #'  @family display dvh
 #'  @export
 #'  @import ggplot2
@@ -856,17 +858,17 @@ display.dvh <- function(dvh, plan=NULL,
                         width=7,
                         fixed.scale=FALSE,
                         return.dataframe=FALSE) {
-  
+
   # usa le librerie ggplot2 (per fare prima...)
   #suppressMessages(library(ggplot2))
-  
+
   # massimo numero di pti per dvh da visualizzare
   max.v <- 1000
-  
+
   # check per vedere se è una lista
   if (class(dvh[[1]]) != "numeric") {N <- length(dvh)}
   else {N <- 1; dvh <- list(dvh)}
-  
+
   # text
   if(!is.null(title)) {
     main <- title
@@ -877,7 +879,7 @@ display.dvh <- function(dvh, plan=NULL,
     if(!is.null(plan)) {main <- paste(plan$name, '- DVHs')}
     else {main <- 'DVHs'}
   }
-  
+
   # crea dataframe per ggplot
   init=1
   for(i in 1:N) {
@@ -898,23 +900,23 @@ display.dvh <- function(dvh, plan=NULL,
         df.tmp <- df.tmp[index,]
       }
     }
-    
+
     if(i==init) {df <- df.tmp} else (df <- rbind(df, df.tmp))
   }
-  
+
   if(return.dataframe) {return(df)}
-  
+
   #print(summary(df))
   Ncol <- length(unique(df$voi))
   #my.cols <- sample(colors(), N)
   #palette(rainbow(round(Ncol*1.5))) # prende solo la prima parte del rainbow
   #my.cols <- palette()[1:Ncol]
   my.cols <- rainbow(round(Ncol*1.5))[1:Ncol]
-  
+
   # check per vedere quante variabili ci sono nella lista
   variables <- unique(df$variable)
   Nv <- length(variables)
-  
+
   # scaling
   my.scale <- 1/max.v*100
 
@@ -946,13 +948,13 @@ display.dvh <- function(dvh, plan=NULL,
       # both Diff+integral
       #stat_density(position='dodge', alpha=alpha.color, aes(x=value, y=..scaled..*25, colour=voi, fill=voi, group=id)) +
       #geom_line(aes(x=value, y=volume*100, colour=voi, group=id)) +
- 
+
      labs(y='Normalized Volume', title=main, colour='VOI', fill='VOI') +
       scale_color_manual(values=my.cols) +
       scale_fill_manual(values=my.cols) +
       my.ggplot.theme() #+ coord_cartesian(xlim = c(1, 1.25))
   }
-  
+
   if(Nv==1) {
     p <- p + labs(x=variables)
   } else {
@@ -962,14 +964,14 @@ display.dvh <- function(dvh, plan=NULL,
       p <- p + facet_wrap(~variable, scales='free_x')
     }
   }
-  
+
   if(!is.null(file.name)) {ggsave(plot=p, filename=file.name, height=height, width=width)}
   if(show.plot) {print(p)} else {return(p)}
 }
 
 
 #' plot del dvh diff+integral combinato
-#' 
+#'
 #' @import ggplot2
 #' @export
 display.dvh.combined <- function(dvh,
@@ -981,17 +983,17 @@ display.dvh.combined <- function(dvh,
                                  show.plot=TRUE,
                                  original.colors=FALSE,
                                  filename=NULL, width=7, height=7) {
-  
+
   # usa le librerie ggplot2 (per fare prima...)
   #suppressMessages(library(ggplot2))
- 
+
   # massimo numero di pti per dvh da visualizzare
   max.v <- 1000
-  
+
   # check per vedere se è una lista
   if (class(dvh[[1]]) != "numeric") {N <- length(dvh)}
   else {N <- 1; dvh <- list(dvh)}
-  
+
   # text
   if(!is.null(title)) {
     main <- title
@@ -1002,7 +1004,7 @@ display.dvh.combined <- function(dvh,
     if(!is.null(plan)) {main <- paste(plan$name, '- DVHs')}
     else {main <- 'DVHs'}
   }
-  
+
   # crea dataframe per ggplot
   init=1
   for(i in 1:N) {
@@ -1038,10 +1040,10 @@ display.dvh.combined <- function(dvh,
         df.tmp <- df.tmp[index,]
       }
     }
-    
+
     if(i==init) {df <- rbind(df.tmp, df.tmp.diff)} else (df <- rbind(df, df.tmp, df.tmp.diff))
   }
-  
+
   # check per vedere quante variabili ci sono nella lista
   variables <- unique(df$variable)
   Nv <- length(variables)
@@ -1072,8 +1074,8 @@ display.dvh.combined <- function(dvh,
              scale_fill_manual(values=my.cols)
     }
   p <- p + guides(alpha=FALSE, fill=FALSE)
- 
-  
+
+
   if(Nv==1) {
     p <- p + labs(x=variables) + facet_grid(Type~., scales='free_y')
   } else {
@@ -1088,100 +1090,100 @@ display.dvh.combined <- function(dvh,
 
 
 #' plot di "dvh2D per un voi e due variabili specifiche
-#' 
+#'
 #' @import ggplot2
 #' @export
 display.dvh2d <- function(values=values, vois=vois, variables=c('Dose[Gy]', 'Dose[Gy]'), voi=voi, alpha=0.2, means=FALSE, x.lim=NULL, y.lim=NULL) {
 
   #library(grid)
   #library(gtable)
-  
+
   # crea d.f
   df1 <- dataframe.from.values(values=values, vois=vois, variables=variables[1], rois=voi)
   df2 <- dataframe.from.values(values=values, vois=vois, variables=variables[2], rois=voi)
-  
+
   d.f <- data.frame(x=df1$value, y=df2$value)
-  
+
   # Main scatterplot
-  p1 <- ggplot(d.f, aes(x, y)) + 
-    geom_point(alpha=alpha) + 
-    scale_x_continuous(expand = c(0, 0)) + 
-    scale_y_continuous(expand = c(0, 0)) + 
-    expand_limits(y = c(min(d.f$y) - 0.1 * diff(range(d.f$y)), 
-                        max(d.f$y) + 0.1 * diff(range(d.f$y)))) + 
-    expand_limits(x = c(min(d.f$x) - 0.1 * diff(range(d.f$x)), 
-                        max(d.f$x) + 0.1 * diff(range(d.f$x)))) + 
+  p1 <- ggplot(d.f, aes(x, y)) +
+    geom_point(alpha=alpha) +
+    scale_x_continuous(expand = c(0, 0)) +
+    scale_y_continuous(expand = c(0, 0)) +
+    expand_limits(y = c(min(d.f$y) - 0.1 * diff(range(d.f$y)),
+                        max(d.f$y) + 0.1 * diff(range(d.f$y)))) +
+    expand_limits(x = c(min(d.f$x) - 0.1 * diff(range(d.f$x)),
+                        max(d.f$x) + 0.1 * diff(range(d.f$x)))) +
     theme(plot.margin = unit(c(0.2, 0.2, 0.5, 0.5), "lines")) +
     labs(x=variables[1], y=variables[2])
   if(means) {p1 <- p1 + geom_point(x=mean(d.f$x), y=mean(d.f$y), color='red')}
   if(!is.null(x.lim)) {p1 <- p1 + scale_x_continuous(limits=x.lim)}
   if(!is.null(y.lim)) {p1 <- p1 + scale_y_continuous(limits=y.lim)}
-  
+
   # Horizontal marginal density plot - to appear at the top of the chart
-  p2 <- ggplot(d.f, aes(x=x)) + 
-    geom_density(alpha=alpha, trim=TRUE, fill='black') + 
-    scale_x_continuous(expand = c(0, 0)) + 
-    expand_limits(x = c(min(d.f$x) - 0.1 * diff(range(d.f$x)), 
-                        max(d.f$x) + 0.1 * diff(range(d.f$x)))) + 
-    theme(axis.text = element_blank(), 
-          axis.title = element_blank(), 
-          axis.ticks = element_blank(), 
+  p2 <- ggplot(d.f, aes(x=x)) +
+    geom_density(alpha=alpha, trim=TRUE, fill='black') +
+    scale_x_continuous(expand = c(0, 0)) +
+    expand_limits(x = c(min(d.f$x) - 0.1 * diff(range(d.f$x)),
+                        max(d.f$x) + 0.1 * diff(range(d.f$x)))) +
+    theme(axis.text = element_blank(),
+          axis.title = element_blank(),
+          axis.ticks = element_blank(),
           plot.margin = unit(c(1, 0.2, -0.5, 0.5), "lines"))
   if(means) {p2 <- p2 + geom_vline(xintercept=mean(d.f$x), color='red')}
   if(!is.null(x.lim)) {p2 <- p2 + scale_x_continuous(limits=x.lim)}
-  
+
   # Vertical marginal density plot - to appear at the right of the chart
-  p3 <- ggplot(d.f, aes(x=y)) + 
-    geom_density(alpha=alpha, trim=TRUE, fill='black') + 
-    scale_x_continuous(expand = c(0, 0)) + 
-    expand_limits(x = c(min(d.f$y) - 0.1 * diff(range(d.f$y)), 
-                        max(d.f$y) + 0.1 * diff(range(d.f$y)))) + 
-    coord_flip() + 
-    theme(axis.text = element_blank(), 
-          axis.title = element_blank(), 
-          axis.ticks = element_blank(), 
+  p3 <- ggplot(d.f, aes(x=y)) +
+    geom_density(alpha=alpha, trim=TRUE, fill='black') +
+    scale_x_continuous(expand = c(0, 0)) +
+    expand_limits(x = c(min(d.f$y) - 0.1 * diff(range(d.f$y)),
+                        max(d.f$y) + 0.1 * diff(range(d.f$y)))) +
+    coord_flip() +
+    theme(axis.text = element_blank(),
+          axis.title = element_blank(),
+          axis.ticks = element_blank(),
           plot.margin = unit(c(0.2, 1, 0.5, -0.5), "lines"))
   if(means) {p3 <- p3 + geom_vline(xintercept=mean(d.f$y), color='red')}
   if(!is.null(y.lim)) {p3 <- p3 + scale_x_continuous(limits=y.lim)}
-  
+
   # Get the gtables
   gt1 <- ggplot_gtable(ggplot_build(p1))
   gt2 <- ggplot_gtable(ggplot_build(p2))
   gt3 <- ggplot_gtable(ggplot_build(p3))
-  
+
   # Get maximum widths and heights for x-axis and y-axis title and text
   maxWidth <- unit.pmax(gt1$widths[2:3], gt2$widths[2:3])
   maxHeight <- unit.pmax(gt1$heights[4:5], gt3$heights[4:5])
-  
+
   # Set the maximums in the gtables for gt1, gt2 and gt3
   gt1$widths[2:3] <- as.list(maxWidth)
   gt2$widths[2:3] <- as.list(maxWidth)
-  
+
   gt1$heights[4:5] <- as.list(maxHeight)
   gt3$heights[4:5] <- as.list(maxHeight)
-  
+
   # Combine the scatterplot with the two marginal boxplots
   # Create a new gtable
   gt <- gtable(widths = unit(c(7, 2), "null"), height = unit(c(2, 7), "null"))
-  
+
   # Instert gt1, gt2 and gt3 into the new gtable
   gt <- gtable_add_grob(gt, gt1, 2, 1)
   gt <- gtable_add_grob(gt, gt2, 1, 1)
   gt <- gtable_add_grob(gt, gt3, 2, 2)
-  
+
   # And render the plot
   grid.newpage()
   grid.draw(gt)
 }
 
 #' plot multiplo di dvh2D
-#' 
+#'
 #' utilizza una lista di values, di vois, e di voi. C'è flessibilità su come
 #' si può combinare la molteplicità: ad es. il nome del voi specificato
 #' può essere comune a tutti i vois, oppure si può specificare per ciascun
 #' values. E' necessario fornire un vettore per la legenda, per identificare
 #' a mano i diversi contributi.
-#' 
+#'
 #' E' possibile passare dei dataframe di parametri per ogni distribuzione
 #' per i modelli da usare (a cui sono associati coppie di parametri specifiche):
 #' - (Dose, Survival[.LM,.cMKM]) -> model.LQ
@@ -1189,21 +1191,21 @@ display.dvh2d <- function(values=values, vois=vois, variables=c('Dose[Gy]', 'Dos
 #' - i dataframe dei parametri devono avere la forma:
 #' par1, par2, ... , id
 #' dove il numero di righe = length(legend) e id[i] = legend[i]
-#' 
+#'
 #' i parametri hanno i nomi:
 #' model.LQ -> (alpha, beta)
 #' model.LM -> (alpha0, m)
 #' model.cMKM -> (alphaX, betaX, Rn, Rd)
 #' model.MKM -> (alphaX, betaX, Rn, Rd)
-#' 
+#'
 #' se è RBE.alpha=TRUE, viene anche usata l'alphaX (specificata nel modello) per calcolare l'RBE.alpha
 #' del modello
-#' 
+#'
 #' Nota: per il modello cMKM occorre specificare obbligatoriamente l'intervallo xlim
-#' 
+#'
 #' @param legend.position The position of the legend. legend.position = 0 means no legend.
-#' 
-#' 
+#'
+#'
 #' @import ggplot2 gtable grid
 #' @export
 display.dvh2d.multiple <- function(values=values, vois=vois, variables=c('Dose[Gy]', 'Dose[Gy]'), voi=voi,
@@ -1223,14 +1225,14 @@ display.dvh2d.multiple <- function(values=values, vois=vois, variables=c('Dose[G
   alpha <- alpha/sqrt(NN)
 
   message('Nval:', Nval, ' Nvois:', Nvois, ' Nvoi:', Nvoi)
- 
+
   # crea d.f
   for(i in 1:NN) {
-    
+
     if(Nval>1) {my.values <- values[[i]]} else {my.values <- values}
     if(Nvois>1) {my.vois <- vois[[i]]} else {my.vois <- vois}
     if(Nvoi>1) {my.voi <- voi[i]} else {my.voi <- voi}
-    
+
     df1 <- dataframe.from.values(values=my.values,
                                      vois=my.vois,
                                      variables=variables[1],
@@ -1242,18 +1244,18 @@ display.dvh2d.multiple <- function(values=values, vois=vois, variables=c('Dose[G
     df.tmp <- data.frame(x=df1$value, y=df2$value, id=legend[i])
     if(i==1) {d.f <- df.tmp} else {d.f <- rbind(d.f, df.tmp)}
   }
-  
+
   #return(d.f)
-  
+
   # Main scatterplot
-  p1 <- ggplot(d.f, aes(x, y, colour=as.factor(id))) + 
-    geom_point(alpha=alpha/2) + 
-    scale_x_continuous(expand = c(0, 0)) + 
-    scale_y_continuous(expand = c(0, 0)) + 
-    expand_limits(y = c(min(d.f$y) - 0.1 * diff(range(d.f$y)), 
-                        max(d.f$y) + 0.1 * diff(range(d.f$y)))) + 
-    expand_limits(x = c(min(d.f$x) - 0.1 * diff(range(d.f$x)), 
-                        max(d.f$x) + 0.1 * diff(range(d.f$x)))) + 
+  p1 <- ggplot(d.f, aes(x, y, colour=as.factor(id))) +
+    geom_point(alpha=alpha/2) +
+    scale_x_continuous(expand = c(0, 0)) +
+    scale_y_continuous(expand = c(0, 0)) +
+    expand_limits(y = c(min(d.f$y) - 0.1 * diff(range(d.f$y)),
+                        max(d.f$y) + 0.1 * diff(range(d.f$y)))) +
+    expand_limits(x = c(min(d.f$x) - 0.1 * diff(range(d.f$x)),
+                        max(d.f$x) + 0.1 * diff(range(d.f$x)))) +
     theme(plot.margin = unit(c(0.2, 0.2, 0.5, 0.5), "lines")) +
     labs(x=variables[1], y=variables[2], colour=NULL) +
     guides(colour=guide_legend(override.aes=list(alpha=1)))
@@ -1298,7 +1300,7 @@ display.dvh2d.multiple <- function(values=values, vois=vois, variables=c('Dose[G
       if(iMKM==1) {MKM.df <- MKM.df.tmp} else {MKM.df <- rbind(MKM.df, MKM.df.tmp)}
     }
     if(RBE.alpha) {
-      MKM.df$alpha <- MKM.df$alpha/MKM.df$alpha.X	# sostituisce per far prima	      
+      MKM.df$alpha <- MKM.df$alpha/MKM.df$alpha.X	# sostituisce per far prima
     }
     p1 <- p1 + geom_line(data=MKM.df, aes(x=let, y=alpha, colour=id, group=id))
   }
@@ -1306,64 +1308,64 @@ display.dvh2d.multiple <- function(values=values, vois=vois, variables=c('Dose[G
   if(!is.null(x.lim)) {p1 <- p1 + scale_x_continuous(limits=x.lim)}
   if(!is.null(y.lim)) {p1 <- p1 + scale_y_continuous(limits=y.lim)}
   #print(p1)
-  
+
   # Horizontal marginal density plot - to appear at the top of the chart
-  p2 <- ggplot(d.f, aes(x=x, colour=as.factor(id))) + 
-    geom_density(alpha=alpha, trim=TRUE, aes(fill=as.factor(id))) + 
-    scale_x_continuous(expand = c(0, 0)) + 
-    expand_limits(x = c(min(d.f$x) - 0.1 * diff(range(d.f$x)), 
-                        max(d.f$x) + 0.1 * diff(range(d.f$x)))) + 
-    theme(axis.text = element_blank(), 
-          axis.title = element_blank(), 
-          axis.ticks = element_blank(), 
+  p2 <- ggplot(d.f, aes(x=x, colour=as.factor(id))) +
+    geom_density(alpha=alpha, trim=TRUE, aes(fill=as.factor(id))) +
+    scale_x_continuous(expand = c(0, 0)) +
+    expand_limits(x = c(min(d.f$x) - 0.1 * diff(range(d.f$x)),
+                        max(d.f$x) + 0.1 * diff(range(d.f$x)))) +
+    theme(axis.text = element_blank(),
+          axis.title = element_blank(),
+          axis.ticks = element_blank(),
           plot.margin = unit(c(1, 0.2, -0.5, 0.5), "lines")) +
     scale_fill_discrete(guide=FALSE) +
     scale_colour_discrete(guide=FALSE)
   if(means) {p2 <- p2 + geom_vline(xintercept=mean(d.f$x), color='red')}
   if(!is.null(x.lim)) {p2 <- p2 + scale_x_continuous(limits=x.lim)}
   #print(p2)
-  
+
   # Vertical marginal density plot - to appear at the right of the chart
-  p3 <- ggplot(d.f, aes(x=y, colour=as.factor(id))) + 
-    geom_density(alpha=alpha, trim=TRUE, aes(fill=as.factor(id))) + 
-    scale_x_continuous(expand = c(0, 0)) + 
-    expand_limits(x = c(min(d.f$y) - 0.1 * diff(range(d.f$y)), 
-                        max(d.f$y) + 0.1 * diff(range(d.f$y)))) + 
-    coord_flip() + 
-    theme(axis.text = element_blank(), 
-          axis.title = element_blank(), 
-          axis.ticks = element_blank(), 
+  p3 <- ggplot(d.f, aes(x=y, colour=as.factor(id))) +
+    geom_density(alpha=alpha, trim=TRUE, aes(fill=as.factor(id))) +
+    scale_x_continuous(expand = c(0, 0)) +
+    expand_limits(x = c(min(d.f$y) - 0.1 * diff(range(d.f$y)),
+                        max(d.f$y) + 0.1 * diff(range(d.f$y)))) +
+    coord_flip() +
+    theme(axis.text = element_blank(),
+          axis.title = element_blank(),
+          axis.ticks = element_blank(),
           plot.margin = unit(c(0.2, 1, 0.5, -0.5), "lines")) +
     scale_fill_discrete(guide=FALSE) +
     scale_colour_discrete(guide=FALSE)
   if(means) {p3 <- p3 + geom_vline(xintercept=mean(d.f$y), color='red')}
   if(!is.null(y.lim)) {p3 <- p3 + scale_x_continuous(limits=y.lim)}
-  
+
   # Get the gtables
   gt1 <- ggplot_gtable(ggplot_build(p1))
   gt2 <- ggplot_gtable(ggplot_build(p2))
   gt3 <- ggplot_gtable(ggplot_build(p3))
-  
+
   # Get maximum widths and heights for x-axis and y-axis title and text
   maxWidth <- unit.pmax(gt1$widths[2:3], gt2$widths[2:3])
   maxHeight <- unit.pmax(gt1$heights[4:5], gt3$heights[4:5])
-  
+
   # Set the maximums in the gtables for gt1, gt2 and gt3
   gt1$widths[2:3] <- as.list(maxWidth)
   gt2$widths[2:3] <- as.list(maxWidth)
-  
+
   gt1$heights[4:5] <- as.list(maxHeight)
   gt3$heights[4:5] <- as.list(maxHeight)
-  
+
   # Combine the scatterplot with the two marginal boxplots
   # Create a new gtable
   gt <- gtable(widths = unit(c(7, 2), "null"), height = unit(c(2, 7), "null"))
-  
+
   # Instert gt1, gt2 and gt3 into the new gtable
   gt <- gtable_add_grob(gt, gt1, 2, 1)
   gt <- gtable_add_grob(gt, gt2, 1, 1)
   gt <- gtable_add_grob(gt, gt3, 2, 2)
-  
+
   # And render the plot
   if(!is.null(file.name)) {
     png(filename=file.name, width=width, height=height, res=300, units='in')
@@ -1377,10 +1379,10 @@ display.dvh2d.multiple <- function(values=values, vois=vois, variables=c('Dose[G
 
 
 #' Visualizza una banda sul DVH
-#' 
+#'
 #' accetta una lista "dvh.bands" (composta da due dvh: dvh.max e dvh.min)
 #' se first.is.reference=TRUE allora visualizza il primo dvh della lista come riferimento (non è quindi usato per calcolare le bande)
-#' 
+#'
 #' @export
 #' @import ggplot2
 display.dvh.bands <- function(dvh,
@@ -1398,7 +1400,7 @@ display.dvh.bands <- function(dvh,
 
   # usa le librerie ggplot2 (per fare prima...)
   #suppressMessages(library(ggplot2))
-  
+
   # se nella lista dvh ci sono più di 2 sv, allora calcola direttamente
   # le bande
   if(eval.bands) {
@@ -1410,18 +1412,18 @@ display.dvh.bands <- function(dvh,
       dvh <- dvh.evaluate.bands(dvh, alpha)
     }
   }
-  
+
   # crea dataframe per ggplot
   df <- data.frame(volume=dvh[[1]]$volume,
                    value.mean=dvh$dvh.mean$value,
                    value.median=dvh$dvh.median$value,
                    value.up=dvh$dvh.alpha.up$value,
                    value.lo=dvh$dvh.alpha.lo$value)
-  
+
   if(!is.null(plan)) {
     tit <- paste(plan$name, ' - ', dvh[[1]]$voi, sep='')
   } else {tit <- dvh[[1]]$voi}
-  
+
   p <- ggplot(df) +
     geom_ribbon(alpha=alpha.color, aes(x=volume*100, ymax=value.up, ymin=value.lo)) +
     coord_flip() +
@@ -1441,15 +1443,15 @@ display.dvh.bands <- function(dvh,
 
   if(!is.null(file.name)) {ggsave(plot=p, filename=file.name, width=width, height=height)}
   if(show.plot) {print(p)} else {return(p)}
-  
+
 }
 
 
 #' Visualizza una banda sui DVH
-#' 
+#'
 #' accetta una lista di "dvh"
 #' i dvh vengono raggruppati a seconda del nome contenuto in dvh$voi.
-#' 
+#'
 #' @export
 #' @import ggplot2
 display.dvh.bands.multiple <- function(dvh,
@@ -1463,16 +1465,16 @@ display.dvh.bands.multiple <- function(dvh,
                                        with.mean=TRUE,
                                        with.median=TRUE,
                                        title=NULL) {
-  
+
   # usa le librerie ggplot2 (per fare prima...)
   #suppressMessages(library(ggplot2))
-  
+
   # fa diventare il dvh.reference una lista
   if(!is.null(dvh.reference) & (!is.null(names(dvh.reference)) | length(names(dvh.reference)[1]=='value')!=0)) {
     message('one dvh for reference...')
     dvh.reference <- list(dvh.reference)
   }
-  
+
   # identifica i nomi dei diversi voi:
   Ndvh <- length(dvh)
   voi <- rep('', Ndvh)
@@ -1482,7 +1484,7 @@ display.dvh.bands.multiple <- function(dvh,
   voi <- unique(voi)
   message('found vois: ', paste(voi, collapse=', '))
 
-  
+
   # CREA dataframe DVH reference
   if(!is.null(dvh.reference)) {
     for(i in 1:length(dvh.reference)){
@@ -1495,19 +1497,19 @@ display.dvh.bands.multiple <- function(dvh,
 
   # MAIN LOOP sui voi - DVHs
   for(vv in 1:length(voi)) {
-    
+
     # identifica i DVH per il voi specifico
     dvh.tmp <-  list()
     index <- 1
     for(i in 1:Ndvh) {
       if(dvh[[i]]$voi==voi[vv]) {dvh.tmp[[index]] <- dvh[[i]]; index <- index+1}
     }
-  
+
     # calcola direttamente
     # le bande
     message('evaluating bands...')
     dvh.bands <- dvh.evaluate.bands(dvh.tmp, alpha)
-  
+
     # crea dataframe per ggplot
     df.tmp <- data.frame(volume=dvh.bands[[1]]$volume,
                          value.mean=dvh.bands$dvh.mean$value,
@@ -1515,17 +1517,17 @@ display.dvh.bands.multiple <- function(dvh,
                          value.up=dvh.bands$dvh.alpha.up$value,
                          value.lo=dvh.bands$dvh.alpha.lo$value,
                          voi=voi[vv])
-  
+
     if(vv==1) {df <- df.tmp} else {df <- rbind(df, df.tmp)}
   }
-  
+
   p <- ggplot(df) +
     geom_ribbon(alpha=alpha.color, aes(x=volume*100, ymax=value.up, ymin=value.lo, fill=voi)) +
     coord_flip() +
     labs(title=title, y=dvh[[1]]$variable, x='%Volume') +
     my.ggplot.theme()
-  
-  
+
+
   if(with.mean) {
     p <- p + geom_line(aes(x=volume*100, y=value.mean, colour=voi))
   }
@@ -1536,10 +1538,10 @@ display.dvh.bands.multiple <- function(dvh,
     p <- p + geom_line(data=df.reference, aes(x=volume*100, y=value, colour=voi))
   }
 
-  
+
   if(!is.null(file.name)) {ggsave(plot=p, filename=file.name, width=width, height=height)}
   if(show.plot) {print(p)} else {return(p)}
-  
+
 }
 
 
@@ -1547,11 +1549,11 @@ display.dvh.bands.multiple <- function(dvh,
 
 
 #' rendering di isosuperfici da matrice values
-#' 
+#'
 #' @param mask a function of 3 arguments returning a logical array, a three dimensional logical array, or NULL. If not NULL, only cells for which mask is true at all eight vertices are used in forming the contour. Can also be a list of functions the same length as level.
-#' 
+#'
 #' Rendering remoto usando Xvfb (da implementare)
-#' 
+#'
 #' @export
 #' @import rgl misc3d
 
@@ -1559,7 +1561,7 @@ render.isosurfaces <- function(values, variable=NULL, levels=0, add=FALSE, alpha
 {
   library(rgl)
   library(misc3d)
-  
+
   # identifica variabile
   v.index <- which(values$variable==variable)
   Nv <- length(values$variables)
@@ -1568,7 +1570,7 @@ render.isosurfaces <- function(values, variable=NULL, levels=0, add=FALSE, alpha
   } else {
     v.array <- values$values[v.index,,,]
   }
-  
+
   if(is.null(color)) {
     Ncol <- length(levels)
     my.cols <- rainbow(Ncol, start=0, end=0.6)[Ncol:1]
@@ -1576,64 +1578,64 @@ render.isosurfaces <- function(values, variable=NULL, levels=0, add=FALSE, alpha
   if(is.null(alpha)) {
     alpha <- 1/length(levels)
   }
-  
+
   if(!is.null(mask)) {message('mask:');print(mask)}
-  
+
   contour3d(v.array, levels, values$x, values$y, values$z, smooth=TRUE, add=add, alpha=alpha, color=my.cols, mask=mask)
-  
+
   if(!add) {
     box3d()
     #rgl.viewpoint(30, 30, zoom=1, fov=30)
   }
-  
+
   if(axes & !add) {axes3d(box=TRUE)}
-  
+
   if(!is.null(file.name)) {snapshot3d(file.name)}
-  
+
 }
 
 
 #' rendering 3D dei voi con isosuperfici
-#' 
-#' @param mask a function of 3 arguments returning a logical array, a three dimensional logical array, or NULL. If not NULL, only cells for which mask is true at all eight vertices are used in forming the contour. 
-#' 
+#'
+#' @param mask a function of 3 arguments returning a logical array, a three dimensional logical array, or NULL. If not NULL, only cells for which mask is true at all eight vertices are used in forming the contour.
+#'
 #' @export
 
 render.voi.isosurfaces <- function(vois=vois, voi=PTV, file.name=NULL, add=FALSE, alpha=NULL, mask=NULL)
 {
-  
+
   vois.v <- vois
-  
+
   Ncol <- length(voi)
-  my.cols <- rainbow(round(Ncol*1.5))[1:Ncol] 
-  
+  my.cols <- rainbow(round(Ncol*1.5))[1:Ncol]
+
   for(i in 1:length(voi))
   {
     message('evaluating isosurface for: ', voi[i])
-    
+
     # crea la matrice values corrispondente al voi specificato per rendering con isosuperfici
     voi.index <- get.voi.logical(vois=vois, voi=voi[i])
     vois.v$values <- array(data=as.numeric(voi.index), dim=c(vois$Nx, vois$Ny, vois$Nz))
-    
+
     vois.v$variables <- voi[i]
-    
+
     if(i==1 & add==FALSE) {add <- FALSE} else {add <- TRUE}
     if(is.null(alpha)) {alpha <- 1/length(voi)}
-    
+
     if(sum(vois.v$values)>0) {
       render.isosurfaces(values=vois.v, variable=voi[i], levels=0.5, add=add, alpha=alpha, color=my.cols[i], file.name=file.name, mask=mask)
     }
   }
-  
+
 
 }
 
 #' mostra slice in maniera interattiva
-#' 
+#'
 #' usa il pacchetto tkrplot (installa prima tk-dev con apt-get)
 #' può visualizzare più di una variabile simultaneamente (mappandola sul "tempo")
 #' (questo magari lo riformulerò quando userò immagini 4D...)
-#' 
+#'
 #' @export
 #' @import tkrplot
 
@@ -1641,7 +1643,7 @@ display.slices.interactive <- function(values=values, variables=NULL, gray=FALSE
 {
   library(rgl)
   library(misc3d)
-  
+
   # identifica variabili e formatta l'array temporale
   if(is.null(variables)) {variables <- values$variables}
   if(length(values$variables)==1) {
@@ -1654,23 +1656,23 @@ display.slices.interactive <- function(values=values, variables=NULL, gray=FALSE
     index.v <- which(values$variables==variables)
     v.array <- values$values[index.v,,,]
   }
-  
+
   if(!gray) {
     Ncol <- 256
     my.cols <- rainbow(Ncol, start=0, end=0.6)[Ncol:1]
   }
-  
+
   slices3d(vol1=v.array, col1=my.cols)
-  
+
 }
 
 
 # DISPLAY PROFILE FUNCTIONS ----------------------------------------------------
 
 #' Display profile
-#' 
+#'
 #' Display the profile. Optionally the profile could be plotted over a background color gradient representing the ct data (or other values).
-#' 
+#'
 #' @param profile.values the main profile dataframe to be plotted. It can be a single profile or a list of profiles
 #' @param profile.ct the background ct (or other data) profile
 #' @param profile.names a vector containing the names of the profiles. It is used if a list of different profiles is used as input.
@@ -1693,7 +1695,7 @@ display.profile <- function(profile.values,
                             height=7,
                             width=7,
                             return.dataframe=FALSE) {
-  
+
   #crea intervalli per la ct
   if(!is.null(profile.ct)) {
     names(profile.ct) <- c('variable', 'axis', 'depth', 'value.ct')
@@ -1702,8 +1704,8 @@ display.profile <- function(profile.values,
     profile.ct$depth.max <- profile.ct$depth + d.depth/2
     ct.variable <- unique(profile.ct$variable)
   }
-  
-  
+
+
   if(class(profile.values)=='list')
   {
     # combina eventuale lista profili in un unico dataframe
@@ -1719,16 +1721,16 @@ display.profile <- function(profile.values,
       profile.values.df.tmp$id <- i
       if(i==1) {profile.values.df <- profile.values.df.tmp} else {profile.values.df <- rbind(profile.values.df, profile.values.df.tmp)}
     }
-    
+
     # estremi espliciti
     y.lim <- range(profile.values.df$value)
     if(diff(y.lim)==0) {y.lim <- c(y.lim[1]-0.5, y.lim[2]+0.5)}
     x.lim <- range(profile.values.df$depth)
-    
+
     # variabile e asse del profilo
     values.variable <- unique(profile.values.df$variable)
     values.axis <- unique(profile.values.df$axis)
-    
+
     #plot
     p <- ggplot()
     if(!is.null(profile.ct)) {
@@ -1739,21 +1741,21 @@ display.profile <- function(profile.values,
     p <- p + geom_line(data=profile.values.df, aes(x=depth, y=value, colour=name, group=id)) +
       labs(x=values.axis, y=values.variable)
   }
-  
+
   else
-  
+
   {
-    
+
     # estremi espliciti
     y.lim <- range(profile.values$value)
     if(diff(y.lim)==0) {y.lim <- c(y.lim[1]-0.5, y.lim[2]+0.5)}
     x.lim <- range(profile.values$depth)
-    
+
     # variabile e asse del profilo
     values.variable <- unique(profile.values$variable)
     values.axis <- unique(profile.values$axis)
-    
-    
+
+
     p <- ggplot()
     if(!is.null(profile.ct)) {
       p <- p + geom_rect(data=profile.ct, ymin=y.lim[1], ymax=y.lim[2], aes(xmin=depth.min, xmax=depth.max, fill=value.ct)) +
@@ -1765,7 +1767,7 @@ display.profile <- function(profile.values,
   }
 
   if(!is.null(depth.lim)) {p <- p + scale_x_continuous(limits=depth.lim)}
-  
+
   my.ggplot.theme()
   if(!is.null(file.name)) {ggsave(plot=p, filename=file.name, height=height, width=width)}
   if(return.dataframe) {return(profile.values.df)}
@@ -1776,41 +1778,41 @@ display.profile <- function(profile.values,
 # UTILITIES ====================================================================
 
 #' Generate gray colormap for Hounsfield numbers
-#' 
+#'
 #' @param HU.range The range c(HU.min, HU.max) of the Hounsfield numbers of the CT
 #' @param HU.windos The range c(HU.min, HU.max) to map to c(0,1) gray map.
 #' @export
 colormap.ct <- function(HU.range=c(-1000, 3000), HU.window=c(-1000,3000))
 {
-  
+
   # controlla se la finestra è fuori range...
   scaling.HU.window <- FALSE
   if(HU.window[1]<HU.range[1]) {HU.window[1] <- HU.range[1]; scaling.HU.window <- TRUE}
   if(HU.window[2]>HU.range[2]) {HU.window[2] <- HU.range[2]; scaling.HU.window <- TRUE}
   if(scaling.HU.window) {message('HU.window scaled to HU.range')}
-  
 
-  
+
+
   Nc <- max(HU.range[2] - HU.range[1], 2)
 
   interval <- ((1:Nc)-1)/Nc
-  
+
   if(diff(HU.range)==0) {
     col.ct <- 0.5
     return(col.ct)
   }
-  
-  
+
+
   wmin <- max(HU.window[1] - HU.range[1], 1)
   wmax <- min(HU.window[2] - HU.range[1], Nc)
-  
+
   #message(wmin, ' ', wmax)
   #print(interval)
-  
+
   interval[1:wmin] <- 0
   interval[(wmin+1):(wmax)] <- seq(0, 1, length.out=(wmax-wmin))
   interval[(wmax+1):Nc] <- 1
-  
+
   col.ct <- gray(interval)
 
   return(col.ct)
@@ -1825,7 +1827,7 @@ my.ggplot.theme <- function(size=16)
   theme_set(theme_bw(size))
   pt <- theme(legend.key = element_rect(colour = 'white')) +
     theme(panel.border = element_rect(colour = "black"))
-  
+
     # altre possibilità..
     # theme(panel.grid.major = element_line(colour = rgb(0.8, 0.8, 0.8)))
   return(pt)
@@ -1835,7 +1837,7 @@ my.ggplot.theme <- function(size=16)
 # BEAMS DISPLAY FUNCTIONS ------------------------------------------------------
 
 #' Beam statistics plot
-#' 
+#'
 #' @param beams The beams dataframe.
 #' @param plan The plan object.
 #' @param numeric Display a numeric ID for the fields (default uses a beamLine+angles code).
@@ -1843,6 +1845,7 @@ my.ggplot.theme <- function(size=16)
 #' @param file.name File name for saving the plot.
 #' @param height The height of the saved plot image (inches).
 #' @param width The width of the saved plot image (inches).
+#' @param dpi dpi of the saved image.
 #' @return If show.plot=FALSE, it returns a ggplot object.
 #' @export
 #' @import ggplot2
@@ -1854,55 +1857,57 @@ display.beams <- function(beams,
                           show.plot=TRUE,
                           file.name=NULL,
                           height=7,
-                          width=7)
+                          width=7,
+                          dpi=300)
 {
   if(!is.null(plan)) {
     my.title <- paste(plan$name, 'Beams', sep=' - ')
   } else {
     my.title <- 'Beams'
   }
-  
+
   # aggiunge field ID
   if(!('field' %in% colnames(beams))) {beams <- add.field(beams, numeric=numeric)}
-  
+
   # digits
   beams$energy.f <- as.factor(round(beams$energy, digits=1))
-  
+
   # plot
+  my.ggplot.theme()
   p <- ggplot(beams) +
     stat_bin(aes(x=energy.f, weight=fluence, fill=field)) +
     coord_flip() +
     labs(y='Total number of primary ions', x='Energy Layers [MeV/u]', title=my.title) +
     theme(axis.title.y=element_text(vjust=.2))
-  my.ggplot.theme()
-  
-  if(!is.null(file.name)) {ggsave(plot=p, filename=file.name, height=height, width=width)}
+
+
+  if(!is.null(file.name)) {ggsave(plot=p, filename=file.name, height=height, width=width, dpi = dpi)}
   if(show.plot) {print(p)} else {return(p)}
 }
 
 
 #' Display spots (3D)
-#' 
+#'
 #' @param beams the beams dataframe
 #' @param vois the vois object
 #' @param voi(s) names
 #' @param display.iso display the isocenter
 #' @param alpha.spot the opacity value for the spot points
-#' 
+#'
 #' @export
 #' @import rgl misc3d
 display.spots <- function(beams, vois=NULL, voi=NULL, display.iso=TRUE, alpha.spot=0.2, alpha.voi=1)
 {
   # plot 3d
   plot3d(beams$x_s, beams$y_s, beams$z_s, xlab='x [mm]', ylab='y [mm]', zlab='z [mm]', type='p', size=1, alpha.spot=alpha.spot)
-  
+
   # isocentro
   if(display.iso) {
     iso <- aggregate(data.frame(N=rep(1,nrow(beams))), by=list(x=beams$x_iso, y=beams$y_iso, z=beams$z_iso), sum)
     print(iso)
     plot3d(iso$x, iso$y, iso$z, type='p', size=10, col='red', add=TRUE)
   }
-  
+
   # vois
   if(!is.null(vois) & !is.null(voi)) {
     render.voi.isosurfaces(vois=vois, voi=voi, add=TRUE, alpha=alpha.voi)
@@ -1911,7 +1916,7 @@ display.spots <- function(beams, vois=NULL, voi=NULL, display.iso=TRUE, alpha.sp
 
 
 #' Display rays (3D)
-#' 
+#'
 #' @param rays the rays dataframe.
 #' @param alpha the opacity value for the point and lines.
 #' @param ray.length Length of the rays. If ray.lengt=0 ti will plot only the spots.
@@ -1933,7 +1938,7 @@ display.rays <- function(rays, alpha=1, ray.length=1, add=FALSE)
 
 
 #' Beam-port splot
-#' 
+#'
 #' @param beams beams dataframe.
 #' @param plan The plan object.
 #' @param numeric Display a numeric ID for the fields (default uses a beamLine+angles code).
@@ -1941,6 +1946,7 @@ display.rays <- function(rays, alpha=1, ray.length=1, add=FALSE)
 #' @param file.name File name for saving the plot.
 #' @param height The height of the saved plot image (inches).
 #' @param width The width of the saved plot image (inches).
+#' @param dpi The dpi of the saved image.
 #' @return If show.plot=FALSE, it returns a ggplot object.
 #' @export
 #' @import ggplot2
@@ -1951,19 +1957,20 @@ display.beamports <- function(beams,
                           show.plot=TRUE,
                           file.name=NULL,
                           height=7,
-                          width=7)
+                          width=7,
+                          dpi=300)
 {
   if(!is.null(plan)) {
     my.title <- paste(plan$name, 'Beam-ports', sep=' - ')
   } else {
     my.title <- 'Beam-ports (fields)'
   }
-  
+
   # aggiunge field ID
   beams <- add.field(beams, numeric=numeric)
-  
+
   beams.a <- aggregate(list(Npart=beams$fluence), list(deflX=beams$deflX, deflY=beams$deflY, beam.port=beams$field), sum)
-  
+
   # plot
   p <- ggplot(beams.a) +
     geom_point(aes(x=deflX, y=deflY, colour=Npart, size=Npart)) +
@@ -1971,7 +1978,7 @@ display.beamports <- function(beams,
     facet_wrap(~beam.port)
     #theme(axis.title.y=element_text(vjust=.2))
   my.ggplot.theme()
-  
+
   if(!is.null(file.name)) {ggsave(plot=p, filename=file.name, height=height, width=width)}
   if(show.plot) {print(p)} else {return(p)}
 }

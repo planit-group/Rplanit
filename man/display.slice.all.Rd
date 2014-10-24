@@ -8,7 +8,7 @@ display.slice.all(ct = NULL, contours = NULL, values = NULL,
   cont = FALSE, isoc = FALSE, xlim = NULL, ylim = NULL, zlim = NULL,
   vlim = NULL, file.name = NULL, width = 7, height = 7,
   HU.window = c(-1000, 3000), alpha.lower = 0, alpha.upper = 1,
-  invert.y.axis = FALSE, contour.color = "green")
+  invert.y.axis = FALSE, contour.color = "green", dpi = 300)
 }
 \arguments{
 \item{ct}{the ct object (optional, if plan is specified)}
@@ -42,6 +42,8 @@ display.slice.all(ct = NULL, contours = NULL, values = NULL,
 \item{invert.y.axis}{Invert the y axis.}
 
 \item{contour.color}{The color used for the contour of the VOI.}
+
+\item{dpi}{dpi of the saved image.}
 
 \item{Nx,Ny,Nz}{slice index to be displayed. Only one of them should be defined, corresponding to an axial, coronal or sagittal slice (optional)}
 
