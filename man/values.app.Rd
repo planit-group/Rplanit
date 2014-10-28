@@ -19,5 +19,6 @@ values.app(plan = NULL, values = NULL, ct = NULL, contours = NULL,
 Start an interactive GUI (web app) to explore the evaluated values ditribution.
 It can use directly  a plan object as argument (deriving from it the corresponding values, ct and contours objects to visualize).
 It can accept also a list of plan objects, to explore simultaneusly different plans.
+(A full web based app will be released in future.)
 }
 
