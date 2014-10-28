@@ -4,7 +4,8 @@
 \title{Beam statistics plot}
 \usage{
 display.beams(beams, plan = NULL, numeric = FALSE, show.plot = TRUE,
-  file.name = NULL, height = 7, width = 7, dpi = 300)
+  file.name = NULL, height = 7, width = 7, dpi = 300,
+  field.names = NULL)
 }
 \arguments{
 \item{beams}{The beams dataframe.}
@@ -20,6 +21,8 @@ display.beams(beams, plan = NULL, numeric = FALSE, show.plot = TRUE,
 \item{width}{The width of the saved plot image (inches).}
 
 \item{dpi}{dpi of the saved image.}
+
+\item{field.names}{Optional vector of the names for the different fields}
 
 \item{shot.plot}{Show plot.}
 }

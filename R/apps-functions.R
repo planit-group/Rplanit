@@ -5,8 +5,7 @@
 #' 
 #' Start an interactive GUI (web app) to explore the evaluated values ditribution.
 #' It can use directly  a plan object as argument (deriving from it the corresponding values, ct and contours objects to visualize).
-#' It can accept also a list of
-#' plan objects, to explore simultaneusly different plans.
+#' It can accept also a list of plan objects, to explore simultaneusly different plans.
 #' @param plan The plan object
 #' @param values The values object (optional if plan is given)
 #' @param ct The CT object (optional)

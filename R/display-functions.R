@@ -1846,6 +1846,7 @@ my.ggplot.theme <- function(size=16)
 #' @param height The height of the saved plot image (inches).
 #' @param width The width of the saved plot image (inches).
 #' @param dpi dpi of the saved image.
+#' @param field.names Optional vector of the names for the different fields
 #' @return If show.plot=FALSE, it returns a ggplot object.
 #' @export
 #' @import ggplot2
@@ -1858,7 +1859,8 @@ display.beams <- function(beams,
                           file.name=NULL,
                           height=7,
                           width=7,
-                          dpi=300)
+                          dpi=300,
+                          field.names=NULL)
 {
   if(!is.null(plan)) {
     my.title <- paste(plan$name, 'Beams', sep=' - ')
@@ -1868,6 +1870,7 @@ display.beams <- function(beams,
 
   # aggiunge field ID
   if(!('field' %in% colnames(beams))) {beams <- add.field(beams, numeric=numeric)}
+  if(!is.null(field.names)) {beams$field <- field.names[beams$field]}
 
   # digits
   beams$energy.f <- as.factor(round(beams$energy, digits=1))
@@ -1947,6 +1950,7 @@ display.rays <- function(rays, alpha=1, ray.length=1, add=FALSE)
 #' @param height The height of the saved plot image (inches).
 #' @param width The width of the saved plot image (inches).
 #' @param dpi The dpi of the saved image.
+#' @param field.names Optional vector of the names for the different fields
 #' @return If show.plot=FALSE, it returns a ggplot object.
 #' @export
 #' @import ggplot2
@@ -1958,7 +1962,8 @@ display.beamports <- function(beams,
                           file.name=NULL,
                           height=7,
                           width=7,
-                          dpi=300)
+                          dpi=300,
+                          field.names=NULL)
 {
   if(!is.null(plan)) {
     my.title <- paste(plan$name, 'Beam-ports', sep=' - ')
@@ -1968,6 +1973,7 @@ display.beamports <- function(beams,
 
   # aggiunge field ID
   beams <- add.field(beams, numeric=numeric)
+  if(!is.null(field.names)) {beams$field <- field.names[beams$field]}
 
   beams.a <- aggregate(list(Npart=beams$fluence), list(deflX=beams$deflX, deflY=beams$deflY, beam.port=beams$field), sum)
 
