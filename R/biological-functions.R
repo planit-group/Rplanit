@@ -29,7 +29,7 @@ mkm.upper <- c(1,1,10,1)
 #' Evaluation of Linear-Quadratic (LQ) Poisson Model parameters
 #'
 #' It translates R, D50 and gamma parameters to alphaX and betaX.
-#' 
+#'
 #' Note: d.ref è la dose per frazione di riferimento
 #' in cui sono fittati i dati per D50, gam.
 #' Per il momento d.ref non è usato: si assume una condizione di riferimento
@@ -40,11 +40,11 @@ mkm.upper <- c(1,1,10,1)
 #' @param gam  the gamma parameter (associated to the clonogenic density).
 #' @param d.ref  the reference dose at which D50 and gam are fitted (usually 2 Gy).
 #' @param d  the actual level of dose for the evaluation of alphaX, betaX.
-#' 
+#'
 #' @return A list consisting of:
 #' \item{alphaX}{the LQ alpha parameter}
 #' \item{betaX}{the LQ beta parameter}
-#' 
+#'
 #' @family Basic Biological Models
 #' @export
 alpha.beta.lqp <- function(R=R, D50=D50, gam=gam, d.ref=2, d=2)
@@ -53,21 +53,21 @@ alpha.beta.lqp <- function(R=R, D50=D50, gam=gam, d.ref=2, d=2)
   D50 <- D50*(1+d.ref/R)/(1+d/R)
   alphaX <- (e*gam-log(log(2)))/(D50*(1+d/R))
   betaX  <- (e*gam-log(log(2)))/(D50*(R+d))
-  return(list(alphaX=alphaX, betaX=betaX)) 
+  return(list(alphaX=alphaX, betaX=betaX))
 }
 
 
 #' Evaluation of dose-depending RBE
-#' 
+#'
 #' Evaluate the Relative Biological effectiveness (RBE) of the actual radiation.
 #' It uses the parameters: alpha, beta, alphaX and betaX
-#' 
+#'
 #' @param alpha,beta LQ parameters for the actual radiation.
 #' @param alphaX,betaX LQ parameters for the reference radiation.
 #' @param dose dose (Gy)
-#' 
+#'
 #' @return the value of the RBE
-#' 
+#'
 #' @family Basic Biological Models
 #' @export
 rbe.evaluate <- function(alpha=alpha, beta=beta, dose=dose, alphaX=alphaX, betaX=betaX) {
@@ -85,14 +85,14 @@ rbe.evaluate <- function(alpha=alpha, beta=beta, dose=dose, alphaX=alphaX, betaX
 #'TCP (Poissonian Model, Biological Dose)
 #'
 #' Evaluate the Tumor Control Probability (TCP) using the Poissonian Model from the knowledge of the biological dose distribution.
-#' 
+#'
 #' The default parameters are taken from the example in [in Bentzen1997]
 #' plus the R=alphaX/betaX parameter for tumoral tissues.
-#'  
+#'
 #' By default it is assumed that the \code{dvh.dose} contains the biological dose dvh [Gy(E)]. Alternatively it could contain the "physical" dose [Gy] and the biological dose is evaluated by specifying the RBE per fraction (assumed to be constant over the irradiated volume).
 #'
 #' If alphaX and betaX are not explicity defined, they were deduced from \code{D50}, \code{gam} and \code{R}
-#' 
+#'
 #' @param dvh.dose a dvh object in which is stored the dose (biological dose) for the specific volume.
 #' @param D50,R,gam tissue specific biological parameters: tolerance dose at 50\%, R=alphaX/betaX, clonogenic density.
 #' @param alphaX,betaX alternatively to (D50, R, gam), it is possible to use directly the LQ parameters as biological parameters. These parameters can be vectors.
@@ -100,17 +100,17 @@ rbe.evaluate <- function(alpha=alpha, beta=beta, dose=dose, alphaX=alphaX, betaX
 #' @param Nf number of fractions.
 #' @param G Lea-Catcheside dose-protraction factor (if not define it is assumed complete repair between fractions, G=1/Nf).
 #' @param RBE Relative Biological Effectivenes.
-#' 
+#'
 #' @return The TCP value
-#' 
+#'
 #' @family General TCP/NTCP Models
 #' @export
-#' 
+#'
 tcp.lqp <- function(dvh.dose=dvh.dose, D50=66, R=10,  gam=2, d=2, alphaX=NULL, betaX=NULL, Nf=30, G=NULL, RBE=1)
 {
   # costanti
   e <- exp(1)
- 
+
   # ricava i valori di alphaX e betaX
   if((is.null(alphaX) | is.null(betaX))) {
     alphaX <- alpha.beta.lqp(R, D50, gam, d)$alphaX
@@ -136,7 +136,7 @@ tcp.lqp <- function(dvh.dose=dvh.dose, D50=66, R=10,  gam=2, d=2, alphaX=NULL, b
 
 
 #' NTCP (Biological Dose, Relative Seriality Model [Kallman1992a])
-#' 
+#'
 #' It Uses as default parameters those of the "spinal cord" [from Su2010].
 #'
 #' @param dvh.dose a dvh object in which is stored the dose (biological dose) for the specific volume.
@@ -147,12 +147,12 @@ tcp.lqp <- function(dvh.dose=dvh.dose, D50=66, R=10,  gam=2, d=2, alphaX=NULL, b
 #' @param Nf number of fractions.
 #' @param G Lea-Catcheside dose-protraction factor (if not define it is assumed complete repair between fractions, G=1/Nf).
 #' @param RBE Relative Biological Effectivenes.
-#' 
+#'
 #' @return The NTCP value
-#' 
+#'
 #' @family General TCP/NTCP Models
 #' @export
-#' 
+#'
 ntcp.kallman <- function(dvh.dose, D50=57, R=3,  gam=6.7, s=1, d=2, alphaX=NULL, betaX=NULL, Nf=30, G=NULL, RBE=1)
 {
   # costanti
@@ -182,33 +182,33 @@ ntcp.kallman <- function(dvh.dose, D50=57, R=3,  gam=6.7, s=1, d=2, alphaX=NULL,
 
 
 #' TCP (Biological Dose, Poissonian Model, Variable fractions)
-#' 
+#'
 #' TCP evaluation from the biological dose, using arbitrary set of fractions.
-#' 
+#'
 #' The total treatment correspond to a "train" of acute doses distribution (with no time correlation, i.e. full-repair is assumed).
 #' The biological dose distribution, for each voxel, can be different among fractions.
 #' Hence a list of DVH objects is needed. Each element of the list correspond to a DHV evaluated for a specific fraction.
-#' 
+#'
 #' By default it is assumed that the \code{dvh.dose} contains the biological dose dvh [Gy(E)]. Alternatively it could contain the "physical" dose [Gy] and the biological dose is evaluated by specifying the RBE per fraction (assumed to be constant over the irradiated volume).
 #'
 #' If alphaX and betaX are not explicity defined, they were deduced from \code{D50}, \code{gam} and \code{R}.
-#' 
+#'
 #' @param dvhs a list of biological dose DVHs
 #' @param D50,R,gam tissue specific biological parameters: tolerance dose at 50\%, R=alphaX/betaX, clonogenic density
 #' @param d dose per fraction
 #' @param Nf number of fractions
 #' @param RBE Relative Biological Effectivenes
-#' 
+#'
 #' @return The TCP value
-#' 
+#'
 #' @family General TCP/NTCP Models
 #' @export
-#' 
+#'
 tcp.lqp.train <- function(dvhs, D50=66, R=10,  gam=2, d=2, alphaX=NULL, betaX=NULL, RBE=1)
 {
   # costanti
   e <- exp(1)
-  
+
   # ricava i valori di alphaX e betaX
   if((is.null(alphaX) | is.null(betaX))) {
     alphaX <- alpha.beta.lqp(R, D50, gam, d)$alphaX
@@ -217,14 +217,14 @@ tcp.lqp.train <- function(dvhs, D50=66, R=10,  gam=2, d=2, alphaX=NULL, betaX=NU
   #cat('LQ parameters:\n')
   #cat('alphaX =', mean(alphaX), 'Gy^(-1)\n')
   #cat('betaX =', mean(betaX), 'Gy^(-2)\n')
-  
+
   # numero di frazioni
   Nf <- length(dvhs)
   #message('Number of fractions: ', Nf)
-  
+
   # volume elemetare (frazione). Assume che le divere frazioni abbiano la stessa griglia di voxel
   dv <- 1/dvhs[[1]]$Nvoxel
-  
+
   # sopravvivenza finale per voxel
   S <- dvhs[[1]]$value*0 + 1 # vettore di sopravvivenze finali per ogni voxel
   for(i in 1:Nf) {
@@ -232,39 +232,39 @@ tcp.lqp.train <- function(dvhs, D50=66, R=10,  gam=2, d=2, alphaX=NULL, betaX=NU
     s <- exp(-alphaX*df - betaX*df*df)
     S <- S*s # assume scorrelazione temporale tra le frazioni
   }
-  
+
   return( exp(-exp(e*gam)*dv*sum(S)) )
 }
 
 
 #' NTCP (Biological Dose, Relative Seriality Model [Kallman1992a], Variable fractions)
-#' 
+#'
 #' NTCP evaluation from the biological dose, using arbitrary set of fractions.
-#' 
+#'
 #' The total treatment correspond to a "train" of acute doses distribution (with no time correlation, i.e. full-repair is assumed).
 #' The biological dose distribution, for each voxel, can be different among fractions.
 #' Hence a list of DVH objects is needed. Each element of the list correspond to a DHV evaluated for a specific fraction.
-#' 
+#'
 #' By default it is assumed that the \code{dvh.dose} contains the biological dose dvh [Gy(E)]. Alternatively it could contain the "physical" dose [Gy] and the biological dose is evaluated by specifying the RBE per fraction (assumed to be constant over the irradiated volume).
 #'
 #' If alphaX and betaX are not explicity defined, they were deduced from \code{D50}, \code{gam} and \code{R}.
-#' 
+#'
 #' @param dvhs a list of biological dose DVHs
 #' @param D50,R,gam tissue specific biological parameters: tolerance dose at 50\%, R=alphaX/betaX, clonogenic density
 #' @param s relative seriality parameter
 #' @param d dose per fraction
 #' @param Nf number of fractions
 #' @param RBE Relative Biological Effectivenes
-#' 
+#'
 #' @return The NTCP value
-#' 
+#'
 #' @family General TCP/NTCP Models
 #' @export
 ntcp.kallman.train <- function(dvhs, D50=57, R=3,  gam=6.7, s=1, d=2, alphaX=NULL, betaX=NULL, RBE=1)
 {
   # costanti
   e <- exp(1)
-  
+
   # ricava i valori di alphaX e betaX
   if((is.null(alphaX) | is.null(betaX))) {
     alphaX <- alpha.beta.lqp(R, D50, gam, d)$alphaX
@@ -277,10 +277,10 @@ ntcp.kallman.train <- function(dvhs, D50=57, R=3,  gam=6.7, s=1, d=2, alphaX=NUL
   # numero di frazioni
   Nf <- length(dvhs)
   #message('Number of fractions: ', Nf)
-  
+
   # volume elemetare (frazione). Assume che le divere frazioni abbiano la stessa griglia di voxel
   dv <- 1/dvhs[[1]]$Nvoxel
-  
+
   # sopravvivenza finale per voxel
   S <- dvhs[[1]]$value*0 + 1 # vettore di sopravvivenze finali per ogni voxel
   for(i in 1:Nf) {
@@ -288,7 +288,7 @@ ntcp.kallman.train <- function(dvhs, D50=57, R=3,  gam=6.7, s=1, d=2, alphaX=NUL
     sf <- exp(-alphaX*df - betaX*df*df)
     S <- S*sf # assume scorrelazione temporale tra le frazioni
   }
-  
+
   return( (1 - prod( (1 - exp(-s*exp(e*gam)*S))^dv ) )^(1/s) )
 }
 
@@ -296,28 +296,28 @@ ntcp.kallman.train <- function(dvhs, D50=57, R=3,  gam=6.7, s=1, d=2, alphaX=NUL
 #' TCP (Poissonian Model)
 #'
 #' Evaluate TCP directly from the DVH of the "survivals" (for a given endpoint and VOI), without using the biological dose and/or indirect radiobiological parameters for a reference radiation.
-#' 
+#'
 #' It assumes identical and uncorrelated fractions (complete-repair)
-#' 
+#'
 #' @param dvh.survival DVH of the cell "survivals" for a single fraction
 #' @param gam radiobiological parameter, related to the clonogenic density
 #' @param Nf number of fractions
-#' 
+#'
 #' @return the TCP value.
-#' 
+#'
 #' @family General TCP/NTCP Models
 #' @export
 tcp.S <- function(dvh.survival=dvh.survival, gam=2, Nf=30) {
-  
+
   # costanti
   e <- exp(1)
 
   # volume elementare (frazione). Assume che le diverse frazioni abbiano la stessa griglia di voxel
   dv <- 1/dvh.survival$Nvoxel
-  
+
   # Sopravvivenza complessiva (assume completa scorrelazione temporale e che le diverse frazioni siano identiche)
   S <- dvh.survival$value^Nf
-  
+
   return( exp(-exp(e*gam)*dv*sum(S)) )
 }
 
@@ -325,30 +325,30 @@ tcp.S <- function(dvh.survival=dvh.survival, gam=2, Nf=30) {
 #' NTCP (Relative Seriality Model [Kallman1992a])
 #'
 #' Evaluate the NTCP directly from the DVH of the "survivals" (for a given endpoint and VOI), without using the biological dose and/or indirect radiobiological parameters for a reference radiation.
-#' 
+#'
 #' It assumes identical and uncorrelated fractions (complete-repair)
-#' 
+#'
 #' @param dvh.survival DVH of the cell "survivals" for a single fraction
 #' @param gam radiobiological parameter, related to the clonogenic density
 #' @param s relative serialiy parameter
 #' @param Nf number of fractions
-#' 
+#'
 #' @return The NTCP value.
-#' 
+#'
 #' @family General TCP/NTCP Models
 #' @export
-#' 
+#'
 ntcp.S <- function(dvh.survival, gam=2, s=1, Nf=30) {
-  
+
   # costanti
   e <- exp(1)
 
   # volume elementare (frazione). Assume che le diverse frazioni abbiano la stessa griglia di voxel
   dv <- 1/dvh.survival$Nvoxel
-  
+
   # Sopravvivenza complessiva (assume completa scorrelazione temporale e che le diverse frazioni siano identiche)
   S <- dvh.survival$value^Nf
-  
+
   return( (1 - prod( (1 - exp(-s*exp(e*gam)*S))^dv ) )^(1/s) )
 }
 
@@ -356,9 +356,9 @@ ntcp.S <- function(dvh.survival, gam=2, s=1, Nf=30) {
 #LEM/MKM MODELS ----------------------------------------------------------------
 
 #' Evaluation of alpha and beta LQ parameter (MKM)
-#' 
+#'
 #' The evaluation is performed for a monoenergetic ion. It uses a C++ MKM "rapid" implementation for the evaluation. It accepts a single set of MKM parameter (\code{alphaX}, \code{betaX}, \code{rN}, \code{rd}), or alternatively a full range of variability (min,max) for each parameter.
-#' 
+#'
 #' @param alphaX,betaX,rN,rd MKM "biological" parameter associated to a specific biological tissue/cell line:
 #' \itemize{
 #'   \item{alphaX} LQ alpha parameter of the reference radiation [Gy^-1]
@@ -366,7 +366,7 @@ ntcp.S <- function(dvh.survival, gam=2, s=1, Nf=30) {
 #'   \item{rN} cell nucleus radius [um]
 #'   \item{rd} domain radius [um]
 #' }
-#' 
+#'
 #' @param alphaX.min,alphaX.max range of variability for parameter \code{alphaX}
 #' @param alphaX.N number of step for \code{alphaX}
 #' @param betaX.min,betaX.max range of variability for parameter \code{betaX}
@@ -379,7 +379,7 @@ ntcp.S <- function(dvh.survival, gam=2, s=1, Nf=30) {
 #' @param particel type. Available ions: 'H', 'He', 'Li', 'Be', 'B,', 'C', 'N', 'O', 'F', 'Ne'.
 #' @param energies vector of energies for the particle [MeV]
 #' @param lets vector of LETs for the particle [keV/um]. It is used if \code{energies} is \code{NULL}.
-#' 
+#'
 #' @return a data.frame containing all the information specified including the alpha and beta MKM evaluation (note, in the MKM implementation beta = betaX).
 #'
 #' @family LEM/MKM Models
@@ -404,9 +404,9 @@ alpha.beta.mkm <- function(alphaX=0.1295, betaX=0.03085, rN=4, rd=0.31,
 {
   model='MKM'
   calculusType='rapidMKM'
-  
+
   #lem.setenv=get('lem.setenv', envir=dektoolsEnv)
-  
+
   # nome cellType
   if(is.null(cellType)) {cellType <- paste('R', sprintf("%06d", round(runif(1,min=0,max=1e6))), sep='')}
 
@@ -417,14 +417,14 @@ alpha.beta.mkm <- function(alphaX=0.1295, betaX=0.03085, rN=4, rd=0.31,
   if (!is.null(rd)) {d <- paste(rd, rd, 1)} else {d <- paste(rd.min, rd.max, rd.N)}
 
   # check per vedere se il calcolo è sulle energie o sul let (e controllo estremi):
-  if(!is.null(energies)) {
+  if(length(energies)>0) {
     energyType <- 'energy'
     e <- paste(energies, collapse=' ')
-  } else if(!is.null(lets)) {
+  } else if(length(lets)>0) {
     lets <- lets[lets >= srim.let.min[particleType] &  lets <= srim.let.max[particleType]]
     energyType <- 'let'
     e <- paste(lets, collapse=' ')
-  } else {
+  } else if(length(energies)==0 & length(lets)==0){
     stop('energies/lets not specified.')
   }
 
@@ -452,9 +452,9 @@ alpha.beta.mkm <- function(alphaX=0.1295, betaX=0.03085, rN=4, rd=0.31,
 
 
 #' Evaluation of alpha and beta LQ parameter (LEM)
-#' 
+#'
 #' The evaluation is performed for a monoenergetic ion. It uses a C++ LEM "rapid" implementation for the evaluation. It accepts a single set of LEM parameter (\code{alphaX}, \code{betaX}, \code{rN}, \code{Dt}), or alternatively a full range of variability (min,max) for each parameter.
-#' 
+#'
 #' @param alphaX,betaX,rN,Dt LEM "biological" parameter associated to a specific biological tissue/cell line:
 #' \itemize{
 #'   \item{alphaX} LQ alpha parameter of the reference radiation [Gy^-1]
@@ -462,7 +462,7 @@ alpha.beta.mkm <- function(alphaX=0.1295, betaX=0.03085, rN=4, rd=0.31,
 #'   \item{rN} cell nucleus radius [um]
 #'   \item{Dt} threshold dose [Gy]
 #' }
-#' 
+#'
 #' @param alphaX.min,alphaX.max range of variability for parameter \code{alphaX}
 #' @param alphaX.N number of step for \code{alphaX}
 #' @param betaX.min,betaX.max range of variability for parameter \code{betaX}
@@ -477,7 +477,7 @@ alpha.beta.mkm <- function(alphaX=0.1295, betaX=0.03085, rN=4, rd=0.31,
 #' @param particel type. Available ions: 'H', 'He', 'Li', 'Be', 'B,', 'C', 'N', 'O', 'F', 'Ne'.
 #' @param energies vector of energies for the particle [MeV]
 #' @param lets vector of LETs for the particle [keV/um]. It is used if \code{energies} is \code{NULL}.
-#' 
+#'
 #' @return a data.frame containing all the information specified including the alpha and beta LEM evaluation.
 #'
 #' @family LEM/MKM Models
@@ -495,18 +495,18 @@ alpha.beta.lem <- function(alphaX=0.1, betaX=0.05, rN=5, Dt=30,
 {
   #model='LEM'
   #calculusType='rapidMKM'
-  
+
   #lem.setenv=get('lem.setenv', envir=dektoolsEnv)
-  
+
   # nome cellType
   if(is.null(cellType)) {cellType <- paste('R', sprintf("%06d", round(runif(1,min=0,max=1e6))), sep='')}
-  
+
   # valori dei parametri LEM
   if (!is.null(alphaX)) {a <- paste(alphaX, alphaX, 1)} else {a <- paste(alphaX.min, alphaX.max, alphaX.N)}
   if (!is.null(betaX)) {b <- paste(betaX, betaX, 1)} else {b <- paste(betaX.min, betaX.max, betaX.N)}
   if (!is.null(rN)) {n <- paste(rN, rN, 1)} else {n <- paste(rN.min, rN.max, rN.N)}
   if (!is.null(Dt)) {d <- paste(Dt, Dt, 1)} else {d <- paste(Dt.min, Dt.max, Dt.N)}
-  
+
   # check per vedere se il calcolo è sulle energie o sul let (e controllo estremi):
   if(!is.null(energies)) {
     energyType <- 'energy'
@@ -518,43 +518,43 @@ alpha.beta.lem <- function(alphaX=0.1, betaX=0.05, rN=5, Dt=30,
   } else {
     stop('energies/lets not specified.')
   }
-  
+
   # output file
   of <- paste(particleType, cellType, model, calculusType, sep='_')
   of <- paste(of, 'csv', sep='.')
-  
+
   # costruzione linea di comando:
   s.args <- paste(cellType, model, calculusType, a, b, n, d, particleType, energyType, e)
   # cmd <- paste('.', lem.setenv, '; survival_alpha_beta_parameter_study', s.args)
   cmd <- paste('survival', s.args)
   if(!ignore.stdout) {message(cmd)}
-  
+
   t <- system.time(system(cmd, ignore.stdout=ignore.stdout, ignore.stderr=ignore.stderr))
   #message('time elapsed: ', t)
-  
+
   # legge file temporaneo salvato
   out.df <- read.csv(of)
-  
+
   # cancella file temporaneo
   system(paste('rm', of))
-  
+
   return(out.df)
 }
 
 
 #' Evaluate alpha function (MKM)
-#' 
+#'
 #' Returns a function alpha(LET) or alpha(specific energy), using the MKM model. The functions is an interpolation functions that uses a set of alpha values evaluated over the defined set of LETs (or specific energies).
-#' 
+#'
 #' @param alphaX,betaX,rN,rd The radiobiological parameter of the MKM.
 #' @param cellType Optionally you can associate a cell name tag (I have to figure yet what use to do with that).
 #' @param particleType The particle specification ('H', 'He', 'Li', 'Be', 'B', 'C', 'N', 'O', 'F')
 #' @param energies,lets A vector of specific energies (MeV/u) or LETs (keV/um).
 #' @param use.limits Filters the energies or the LETs values to rule out values too high or too low.
-#' 
+#'
 #' @family LEM/MKM Models
 #' @export
-#' 
+#'
 alpha.fun.mkm <- function(alphaX=0.1295, betaX=0.03085, rN=4, rd=0.31,
                       cellType=NULL,
                       particleType='H',
@@ -563,7 +563,7 @@ alpha.fun.mkm <- function(alphaX=0.1295, betaX=0.03085, rN=4, rd=0.31,
 {
   model='MKM'
   calculusType='rapidMKM'
-  
+
   #lem.setenv=get('lem.setenv', envir=dektoolsEnv)
 
   # nome cellType
@@ -571,7 +571,7 @@ alpha.fun.mkm <- function(alphaX=0.1295, betaX=0.03085, rN=4, rd=0.31,
     cellType <- paste('R', sprintf("%06d", round(runif(1,min=0,max=1e6))), sep='')
     #message('cellType = ', cellType)
   }
-  
+
   # valori dei parametri MKM
   a <- paste(alphaX, alphaX, 1)
   b <- paste(betaX, betaX, 1)
@@ -611,7 +611,7 @@ alpha.fun.mkm <- function(alphaX=0.1295, betaX=0.03085, rN=4, rd=0.31,
   #print(cmd)
 
   if(outmessages) {ignore.stdout=FALSE; ignore.stderr=FALSE} else {ignore.stdout=TRUE; ignore.stderr=TRUE}
-  
+
   t <- system.time(system(cmd, ignore.stdout=TRUE, ignore.stderr=TRUE))
   #message('time elapsed: ', t)
 
@@ -633,56 +633,56 @@ alpha.fun.mkm <- function(alphaX=0.1295, betaX=0.03085, rN=4, rd=0.31,
 
 
 #' Calcola la sopravvivenza secondo il modello LM e la aggiunge in values
-#' 
+#'
 #' m, c e beta sono i parametri del modello
 #' m -> coefficiente angolare
 #' c -> costante
 #' beta -> valore di beta (indipendente dal LETd)
 #' Nota: l'oggetto values deve avere le due variabili 'Dose[Gy]' e 'DoseAveragedLET[keV/um]'
-#' 
+#'
 #' @family Values Bioogical Evaluations
 #' @export
-#' 
+#'
 values.add.survival.LM <- function(values, alpha0, m, beta, add.alpha=TRUE)
 {
-  
+
   # identifica gli indici per 'Dose[Gy]' e 'DoseAveragedLET[keV/um]'
   index.dose<- which(values$variables=='Dose[Gy]')
-  index.LETd <- which(values$variables=='DoseAveragedLET[keV/um]') 
+  index.LETd <- which(values$variables=='DoseAveragedLET[keV/um]')
   # estrae dose e LETd da values
   dose <- values$values[index.dose,,,]
   LETd <- values$values[index.LETd,,,]
-    
+
   # calcola un nuovo array 'Survival.LM' da 'Dose[Gy]' e 'DoseAveragedLET[keV/um]' usando come parametri m, c, e beta
   alpha <- m*LETd + alpha0
   new.array <- exp(-alpha*dose - beta*dose^2)
-  
+
   # aggiungi l'array calcolato all'oggetto values
   values <- add.array.values(values, new.array, variable='Survival.LM')
-  
+
   # aggiungi opzionalmente anche l'array alpha
   if(add.alpha) {values <- add.array.values(values, alpha, variable='Alpha.LM[Gy^(-1)]')}
-    
+
   # ritorna values
   return(values)
 }
 
 
 #' Calcola l'RBE.alpha e l'aggiunge in values
-#' 
+#'
 #' viene passato come argomento il modello:
 #' (NULL -> usa "Alpha[Gy^(-1)]")
 #' (LM -> usa "Alpha.LM[Gy^(-1)]")
 #' (cMKM -> usa "Alpha.cMKM[Gy(-1)]")
-#' 
+#'
 #' assume che la variabile alpha sia già presente in values, atrimenti la calcola
 #' esplicitamente.
-#' 
+#'
 #' nota: nell'oggetto values NON deve essere già presente la variabile "Survival"
-#' 
+#'
 #' nota: nei parametri del modello deve essere esplcitata obbligatoriamente anche il beta
 #' anche se non viene esplicitamente usatato, viene usato per calcolare le sopravvivenze
-#' 
+#'
 #' @family Values Bioogical Evaluations
 #' @export
 #'
@@ -718,28 +718,28 @@ values.add.RBE.alpha <- function(values, model=NULL, alphaX=0.2, model.LM=NULL, 
 
 
 #' Calcola la sopravvivenza secondo il modello cMKM e la aggiunge in values
-#' 
+#'
 #' alphaX, betaX, rN, rd sono i parametri del modello MKM
 #' particleType -> ione di riferimento
 #' beta -> valore di beta (indipendente dal LETd)
 #' Nota: l'oggetto values deve avere le due variabili 'Dose[Gy]' e 'DoseAveragedLET[keV/um]'
-#' 
+#'
 #' @family Values Bioogical Evaluations
 #' @export
 #'
 values.add.survival.cMKM <- function(values=values, alphaX=alphaX, betaX=betaX, rN=rN, rd=rd, particleType=particleType, beta=beta, add.alpha=TRUE)
 {
-  
+
   # identifica gli indici per 'Dose[Gy]' e 'DoseAveragedLET[keV/um]'
   index.dose<- which(values$variables=='Dose[Gy]')
-  index.LETd <- which(values$variables=='DoseAveragedLET[keV/um]') 
+  index.LETd <- which(values$variables=='DoseAveragedLET[keV/um]')
   # estrae dose e LETd da values
   dose <- values$values[index.dose,,,]
   LETd <- values$values[index.LETd,,,]
 
   # vettore di lets da interpolare
   lets <- seq(min(LETd, na.rm=TRUE), max(LETd, na.rm=TRUE), length.out=30)
-   
+
   # calcola un nuovo array 'Survival.cMKM' da 'Dose[Gy]' e 'DoseAveragedLET[keV/um]'
   alpha.mkm <- alpha.fun.mkm(alphaX=alphaX, betaX=betaX, rN=rN, rd=rd,
                              particleType=particleType,
@@ -748,20 +748,20 @@ values.add.survival.cMKM <- function(values=values, alphaX=alphaX, betaX=betaX, 
 
   alpha <- alpha.mkm(LETd)
   new.array <- exp(-alpha*dose - beta*dose^2)
-  
+
   # aggiungi l'array calcolato all'oggetto values
   values <- add.array.values(values=values, new.array=new.array, variable='Survival.cMKM')
-  
+
   # aggiungi opzionalmente anche l'array alpha
   if(add.alpha) {values <- add.array.values(values, alpha, variable='Alpha.cMKM[Gy^(-1)]')}
-    
+
   # ritorna values
   return(values)
 }
 
 
 #' calcola l'RBE e l'agiunge in values a partire da alpha e beta e dose
-#' 
+#'
 #' @family Values Bioogical Evaluations
 #' @export
 #'
@@ -821,7 +821,7 @@ values.add.RBE <- function(values, model=NULL, alphaX=0.2, betaX=0.02, model.LM=
 
 
 #' calcola TCP con modello LM
-#' 
+#'
 #' @family LM/cMKM TCP/NTCP Models
 #' @export
 #'
@@ -858,7 +858,7 @@ NTCP.LM <- function(values, vois, voi='PTV', alpha0, beta, m, G=G, s=s, Nf=Nf){
 
 
 #' calcola NTCP con modello cMKM
-#' 
+#'
 #' @family LM/cMKM TCP/NTCP Models
 #' @export
 #'
@@ -874,7 +874,7 @@ NTCP.cMKM <- function(values=values, vois=vois, voi='PTV', alphaX=alphaX, betaX=
 
 
 #' calcola la log likelihood di cura (TCP), per un singolo caso, rispetto al dato clinico
-#' 
+#'
 #' Utilizza il modello lineare (alpha=alpha0 + m*LETd, beta=cost.).
 #' Assume frazioni indipendenti e costanti.
 #' Assume la presenza di matrice di dose fisica e di LETd per il calcolo LM.
@@ -882,7 +882,7 @@ NTCP.cMKM <- function(values=values, vois=vois, voi='PTV', alphaX=alphaX, betaX=
 #' Np -> numero di pazienti
 #' R -> numero di pazienti responder (R=Np*TCP)
 #' Nf -> numero di frazioni
-#' 
+#'
 #' @family Likelihood Evaluations
 #' @export
 #'
@@ -896,7 +896,7 @@ TCP.LL.LM <- function(values, vois, voi='PTV', alpha0, beta, m, G=G, Np=Np, R=R,
 
 
 #' calcola la log likelihood di cura (TCP), per un singolo caso, rispetto al dato clinico
-#' 
+#'
 #' Utilizza il modello cMKM.
 #' Assume frazioni indipendenti e costanti.
 #' Assume la presenza di matrice di dose fisica e di LETd per il calcolo LM.
@@ -919,7 +919,7 @@ TCP.LL.cMKM <- function(values, vois, voi='PTV',
 
 
 #' calcola la log likelihood di complicazioni (NTCP), per un singolo caso, rispetto al dato clinico
-#' 
+#'
 #' Utilizza il modello lineare (alpha=alpha0 + m*LETd, beta=cost.).
 #' Assume frazioni indipendenti e costanti.
 #' Assume la presenza di matrice di dose fisica e di LETd per il calcolo LM.
@@ -941,7 +941,7 @@ NTCP.LL.LM <- function(values, vois, alpha0, beta, m, G=G, s=s, Np=Np, R=R, Nf=N
 
 
 #' calcola la log likelihood di complicazioni (NTCP), per un singolo caso, rispetto al dato clinico
-#' 
+#'
 #' Utilizza il modello cMKM.
 #' Assume frazioni indipendenti e costanti.
 #' Assume la presenza di matrice di dose fisica e di LETd per il calcolo LM.
@@ -961,5 +961,5 @@ NTCP.LL.cMKM <- function(values, vois,
   LL <- log(NTCP)*R+log(1-NTCP)*(Np-R)
   if(is.infinite(LL)) {message('NTCP: ', NTCP)}
   return(LL)
-} 
-                                       
+}
+

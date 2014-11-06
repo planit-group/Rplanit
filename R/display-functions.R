@@ -1245,7 +1245,7 @@ display.dvh2d.multiple <- function(values=values, vois=vois, variables=c('Dose[G
     if(i==1) {d.f <- df.tmp} else {d.f <- rbind(d.f, df.tmp)}
   }
 
-  #return(d.f)
+  #if(return.dataframe) {return(d.f)}
 
   # Main scatterplot
   p1 <- ggplot(d.f, aes(x, y, colour=as.factor(id))) +
@@ -1396,7 +1396,8 @@ display.dvh.bands <- function(dvh,
                               height=7,
                               first.is.reference=FALSE,
                               with.mean=TRUE,
-                              with.median=TRUE) {
+                              with.median=TRUE,
+                              return.dataframe=FALSE) {
 
   # usa le librerie ggplot2 (per fare prima...)
   #suppressMessages(library(ggplot2))
@@ -1464,7 +1465,8 @@ display.dvh.bands.multiple <- function(dvh,
                                        height=7,
                                        with.mean=TRUE,
                                        with.median=TRUE,
-                                       title=NULL) {
+                                       title=NULL,
+                                       return.dataframe=FALSE) {
 
   # usa le librerie ggplot2 (per fare prima...)
   #suppressMessages(library(ggplot2))
@@ -1520,6 +1522,8 @@ display.dvh.bands.multiple <- function(dvh,
 
     if(vv==1) {df <- df.tmp} else {df <- rbind(df, df.tmp)}
   }
+  
+  if(return.dataframe) {return(list(df, df.reference))}
 
   p <- ggplot(df) +
     geom_ribbon(alpha=alpha.color, aes(x=volume*100, ymax=value.up, ymin=value.lo, fill=voi)) +

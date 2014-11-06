@@ -12,6 +12,9 @@ integra la lut radiale
 Other LUT: \code{\link{get.zBP.fun}};
   \code{\link{lut.add.alpha}}; \code{\link{lut.add.beta}};
   \code{\link{lut.add.rbe.alpha}}; \code{\link{read.lut}};
-  \code{\link{write.lut}}
+  \code{\link{write.lut.4d}}; \code{\link{write.lut.meta}};
+  \code{\link{write.lut.optics}};
+  \code{\link{write.lut.phasespace}};
+  \code{\link{write.lut.zBP}}; \code{\link{write.lut}}
 }
 

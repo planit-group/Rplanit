@@ -6,7 +6,7 @@
 display.dvh.bands(dvh, plan = NULL, alpha = 0.37, eval.bands = TRUE,
   alpha.color = 0.25, show.plot = TRUE, file.name = NULL, width = 7,
   height = 7, first.is.reference = FALSE, with.mean = TRUE,
-  with.median = TRUE)
+  with.median = TRUE, return.dataframe = FALSE)
 }
 \description{
 accetta una lista "dvh.bands" (composta da due dvh: dvh.max e dvh.min)

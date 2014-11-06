@@ -1,7 +1,7 @@
 # LUT --------------------------------------------------------------------------
 
 
-#' Read LUT
+#' Read LUT (4d)
 #'
 #' Read pencil-LUT.
 #' @param lut.name the name (prefix of the file name) of the lut (i.e. not including the file name extension.)
@@ -155,6 +155,204 @@ read.lut <- function(lut.name, dataframe=FALSE)
   return(Values)
 }
 
+#' Write LUT meta file
+#' @param lut.name The name (file prefix) of the LUT
+#' @param physical.variables Names of the physical variables
+#' @param biological.variables Names of the biological variables
+#' @param model.names Names of the biological models
+#' @param alphaX,betaX vectors of the LQ parameters for the reference radiation (used to compute the RBE.)
+#' @family LUT
+#' @export
+write.lut.meta <- function(lut.name,
+                           physical.variables='DosePerEvent[Gy/primary]',
+                           biological.variables=c('LethAlphaPerEvent[1/primary]', 'SqrtLethBetaPerEvent[1/primary]'),
+                           tissue.names='NULL', alphaX=1, betaX=1) {
+  file.name <- paste0(lut.name, '.lutMeta')
+  con <- file(file.name, "w") # open for writing in text mode
+  
+  # optics
+  writeLines(paste0(LUT.name, ".optics\n"), con=con, sep='') # Name of beam-line-optics file
+  writeLines("0.0   0.0   0.0\n", con=con, sep='') # Deflection along X, deflection along Y, phantom entrance along Z
+  
+  # physical variables
+  physical.text <- paste(length(physical.variables), paste0(physical.variables, collapse = ' '), '\n')
+  writeLines(physical.text, con=con, sep='') # number of physical values, list of physical values tags
+  
+  # biological variables
+  if(length(biological.variables)>0) {
+    biological.text <- paste(length(biological.variables), paste0(biological.variables, collapse = ' '), '\n')
+    writeLines(biological.text, con=con, sep='') # number of biological values, list of biological values
+    writeLines(paste0(length(tissue.names), '\n'), con=con, sep='')
+    for(im in seq_along(tissue.names)) {
+      writeLines(paste0(tissue.names[im], ' ', alphaX[im], ' ', betaX[im], '\n'), con=con, sep='')
+    }
+  }
+  
+  # files
+  writeLines(paste0(LUT.name, ".zBraggPeaks.1d\n"), con=con, sep='') # Name of Bragg-peak-depths file
+  writeLines(paste0(LUT.name, ".lut.4d\n"), con=con, sep='') # Name of LUT file
+  
+  close(con)
+}
+
+#' Write LUT optics (meta) file
+#' @param lut.name The name (file prefix) of the LUT
+#' @param x.magnet.distance,y.magnet.distance Distances of the scanning magnets.
+#' @param particle The primary particle.
+#' @family LUT
+#' @export
+write.lut.optics <- function(lut.name, x.magnet.distance=6000, y.magnet.distance=6000, particle='1H') {
+  file.name <- paste0(lut.name, '.optics')
+  con <- file(file.name, "w") # open for writing in text mode
+  writeLines(particle, con=con) # particle type
+  writeLines(paste(x.magnet.distance, y.magnet.distance), con=con) # virtual source vsad_x vsad_y
+  writeLines(paste0(LUT.name, ".sub.lutMeta"), con=con) # Name of sub-beams meta file
+  writeLines(paste0(LUT.name, ".xPhaseSpace.3d"), con=con) # Name of x-phase-space file
+  writeLines(paste0(LUT.name, ".yPhaseSpace.3d"), con=con) # Name of y-phase-space file
+  writeLines(paste0(LUT.name, ".energyPhaseSpace.1d"), con=con) # Name of energy-phase-space file
+  writeLines(paste0(LUT.name, ".shiftsPhaseSpace.1d"), con=con) # Name of z-shifts-phase-space file
+  close(con)
+}
+
+#' Write LUT Bragg peaks depths file
+#' @param lut.name The name (file prefix) of the LUT
+#' @param energies Vector of energies.
+#' @param zBP Corresponding vector of Bragg peack depths [mm].
+#' @family LUT
+#' @export
+write.lut.zBP <- function(lut.name, energies, zBP) {
+  file.name <- paste0(lut.name, '.zBraggPeaks.1d')
+  con <- file(file.name, "w") # open for writing in text mode
+  writeLines(paste0(length(energies), ' Energy[MeV/u] POINTWISE'), con=con) # Number of energies
+  writeLines(paste(energies, collapse = ' '), con=con) # List of energies
+  writeLines('1 BraggPeakDepths[mm]', con=con) # number of values (1: bragg peak depths)
+  writeLines('ASCII', con=con) # formato
+  writeLines(as.character(zBP), con=con)
+  close(con)
+}
+
+#' Write LUT 4d data array
+#' @param lut.name The name (file prefix) of the LUT
+#' @param lut the LUT object containing the 4d data array
+#' @family LUT
+#' @export
+write.lut.4d <- function(lut.name, lut) {
+  # la lut è sostanzialmente un oggetto values 4d:
+  # le dimensioni dell'oggetto 4d sono: NV, NE, NX, NY, NZ
+  # Le coordinate Z sono normalizzate e alla lut è agganciata anche una funzione z.BP(z), per ottenere i valori assoluti di z.
+  
+  # nota: nell'oggetto lut alphaD e sqrt(beta)D sono differenziati con '*_n', mentre nel
+  # file da salvare no...
+  
+  variables <- gsub('_[0-9]|_[1-9][0-9]', '', lut$variables)
+  # print(variables)
+  
+  
+  # 4d file
+  
+  # scrive header
+  file.name <- paste0(lut.name, '.lut.4d')
+  con <- file(file.name, "w") # open for writing in text mode
+  
+  writeLines(paste(lut$NE, "NominalEnergy[MeV/u] POINTWISE"), con=con) # Number of energies
+  writeLines(paste(lut$E, collapse=' '), con=con)
+  writeLines(paste(lut$Nx, "X[mm] POINTWISE"), con=con)
+  writeLines(paste(lut$x, collapse=' '), con=con)
+  writeLines(paste(lut$Ny, "Y[mm] POINTWISE"), con=con)
+  writeLines(paste(lut$y, collapse=' '), con=con)
+  writeLines(paste(lut$Nz, "NormalizedZ POINTWISE"), con=con)
+  writeLines(paste(lut$z, collapse=' '), con=con)
+  writeLines(paste(lut$Nv, paste(variables, collapse=' ')), con=con) # Nv = Number of physical quantities + (number of biological quantities * number of tissues)
+  writeLines('BINARY', con=con)
+  close(con)
+  
+  # scrive dati binari
+  con <- file(file.name, "ab") # open for writing in text mode
+  writeBin(as.double(lut[['values']]), con=con)
+  close(con)
+}
+
+#' Write LUT phase-space file
+#' 
+#' Note: this implementations assumes a "complete" pencilbeam approach, without sub-pencilbeams. Hence the phase space is essentially
+#' a place holder.
+#' @param lut.name The name (file prefix) of the LUT
+#' @param lut the LUT object containing the 4d data array
+#' @family LUT
+#' @export
+write.lut.phasespace <- function(lut.name,
+                                 nominalEnergy=NULL,
+                                 meanEnergy=NULL, sigmaEnergy=0,
+                                 sigmaX=4, sigmaY=4, sigmaX1=0, sigmaY1=0, rhoXX1=0, rhoYY1=0) {
+  if(is.null(nominalEnergy)) {nominalEnergy <- c(1,1e3)}
+  NE <- length(nominalEnergy)
+  
+  if(is.null(meanEnergy)) {meanEnergy <- nominalEnergy}
+  
+  if(length(sigmaX)==1) {sigmaX <- rep(sigmaX, NE)}
+  if(length(sigmaY)==1) {sigmaY <- rep(sigmaY, NE)}
+  if(length(sigmaX1)==1) {sigmaX1 <- rep(sigmaX1, NE)}
+  if(length(sigmaY1)==1) {sigmaY1 <- rep(sigmaY1, NE)}
+  if(length(rhoXX1)==1) {rhoXX1 <- rep(rhoXX1, NE)}
+  if(length(rhoYY1)==1) {rhoYY1 <- rep(rhoYY1, NE)}
+  if(length(sigmaEnergy)==1) {sigmaEnergy <- rep(sigmaEnergy, NE)}
+  
+  # nota: i valori sigmaX,Y e sigmaX1,Y1 dipendono in generale dall'energia e dalla deflessione.
+  # Qui per semplicfictà si assume che non ci sia nessuna dipendenza in funzione della defessione
+  # Sembra che invece lo spazio delle fasi dell'energia non dipenda dalla deflessione... boh?
+  
+  # x phasespace
+  file.name <- paste0(lut.name, '.xPhaseSpace.3d')
+  con <- file(file.name, "w")
+  writeLines(paste(NE, 'NominalEnergy[MeV/u]  POINTWISE'), con=con)
+  writeLines(paste(nominalEnergy, collapse=' '), con=con)
+  writeLines('2 DeflectionX[mm] POINTWISE', con=con)
+  writeLines('-1e9 1e9', con=con)
+  writeLines('2 DeflectionY[mm] POINTWISE', con=con)
+  writeLines('-1e9 1e9', con=con)
+  writeLines("3 SigmaX[mm] SigmaX' RhoXX'", con=con)
+  writeLines('ASCII', con=con)
+  for(ii in 1:4) { # ripete valori identificativi al variare delle deflessioni
+    writeLines(paste(sigmaX, sigmaX1, rhoXX1), con=con)
+  }
+  close(con)
+  
+  # y phasespace
+  file.name <- paste0(lut.name, '.yPhaseSpace.3d')
+  con <- file(file.name, "w")
+  writeLines(paste(NE, 'NominalEnergy[MeV/u]  POINTWISE'), con=con)
+  writeLines(paste(nominalEnergy, collapse=' '), con=con)
+  writeLines('2 DeflectionX[mm] POINTWISE', con=con)
+  writeLines('-1e9 1e9', con=con)
+  writeLines('2 DeflectionY[mm] POINTWISE', con=con)
+  writeLines('-1e9 1e9', con=con)
+  writeLines("3 SigmaY[mm] SigmaY' RhoYY'", con=con)
+  writeLines('ASCII', con=con)
+  for(ii in 1:4) { # ripete valori identivi al variare delle deflessioni
+    writeLines(paste(sigmaY, sigmaY1, rhoYY1), con=con)
+  }
+  close(con)
+  
+  # energy phasespace
+  file.name <- paste0(lut.name, '.energyPhaseSpace.1d')
+  con <- file(file.name, "w")
+  writeLines(paste(NE, 'NominalEnergy[MeV/u]  POINTWISE'), con=con)
+  writeLines(paste(nominalEnergy, collapse=' '), con=con)
+  writeLines('2 MeanEnergy[MeV/u] SigmaEnergy[MeV/u]', con=con)
+  writeLines('ASCII', con=con)
+  writeLines(paste(meanEnergy, sigmaEnergy), con=con)
+  close(con)
+  
+  # shift phasespace
+  file.name <- paste0(lut.name, '.shiftsPhaseSpace.1d')
+  con <- file(file.name, "w")
+  writeLines(paste(NE, 'NominalEnergy[MeV/u]  POINTWISE'), con=con)
+  writeLines(paste(nominalEnergy, collapse=' '), con=con)
+  writeLines('2 ShiftZ_1[mm] Weight_1', con=con) # ogni shift è una variabile a parte... ma che cazzo...
+  writeLines('ASCII', con=con)
+  writeLines(paste(c(0,0), c(1,1)), con=con)
+  close(con)
+}
 
 #' Return a function z.BP(E)
 #'

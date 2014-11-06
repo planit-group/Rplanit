@@ -182,7 +182,7 @@ set.lut.folder <- function(lut.folder=NULL)
     lut.folder <- paste0(my.home, '/Pure-dek-install/LUT/')
   }
   
-  Sys.setenv(PATH_TO_LUT=lut.folder)
+  Sys.setenv(PATH_TO_LUT=path.expand(lut.folder))
 }
 
 # INSTALLING -------------------------------------------------------------------
