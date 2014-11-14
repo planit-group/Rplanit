@@ -1559,7 +1559,7 @@ display.dvh.bands.multiple <- function(dvh,
 #' Rendering remoto usando Xvfb (da implementare)
 #'
 #' @export
-#' @import rgl misc3d
+# @import rgl misc3d
 
 render.isosurfaces <- function(values, variable=NULL, levels=0, add=FALSE, alpha=NULL, color=NULL, file.name=NULL, axes=TRUE, mask=NULL)
 {
@@ -1645,8 +1645,6 @@ render.voi.isosurfaces <- function(vois=vois, voi=PTV, file.name=NULL, add=FALSE
 
 display.slices.interactive <- function(values=values, variables=NULL, gray=FALSE)
 {
-  library(rgl)
-  library(misc3d)
 
   # identifica variabili e formatta l'array temporale
   if(is.null(variables)) {variables <- values$variables}
