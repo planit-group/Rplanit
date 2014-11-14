@@ -1563,8 +1563,8 @@ display.dvh.bands.multiple <- function(dvh,
 
 render.isosurfaces <- function(values, variable=NULL, levels=0, add=FALSE, alpha=NULL, color=NULL, file.name=NULL, axes=TRUE, mask=NULL)
 {
-  library(rgl)
-  library(misc3d)
+  #library(rgl)
+  #library(misc3d)
 
   # identifica variabile
   v.index <- which(values$variable==variable)
@@ -1900,7 +1900,7 @@ display.beams <- function(beams,
 #' @param alpha.spot the opacity value for the spot points
 #'
 #' @export
-#' @import rgl misc3d
+# @import rgl misc3d
 display.spots <- function(beams, vois=NULL, voi=NULL, display.iso=TRUE, alpha.spot=0.2, alpha.voi=1)
 {
   # plot 3d
@@ -1927,7 +1927,7 @@ display.spots <- function(beams, vois=NULL, voi=NULL, display.iso=TRUE, alpha.sp
 #' @param ray.length Length of the rays. If ray.lengt=0 ti will plot only the spots.
 #' @param add Add to existing 3D plot.
 #' @export
-#' @import rgl misc3d
+# @import rgl misc3d
 display.rays <- function(rays, alpha=1, ray.length=1, add=FALSE)
 {
   # plot 3d
