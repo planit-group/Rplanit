@@ -1563,8 +1563,10 @@ display.dvh.bands.multiple <- function(dvh,
 
 render.isosurfaces <- function(values, variable=NULL, levels=0, add=FALSE, alpha=NULL, color=NULL, file.name=NULL, axes=TRUE, mask=NULL)
 {
-  #library(rgl)
-  #library(misc3d)
+  
+  # carica esplicitamente le librerie
+  library(rgl)
+  library(misc3d)
 
   # identifica variabile
   v.index <- which(values$variable==variable)
@@ -1641,11 +1643,13 @@ render.voi.isosurfaces <- function(vois=vois, voi=PTV, file.name=NULL, add=FALSE
 #' (questo magari lo riformulerò quando userò immagini 4D...)
 #'
 #' @export
-#' @import tkrplot
+# @import tkrplot
 
 display.slices.interactive <- function(values=values, variables=NULL, gray=FALSE)
 {
-
+ 
+  library(tkrplot) # carica esplicitamente la libreria
+  
   # identifica variabili e formatta l'array temporale
   if(is.null(variables)) {variables <- values$variables}
   if(length(values$variables)==1) {
