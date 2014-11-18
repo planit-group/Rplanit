@@ -274,6 +274,7 @@ write.beams <- function(beams, file.name, format='puredek', ion='1H', add.extens
       beams.ord <- beams[c("particle", "beamLine", "x_iso", "y_iso", "z_iso", "gantryAngle", "patientAngle", "fluence", "energy", "deflX", "deflY")]
     } else {
       warning('Warning, number of columns in beams data.frame anomalous...')
+      beams.ord <- beams[c("particle", "beamLine", "x_iso", "y_iso", "z_iso", "gantryAngle", "patientAngle", "fluence", "energy", "deflX", "deflY", "x_s", "y_s", "z_s")]
     }
 
     write.table(beams.ord, file=file.name, append=TRUE, col.names=FALSE, row.names=FALSE, quote=FALSE)
