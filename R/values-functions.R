@@ -1,26 +1,26 @@
 # VALUES -----------------------------------------------------------------------
 
 #' Create values object
-#' 
+#'
 #' Create values object from array. Note: the value distributions are stored in a multidimensional array:
 #' values$values with dim(values$values) = c(Nv, Nx, Nz, Ny).
-#' 
+#'
 #' @param array the 3D array. Optional. If it is not specified an array of zeros is assumed.
 #' @param variables The name of the variable (can be a vector of names).
 #' @param x,y,z coordinate vectors
 #' @return a \code{values} object
-#' 
+#'
 #' @family Values
 #' @export
-#' 
+#'
 create.values <- function(array.values=NULL, variables='variable name', x, y, z)
 {
-  
+
   Nx <- length(x)
   Ny <- length(y)
   Nz <- length(z)
   Nv <- length(variables)
-  
+
   if(is.null(array.values)) {
     if(Nv>1) {
       array.values <- array(0, dim=c(Nv, Nx, Ny, Nz))
@@ -28,7 +28,7 @@ create.values <- function(array.values=NULL, variables='variable name', x, y, z)
       array.values <- array(0, dim=c(Nx, Ny, Nz))
     }
   }
-  
+
   values <- list()
   values$values <- array.values
   values$x <- x
@@ -40,7 +40,7 @@ create.values <- function(array.values=NULL, variables='variable name', x, y, z)
   values$Nv <- Nv
   values$variables <- variables
   values$file <- NULL
-  
+
   # check dimensioni
   my.dims <- dim(values$values)
   if(length(my.dims)==3) {
@@ -52,16 +52,16 @@ create.values <- function(array.values=NULL, variables='variable name', x, y, z)
       message('create.values warning: inconsistent size with coordinates')
     }
   }
-  
+
   # definisci classe
   class(values) <- 'values'
-  
+
   return(values)
 }
 
 
 #' Get values object
-#' 
+#'
 #' Get the values matrices for a plan.
 #' @param plan The plan object.
 #' @family Values
@@ -69,7 +69,7 @@ create.values <- function(array.values=NULL, variables='variable name', x, y, z)
 get.values <- function(plan, ...) UseMethod("get.values")
 
 #' Get values object (PlanKIT)
-#' 
+#'
 #' Get the values matrices for a plan (PlanKIT).
 #' @param plan The plan object.
 #' @family Values
@@ -79,12 +79,12 @@ get.values.plankit.plan <- function(plan)
   if(is.null(plan[['outputValuesFile']])) {
     cat('The plan "', plan[['name']], '" has no values file.\n', sep='')
     return(NULL)
-  } 
+  }
   return(read.3d(plan[['outputValuesFile']]))
 }
 
 #' Get values object (Gate)
-#' 
+#'
 #' Get the values matrices for a plan (Gate).
 #' @param plan.gate The plan object.
 #' @param center.coordinates The coordinates of the center of the values 3D distribution. If it is NULL, the center of the CT is assumed.
@@ -101,7 +101,7 @@ get.values.gate.plan <- function(plan, center.coordinates=NULL)
     values[[i]] <- read.3d.hdr(file.name=variable.file, variable=variables[i])
   }
   values <- merge.values(values.list=values)
-  
+
   # recupera le coordinate assolute dalla CT
   if(is.null(center.coordinates)) {
     ct <- get.ct(plan)
@@ -110,7 +110,7 @@ get.values.gate.plan <- function(plan, center.coordinates=NULL)
     center.coordinates[3] <- sum(range(ct$z))/2
     print(center.coordinates)
   }
-  
+
   # traslazione del centro
   x.c <- sum(range(values$x))/2
   y.c <- sum(range(values$y))/2
@@ -118,13 +118,13 @@ get.values.gate.plan <- function(plan, center.coordinates=NULL)
   values$x <- values$x + (center.coordinates[1]-x.c)
   values$y <- values$y + (center.coordinates[2]-y.c)
   values$z <- values$z + (center.coordinates[3]-z.c)
-  
+
   return(values)
 }
 
 
 #' Get sparse array values (Gate)
-#' 
+#'
 #' Get the sparse array evaluated for a plan (Gate).
 #' Note: the plan has to be evaluated via run.gate.forward() with the option evaluate.sparse.arrays=TRUE.
 #' @param plan.gate The plan object.
@@ -138,7 +138,7 @@ get.sparse.array.gate <- function(plan.gate)
 
 
 #' recupera matrice di valori in formato dataframe
-#' 
+#'
 #' Obsoleto
 #' @family Values
 #'
@@ -147,18 +147,18 @@ get.values.dataframe <- function(plan)
   if(is.null(plan[['outputValuesFile']])) {
     cat('The plan "', plan[['name']], '" has no values file.\n', sep='')
     return(NULL)
-  } 
+  }
   return(read.3d( paste(plan[['name']], '/', plan[['outputValuesFile']], sep='') ))
 }
 
 
 #' Generate data.frame from values object
-#' 
+#'
 #' Uses only voxels belogning to the specified VOIs.
 #' Each row of the output data.frame is a single voxel.
 #' Each voxel is associated to a VOI.
 #' Voxels assiciated to different VOIs are replicated on different rows.
-#' 
+#'
 #' @family Values
 #' @export
 dataframe.from.values <- function(values=values, vois=vois, variables=NULL, rois=NULL)
@@ -170,7 +170,7 @@ dataframe.from.values <- function(values=values, vois=vois, variables=NULL, rois
   } else {
     index.r <- which(vois$vois %in% rois) # gli indici dei voi si riferiscono al vettore vois$vois
   }
-  
+
   # identifica le variabili da mettere nel dataframe
   if(is.null(variables)) {
     variables <- values$variables
@@ -178,26 +178,26 @@ dataframe.from.values <- function(values=values, vois=vois, variables=NULL, rois
   } else {
     index.v <- which(values$variables %in% variables) # gli indici delle variabili si riferiscono al vettore values$variables
   }
-  
+
   # crea le matrici X,Y,Z
   X <- array(values$x, dim=c(values$Nx,values$Ny,values$Nz))
   Y <- array(values$y, dim=c(values$Ny,values$Nx,values$Nz))
   Y <- aperm(Y, c(2,1,3))
   Z <- array(values$z, dim=c(values$Nz,values$Nx,values$Ny))
   Z <- aperm(Z, c(2,3,1))
-  
+
   # crea dataframe per ogni voi specificato nella lista rois
   for(i in 1:length(index.r))
   {
     message('extracting dataframe for: ', vois$vois[index.r[i]])
-    
+
     index.voi <- get.voi.logical(vois, voi=vois$vois[index.r[i]])
-    
+
     # estrai coordinate dei voi
     x <- X[index.voi]
     y <- Y[index.voi]
     z <- Z[index.voi]
-    
+
     # ciclo sulle variabili
     for(j in 1:length(index.v)) {
       message('- variable: ', values$variables[index.v[j]])
@@ -210,16 +210,16 @@ dataframe.from.values <- function(values=values, vois=vois, variables=NULL, rois
       if(i==1 & j==1) {df.all <- df.tmp} else {df.all <- rbind(df.all, df.tmp)}
     }
   }
-  
+
   return(df.all)
 }
 
 
 #' recupera matrice sparsa da values
-#' 
+#'
 #' accetta values con più di una variabile. la selezione è fatta sulla prima.
 #' (che può coincidere o meno con la variabile specificata)
-#' 
+#'
 #' @family Values
 #' @export
 sparse.array.from.values <- function(values, variable='Dose[Gy]', threshold=0)
@@ -229,7 +229,7 @@ sparse.array.from.values <- function(values, variable='Dose[Gy]', threshold=0)
     v.index <- which(values$variables==variable)
     my.array <- values$values[v.index,,,]
     voxel.index <- which(values$values[1,,,]>threshold)
-    
+
     for(i in 1:values$Nv) {
       my.array <- values$values[i,,,]
       sparse.array <- my.array[voxel.index]
@@ -240,19 +240,19 @@ sparse.array.from.values <- function(values, variable='Dose[Gy]', threshold=0)
       }
     }
     return(df)
-    
+
   } else {
     my.array <- values$values
     voxel.index <- which(my.array>threshold)
     sparse.array <- my.array[voxel.index]
     return(data.frame(voxel.index=voxel.index, value=sparse.array))
   }
-  
+
 }
 
 
 #' Create values from sparse array
-#' 
+#'
 #' Create a values object from a sparse array.
 #'
 #' @param sparse.array The sparse array. Note: the sparse array is a dataframe containing at least the following columns: 'voxel.index' and 'value'. Optionally it could contain also the column 'variable'. The latter is mandatory if there are multiple variables.
@@ -261,15 +261,15 @@ sparse.array.from.values <- function(values, variable='Dose[Gy]', threshold=0)
 #' Note: the sparse array is a dataframe containing at least the following columns: 'voxel.index' and 'value'
 #' @family Values
 #' @export
-#' 
+#'
 values.from.sparse.array <- function(sparse.array, variables=NULL, x, y, z)
 {
   values <- list()
-  
+
   Nx <- length(x)
   Ny <- length(y)
   Nz <- length(z)
-  
+
   # variables
   if(is.null(variables)) {
     if('variable' %in% colnames(sparse.array)) {
@@ -284,12 +284,12 @@ values.from.sparse.array <- function(sparse.array, variables=NULL, x, y, z)
       variables <- as.character(sparse.array$variable)
     } else {
       if(length(variables)>1) {stop('variable names not present in sparse array')}
-    }  
+    }
   }
   Nv <- length(variables)
-  
+
   values <- create.values(variables=variables, x=x, y=y, z=z)
-  
+
   if(Nv==1) {values$values[sparse.array$voxel.index] <- sparse.array[,2]}
   else {
     for(i in 1:Nv) {
@@ -298,13 +298,13 @@ values.from.sparse.array <- function(sparse.array, variables=NULL, x, y, z)
       values$values[i,,,] <- temp.array
     }
   }
-  
+
   return(values)
 }
 
 
 #' rimuove valori nulli non "fisici"
-#' 
+#'
 #' @family Values
 #' @export
 sanitize.values <- function(values)
@@ -322,7 +322,7 @@ sanitize.values <- function(values)
 }
 
 #' Merge a list of values
-#' 
+#'
 #' Merge a list of values objects in a single object. It assumes that the variable names are not overlapping among different values objects.
 #' @param values.list A list of values objects.
 #' @return A values object
@@ -347,7 +347,7 @@ merge.values <- function(values.list)
 # VALUES MANIPULATION ----------------------------------------------------
 
 #' Get origin coordinates
-#' 
+#'
 #' Get the coordinates of origin corner (corner of voxel [1,1,1]).
 #' @param values the values object
 #' @return a vector of the coordinates x, y and z.
@@ -362,7 +362,7 @@ get.origin <- function(values)
 }
 
 #' Set origin coordinates
-#' 
+#'
 #' Set the coordinates of origin corner (corner of voxel [1,1,1]).
 #' @param coordinates a vector of the coordinates x, y and z.
 #' @return the translated values object
@@ -373,16 +373,16 @@ set.origin <- function(values, coordinates)
   x0 <- values$x[1] - (values$x[2] - values$x[1])/2
   y0 <- values$y[1] - (values$y[2] - values$y[1])/2
   z0 <- values$z[1] - (values$z[2] - values$z[1])/2
-  
+
   values$x <- values$x - x0 + coordinates[1]
   values$y <- values$y - y0 + coordinates[2]
   values$z <- values$z - z0 + coordinates[3]
-  
+
   return(values)
 }
 
 #' estrai array della variabile specificata dai values
-#' 
+#'
 #' @family Values Manipulation
 #' @export
 get.array.values <- function(values, variable)
@@ -398,7 +398,7 @@ get.array.values <- function(values, variable)
 
 
 #' Add an array to values
-#' 
+#'
 #' Add an array of a new variable to a \code{values} object.
 #' @param values the \code{values} object
 #' @param new.array the array to be added
@@ -412,7 +412,7 @@ add.array.values <- function(values, new.array, variable='New Data')
     message('Variable already in values')
     return()
   }
-  
+
   if(values$Nv > 1) {
     v <- aperm(values$values, c(2,3,4,1))
   } else {
@@ -422,7 +422,7 @@ add.array.values <- function(values, new.array, variable='New Data')
   values$values <- aperm(v, c(4,1,2,3))
   values$Nv <- values$Nv+1
   values$variables[values$Nv] <- variable
-  
+
   return(values)
 }
 
@@ -430,23 +430,23 @@ add.array.values <- function(values, new.array, variable='New Data')
 # PROFILES ---------------------------------------------------------------------
 
 #' Ray-tracing (intersections)
-#' 
-#' Evaluate the intersections along voxels 
+#'
+#' Evaluate the intersections along voxels
 #' @export
 #' @family Values, Profiles
 ray.tracing <- function(ray, xi, yi, zi, values=NULL) {
-  
+
   if(!is.null(values)) {
     # coordinate piani tra i voxels
     xi <- create.intervals(values$x)
     yi <- create.intervals(values$y)
-    zi <- create.intervals(values$z)   
+    zi <- create.intervals(values$z)
   }
-  
+
   R <- c(ray$X, ray$Y, ray$Z)
   rn <- c(ray$xn, ray$yn, ray$zn)
   px <- py <- pz <- list()
-  
+
   # calcola intersezione dei piani
   if(rn[1]!=0) {
     tx <- (xi - R[1])/rn[1]
@@ -463,7 +463,7 @@ ray.tracing <- function(ray, xi, yi, zi, values=NULL) {
     py.x <- R[1]+ty*rn[1]
     py.y <- R[2]+ty*rn[2]
     py.z <- R[3]+ty*rn[3]
-    py <- data.frame(x=py.x, y=py.y, z=py.z, t=ty)  
+    py <- data.frame(x=py.x, y=py.y, z=py.z, t=ty)
   } else {
     ty <- NULL
     py <- data.frame(x=NA, y=NA, z=NA, t=NA)
@@ -473,31 +473,31 @@ ray.tracing <- function(ray, xi, yi, zi, values=NULL) {
     pz.x <- R[1]+tz*rn[1]
     pz.y <- R[2]+tz*rn[2]
     pz.z <- R[3]+tz*rn[3]
-    pz <- data.frame(x=pz.x, y=pz.y, z=pz.z, t=tz)    
+    pz <- data.frame(x=pz.x, y=pz.y, z=pz.z, t=tz)
   } else {
     tz <- NULL
     pz <- data.frame(x=NA, y=NA, z=NA, t=NA)
   }
-  
+
   # merge di punti
   p <- rbind(px, py, pz)
-  
+
   # elimina punti fuori array
   p <- subset(p, x>=min(xi, na.rm=TRUE) & x<=max(xi, na.rm=TRUE) &
                 y>=min(yi, na.rm=TRUE) & y<=max(yi, na.rm=TRUE) &
                 z>=min(zi, na.rm=TRUE) & z<=max(zi, na.rm=TRUE))
-  
+
   # sorting dei punti
   p <- p[order(p$t),]
-  
+
   return(p)
 }
 
 
 #' Get profile
-#' 
+#'
 #' Get a profile (values along a specific axis, or voxel line) from a \code{values} object. The axis is specifed trough the definition of two of the following three coordinates: x, y, z, or with a single ray object for arbitrary directions.
-#' 
+#'
 #' @param values the \code{values object}
 #' @param variable the variable to be profiled. If it is not specified, the fist available variable will be used.
 #' @param x,y,z definition of the axis (only two coordinates should be defined). For example \code{x=4.4} and \code{z=0.5} specifies a profile along the y-axis passing through x=4.4 and z=0.5
@@ -511,7 +511,7 @@ ray.tracing <- function(ray, xi, yi, zi, values=NULL) {
 #' @export
 get.profile <- function(values, variable=NULL, x=NULL, y=NULL, z=NULL, integrate=FALSE, ray=NULL, return.voxel.index=FALSE, return.xyz=FALSE)
 {
-  
+
   # variable
   v <- NULL
   if(!is.null(variable)) {v <- which(values$variables==variable)}
@@ -519,27 +519,27 @@ get.profile <- function(values, variable=NULL, x=NULL, y=NULL, z=NULL, integrate
   variable <- values$variable[v]
   message('using ', variable, ' ...')
   if(values$Nv>1) {values$values <- values$values[v,,,]}
-  
+
   Nx <- Ny <- Nz <- NULL
   if(!is.null(x)) {Nx <- identify.slice(x, values$x)}
   if(!is.null(y)) {Ny <- identify.slice(y, values$y)}
   if(!is.null(z)) {Nz <- identify.slice(z, values$z)}
-  
+
   # recupera coordinate
   if(is.null(x)) {coord.name <- 'x[mm]'; coord.value <- values$x}
   if(is.null(y)) {coord.name <- 'y[mm]'; coord.value <- values$y}
   if(is.null(z)) {coord.name <- 'z[mm]'; coord.value <- values$z}
-  
+
   # calcoli preliminari per l'integrazione
   if(integrate) {
     variable <- paste(variable, '[mm^2]', sep='')
-    
+
     dx <- diff(points2intervals(values$x))
     dy <- diff(points2intervals(values$y))
     dz <- diff(points2intervals(values$z))
 
   }
-  
+
   # calcola profili
   if(!is.null(Nx) & !is.null(Ny)) {
     if(integrate) {
@@ -562,27 +562,27 @@ get.profile <- function(values, variable=NULL, x=NULL, y=NULL, z=NULL, integrate
       profile.value <- values$values[,Ny,Nz]
     }
   }
-  
+
   # profilo su direzione arbitraria (ray-tracing)
   if(!is.null(ray)) {
-    
+
     # coordinate piani tra i voxels
     #dx <- mean(diff(values$x)); dy <- mean(diff(values$y)); dz <- mean(diff(values$z))
     xi <- create.intervals(values$x)
     yi <- create.intervals(values$y)
     zi <- create.intervals(values$z)
-    
+
     # evaluate ray-tracing
     p <- ray.tracing(ray, xi, yi, zi)
-    
+
     np <- nrow(p)-1
-    
+
     # punti centrali dei segmenti
     p.mid <- data.frame(x=(p$x[1:np]+diff(p$x)/2), y=(p$y[1:np]+diff(p$y)/2), z=(p$z[1:np]+diff(p$z)/2), t=(p$t[1:np]+diff(p$t)))
-    
+
     # identifica voxels
     voxel.index <- get.voxel.index(Xv=values$x, Yv=values$y, Zv=values$z, x=p.mid$x, y=p.mid$y, z=p.mid$z)
-    
+
     coord.name <- 'r [mm]'
     coord.value <- p.mid$t - min(p$t) # la coordinata è zero all'ingresso
     profile.value <- values$values[voxel.index]
@@ -591,14 +591,14 @@ get.profile <- function(values, variable=NULL, x=NULL, y=NULL, z=NULL, integrate
   #print(profile.value)
   #profile.df <- data.frame(variable=variable, axis=coord.name, depth=coord.value, value=profile.value, variable='variable')
   profile.df <- data.frame(variable=variable, axis=coord.name, depth=coord.value, value=profile.value)
-  
+
   if(return.voxel.index & !is.null(ray)) {profile.df$voxel.index <- voxel.index}
   if(return.xyz  & !is.null(ray)) {
     profile.df$x <- p.mid$x
     profile.df$y <- p.mid$y
     profile.df$z <- p.mid$z
   }
-  
+
   return(profile.df)
 }
 
@@ -606,29 +606,76 @@ get.profile <- function(values, variable=NULL, x=NULL, y=NULL, z=NULL, integrate
 
 # VALUES UTILITIES -------------------------------------------------------------
 
+#' get values at coordinate
+#'
+#' @param values Values object
+#' @param x,y,z coordinates of a 3D point on which to evaluate the values.
+#' @return a values object (with elements at coordinates x,y,z).
+#'
+#' @family ValuesUtilities
+#' @export
+get.values.at.point <- function(values, x, y, z, variable='Dose[Gy]')
+{
+  if(values$Nv==1) {array.v <- values$values}
+  else{
+    v <- which(variable==values$variables)
+    array.v <- values$values[v,,,]
+    #stop('Interpolation of more than one variable not yet implemented...')
+  }
+  message(values$Nx, ' ', values$Ny, ' ', values$Nz)
+  print(dim(array.v))
+
+  array.x <- array(0, dim=c(1, values$Ny, values$Nz))
+  array.y <- array(0, dim=c(1, 1, values$Nz))
+  array.z <- array(0, dim=c(1, 1, 1))
+
+  # interpolazione lungo x
+  for(iy in 1:values$Ny) {
+    for(iz in 1:values$Nz) {
+      vx.fun <- approxfun(x=values$x, y=array.v[,iy,iz], rule=2)
+      vx <- vx.fun(x)
+      array.x[1,iy,iz] <- vx
+    }
+  }
+
+  # interpolazione lungo y
+  for(iz in 1:values$Nz) {
+    vy.fun <- approxfun(x=values$y, y=array.x[1,,iz], rule=2)
+    vy <- vy.fun(y)
+    array.y[1,1,iz] <- vy
+  }
+
+  # interpolazione lungo z
+  vz.fun <- approxfun(x=values$z, y=array.y[1,1,], rule=2)
+  vz <- vz.fun(z)
+  array.z[1,1,1] <- vz
+
+  return(vz)
+}
+
 #' Tri-linear interpolation
-#' 
+#'
 #' @param values Values object
 #' @param x,y,z cartesian coordinate on which evaluate the interpolation.
 #' @return a values object (with elements at coordinates x,y,z).
-#' 
+#'
 #' @family ValuesUtilities
 #' @export
 interpolate.values <- function(values, x, y, z)
 {
   Nx <- length(x); Ny <- length(y); Nz <- length(z)
-  
+
   # crea oggetto values
   values.intrp <- create.values(variables=values$variables, x=x, y=y, z=z)
-  
+
   for(v in 1:values$Nv) {
     if(values$Nv==1) {array.v <- values$values} else {array.v <- values$values[v,,,]}
     array.x <- array(0, dim=c(Nx, values$Ny, values$Nz))
     array.y <- array(0, dim=c(Nx, Ny, values$Nz))
     array.z <- array(0, dim=c(Nx, Ny, Nz))
-    
+
     message('interpolating ', values$variables[v])
-    
+
     # interpolazione lungo x
     for(iy in 1:values$Ny) {
       for(iz in 1:values$Nz) {
@@ -637,7 +684,7 @@ interpolate.values <- function(values, x, y, z)
         array.x[,iy,iz] <- vx
       }
     }
-    
+
     # interpolazione lungo y
     for(ix in 1:Nx) {
       for(iz in 1:values$Nz) {
@@ -646,7 +693,7 @@ interpolate.values <- function(values, x, y, z)
         array.y[ix,,iz] <- vy
       }
     }
-    
+
     # interpolazione lungo z
     for(ix in 1:Nx) {
       for(iy in 1:Ny) {
@@ -655,21 +702,21 @@ interpolate.values <- function(values, x, y, z)
         array.z[ix,iy,] <- vz
       }
     }
-   
-    
+
+
     if(values$Nv==1) {
       values.intrp$values <- array.z
     } else {
       values.intrp$values[v,,,] <- array.z
     }
   }
-  
+
   return(values.intrp)
 }
 
 
 #' identifica slice corrispondente alla coordinata
-#' 
+#'
 #' @family ValuesUtilities
 #' @export
 identify.slice <- function(x, xvec)
@@ -678,11 +725,11 @@ identify.slice <- function(x, xvec)
 }
 
 #' Evaluate intervals
-#' 
+#'
 #' Evaluate intervals vector from points vector.
-#' 
+#'
 #' Voxel coordinates are usually specified by indicating (x,y,z) the middle point. Another way is to indicate the intervals (xmin,xmax), (ymin,ymax) (zmin,zmax). Since it is assumed that voxels are contiguous, xmax[i] = xmin[i-1], for each axis the coordinates can be stored in a single vector.
-#' 
+#'
 #' @param x the puntual coordinate vector
 #' @return the intervals vector (the length of this vector is Nx+1, where Nx = length(x))
 #' @export
@@ -700,7 +747,7 @@ points2intervals <- function(x)
 
 
 #' Removes values outside VOI
-#' 
+#'
 #' @param values The original values
 #' @param vois The vois object
 #' @param voi the name of the VOI
@@ -710,11 +757,11 @@ points2intervals <- function(x)
 #' @family Vois, Values, Values Utilities
 remove.values.outside.voi <- function(values, vois, voi, index.voi=NULL)
 {
-  
+
   if(is.null(index.voi)) {
     index.voi <- get.voi.logical(vois, voi)
   }
-  
+
   Nv <- values$Nv
   if(Nv==1) {
     values$values[!index.voi] <- NA
@@ -725,14 +772,14 @@ remove.values.outside.voi <- function(values, vois, voi, index.voi=NULL)
       values$values[i,,,] <- values.tmp
     }
   }
-  
+
   return(values)
 }
 
 #' Create values form events
-#' 
+#'
 #' Uses the (x,y,z) coordinates of a shower of events to create a values object with the 3D histogram of the events.
-#' 
+#'
 #' @param Xe event x coorditate vector.
 #' @param Ye event y coordinate vector.
 #' @param Ze event z coordinate vector.
@@ -749,10 +796,10 @@ generate.values.from.events <- function(Xe, Ye, Ze,
                                         xbin, ybin, zbin,
                                         weight=1, variable='Activity', sparse.matrix=FALSE)
 {
-  
+
   message('histogramming the ', variable, '...')
   if(length(weight)==1) {weight=rep(weight, length(Xe))}
-  
+
   # intervalli (da coordinate puntuali)
   Nx <- length(xbin) - 1
   Ny <- length(ybin) - 1
@@ -760,15 +807,15 @@ generate.values.from.events <- function(Xe, Ye, Ze,
   x <- (xbin[1:Nx] + xbin[2:(Nx+1)])/2
   y <- (ybin[1:Ny] + ybin[2:(Ny+1)])/2
   z <- (zbin[1:Nz] + zbin[2:(Nz+1)])/2
-  
+
   # cuts (se riuscissi a fare direttamente un cut=voxel index...)
   Xe.c <- cut(Xe, breaks=xbin)
   Ye.c <- cut(Ye, breaks=ybin)
   Ze.c <- cut(Ze, breaks=zbin)
-  voxel.index <- as.numeric(interaction(Xe.c, Ye.c, Ze.c)) # questo è quasi un miracolo della fede.  
+  voxel.index <- as.numeric(interaction(Xe.c, Ye.c, Ze.c)) # questo è quasi un miracolo della fede.
   # crea oggetto values (vuoto)
   # values <- create.values(variables=variable, x=x, y=y, z=z)
-  
+
   #XYZ <- aggregate(list(weigth=weight), list(x=Xe.c, y=Ye.c, z=Ze.c), sum)
   XYZ <- aggregate(list(value=weight), list(voxel.index=voxel.index), sum)
 
@@ -778,9 +825,9 @@ generate.values.from.events <- function(Xe, Ye, Ze,
     return(values.from.sparse.array(sparse.array=XYZ, variables=variable, x=x, y=y, z=z))
   }
 }
-  
+
 #' Generate bin intervals from points
-#' 
+#'
 #' @param x A vector.
 #' @return A vector (with N+1 elements)
 #' @family Values, Values Utilities
@@ -794,7 +841,7 @@ create.intervals <- function(x)
 }
 
 #' Get voxel index from coordinates
-#' 
+#'
 #' @param x,y,z coordinate vectors.
 #' @param Xv,Yv,Zv coordinates of the voxels.
 #' @return A vector.
@@ -805,7 +852,7 @@ get.voxel.index <- function(x, y, z, Xv, Yv, Zv)
   xbin <- create.intervals(Xv)
   ybin <- create.intervals(Yv)
   zbin <- create.intervals(Zv)
-  
+
   X.c <- cut(x, breaks=xbin)
   Y.c <- cut(y, breaks=ybin)
   Z.c <- cut(z, breaks=zbin)
@@ -813,10 +860,10 @@ get.voxel.index <- function(x, y, z, Xv, Yv, Zv)
 }
 
 #' Get coordinates from voxel index
-#' 
+#'
 #' @param x,y,z coordinate vectors corresponding to the 3D array.
 #' @param voxel.index The voxels index (can be a vectors of voxel index).
-#' @return A data.frame (x,y,z) for more than a single voxel index. 
+#' @return A data.frame (x,y,z) for more than a single voxel index.
 #' @family Values, Values Utilities
 #' @export
 get.coordinates <- function(voxel.index, x, y, z)
@@ -843,7 +890,7 @@ get.coordinates <- function(voxel.index, x, y, z)
 #' @param v0 vector of values in the reference material evaluated at r0
 #' @param r1 vector of incremental coordinates in the actual material
 #' @param v1 vector of values in the actual material evaluated at r1
-#' @param add.extrapolation evaluate the extrapolation values using a linear fit over EPL(r). If it is FALSE, it will use 1 as angular coefficient (i.e. it will assume that the teo materials are equal outside the specified coordinates: EPL = r) 
+#' @param add.extrapolation evaluate the extrapolation values using a linear fit over EPL(r). If it is FALSE, it will use 1 as angular coefficient (i.e. it will assume that the teo materials are equal outside the specified coordinates: EPL = r)
 #' @return a function r0=r0(r1): the epl in the reference material as a function of the length in the actual material.
 #' @family Values Utilities
 #' @export
@@ -853,7 +900,7 @@ evaluate.epl <- function(r0, v0, r1, v1, add.extrapolation=FALSE)
   dr1 <- diff(create.intervals(r1))
   v0.cum <- cumsum(v0*dr0); v0.cum.fun <- approxfun(x=r0, y=v0.cum, rule=2)
   v1.cum <- cumsum(v1*dr1); v1.cum.fun <- approxfun(x=r1, y=v1.cum, rule=2)
-  
+
   r <- sort(unique(c(r0, r1)))
   epl <- rep(0, length(r))
   v0.cum.r <- v0.cum.fun(r)
@@ -862,7 +909,7 @@ evaluate.epl <- function(r0, v0, r1, v1, add.extrapolation=FALSE)
   for(i in 1:length(r)) {
     epl[i] <- mean(r[(v1.cum.r[i]-v0.cum.r)^2==min((v1.cum.r[i]-v0.cum.r)^2)])
   }
-  
+
   if(add.extrapolation) {
     r1.fit <- lm(epl~r)
     r.l <- -1e14
