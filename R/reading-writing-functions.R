@@ -28,16 +28,19 @@ read.3d <- function(file.name,
   # splitta la stringa in sottostringhe delimitate da uno o piu' spazi (regexpr: " +")
   myline.splitted <- unlist(strsplit(myline[1], ' +'))
   Nx <- as.numeric(myline.splitted[1])
+  x.type <- myline.splitted[3]
   myline.splitted <- unlist(strsplit(myline[2], ' +'))
   x <- as.numeric(myline.splitted)
   
   myline.splitted <- unlist(strsplit(myline[3], ' +'))
   Ny <- as.numeric(myline.splitted[1])
+  y.type <- myline.splitted[3]
   myline.splitted <- unlist(strsplit(myline[4], ' +'))
   y <- as.numeric(myline.splitted)
   
   myline.splitted <- unlist(strsplit(myline[5], ' +'))
   Nz <- as.numeric(myline.splitted[1])
+  z.type <- myline.splitted[3]
   myline.splitted <- unlist(strsplit(myline[6], ' +'))
   z <- as.numeric(myline.splitted)
   
@@ -53,9 +56,9 @@ read.3d <- function(file.name,
   cat('type:', type, '\n')
   
   # trasforma intervalli in coordinate puntuali
-  x <- (x[1:Nx] + x[2:(Nx+1)])/2
-  y <- (y[1:Ny] + y[2:(Ny+1)])/2
-  z <- (z[1:Nz] + z[2:(Nz+1)])/2
+  if(x.type=='INTERVAL') {x <- (x[1:Nx] + x[2:(Nx+1)])/2}
+  if(y.type=='INTERVAL') {y <- (y[1:Ny] + y[2:(Ny+1)])/2}
+  if(z.type=='INTERVAL') {z <- (z[1:Nz] + z[2:(Nz+1)])/2}
   
   
   # crea e legge array (4d)
