@@ -3,12 +3,12 @@
 \alias{get.values.at.point}
 \title{get values at coordinate}
 \usage{
-\method{get.values}{at.point}(values, x, y, z)
+\method{get.values}{at.point}(values, x, y, z, variable = "Dose[Gy]")
 }
 \arguments{
 \item{values}{Values object}
 
-\item{x,y,z}{coordinates of a 3D point on which to evaluate the values.}
+\item{x,y,z}{coordinates of a 3D point on which to evaluate the values (they can be vectors).}
 }
 \value{
 a values object (with elements at coordinates x,y,z).

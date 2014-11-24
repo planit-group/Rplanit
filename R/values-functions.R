@@ -609,7 +609,7 @@ get.profile <- function(values, variable=NULL, x=NULL, y=NULL, z=NULL, integrate
 #' get values at coordinate
 #'
 #' @param values Values object
-#' @param x,y,z coordinates of a 3D point on which to evaluate the values.
+#' @param x,y,z coordinates of a 3D point on which to evaluate the values (they can be vectors).
 #' @return a values object (with elements at coordinates x,y,z).
 #'
 #' @family ValuesUtilities
@@ -622,35 +622,54 @@ get.values.at.point <- function(values, x, y, z, variable='Dose[Gy]')
     array.v <- values$values[v,,,]
     #stop('Interpolation of more than one variable not yet implemented...')
   }
-  message(values$Nx, ' ', values$Ny, ' ', values$Nz)
-  print(dim(array.v))
 
-  array.x <- array(0, dim=c(1, values$Ny, values$Nz))
-  array.y <- array(0, dim=c(1, 1, values$Nz))
-  array.z <- array(0, dim=c(1, 1, 1))
+  # subsetting...
+  ix.min <- max(which(values$x<min(x)))
+  ix.max <- min(which(values$x>min(x)))
+  iy.min <- max(which(values$y<min(y)))
+  iy.max <- min(which(values$y>min(y)))
+  iz.min <- max(which(values$z<min(z)))
+  iz.max <- min(which(values$z>min(z)))
+  array.v <- array.v[ix.min:ix.max, iy.min:iy.max, iz.min:iz.max]
+  c.dim <- dim(array.v); nx <- c.dim[1]; ny <- c.dim[2]; nz <- c.dim[3]
+  xx <- values$x[ix.min:ix.max]
+  yy <- values$y[iy.min:iy.max]
+  zz <- values$z[iz.min:iz.max]
+  array.x <- array(0, dim=c(ny, nz))
+  array.y <- array(0, dim=c(nz))
+  
+  #message(ix.min, ' ', ix.max, ' ', iy.min, ' ', iy.max, ' ', iz.min, ' ', iz.max)
 
-  # interpolazione lungo x
-  for(iy in 1:values$Ny) {
-    for(iz in 1:values$Nz) {
-      vx.fun <- approxfun(x=values$x, y=array.v[,iy,iz], rule=2)
-      vx <- vx.fun(x)
-      array.x[1,iy,iz] <- vx
+  v.out <- rep(NA, length(x))
+
+  # 46, 28, 40 -> 0.5192853
+  # -1.078, 21.1719, -72
+
+  for(ixyz in 1:length(x)) {
+
+    array.x <- array.x*0
+    array.y <- array.y*0
+    
+    # interpolazione lungo x
+    for(iy in 1:ny) {
+      for(iz in 1:nz) {
+        vx.fun <- approxfun(x=xx, y=array.v[,iy,iz], rule=2)
+        array.x[iy,iz] <- vx.fun(x[ixyz])
+      }
     }
+
+    # interpolazione lungo y
+    for(iz in 1:nz) {
+      vy.fun <- approxfun(x=yy, y=array.x[,iz], rule=2)
+      array.y[iz] <- vy.fun(y[ixyz])
+    }
+
+    # interpolazione lungo z
+    vz.fun <- approxfun(x=zz, y=array.y, rule=2)
+    v.out[ixyz] <- vz.fun(z[ixyz])
   }
 
-  # interpolazione lungo y
-  for(iz in 1:values$Nz) {
-    vy.fun <- approxfun(x=values$y, y=array.x[1,,iz], rule=2)
-    vy <- vy.fun(y)
-    array.y[1,1,iz] <- vy
-  }
-
-  # interpolazione lungo z
-  vz.fun <- approxfun(x=values$z, y=array.y[1,1,], rule=2)
-  vz <- vz.fun(z)
-  array.z[1,1,1] <- vz
-
-  return(vz)
+  return(v.out)
 }
 
 #' Tri-linear interpolation
