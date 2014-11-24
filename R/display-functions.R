@@ -130,7 +130,8 @@ display.slice <- function(values=NULL,
                           colors=NULL,
                           invert.y.axis=FALSE,
                           file.name=NULL,
-                          width=7, height=7)
+                          width=7, height=7,
+                          levels=NULL)
 {
   #suppressMessages(library(fields))
 
@@ -249,10 +250,11 @@ display.slice <- function(values=NULL,
   }
 
   # plot contorni
+  if(is.null(levels)) {levels <- pretty(vlim, 10)}
   if(cont==TRUE) {
-    if(!is.na(Nz)) {contour(values$x, values$y, values$values[,,Nz], add=TRUE)}
-    else if(!is.na(Ny)) {contour(values$x, values$z, values$values[,Ny,], add=TRUE)}
-    else if(!is.na(Nx)) {contour(values$y, values$z, values$values[Nx,,], add=TRUE)}
+    if(!is.na(Nz)) {contour(values$x, values$y, values$values[,,Nz], add=TRUE, levels=levels)}
+    else if(!is.na(Ny)) {contour(values$x, values$z, values$values[,Ny,], add=TRUE, levels=levels)}
+    else if(!is.na(Nx)) {contour(values$y, values$z, values$values[Nx,,], add=TRUE, levels=levels)}
   }
 
 
@@ -422,7 +424,8 @@ display.slice.all <- function(ct=NULL,
                               alpha.upper=1,
                               invert.y.axis=FALSE,
                               contour.color='green',
-                              dpi=300)
+                              dpi=300,
+                              levels=NULL)
 {
   #suppressMessages(library(fields))
 
@@ -560,10 +563,11 @@ display.slice.all <- function(ct=NULL,
 
 
   # layer contorni
+  if(is.null(levels)) {levels <- pretty(vlim, n=10)}
   if(cont==TRUE) {
-    if(!is.na(Nz.values)) {contour(values$x, values$y, values$values[,,Nz.values], add=TRUE, xlim=xlim, ylim=ylim, zlim=vlim)}
-    else if(!is.na(Ny.values)) {contour(values$x, values$z, values$values[,Ny.values,], add=TRUE, xlim=xlim, ylim=zlim, zlim=vlim)}
-    else if(!is.na(Nx.values)) {contour(values$y, values$z, values$values[Nx.values,,], add=TRUE, xlim=ylim, ylim=zlim, zlim=vlim)}
+    if(!is.na(Nz.values)) {contour(values$x, values$y, values$values[,,Nz.values], add=TRUE, xlim=xlim, ylim=ylim, zlim=vlim, levels=levels)}
+    else if(!is.na(Ny.values)) {contour(values$x, values$z, values$values[,Ny.values,], add=TRUE, xlim=xlim, ylim=zlim, zlim=vlim, levels=levels)}
+    else if(!is.na(Nx.values)) {contour(values$y, values$z, values$values[Nx.values,,], add=TRUE, xlim=ylim, ylim=zlim, zlim=vlim, levels=levels)}
   }
 
   # layer roi (solo slice assiali)
@@ -1211,7 +1215,7 @@ display.dvh2d <- function(values=values, vois=vois, variables=c('Dose[Gy]', 'Dos
 display.dvh2d.multiple <- function(values=values, vois=vois, variables=c('Dose[Gy]', 'Dose[Gy]'), voi=voi,
 				   alpha=0.2, means=FALSE, x.lim=NULL, y.lim=NULL,
 				   model.LQ=NULL, model.LM=NULL, model.cMKM=NULL, model.MKM=NULL, RBE.alpha=FALSE,
-				   legend=c('plan'), legend.position=1, different.model.colors=FALSE, file.name=NULL, height, width)
+				   legend=c('plan'), legend.position=1, different.model.colors=FALSE, file.name=NULL, height=7, width=7)
 {
 
   #library(grid)
@@ -1683,7 +1687,7 @@ display.slices.interactive <- function(values=values, variables=NULL, gray=FALSE
 #' @param profile.ct the background ct (or other data) profile
 #' @param profile.names a vector containing the names of the profiles. It is used if a list of different profiles is used as input.
 #' @param depth.lim The x-axis range to display. (automatic if not specified).
-#' @param shot.plot Show plot.
+#' @param show.plot Show plot.
 #' @param file.name File name for saving the plot.
 #' @param height The height of the saved plot image (inches).
 #' @param width The width of the saved plot image (inches).
@@ -1729,9 +1733,9 @@ display.profile <- function(profile.values,
     }
 
     # estremi espliciti
-    y.lim <- range(profile.values.df$value)
+    y.lim <- range(profile.values.df$value, na.rm = TRUE)
     if(diff(y.lim)==0) {y.lim <- c(y.lim[1]-0.5, y.lim[2]+0.5)}
-    x.lim <- range(profile.values.df$depth)
+    x.lim <- range(profile.values.df$depth, na.rm = TRUE)
 
     # variabile e asse del profilo
     values.variable <- unique(profile.values.df$variable)
@@ -1753,9 +1757,9 @@ display.profile <- function(profile.values,
   {
 
     # estremi espliciti
-    y.lim <- range(profile.values$value)
+    y.lim <- range(profile.values$value, na.rm = TRUE)
     if(diff(y.lim)==0) {y.lim <- c(y.lim[1]-0.5, y.lim[2]+0.5)}
-    x.lim <- range(profile.values$depth)
+    x.lim <- range(profile.values$depth, na.rm = TRUE)
 
     # variabile e asse del profilo
     values.variable <- unique(profile.values$variable)

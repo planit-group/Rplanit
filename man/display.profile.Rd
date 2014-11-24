@@ -16,6 +16,8 @@ display.profile(profile.values, profile.ct = NULL, profile.names = NULL,
 
 \item{depth.lim}{The x-axis range to display. (automatic if not specified).}
 
+\item{show.plot}{Show plot.}
+
 \item{file.name}{File name for saving the plot.}
 
 \item{height}{The height of the saved plot image (inches).}
@@ -23,8 +25,6 @@ display.profile(profile.values, profile.ct = NULL, profile.names = NULL,
 \item{width}{The width of the saved plot image (inches).}
 
 \item{return.dataframe}{return the dataframe created for the plot (with ggplot2).}
-
-\item{shot.plot}{Show plot.}
 }
 \value{
 If show.plot=FALSE, it returns a ggplot object. If return.dataframe=TRUE, it returns the the dataframe created for the plot (with ggplot2).

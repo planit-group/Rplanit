@@ -8,7 +8,8 @@ display.slice.all(ct = NULL, contours = NULL, values = NULL,
   cont = FALSE, isoc = FALSE, xlim = NULL, ylim = NULL, zlim = NULL,
   vlim = NULL, file.name = NULL, width = 7, height = 7,
   HU.window = c(-1000, 3000), alpha.lower = 0, alpha.upper = 1,
-  invert.y.axis = FALSE, contour.color = "green", dpi = 300)
+  invert.y.axis = FALSE, contour.color = "green", dpi = 300,
+  levels = NULL)
 }
 \arguments{
 \item{ct}{the ct object (optional, if plan is specified)}

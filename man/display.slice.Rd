@@ -7,7 +7,7 @@ display.slice(values = NULL, variable = NULL, Nx = NA, Ny = NA,
   Nz = NA, x = NA, y = NA, z = NA, plan = NULL, bw = FALSE,
   cont = FALSE, isoc = FALSE, xlim = NULL, ylim = NULL, zlim = NULL,
   vlim = NULL, colors = NULL, invert.y.axis = FALSE, file.name = NULL,
-  width = 7, height = 7)
+  width = 7, height = 7, levels = NULL)
 }
 \arguments{
 \item{values}{the values object (optional if plan is defined)}

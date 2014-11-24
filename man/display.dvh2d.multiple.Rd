@@ -8,7 +8,8 @@ display.dvh2d.multiple(values = values, vois = vois,
   means = FALSE, x.lim = NULL, y.lim = NULL, model.LQ = NULL,
   model.LM = NULL, model.cMKM = NULL, model.MKM = NULL,
   RBE.alpha = FALSE, legend = c("plan"), legend.position = 1,
-  different.model.colors = FALSE, file.name = NULL, height, width)
+  different.model.colors = FALSE, file.name = NULL, height = 7,
+  width = 7)
 }
 \arguments{
 \item{legend.position}{The position of the legend. legend.position = 0 means no legend.}
