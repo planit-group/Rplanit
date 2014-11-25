@@ -427,6 +427,39 @@ add.array.values <- function(values, new.array, variable='New Data')
 }
 
 
+#' Get a subset of a  \code{values} object.
+#' @param values the \code{values} object
+#' @param variables A vector of the subset of variables to extract from the values object.
+#' @param xlim,ylim,zlim The ranges of the subset coordinates.
+#' @family Values Manipulation
+#' @export
+get.subset.values <- function(values, variables=NULL, xlim=c(-Inf,Inf), ylim=c(-Inf,Inf), zlim=c(-Inf,Inf))
+{
+  # estrai range
+  xlim[1] <- max(min(values$x), xlim[1]); xlim[2] <- min(max(values$x), xlim[2])
+  ylim[1] <- max(min(values$y), ylim[1]); ylim[2] <- min(max(values$y), ylim[2])
+  zlim[1] <- max(min(values$z), zlim[1]); zlim[2] <- min(max(values$z), zlim[2])
+  
+  ix.min <- max(which(values$x<xlim[1]), 1); ix.max <- min(which(values$x>xlim[2]), values$Nx); # print(c(ix.min,ix.max))
+  iy.min <- max(which(values$y<ylim[1]), 1); iy.max <- min(which(values$y>ylim[2]), values$Ny)
+  iz.min <- max(which(values$z<zlim[1]), 1); iz.max <- min(which(values$z>zlim[2]), values$Nz)
+  
+  x <- values$x[ix.min:ix.max]
+  y <- values$x[iy.min:iy.max]
+  z <- values$z[iz.min:iz.max]
+
+  # estrai variabili
+  if(is.null(variables)) {variables <- values$variables}
+  if(values$Nv>1) {
+    v <- which(values$variables %in% variables)
+    array.v <- values$values[v,ix.min:ix.max,iy.min:iy.max,iz.min:iz.max]
+  } else {
+    array.v <- values$values[ix.min:ix.max,iy.min:iy.max,iz.min:iz.max]
+  }
+
+  return(create.values(array.values = array.v, variables = variables, x=x, y=y, z=z))
+}
+
 # PROFILES ---------------------------------------------------------------------
 
 #' Ray-tracing (intersections)

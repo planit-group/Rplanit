@@ -16,6 +16,7 @@ Set the coordinates of origin corner (corner of voxel [1,1,1]).
 }
 \seealso{
 Other Values Manipulation: \code{\link{add.array.values}};
-  \code{\link{get.array.values}}; \code{\link{get.origin}}
+  \code{\link{get.array.values}}; \code{\link{get.origin}};
+  \code{\link{get.subset.values}}
 }
 
