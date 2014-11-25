@@ -647,7 +647,7 @@ get.profile <- function(values, variable=NULL, x=NULL, y=NULL, z=NULL, integrate
 #'
 #' @family ValuesUtilities
 #' @export
-get.values.at.point <- function(values, x, y, z, variable='Dose[Gy]')
+get.values_at.point <- function(values, x, y, z, variable='Dose[Gy]')
 {
   if(values$Nv==1) {array.v <- values$values}
   else{

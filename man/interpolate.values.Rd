@@ -17,7 +17,7 @@ a values object (with elements at coordinates x,y,z).
 Tri-linear interpolation
 }
 \seealso{
-Other ValuesUtilities: \code{\link{get.values.at.point}};
+Other ValuesUtilities: \code{\link{get.values_at.point}};
   \code{\link{identify.slice}}
 }
 
