@@ -114,7 +114,7 @@ get.subset.vois <- function(vois, xlim=c(-Inf,Inf), ylim=c(-Inf,Inf), zlim=c(-In
   z <- vois$z[iz.min:iz.max]
   
 
-  array.v <- values$values[ix.min:ix.max,iy.min:iy.max,iz.min:iz.max]
+  array.v <- vois$values[ix.min:ix.max,iy.min:iy.max,iz.min:iz.max]
   
   return(list(values = array.v, vois = vois$vois, x=x, y=y, z=z, Nx=length(x), Ny=length(y), Nz=length(z)))
 }

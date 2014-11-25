@@ -708,6 +708,8 @@ get.values_at.points <- function(values, x, y, z, variable='Dose[Gy]')
     v.out[ixyz] <- vz.fun(z[ixyz])
   }
   
+  close(pb)
+  
   return(v.out)
 }
 
