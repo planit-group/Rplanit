@@ -639,15 +639,15 @@ get.profile <- function(values, variable=NULL, x=NULL, y=NULL, z=NULL, integrate
 
 # VALUES UTILITIES -------------------------------------------------------------
 
-#' get values at coordinate
+#' get values at coordinates
 #'
 #' @param values Values object
 #' @param x,y,z coordinates of a 3D point on which to evaluate the values (they can be vectors).
-#' @return a values object (with elements at coordinates x,y,z).
+#' @return a vector of values.
 #'
 #' @family ValuesUtilities
 #' @export
-get.values_at.point <- function(values, x, y, z, variable='Dose[Gy]')
+get.values_at.points <- function(values, x, y, z, variable='Dose[Gy]')
 {
   if(values$Nv==1) {array.v <- values$values}
   else{
@@ -655,14 +655,18 @@ get.values_at.point <- function(values, x, y, z, variable='Dose[Gy]')
     array.v <- values$values[v,,,]
     #stop('Interpolation of more than one variable not yet implemented...')
   }
-
+  
   # subsetting...
-  ix.min <- max(which(values$x<min(x)))
-  ix.max <- min(which(values$x>min(x)))
-  iy.min <- max(which(values$y<min(y)))
-  iy.max <- min(which(values$y>min(y)))
-  iz.min <- max(which(values$z<min(z)))
-  iz.max <- min(which(values$z>min(z)))
+  
+  ix.min <- max(which(values$x<min(x)), 1)
+  ix.max <- min(which(values$x>max(x)), values$Nx)
+  iy.min <- max(which(values$y<min(y)), 1)
+  iy.max <- min(which(values$y>max(y)), values$Ny)
+  iz.min <- max(which(values$z<min(z)), 1)
+  iz.max <- min(which(values$z>max(z)), values$Nz)
+  
+  #message(ix.min, ' ', ix.max, ' ', iy.min, ' ', iy.max, ' ', iz.min, ' ', iz.max)
+  
   array.v <- array.v[ix.min:ix.max, iy.min:iy.max, iz.min:iz.max]
   c.dim <- dim(array.v); nx <- c.dim[1]; ny <- c.dim[2]; nz <- c.dim[3]
   xx <- values$x[ix.min:ix.max]
@@ -671,15 +675,17 @@ get.values_at.point <- function(values, x, y, z, variable='Dose[Gy]')
   array.x <- array(0, dim=c(ny, nz))
   array.y <- array(0, dim=c(nz))
   
-  #message(ix.min, ' ', ix.max, ' ', iy.min, ' ', iy.max, ' ', iz.min, ' ', iz.max)
-
   v.out <- rep(NA, length(x))
-
+  
   # 46, 28, 40 -> 0.5192853
   # -1.078, 21.1719, -72
-
+  
+  pb <- txtProgressBar(min = 0, max = length(x), style = 3)
+  
   for(ixyz in 1:length(x)) {
-
+    
+    setTxtProgressBar(pb, ixyz)
+    
     array.x <- array.x*0
     array.y <- array.y*0
     
@@ -690,18 +696,18 @@ get.values_at.point <- function(values, x, y, z, variable='Dose[Gy]')
         array.x[iy,iz] <- vx.fun(x[ixyz])
       }
     }
-
+    
     # interpolazione lungo y
     for(iz in 1:nz) {
       vy.fun <- approxfun(x=yy, y=array.x[,iz], rule=2)
       array.y[iz] <- vy.fun(y[ixyz])
     }
-
+    
     # interpolazione lungo z
     vz.fun <- approxfun(x=zz, y=array.y, rule=2)
     v.out[ixyz] <- vz.fun(z[ixyz])
   }
-
+  
   return(v.out)
 }
 

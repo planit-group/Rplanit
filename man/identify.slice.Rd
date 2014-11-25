@@ -9,7 +9,7 @@
 identifica slice corrispondente alla coordinata
 }
 \seealso{
-Other ValuesUtilities: \code{\link{get.values_at.point}};
+Other ValuesUtilities: \code{\link{get.values_at.points}};
   \code{\link{interpolate.values}}
 }
 

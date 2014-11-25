@@ -93,6 +93,31 @@ get.voi.logical <- function(vois, voi=NULL) {
   return <- substr(vois$values, v, v)=='1'
 }
 
+#' Get a subset of a  \code{vois} object.
+#' @param values the \code{vois} object
+#' @param xlim,ylim,zlim The ranges of the subset coordinates.
+#' @family VOIs
+#' @export
+get.subset.vois <- function(vois, xlim=c(-Inf,Inf), ylim=c(-Inf,Inf), zlim=c(-Inf,Inf))
+{
+  # estrai range
+  xlim[1] <- max(min(vois$x), xlim[1]); xlim[2] <- min(max(vois$x), xlim[2])
+  ylim[1] <- max(min(vois$y), ylim[1]); ylim[2] <- min(max(vois$y), ylim[2])
+  zlim[1] <- max(min(vois$z), zlim[1]); zlim[2] <- min(max(vois$z), zlim[2])
+  
+  ix.min <- max(which(vois$x<xlim[1]), 1); ix.max <- min(which(vois$x>xlim[2]), vois$Nx); # print(c(ix.min,ix.max))
+  iy.min <- max(which(vois$y<ylim[1]), 1); iy.max <- min(which(vois$y>ylim[2]), vois$Ny)
+  iz.min <- max(which(vois$z<zlim[1]), 1); iz.max <- min(which(vois$z>zlim[2]), vois$Nz)
+  
+  x <- vois$x[ix.min:ix.max]
+  y <- vois$x[iy.min:iy.max]
+  z <- vois$z[iz.min:iz.max]
+  
+
+  array.v <- values$values[ix.min:ix.max,iy.min:iy.max,iz.min:iz.max]
+  
+  return(list(values = array.v, vois = vois$vois, x=x, y=y, z=z, Nx=length(x), Ny=length(y), Nz=length(z)))
+}
 
 # CONTOURS ---------------------------------------------------------------------
 
