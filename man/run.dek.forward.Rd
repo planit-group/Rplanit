@@ -17,6 +17,7 @@ a Plan Object (including data/information of the evaluated output of the forward
 Perform a forward planning with Pure-dek. It assumes that the beams are defined in theplan object, checking in this order: beams, inoutBeamsFile, outputBeamsFile.
 }
 \seealso{
-Other PlanKIT: \code{\link{run.dek.inverse}}
+Other PlanKIT: \code{\link{embed.data}};
+  \code{\link{run.dek.inverse}}
 }
 

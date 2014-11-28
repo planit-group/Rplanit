@@ -469,6 +469,24 @@ run.dek.forward <- function(plan, outmessages=FALSE) {
 
 # UTILITIES --------------------------------------------------------------------
 
+#' Embed data into plan
+#' 
+#' Embed the data (CT, contours, beams, values, vois) associated with a plan directly in the plan object (to provide portability).
+#' @param plan A plan.
+#' @param embed.ct,embed.contours,embed.beams,embed.values,embed.vois By default all data are embedded.
+#' @return A plan with embedded data.
+#' @export
+#' @family PlanKIT
+embed.data <- function(plan, embed.ct=TRUE, embed.contours=TRUE, embed.beams=TRUE, embed.values=TRUE, embed.vois=TRUE)
+{
+  if(embed.ct & is.null(plan[['ct']])) {plan[['ct']] <- get.ct(plan)}
+  if(embed.contours & is.null(plan[['contours']])) {plan[['contours']] <- get.contours(plan)}
+  if(embed.beams & is.null(plan[['beams']])) {plan[['beams']] <- get.beams(plan)}
+  if(embed.values & is.null(plan[['values']])) {plan[['values']] <- get.values(plan)}
+  if(embed.vois & is.null(plan[['vois']])) {plan[['vois']] <- get.vois(plan)}
+  return(plan)
+}
+
 #' Filepath of objects
 #'
 #' Returns the name of the file with complete filepath for the specified object in the plan.

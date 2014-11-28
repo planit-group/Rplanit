@@ -17,6 +17,7 @@ a Plan Object (including data/information of the evaluated output of the inverse
 Perform an inverse planning with Pure-dek.
 }
 \seealso{
-Other PlanKIT: \code{\link{run.dek.forward}}
+Other PlanKIT: \code{\link{embed.data}};
+  \code{\link{run.dek.forward}}
 }
 
