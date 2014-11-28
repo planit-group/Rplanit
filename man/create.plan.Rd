@@ -12,8 +12,9 @@ create.plan(plan = NA, name = "test", ctFile = "ct.3d", ct = NULL,
   cutEnergyFraction = 0.01, fields = NULL, prescription = NULL,
   maxOptimizationIterations = 50, outputBeamsFile = NULL,
   inputBeamsFile = NULL, saveBeamLUTs = FALSE, outputBeamLUTFile = NULL,
-  inputBeamLUTFile = NULL, outputVoisFile = NULL, outputValuesFile = NULL,
-  beams = NULL)
+  inputBeamLUTFile = NULL, vois = NULL, outputVoisFile = NULL,
+  inputVoisFile = NULL, values = NULL, outputValuesFile = NULL,
+  inputValuesFile = NULL, beams = NULL)
 }
 \value{
 A Plan (plankit.plan object).

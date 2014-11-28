@@ -3,10 +3,12 @@
 \alias{get.vois}
 \title{Get VOIs from plan}
 \usage{
-get.vois(plan)
+get.vois(plan, input = FALSE)
 }
 \arguments{
-\item{plan}{the \code{plan} object}
+\item{plan}{The \code{plan} object.}
+
+\item{input}{Return the input vois (if exists).}
 }
 \value{
 the \code{vois} object; a list consisting of

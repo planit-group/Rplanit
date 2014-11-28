@@ -70,22 +70,29 @@ get.values <- function(plan, ...) UseMethod("get.values")
 
 #' Get values object (PlanKIT)
 #'
-#' Get the values matrices for a plan (PlanKIT).
+#' Get the values object associated to a plan (PlanKIT).
 #' @param plan The plan object.
+#' @param input Get the input values (if exits).
 #' @family Values
 #' @export
-get.values.plankit.plan <- function(plan)
+get.values.plankit.plan <- function(plan, input=FALSE)
 {
-  if(is.null(plan[['outputValuesFile']])) {
-    cat('The plan "', plan[['name']], '" has no values file.\n', sep='')
-    return(NULL)
+  if(!is.null(plan[['values']])) {
+    return(plan[['values']])
+  } else {
+    if(input) {values.file <- plan[['inputValuesFile']]}
+    else {values.file <- plan[['outputValuesFile']]}
+    if(is.null(values.file)) {
+      stop('values object not present')
+    } else { 
+      return(read.3d(values.file))
+    }
   }
-  return(read.3d(plan[['outputValuesFile']]))
 }
 
 #' Get values object (Gate)
 #'
-#' Get the values matrices for a plan (Gate).
+#' Get the values object associated to a plan (Gate).
 #' @param plan.gate The plan object.
 #' @param center.coordinates The coordinates of the center of the values 3D distribution. If it is NULL, the center of the CT is assumed.
 #' @family Values

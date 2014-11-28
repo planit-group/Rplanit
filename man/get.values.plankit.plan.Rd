@@ -3,13 +3,15 @@
 \alias{get.values.plankit.plan}
 \title{Get values object (PlanKIT)}
 \usage{
-\method{get.values}{plankit.plan}(plan)
+\method{get.values}{plankit.plan}(plan, input = FALSE)
 }
 \arguments{
 \item{plan}{The plan object.}
+
+\item{input}{Get the input values (if exits).}
 }
 \description{
-Get the values matrices for a plan (PlanKIT).
+Get the values object associated to a plan (PlanKIT).
 }
 \seealso{
 Other Values: \code{\link{create.values}};

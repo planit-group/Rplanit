@@ -11,7 +11,7 @@
 \item{plan.gate}{The plan object.}
 }
 \description{
-Get the values matrices for a plan (Gate).
+Get the values object associated to a plan (Gate).
 }
 \seealso{
 Other Values: \code{\link{create.values}};

@@ -150,9 +150,12 @@ get.beams.plankit.plan <- function(plan, input=FALSE)
   } else {
     if(input){beams.file <- get.filepath('inputBeamsFile', plan=plan)}
     else {beams.file <- get.filepath('outputBeamsFile', plan=plan)}
-    return(read.beams(beams.file))
+    if(is.null(beams.file)) {
+      stop('beams object not present')
+    } else {
+      return(read.beams(beams.file))
+    }
   }
-
 }
 
 #' @family Beams

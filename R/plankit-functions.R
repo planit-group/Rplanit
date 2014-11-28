@@ -89,8 +89,12 @@ create.plan <- function(plan=NA,
                         saveBeamLUTs=FALSE,
                         outputBeamLUTFile=NULL,
                         inputBeamLUTFile=NULL,
+                        vois=NULL,
                         outputVoisFile=NULL,
+                        inputVoisFile=NULL,
+                        values=NULL,
                         outputValuesFile=NULL,
+                        inputValuesFile=NULL,
                         beams=NULL)
 {
 
@@ -119,14 +123,18 @@ create.plan <- function(plan=NA,
                fields=fields,
                prescription=prescription,
                maxOptimizationIterations=maxOptimizationIterations,
+               beams=beams,
                outputBeamsFile=outputBeamsFile,
                inputBeamsFile=inputBeamsFile,
                saveBeamLUTs=saveBeamLUTs,
                outputBeamLUTFile=outputBeamLUTFile,
                inputBeamLUTFile=inputBeamLUTFile,
-               outputVoisFile=NULL,
-               outputValuesFile=NULL,
-               beams=beams # include possibilità di includere direttamente un beams object.
+               vois=vois,
+               values=values,
+               outputVoisFile=outputVoisFile,
+               outputValuesFile=outputValuesFile,
+               inputVoisFile=outputVoisFile,
+               inputValuesFile=outputValuesFile
   )
   class(plan) <- 'plankit.plan'
   return(plan)
