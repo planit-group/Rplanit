@@ -646,6 +646,25 @@ get.profile <- function(values, variable=NULL, x=NULL, y=NULL, z=NULL, integrate
 
 # VALUES UTILITIES -------------------------------------------------------------
 
+#' Create a meshgrid
+#' 
+#' Generate X, Y and Z matrices for three-dimensional arrays starting from x, y and z vectors. The function is similar to the matlab function "meshgrid".
+#' @param x,y,z Coordinates vector.
+#' @return A list with X, Y and Z 3D arrays
+#' @family ValuesUtilities
+#' @export
+meshgrid <- function(x, y, z)
+{
+  Nx <- length(x); Ny <- length(y); Nz <- length(z)
+  # crea le matrici X,Y,Z
+  X <- array(x, dim=c(Nx,Ny,Nz))
+  Y <- array(y, dim=c(Ny,Nx,Nz))
+  Y <- aperm(Y, c(2,1,3))
+  Z <- array(z, dim=c(Nz,Nx,Ny))
+  Z <- aperm(Z, c(2,3,1))
+  return(list(X=X, Y=Y, Z=Z))
+}
+
 #' get values at coordinates
 #'
 #' @param values Values object
