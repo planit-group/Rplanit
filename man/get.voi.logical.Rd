@@ -17,7 +17,9 @@ boolean array representing the volumetric occupancy of a specific VOI.
 Evaluate a boolean 3D array representing the volumetric occupancy of a specific VOI.
 }
 \seealso{
-Other VOIs: \code{\link{get.subset.vois}};
-  \code{\link{get.voiindex}}; \code{\link{get.vois}}
+Other VOIs: \code{\link{create.vois}};
+  \code{\link{get.subset.vois}};
+  \code{\link{get.voiindex}}; \code{\link{get.vois}};
+  \code{\link{is.in.voi}}
 }
 

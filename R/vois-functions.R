@@ -97,7 +97,7 @@ get.voi.logical <- function(vois, voi=NULL) {
   # indice VOI
   if(is.null(voi)) {cat('No VOI...\n'); return(0)}
   v <- which(vois$vois==voi)
-  return <- substr(vois$values, v, v)=='1'
+  return(array(substr(vois$values, v, v)=='1', dim=c(vois$Nx, vois$Ny, vois$Nz)))
 }
 
 #' Get a subset of a  \code{vois} object.
@@ -124,6 +124,105 @@ get.subset.vois <- function(vois, xlim=c(-Inf,Inf), ylim=c(-Inf,Inf), zlim=c(-In
   array.v <- vois$values[ix.min:ix.max,iy.min:iy.max,iz.min:iz.max]
   
   return(list(values = array.v, vois = vois$vois, x=x, y=y, z=z, Nx=length(x), Ny=length(y), Nz=length(z)))
+}
+
+#' Check if point(s) is inside VOI
+#' @param x,y,z Coordinate(s) of the point.
+#' @param contours Contours object.
+#' @param voi The voi name.
+#' @return A logical vector.
+#' @family VOIs
+#' @export
+is.in.voi <- function(x, y, z, contours, voi)
+{
+  # seleziona voi ed identifica z
+  zs.all <- sort(unique(contours$z)); dz <- mean(diff(zs.all)); zlim <- range(zs.all) + c(-dz,dz)/2
+  contours <- subset(contours, contour==voi)
+  if(nrow(contours)==0) {stop('voi ', voi, ' not present in contours')}
+  zs <- sort(unique(contours$z))
+  xlim <- range(contours$x)
+  ylim <- range(contours$y)
+  
+  # rimuove punti out-of-box
+  index.in <- (x>xlim[1]) & (x<xlim[2]) & (y>ylim[1]) & (y<ylim[2]) & (z>zlim[1]) & (z<zlim[2])
+  x.in <- x[index.in]
+  y.in <- y[index.in]
+  z.in <- z[index.in]
+  
+
+  Np <- length(x.in)
+  #print(xlim); print(ylim); print(zlim)
+  message('evaluating ', Np, ' points of ', length(x), '...')
+  inside <- rep(FALSE, Np)
+  pb <- txtProgressBar(min = 0, max = Np, style = 3)
+  for(ip in 1:Np) {
+    setTxtProgressBar(pb, ip)
+    
+    # check out-of-box
+    #if((x[ip]<xlim[1]) | (x[ip]>xlim[2]) | (y[ip]<ylim[1]) | (y[ip]>ylim[2]) | (z[ip]>zlim[2]) | (z[ip]<zlim[1])) {next}
+    
+    # check su z
+    zp <- zs.all[ abs(z.in[ip]-zs.all) ==  min(abs(z.in[ip]-zs.all)) ]
+    if( sum((zp %in% zs))==0 ) {next}
+    
+    # check su x,y
+    zp <- zp[zp %in% zs][1]
+    contours.z <- subset(contours, z==zp)
+    x1 <- contours.z$x; x2 <- c(contours.z$x[2:(length(contours.z$x))], contours.z$x[1]) # segmenti
+    y1 <- contours.z$y; y2 <- c(contours.z$y[2:(length(contours.z$y))], contours.z$y[1])
+    #print(x1);print(x2)
+    #print(y1);print(y2)
+    
+    # elimina segmenti verticali
+    index.x.ok <- x1 != x2
+    x1 <- x1[index.x.ok]
+    x2 <- x2[index.x.ok]
+    y1 <- y1[index.x.ok]
+    y2 <- y2[index.x.ok]
+    
+    # identifica y0 sui segmenti
+    y0 <- (y2-y1)*(x1-x.in[ip])/(x1-x2) + y1
+    intersezioni <- (y.in[ip]<=y0) &
+      ( (x.in[ip]>=x1 & x.in[ip]<=x2) | (x.in[ip]<=x1 & x.in[ip]>=x2))
+    
+    if( (sum(intersezioni) %% 2)>0 ) {inside[ip] <- TRUE}
+    #if( sum(intersezioni)>1 ) {    print(intersezioni);stop()}
+  }
+  close(pb)
+  inside.all <- rep(FALSE, length(x))
+  inside.all[index.in] <- inside
+  return(inside.all)
+}
+
+
+#' Create a VOIS object from a contours object
+#' @param contours The contours object.
+#' @param x,y,z The coordinates of the x,y,z axes for the VOIS 3D grid.
+#' @param voi Vois names vector. Optionally it is possible to specificy a specific set of vois to use.
+#' @return a VOIS object.
+#' @family VOIs
+#' @export
+create.vois <- function(contours, x, y, z, vois=NULL) {
+
+  if(is.null(vois)) {vois <- unique(contours$contour)}
+  else {vois <- vois[which(vois %in% unique(contours$contour))]}
+  xyz <- expand.grid(list(x=x, y=y, z=z))
+  
+  Nv <- length(vois)
+  for(iv in 1:Nv) {
+    message('creating vois for ', vois[iv], ' ...')
+    voi.logical <- is.in.voi(x = xyz$x, y = xyz$y, z = xyz$z, contours = contours, voi = vois[iv])
+    voi.logical.char <- rep('0', nrow(xyz))
+    voi.logical.char[voi.logical] <- '1'
+    if(iv==1) {
+      vois.logical.char.all <- voi.logical.char
+    } else {
+      vois.logical.char.all <- paste0(vois.logical.char.all, voi.logical.char)
+    }
+  }
+  
+  return(list(values=vois.logical.char.all, vois=vois, x=x, y=y, z=z, Nx=length(x), Ny=length(y), Nz=length(z)))
+  
 }
 
 # CONTOURS ---------------------------------------------------------------------

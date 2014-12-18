@@ -15,7 +15,9 @@ get.subset.vois(vois, xlim = c(-Inf, Inf), ylim = c(-Inf, Inf),
 Get a subset of a  \code{vois} object.
 }
 \seealso{
-Other VOIs: \code{\link{get.voi.logical}};
-  \code{\link{get.voiindex}}; \code{\link{get.vois}}
+Other VOIs: \code{\link{create.vois}};
+  \code{\link{get.voi.logical}};
+  \code{\link{get.voiindex}}; \code{\link{get.vois}};
+  \code{\link{is.in.voi}}
 }
 

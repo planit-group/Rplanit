@@ -18,6 +18,6 @@ get values at coordinates
 }
 \seealso{
 Other ValuesUtilities: \code{\link{identify.slice}};
-  \code{\link{interpolate.values}}
+  \code{\link{interpolate.values}}; \code{\link{meshgrid}}
 }
 

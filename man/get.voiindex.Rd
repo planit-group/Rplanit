@@ -19,7 +19,9 @@ the VOI index
 Get the VOI index from the contours file
 }
 \seealso{
-Other VOIs: \code{\link{get.subset.vois}};
-  \code{\link{get.voi.logical}}; \code{\link{get.vois}}
+Other VOIs: \code{\link{create.vois}};
+  \code{\link{get.subset.vois}};
+  \code{\link{get.voi.logical}}; \code{\link{get.vois}};
+  \code{\link{is.in.voi}}
 }
 

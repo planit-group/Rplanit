@@ -30,7 +30,9 @@ Get the VOIs (\code{vois} object) from a \code{plan} object.
 The \code{vois} object is similar (but different) to the values object.
 }
 \seealso{
-Other VOIs: \code{\link{get.subset.vois}};
-  \code{\link{get.voi.logical}}; \code{\link{get.voiindex}}
+Other VOIs: \code{\link{create.vois}};
+  \code{\link{get.subset.vois}};
+  \code{\link{get.voi.logical}};
+  \code{\link{get.voiindex}}; \code{\link{is.in.voi}}
 }
 
