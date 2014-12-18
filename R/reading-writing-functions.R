@@ -208,7 +208,7 @@ read.3d.dicom <- function(dicom.folder, exclude=NULL, recursive=TRUE, verbose=TR
   dcmImages$img <- imgs
   
   # array 3d
-  Values.3d <- create3D(dcmImages)
+  Values.3d <- create3D(dcmImages); #return(Values.3d)
   Nx <- dim(Values.3d)[1]
   Ny <- dim(Values.3d)[2]
   Nz <- dim(Values.3d)[3]
@@ -229,7 +229,7 @@ read.3d.dicom <- function(dicom.folder, exclude=NULL, recursive=TRUE, verbose=TR
   z <- sort(zz)
   
   # crea oggetto values
-  values <- list(values=Values.3d, x=x, y=y, z=z, Nx=Nx, Ny=Ny, Nz=Nz, Nv=Nv, variables=variables, file=file.name)
+  values <- list(values=Values.3d, x=x, y=y, z=z, Nx=Nx, Ny=Ny, Nz=Nz, Nv=Nv, variables=variable)
   class(values) <- 'values'
   return(values)
 }
