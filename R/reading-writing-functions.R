@@ -636,7 +636,7 @@ read.1d <- function(file.name, melted=FALSE) {
 #' 
 #' @family R/W Array
 #' @export
-write.3d.array <- function(values, file.name) {
+write.3d <- function(values, file.name) {
   
   Nx <- values[['Nx']]
   Ny <- values[['Ny']]
