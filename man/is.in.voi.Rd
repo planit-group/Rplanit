@@ -4,7 +4,7 @@
 \alias{is.in.voi}
 \title{Check if point(s) is inside VOI}
 \usage{
-is.in.voi(x, y, z, contours, voi)
+is.in.voi(x, y, z, contours, voi, progressbar = FALSE)
 }
 \arguments{
 \item{x,y,z}{Coordinate(s) of the point.}
