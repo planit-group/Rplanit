@@ -2,7 +2,7 @@
 % Please edit documentation in R/display-functions.R
 \name{render.isosurfaces}
 \alias{render.isosurfaces}
-\title{rendering di isosuperfici da matrice values}
+\title{rendering di isosuperfici da matrice values (openGL)}
 \usage{
 render.isosurfaces(values, variable = NULL, levels = 0, add = FALSE,
   alpha = NULL, color = NULL, file.name = NULL, axes = TRUE,
@@ -14,6 +14,6 @@ render.isosurfaces(values, variable = NULL, levels = 0, add = FALSE,
 Rendering remoto usando Xvfb (da implementare)}
 }
 \description{
-rendering di isosuperfici da matrice values
+rendering di isosuperfici da matrice values (openGL)
 }
 

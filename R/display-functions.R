@@ -297,7 +297,7 @@ display.slice.ct <- function(ct, contours=NULL,
                              HU.window=c(-1000,3000),
                              invert.y.axis=FALSE,
                              file.name=NULL,
-                             width=7, height=7)
+                             width=7, height=7, dpi=300)
 {
 
   # estremi
@@ -313,7 +313,7 @@ display.slice.ct <- function(ct, contours=NULL,
 
   # INIZIA FIGURA
   if(!is.null(file.name)) {
-    png(filename=file.name, width=width, height=height, res=300, units='in')
+    png(filename=file.name, width=width, height=height, res=dpi, units='in')
   }
 
   # immagine ct
@@ -1556,7 +1556,7 @@ display.dvh.bands.multiple <- function(dvh,
 # RENDERING 3D -----------------------------------------------------------------
 
 
-#' rendering di isosuperfici da matrice values
+#' rendering di isosuperfici da matrice values (openGL)
 #'
 #' @param mask a function of 3 arguments returning a logical array, a three dimensional logical array, or NULL. If not NULL, only cells for which mask is true at all eight vertices are used in forming the contour. Can also be a list of functions the same length as level.
 #'
@@ -1564,9 +1564,13 @@ display.dvh.bands.multiple <- function(dvh,
 #'
 #' @export
 # @import rgl misc3d
-
 render.isosurfaces <- function(values, variable=NULL, levels=0, add=FALSE, alpha=NULL, color=NULL, file.name=NULL, axes=TRUE, mask=NULL)
 {
+  
+  # check per vedere se X11 è disponibile
+  if(!capabilities(what='X11')) {
+    render.isosurfaces.static(values=values, variable=variable, levels=levels, add=add, alpha=alpha, color=color, file.name=file.name, axes=axes, mask=mask)
+  }
   
   # carica esplicitamente le librerie
   library(rgl)
@@ -1602,6 +1606,17 @@ render.isosurfaces <- function(values, variable=NULL, levels=0, add=FALSE, alpha
 
   if(!is.null(file.name)) {snapshot3d(file.name)}
 
+}
+
+#' rendering di isosuperfici da matrice values
+#'
+#' @param mask a function of 3 arguments returning a logical array, a three dimensional logical array, or NULL. If not NULL, only cells for which mask is true at all eight vertices are used in forming the contour. Can also be a list of functions the same length as level.
+#'
+#' @export
+# @import rgl misc3d
+render.isosurfaces.static <- function(values, variable=NULL, levels=0, add=FALSE, alpha=NULL, color=NULL, file.name=NULL, axes=TRUE, mask=NULL)
+{
+  warning('render.isosurface.static not yet implemented')
 }
 
 

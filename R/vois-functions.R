@@ -133,7 +133,7 @@ get.subset.vois <- function(vois, xlim=c(-Inf,Inf), ylim=c(-Inf,Inf), zlim=c(-In
 #' @return A logical vector.
 #' @family VOIs
 #' @export
-is.in.voi <- function(x, y, z, contours, voi)
+is.in.voi <- function(x, y, z, contours, voi, progressbar=FALSE)
 {
   # seleziona voi ed identifica z
   zs.all <- sort(unique(contours$z)); dz <- mean(diff(zs.all)); zlim <- range(zs.all) + c(-dz,dz)/2
@@ -151,12 +151,13 @@ is.in.voi <- function(x, y, z, contours, voi)
   
 
   Np <- length(x.in)
+  if(Np==0) return(rep(FALSE, length(x)))
   #print(xlim); print(ylim); print(zlim)
   message('evaluating ', Np, ' points of ', length(x), '...')
   inside <- rep(FALSE, Np)
-  pb <- txtProgressBar(min = 0, max = Np, style = 3)
+  if(progressbar) {pb <- txtProgressBar(min = 0, max = Np, style = 3)}
   for(ip in 1:Np) {
-    setTxtProgressBar(pb, ip)
+    if(progressbar) {setTxtProgressBar(pb, ip)}
     
     # check out-of-box
     #if((x[ip]<xlim[1]) | (x[ip]>xlim[2]) | (y[ip]<ylim[1]) | (y[ip]>ylim[2]) | (z[ip]>zlim[2]) | (z[ip]<zlim[1])) {next}
@@ -188,7 +189,7 @@ is.in.voi <- function(x, y, z, contours, voi)
     if( (sum(intersezioni) %% 2)>0 ) {inside[ip] <- TRUE}
     #if( sum(intersezioni)>1 ) {    print(intersezioni);stop()}
   }
-  close(pb)
+  if(progressbar) {close(pb)}
   inside.all <- rep(FALSE, length(x))
   inside.all[index.in] <- inside
   return(inside.all)
@@ -220,6 +221,8 @@ create.vois <- function(contours, x, y, z, vois=NULL) {
       vois.logical.char.all <- paste0(vois.logical.char.all, voi.logical.char)
     }
   }
+  # dimensioni giuste
+  dim(vois.logical.char.all) <- c(length(x), length(y), length(z))
   
   return(list(values=vois.logical.char.all, vois=vois, x=x, y=y, z=z, Nx=length(x), Ny=length(y), Nz=length(z)))
   
@@ -560,8 +563,10 @@ write.contours <- function(contours, name)
   writeLines('\n', con=con, sep='')
   close(con)
   write.table(contours[c('id', 'polygon', 'slice', 'x', 'y')],
-              file=paste(name, '.contours', sep=''),
+              file=paste0(name, '.contours'),
               col.names=FALSE, row.names=FALSE, append=TRUE)
+  
+  message('contours saved in file ', paste0(name, '.contours'))
 }
 
 
