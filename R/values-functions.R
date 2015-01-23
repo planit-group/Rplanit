@@ -335,7 +335,7 @@ sanitize.values <- function(values)
 #' @return A values object
 #' @family Values
 #' @export
-merge.values <- function(values.list)
+combine.values <- function(values.list)
 {
   NV <- length(values.list)
   if(NV==1) {return(values.list[[1]])}

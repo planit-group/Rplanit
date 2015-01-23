@@ -11,14 +11,14 @@ accetta values con più di una variabile. la selezione è fatta sulla prima.
 (che può coincidere o meno con la variabile specificata)
 }
 \seealso{
-Other Values: \code{\link{create.values}};
+Other Values: \code{\link{combine.values}};
+  \code{\link{create.values}};
   \code{\link{dataframe.from.values}};
   \code{\link{get.sparse.array.gate}};
   \code{\link{get.values.dataframe}};
   \code{\link{get.values.gate.plan}};
   \code{\link{get.values.plankit.plan}};
-  \code{\link{get.values}}; \code{\link{merge.values}};
-  \code{\link{sanitize.values}};
+  \code{\link{get.values}}; \code{\link{sanitize.values}};
   \code{\link{values.from.sparse.array}}
 }
 
