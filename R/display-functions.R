@@ -1564,12 +1564,13 @@ display.dvh.bands.multiple <- function(dvh,
 #'
 #' @export
 # @import rgl misc3d
-render.isosurfaces <- function(values, variable=NULL, levels=0, add=FALSE, alpha=NULL, color=NULL, file.name=NULL, axes=TRUE, mask=NULL)
+render.isosurfaces <- function(values, variable=NULL, levels=0, add=FALSE, alpha=NULL, color=NULL, file.name=NULL, axes=TRUE, mask=NULL, openGL=TRUE)
 {
   
   # check per vedere se X11 è disponibile
-  if(!capabilities(what='X11')) {
+  if(!capabilities(what='X11') | !openGL) {
     render.isosurfaces.static(values=values, variable=variable, levels=levels, add=add, alpha=alpha, color=color, file.name=file.name, axes=axes, mask=mask)
+    return()
   }
   
   # carica esplicitamente le librerie
@@ -1577,7 +1578,7 @@ render.isosurfaces <- function(values, variable=NULL, levels=0, add=FALSE, alpha
   library(misc3d)
 
   # identifica variabile
-  v.index <- which(values$variable==variable)
+  v.index <- which(values$variable==variable)[1]
   Nv <- length(values$variables)
   if(Nv==1) {
     v.array <- values$values
@@ -1616,7 +1617,32 @@ render.isosurfaces <- function(values, variable=NULL, levels=0, add=FALSE, alpha
 # @import rgl misc3d
 render.isosurfaces.static <- function(values, variable=NULL, levels=0, add=FALSE, alpha=NULL, color=NULL, file.name=NULL, axes=TRUE, mask=NULL)
 {
-  warning('render.isosurface.static not yet implemented')
+  
+  library(plot3D)
+  
+  #warning('render.isosurface.static not yet implemented')
+  
+  # identifica variabile
+  v.index <- which(values$variable==variable)[1]
+  Nv <- length(values$variables)
+  if(Nv==1) {
+    v.array <- values$values
+  } else {
+    v.array <- values$values[v.index,,,]
+  }
+  
+  if(is.null(color)) {
+    Ncol <- length(levels)
+    my.cols <- rainbow(Ncol, start=0, end=0.6)[Ncol:1]
+  } else {my.cols <- color}
+  if(is.null(alpha)) {
+    alpha <- 1/length(levels)
+  }
+  
+  # contour3d(v.array, levels, values$x, values$y, values$z, smooth=TRUE, add=add, alpha=alpha, color=my.cols, mask=mask)
+  isosurf3D(values$x, values$y, values$z, colvar=v.array, level = levels, col=my.cols, alpha=alpha, add=add)
+  print(summary(v.array))
+  print(add)
 }
 
 
@@ -1626,7 +1652,7 @@ render.isosurfaces.static <- function(values, variable=NULL, levels=0, add=FALSE
 #'
 #' @export
 
-render.voi.isosurfaces <- function(vois=vois, voi=PTV, file.name=NULL, add=FALSE, alpha=NULL, mask=NULL)
+render.voi.isosurfaces <- function(vois=vois, voi=PTV, file.name=NULL, add=FALSE, alpha=NULL, mask=NULL, openGL=TRUE)
 {
 
   vois.v <- vois
@@ -1648,7 +1674,7 @@ render.voi.isosurfaces <- function(vois=vois, voi=PTV, file.name=NULL, add=FALSE
     if(is.null(alpha)) {alpha <- 1/length(voi)}
 
     if(sum(vois.v$values)>0) {
-      render.isosurfaces(values=vois.v, variable=voi[i], levels=0.5, add=add, alpha=alpha, color=my.cols[i], file.name=file.name, mask=mask)
+      render.isosurfaces(values=vois.v, variable=voi[i], levels=0.5, add=add, alpha=alpha, color=my.cols[i], file.name=file.name, mask=mask, openGL=openGL)
     }
   }
 

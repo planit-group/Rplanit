@@ -5,7 +5,7 @@
 \title{rendering 3D dei voi con isosuperfici}
 \usage{
 render.voi.isosurfaces(vois = vois, voi = PTV, file.name = NULL,
-  add = FALSE, alpha = NULL, mask = NULL)
+  add = FALSE, alpha = NULL, mask = NULL, openGL = TRUE)
 }
 \arguments{
 \item{mask}{a function of 3 arguments returning a logical array, a three dimensional logical array, or NULL. If not NULL, only cells for which mask is true at all eight vertices are used in forming the contour.}

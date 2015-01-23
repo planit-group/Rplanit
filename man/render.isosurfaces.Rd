@@ -6,7 +6,7 @@
 \usage{
 render.isosurfaces(values, variable = NULL, levels = 0, add = FALSE,
   alpha = NULL, color = NULL, file.name = NULL, axes = TRUE,
-  mask = NULL)
+  mask = NULL, openGL = TRUE)
 }
 \arguments{
 \item{mask}{a function of 3 arguments returning a logical array, a three dimensional logical array, or NULL. If not NULL, only cells for which mask is true at all eight vertices are used in forming the contour. Can also be a list of functions the same length as level.
