@@ -2,7 +2,7 @@
 % Please edit documentation in R/biological-functions.R
 \name{alpha.beta.mkm}
 \alias{alpha.beta.mkm}
-\title{Evaluation of alpha and beta LQ parameter (MKM)}
+\title{Evaluation of alpha and beta LQ parameter (fast MKM)}
 \usage{
 alpha.beta.mkm(alphaX = 0.1295, betaX = 0.03085, rN = 4, rd = 0.31,
   alphaX.min = NULL, alphaX.max = NULL, alphaX.N = NULL,
@@ -32,7 +32,7 @@ alpha.beta.mkm(alphaX = 0.1295, betaX = 0.03085, rN = 4, rd = 0.31,
 
 \item{rN.N}{number of step for \code{rN}}
 
-\item{rd.min,rN.max}{range of variability for parameter \code{rd}}
+\item{rd.min,rd.max}{range of variability for parameter \code{rd}}
 
 \item{rd.N}{number of step for \code{rd}}
 
@@ -51,7 +51,7 @@ a data.frame containing all the information specified including the alpha and be
 The evaluation is performed for a monoenergetic ion. It uses a C++ MKM "rapid" implementation for the evaluation. It accepts a single set of MKM parameter (\code{alphaX}, \code{betaX}, \code{rN}, \code{rd}), or alternatively a full range of variability (min,max) for each parameter.
 }
 \seealso{
-Other LEM/MKM Models: \code{\link{alpha.beta.lem}};
+Other LEM/MKM Models: \code{\link{alpha.beta.ion.range}};
   \code{\link{alpha.fun.mkm}}
 }
 

@@ -355,7 +355,7 @@ ntcp.S <- function(dvh.survival, gam=2, s=1, Nf=30) {
 
 #LEM/MKM MODELS ----------------------------------------------------------------
 
-#' Evaluation of alpha and beta LQ parameter (MKM)
+#' Evaluation of alpha and beta LQ parameter (fast MKM)
 #'
 #' The evaluation is performed for a monoenergetic ion. It uses a C++ MKM "rapid" implementation for the evaluation. It accepts a single set of MKM parameter (\code{alphaX}, \code{betaX}, \code{rN}, \code{rd}), or alternatively a full range of variability (min,max) for each parameter.
 #'
@@ -373,7 +373,7 @@ ntcp.S <- function(dvh.survival, gam=2, s=1, Nf=30) {
 #' @param betaX.N number of step for \code{betaX}
 #' @param rN.min,rN.max range of variability for parameter \code{rN}
 #' @param rN.N number of step for \code{rN}
-#' @param rd.min,rN.max range of variability for parameter \code{rd}
+#' @param rd.min,rd.max range of variability for parameter \code{rd}
 #' @param rd.N number of step for \code{rd}
 #' @param cellType name of the tissue/cell line (optional)
 #' @param particel type. Available ions: 'H', 'He', 'Li', 'Be', 'B,', 'C', 'N', 'O', 'F', 'Ne'.
@@ -384,7 +384,7 @@ ntcp.S <- function(dvh.survival, gam=2, s=1, Nf=30) {
 #'
 #' @family LEM/MKM Models
 #' @export
-# utilizza il main main_alpha_beta_parameter._study.cc
+# utilizza il main main_alpha_beta_parameter_study.cc
 # crea una stringa di argomenti da passare a alpha_beta_parameter_study, predisposta
 # per il calcolo MKM "rapido".
 # In output ritorna un data.frame con i parametri corrispondenti. I valori di
@@ -402,8 +402,9 @@ alpha.beta.mkm <- function(alphaX=0.1295, betaX=0.03085, rN=4, rd=0.31,
                            energies=NULL, lets=NULL,
                            ignore.stdout=TRUE, ignore.stderr=TRUE)
 {
-  model='MKM'
-  calculusType='rapidMKM'
+  model <- 'MKM'
+  calculusType <- 'rapidMKM'
+  precision <- 1
 
   #lem.setenv=get('lem.setenv', envir=dektoolsEnv)
 
@@ -433,7 +434,7 @@ alpha.beta.mkm <- function(alphaX=0.1295, betaX=0.03085, rN=4, rd=0.31,
   of <- paste(of, 'csv', sep='.')
 
   # costruzione linea di comando:
-  s.args <- paste(cellType, model, calculusType, a, b, n, d, particleType, energyType, e)
+  s.args <- paste(cellType, model, calculusType, a, b, n, d, particleType, precision, energyType, e)
   # cmd <- paste('.', lem.setenv, '; survival_alpha_beta_parameter_study', s.args)
   cmd <- paste('survival', s.args)
   if(!ignore.stdout) {message(cmd)}
@@ -450,94 +451,131 @@ alpha.beta.mkm <- function(alphaX=0.1295, betaX=0.03085, rN=4, rd=0.31,
   return(out.df)
 }
 
-
-#' Evaluation of alpha and beta LQ parameter (LEM)
+#' Evaluation of alpha and beta LQ parameter (generic)
 #'
-#' The evaluation is performed for a monoenergetic ion. It uses a C++ LEM "rapid" implementation for the evaluation. It accepts a single set of LEM parameter (\code{alphaX}, \code{betaX}, \code{rN}, \code{Dt}), or alternatively a full range of variability (min,max) for each parameter.
+#' The evaluation is performed for a monoenergetic ion. It uses a C++ implementation for the evaluation. It accepts a single set of parameter depending on the choosen radiobiological model, or alternatively a full range of variability (min,max) for each parameter.
 #'
-#' @param alphaX,betaX,rN,Dt LEM "biological" parameter associated to a specific biological tissue/cell line:
+#' @param model the name of the model (options: 'MKM', 'LEMI', 'LEMII', 'LEMIII')
+#' @param model a dataframe containing the "biological" parameter associated to a specific biological tissue/cell line. In the case of the MKM:
 #' \itemize{
-#'   \item{alphaX} LQ alpha parameter of the reference radiation [Gy^-1]
-#'   \item{betaX} LQ beta parameter of the reference radiation [Gy^-2]
+#'   \item{alpha0} LQ alpha parameter of the reference radiation [Gy^-1]
+#'   \item{beta0} LQ beta parameter of the reference radiation [Gy^-2]
 #'   \item{rN} cell nucleus radius [um]
-#'   \item{Dt} threshold dose [Gy]
+#'   \item{rd} domain radius [um]
+#' }
+#' Optionally, instead of the specific values, the range of the parameters can be specified in the same data.frame. In the case of MKM:
+#' \itemize{
+#'   \item{alpha0.min, alpha0.max, alpha0.N} range of variability for parameter \code{alpha0} and number of steps
+#'   \item{beta0.min, beta0.max, beta0.N} range of variability for parameter \code{beta0} and number of steps
+#'   \item{rN.min, rN.max, rN.N} range of variability for parameter \code{rN} and number of steps
+#'   \item{rd.min, rN.max} domain radius [um]
 #' }
 #'
-#' @param alphaX.min,alphaX.max range of variability for parameter \code{alphaX}
-#' @param alphaX.N number of step for \code{alphaX}
-#' @param betaX.min,betaX.max range of variability for parameter \code{betaX}
-#' @param betaX.N number of step for \code{betaX}
-#' @param rN.min,rN.max range of variability for parameter \code{rN}
-#' @param rN.N number of step for \code{rN}
-#' @param Dt.min,Dt.max range of variability for parameter \code{Dt}
-#' @param Dt.N number of step for \code{Dt}
 #' @param cellType name of the tissue/cell line (optional)
-#' @param model The specific LEM model (available: 'LEMI', 'LEMII', 'LEMIII')
-#' @param calculusType Approximation used for the evaluation (available: 'rapidSholz', 'rapidRusso')
-#' @param particel type. Available ions: 'H', 'He', 'Li', 'Be', 'B,', 'C', 'N', 'O', 'F', 'Ne'.
+#' @param particle available particles: 'H', 'He', 'Li', 'Be', 'B,', 'C', 'N', 'O', 'F', 'Ne'.
 #' @param energies vector of energies for the particle [MeV]
 #' @param lets vector of LETs for the particle [keV/um]. It is used if \code{energies} is \code{NULL}.
-#'
-#' @return a data.frame containing all the information specified including the alpha and beta LEM evaluation.
+#' @param calculusType the type of the evaluations options are:
+#' \itemize{
+#'   \item{rapidMKM} fast implementation for the MKM (Kase2008)
+#'   \item{rapidSholz} fast implementation of the LEMI, LEMII, LEMIII (Sholz2000)
+#'   \item{rapidRusso} fast implementation of the LEMI, LEMII, LEMIII, more accurate than the \code{rapidSholz} (Russo2010)
+#'   \item{slow_alphaIon_betaIon} slow Monte Carlo evaluation (compatible with MKM, LEMI, LEMII and LEMIII).
+#' }
+#' @param precision used onlu for the Monte Carlo evaluation. If precision < 1.0 it represents the target relative standard deviation to be reached in the evaluations of the cell survivals. If precision >= 1 it represents the number of cells to be simulated.
+#' 
+#' @return a data.frame containing all the information specified including the alpha and beta MKM evaluation (note, in the MKM implementation beta = betaX).
 #'
 #' @family LEM/MKM Models
 #' @export
-alpha.beta.lem <- function(alphaX=0.1, betaX=0.05, rN=5, Dt=30,
-                           alphaX.min=NULL, alphaX.max=NULL, alphaX.N=NULL,
-                           betaX.min=NULL, betaX.max=NULL, betaX.N=NULL,
-                           rN.min=NULL, rN.max=NULL, rN.N=NULL,
-                           Dt.min=NULL, Dt.max=NULL, Dt.N=NULL,
-                           model='LEMI', calculusType='rapidScholz',
-                           cellType=NULL,
-                           particleType='H',
+alpha.beta.ion.range <- function(model='MKM',
+                           model.parameters=data.frame(alpha0=0.1295, beta0=0.03085, rN=4, rd=0.31),
+                           cell.name=NULL,
+                           particle='H',
                            energies=NULL, lets=NULL,
-                           ignore.stdout=TRUE, ignore.stderr=TRUE)
+                           calculusType='rapidMKM', precision=0.5,
+                           ignore.stdout=TRUE, ignore.stderr=TRUE, remove.temp.files=TRUE)
 {
-  #model='LEM'
-  #calculusType='rapidMKM'
-
-  #lem.setenv=get('lem.setenv', envir=dektoolsEnv)
-
   # nome cellType
-  if(is.null(cellType)) {cellType <- paste('R', sprintf("%06d", round(runif(1,min=0,max=1e6))), sep='')}
-
-  # valori dei parametri LEM
-  if (!is.null(alphaX)) {a <- paste(alphaX, alphaX, 1)} else {a <- paste(alphaX.min, alphaX.max, alphaX.N)}
-  if (!is.null(betaX)) {b <- paste(betaX, betaX, 1)} else {b <- paste(betaX.min, betaX.max, betaX.N)}
-  if (!is.null(rN)) {n <- paste(rN, rN, 1)} else {n <- paste(rN.min, rN.max, rN.N)}
-  if (!is.null(Dt)) {d <- paste(Dt, Dt, 1)} else {d <- paste(Dt.min, Dt.max, Dt.N)}
-
+  if(is.null(cell.name)) {cell.name <- paste('R', sprintf("%06d", round(runif(1,min=0,max=1e6))), sep='')}
+  
+  # nomi dei parametri
+  if(model=='MKM') {
+    parameter.names <- c('alpha0', 'beta0', 'rN', 'rd')
+    parameter.names.min <- c('alpha0.min', 'beta0.min', 'rN.min', 'rd.min')
+    parameter.names.max <- c('alpha0.max', 'beta0.max', 'rN.max', 'rd.max')
+    parameter.names.N <- c('alpha0.N', 'beta0.N', 'rN.N', 'rd.N')
+  }
+  else if(model=='LEMI' | model=='LEMII' | model=='LEMIII') {
+    parameter.names <- c('alpha0', 'beta0', 'rN', 'Dt')
+    parameter.names.min <- c('alpha0.min', 'beta0.min', 'rN.min', 'Dt.min')
+    parameter.names.max <- c('alpha0.max', 'beta0.max', 'rN.max', 'Dt.max')
+    parameter.names.N <- c('alpha0.N', 'beta0.N', 'rN.N', 'Dt.N')
+  } else {
+    stop('Model', model, 'not defined.')
+  }
+  
+  # recupera parametri
+  if(all(parameter.names %in% names(model.parameters))) {
+    p <- model.parameters[parameter.names]
+    p.min <- p.max <- p.N <- NULL
+  } else if(all(c(parameter.names.min, parameter.names.max, parameter.names.N) %in% names(model.parameters))) {
+    p.min <- model.parameters[parameter.names.min];
+    p.max <- model.parameters[parameter.names.max];
+    p.N <- model.parameters[parameter.names.N];
+    p <- NULL
+  } else {
+    stop('Parameter not well defined. (', names(model.parameters), ')')
+  }
+  
+  # valori dei parametri da passare a pure-survival
+  if (!is.null(p[1])) {a <- paste(p[1], p[1], 1)} else {a <- paste(p.min[1], p.max[1], p.N[1])}
+  if (!is.null(p[2])) {b <- paste(p[2], p[2], 1)} else {b <- paste(p.min[2], p.max[2], p.N[2])}
+  if (!is.null(p[3])) {n <- paste(p[3], p[3], 1)} else {n <- paste(p.min[3], p.max[3], p.N[3])}
+  if (!is.null(p[4])) {d <- paste(p[4], p[4], 1)} else {d <- paste(p.min[4], p.max[4], p.N[4])}
+  
   # check per vedere se il calcolo è sulle energie o sul let (e controllo estremi):
-  if(!is.null(energies)) {
+  if(length(energies)>0) {
     energyType <- 'energy'
     e <- paste(energies, collapse=' ')
-  } else if(!is.null(lets)) {
-    lets <- lets[lets >= srim.let.min[particleType] &  lets <= srim.let.max[particleType]]
+  } else if(length(lets)>0) {
+    lets <- lets[lets >= srim.let.min[particle] &  lets <= srim.let.max[particle]]
     energyType <- 'let'
     e <- paste(lets, collapse=' ')
-  } else {
+  } else if(length(energies)==0 & length(lets)==0){
     stop('energies/lets not specified.')
   }
-
+  
   # output file
-  of <- paste(particleType, cellType, model, calculusType, sep='_')
+  of <- paste(particle, cell.name, model, calculusType, sep='_')
   of <- paste(of, 'csv', sep='.')
-
+  
+  # creazione cartella per calcolo MC
+  if(calculusType=='slow_alphaIon_betaIon') {dir.create(paste0('survival-data-', particle), showWarnings = FALSE)}
+  
   # costruzione linea di comando:
-  s.args <- paste(cellType, model, calculusType, a, b, n, d, particleType, energyType, e)
+  s.args <- paste(cell.name, model, calculusType, a, b, n, d, particle, precision, energyType, e)
   # cmd <- paste('.', lem.setenv, '; survival_alpha_beta_parameter_study', s.args)
   cmd <- paste('survival', s.args)
   if(!ignore.stdout) {message(cmd)}
-
+  
   t <- system.time(system(cmd, ignore.stdout=ignore.stdout, ignore.stderr=ignore.stderr))
   #message('time elapsed: ', t)
-
+  
   # legge file temporaneo salvato
   out.df <- read.csv(of)
-
+  out.df$cell <- cell.name 
+  out.df$particle <- particle
+  
   # cancella file temporaneo
-  system(paste('rm', of))
-
+  if(remove.temp.files) {
+    #system(paste('rm', of))
+    unlink(of)
+    if(calculusType=='slow_alphaIon_betaIon') {
+      unlink(paste0('survival-data-', particle), recursive = TRUE)
+    }
+  }
+  
   return(out.df)
 }
 
@@ -561,8 +599,9 @@ alpha.fun.mkm <- function(alphaX=0.1295, betaX=0.03085, rN=4, rd=0.31,
                       energies=NULL, lets=NULL,
                       use.limits=FALSE, outmessages=FALSE)
 {
-  model='MKM'
-  calculusType='rapidMKM'
+  model <- 'MKM'
+  calculusType <- 'rapidMKM'
+  precision <- 1
 
   #lem.setenv=get('lem.setenv', envir=dektoolsEnv)
 
@@ -605,7 +644,7 @@ alpha.fun.mkm <- function(alphaX=0.1295, betaX=0.03085, rN=4, rd=0.31,
   of <- paste(of, 'csv', sep='.')
 
   # costruzione linea di comando:
-  s.args <- paste(cellType, model, calculusType, a, b, n, d, particleType, energyType, e)
+  s.args <- paste(cellType, model, calculusType, a, b, n, d, particleType, precision, energyType, e)
   #cmd <- paste('.', lem.setenv, '; survival_alpha_beta_parameter_study', s.args)
   cmd <- paste('survival', s.args)
   #print(cmd)

@@ -23,7 +23,7 @@ alpha.fun.mkm(alphaX = 0.1295, betaX = 0.03085, rN = 4, rd = 0.31,
 Returns a function alpha(LET) or alpha(specific energy), using the MKM model. The functions is an interpolation functions that uses a set of alpha values evaluated over the defined set of LETs (or specific energies).
 }
 \seealso{
-Other LEM/MKM Models: \code{\link{alpha.beta.lem}};
+Other LEM/MKM Models: \code{\link{alpha.beta.ion.range}};
   \code{\link{alpha.beta.mkm}}
 }
 
