@@ -222,11 +222,12 @@ read.3d.dicom <- function(dicom.folder, exclude=NULL, recursive=TRUE, verbose=TR
   voxel.origin <- c(mean(vo[seq(1, length(dxy)-2, by=3)]),
                     mean(vo[seq(2, length(dxy)-1, by=3)]),
                     mean(vo[seq(3, length(dxy), by=3)]))
+  message('origin: ', voxel.origin[1], ', ', voxel.origin[2], ', ', voxel.origin[3])
   dx <- mean(dxy[seq(1, length(dxy)-1, by=2)])
   dy <- mean(dxy[seq(2, length(dxy), by=2)])
   x <- seq(from=voxel.origin[1], by=dx, length.out=Nx)
   y <- seq(from=voxel.origin[2], by=dy, length.out=Ny)
-  z <- sort(zz)
+  z <- sort(zz)-min(zz) + voxel.origin[3]
   
   # crea oggetto values
   values <- list(values=Values.3d, x=x, y=y, z=z, Nx=Nx, Ny=Ny, Nz=Nz, Nv=Nv, variables=variable)

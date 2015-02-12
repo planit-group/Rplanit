@@ -212,7 +212,7 @@ create.vois <- function(contours, x, y, z, vois=NULL) {
   Nv <- length(vois)
   for(iv in 1:Nv) {
     message('creating vois for ', vois[iv], ' ...')
-    voi.logical <- is.in.voi(x = xyz$x, y = xyz$y, z = xyz$z, contours = contours, voi = vois[iv])
+    voi.logical <- is.in.voi(x = xyz$x, y = xyz$y, z = xyz$z, contours = contours, voi = vois[iv], progressbar = TRUE)
     voi.logical.char <- rep('0', nrow(xyz))
     voi.logical.char[voi.logical] <- '1'
     if(iv==1) {

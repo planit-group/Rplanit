@@ -8,7 +8,7 @@ display.slice.ct(ct, contours = NULL, x = NA, y = NA, z = NA, Nx = NA,
   Ny = NA, Nz = NA, plan = NULL, xlim = NULL, ylim = NULL,
   zlim = NULL, vlim = NULL, HU.window = c(-1000, 3000),
   invert.y.axis = FALSE, file.name = NULL, width = 7, height = 7,
-  dpi = 300)
+  dpi = 300, use.contour.colors = FALSE)
 }
 \description{
 Alias for display.slices().

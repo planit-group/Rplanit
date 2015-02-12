@@ -201,7 +201,7 @@ run.dek.inverse <- function(plan, outmessages=FALSE) {
   # CT e CONTORNI
   if(!is.null(plan[['ct']])) {
     message('using ct object in plan...')
-    write.3d.array(values=plan[['ct']], file.name=paste0(plan[['name']], '/ct.3d'))
+    write.3d(values=plan[['ct']], file.name=paste0(plan[['name']], '/ct.3d'))
     plan[['ctFile']] <- paste0(plan[['name']], '/ct.3d')
   }
   if(!is.null(plan[['contours']])) {
@@ -365,7 +365,7 @@ run.dek.forward <- function(plan, outmessages=FALSE) {
   # CT e CONTORNI
   if(!is.null(plan[['ct']])) {
     message('using ct object in plan...')
-    write.3d.array(values=plan[['ct']], file.name=paste0(plan[['name']], '/ct.3d'))
+    write.3d(values=plan[['ct']], file.name=paste0(plan[['name']], '/ct.3d'))
     plan[['ctFile']] <- paste0(plan[['name']], '/ct.3d')
   }
   if(!is.null(plan[['contours']])) {

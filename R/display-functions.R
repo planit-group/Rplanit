@@ -297,7 +297,8 @@ display.slice.ct <- function(ct, contours=NULL,
                              HU.window=c(-1000,3000),
                              invert.y.axis=FALSE,
                              file.name=NULL,
-                             width=7, height=7, dpi=300)
+                             width=7, height=7, dpi=300,
+                             use.contour.colors=FALSE)
 {
 
   # estremi
@@ -349,11 +350,14 @@ display.slice.ct <- function(ct, contours=NULL,
       type <- unique(rs$type)
       if(type=='PTV') {my.lwd[i] <- 4}
       pol <- unique(rs$polygon)
+      if(use.contour.colors) { # imposta colori predefiniti
+        c.col <- rs$display.color[1]
+      } else {c.col <- 'green'}
       #print(pol)
       for(j in 1:length(pol)) {
         rsp <- subset(rs, polygon==pol[j])
         rsp <- rbind(rsp, rsp[1,])
-        lines(rsp$x, rsp$y, col='green', lwd=my.lwd[i])
+        lines(rsp$x, rsp$y, col=c.col, lwd=my.lwd[i])
       }
     }
     }
@@ -396,10 +400,11 @@ display.slice.ct <- function(ct, contours=NULL,
 #' @param width,height sizes of the figure to be saved (inches) (optional)
 #' @param HU.window HU window to visualize for the CT.
 #' @param alpha.lower,alpha.upperThe opacity (alpha) is evaluated as a linear ramp (\code{alpha.lower} to \code{alpha.upper}) from \code{alpha.lower} to \code{alpha.upper} of the values range.
-#'
 #' @param invert.y.axis Invert the y axis.
 #' @param contour.color The color used for the contour of the VOI.
 #' @param dpi dpi of the saved image.
+#' @param use.contour.colors Use the colors defined in the contours object for the contours.
+#' @param title Explicitly define the text to be displayed in the plot title.
 #'
 #' @family display slices
 #' @export
@@ -425,7 +430,9 @@ display.slice.all <- function(ct=NULL,
                               invert.y.axis=FALSE,
                               contour.color='green',
                               dpi=300,
-                              levels=NULL)
+                              levels=NULL,
+                              use.contour.colors=FALSE,
+                              title=NULL)
 {
   #suppressMessages(library(fields))
 
@@ -494,7 +501,9 @@ display.slice.all <- function(ct=NULL,
   if(values$Nv>1) {values$values <- values$values[v,,,]}
 
   # text
-  if(!is.null(plan)) {main <- paste(plan$name, '\n', variable, sep='')} else {main <- variable}
+  if(!is.null(title)) {main <- title} else {
+    if(!is.null(plan)) {main <- paste(plan$name, '\n', variable, sep='')} else {main <- variable}
+  }
   if(!is.na(z)) {subt <- paste('slice at z =', z, 'mm')}
   else if(!is.na(y)) {subt <- paste('slice at y =', y, 'mm')}
   else if(!is.na(x)) {subt <- paste('slice at x =', x, 'mm')}
@@ -585,9 +594,12 @@ display.slice.all <- function(ct=NULL,
       type <- unique(rs$type)
       if(type=='PTV') {my.lwd[i] <- 4}
       pol <- unique(rs$polygon)
+      if(use.contour.colors) { # imposta colori predefiniti
+        c.col <- rs$display.color[1]
+      } else {c.col <- contour.color}
       for(j in 1:length(pol)) {
         rsp <- subset(rs, polygon==pol[j])
-        lines(rsp$x, rsp$y, col=contour.color, lwd=my.lwd[i])
+        lines(rsp$x, rsp$y, col=c.col, lwd=my.lwd[i])
       }
     }
     }
@@ -722,16 +734,19 @@ dumpslices.3d.2.png <- function(file.name,
   myfolder <- paste(file.name, '.slices.png', sep='')
   dir.create(myfolder)
 
+  
+  pb <- txtProgressBar(min = 0, max = Nv, style = 3)
   for (v in 1:Nv) {
-    cat('saving pngs for variable:', values[v], '...\n')
+    setTxtProgressBar(pb, v)
+    #cat('saving pngs for variable:', values[v], '...\n')
     for (k in 1:Nz) {
       png.name <- paste(values[v], '_', z[k], 'y.png', sep='')
       # sanitize
       png.name <- gsub('/', '_', png.name)
-      cat (png.name, '\n')
+      #cat (png.name, '\n')
       if (Nv > 1) {im.slice <- t(Values.3d[v, , , k])}
       else {
-        cat(dim(Values.3d), '\n')
+        #cat(dim(Values.3d), '\n')
         im.slice <- t(Values.3d[ , , k])
       }
       v.max <- max(im.slice)
@@ -740,6 +755,7 @@ dumpslices.3d.2.png <- function(file.name,
       writePNG(im.slice, target=paste(myfolder, '/', png.name, sep=''))
     }
   }
+  close(pb)
 }
 
 
@@ -911,11 +927,23 @@ display.dvh <- function(dvh, plan=NULL,
   if(return.dataframe) {return(df)}
 
   #print(summary(df))
-  Ncol <- length(unique(df$voi))
+  unique.voi <- unique(df$voi)
+  Ncol <- length(unique.voi)
   #my.cols <- sample(colors(), N)
   #palette(rainbow(round(Ncol*1.5))) # prende solo la prima parte del rainbow
   #my.cols <- palette()[1:Ncol]
   my.cols <- rainbow(round(Ncol*1.5))[1:Ncol]
+  
+  # check per vedere se ci sono display.color predefiniti.
+  for(ic in 1:N) {
+    if(!is.null(dvh[[ic]]$display.color)) {
+      message('using display.color for ', dvh[[ic]]$voi)
+      icol <- which(dvh[[ic]]$voi==unique.voi)
+      if(dvh[[ic]]$display.color=="#FFFFFF"){dvh[[ic]]$display.color <- "#000000"}
+      my.cols[icol] <- dvh[[ic]]$display.color
+    }
+  }
+  
 
   # check per vedere quante variabili ci sono nella lista
   variables <- unique(df$variable)
