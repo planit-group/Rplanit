@@ -436,9 +436,9 @@ write.beams <- function(beams, file.name, format='puredek', ion='1H', add.extens
       for(E in 1:NumberOfEnergies) {
         beams.submachine <- subset(beams.machine, energy==energies[E])
         cat(paste('submachine# ',
-                  E-1,
+                  E, # E-1.
                   energies[E],
-                  0, # intensità del fascio (non usato),
+                  1, #0, # intensità del fascio (non usato),
                   9.4, # FWHM spot
                   '\n', sep=' '), file=fluka, sep='')
         cat(paste('#particles ',
