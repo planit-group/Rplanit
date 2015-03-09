@@ -107,7 +107,7 @@ get.values.gate.plan <- function(plan, center.coordinates=NULL)
     variable.file <- paste(plan$name, '/output/', variable.file, sep='')
     values[[i]] <- read.3d.hdr(file.name=variable.file, variable=variables[i])
   }
-  values <- merge.values(values.list=values)
+  values <- combine.values(values.list=values)
 
   # recupera le coordinate assolute dalla CT
   if(is.null(center.coordinates)) {
