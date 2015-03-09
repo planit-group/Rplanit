@@ -456,7 +456,7 @@ alpha.beta.mkm <- function(alphaX=0.1295, betaX=0.03085, rN=4, rd=0.31,
 #' The evaluation is performed for a monoenergetic ion. It uses a C++ implementation for the evaluation. It accepts a single set of parameter depending on the choosen radiobiological model, or alternatively a full range of variability (min,max) for each parameter.
 #'
 #' @param model the name of the model (options: 'MKM', 'LEMI', 'LEMII', 'LEMIII')
-#' @param model a dataframe containing the "biological" parameter associated to a specific biological tissue/cell line. In the case of the MKM:
+#' @param model.parameters a dataframe containing the "biological" parameter associated to a specific biological tissue/cell line. In the case of the MKM:
 #' \itemize{
 #'   \item{alpha0} LQ alpha parameter of the reference radiation [Gy^-1]
 #'   \item{beta0} LQ beta parameter of the reference radiation [Gy^-2]
