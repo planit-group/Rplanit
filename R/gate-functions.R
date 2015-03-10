@@ -191,6 +191,13 @@ set.ct.gate <- function(plan.gate) {
     error('setting for CT not yet implemented')
   }
   
+  # traslazione origine + isocentro
+  vp.mac.txt <- gsub('#@trasl', '', vp.mac.txt)
+  ct.origin <- c(plan.gate[['ct']]$x[1], plan.gate[['ct']]$x[2], plan.gate[['ct']]$x[3])
+  isocenter <- get.isocenter(plan.gate)
+  vp.mac.txt <- gsub('@setOrigin', '', paste0(ct.origin, collapse = ' '))
+  vp.mac.txt <- gsub('@TranslateTheImageAtThisIsoCenter', '', paste0(isocenter, collapse = ' '))
+  
   # write file .mac
   vp.mac <- file(paste(plan.gate$name, '/mac/Voxel_Patient.mac', sep=''), "wt")
   write(vp.mac.txt, file=vp.mac)
@@ -345,6 +352,8 @@ create.gate.structure <- function(plan)
   }
 
   # traslazione dell'isocentro -------------------------------------------------
+  # sembra non fare non fare sostanzialmente nulla per il momento...
+  # non c'è nessun "@translation" in main.mac
   isocenter <- unique(plan$beams[c('x_iso', 'y_iso', 'z_iso')])
   if(nrow(isocenter)>1) {
     stop('multiple isocenters not yet supported in gate...')

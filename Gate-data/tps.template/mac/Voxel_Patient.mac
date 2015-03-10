@@ -61,5 +61,5 @@
 # world center
 
 #/gate/target/placement/setTranslation                  0 0 0 mm
-#/gate/target/geometry/setOrigin                        0 0 0 mm
-#/gate/target/geometry/TranslateTheImageAtThisIsoCenter 0 0 0 mm
+#@trasl/gate/target/geometry/setOrigin                        @setOrigin mm
+#@trasl/gate/target/geometry/TranslateTheImageAtThisIsoCenter @TranslateTheImageAtThisIsoCenter mm

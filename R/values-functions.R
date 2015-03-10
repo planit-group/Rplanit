@@ -101,6 +101,7 @@ get.values.gate.plan <- function(plan, center.coordinates=NULL)
 {
   values <- list()
   variables <- plan$computingValues
+  print(variables)
   for(i in 1:length(variables))
   {
     variable.file <- file.variable.gate(variables[i])
