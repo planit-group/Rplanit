@@ -13,6 +13,21 @@ alpha.beta.ion.range(model = "MKM", model.parameters = data.frame(alpha0 =
 \arguments{
 \item{model}{the name of the model (options: 'MKM', 'LEMI', 'LEMII', 'LEMIII')}
 
+\item{model.parameters}{a dataframe containing the "biological" parameter associated to a specific biological tissue/cell line. In the case of the MKM:
+\itemize{
+  \item{alpha0} LQ alpha parameter of the reference radiation [Gy^-1]
+  \item{beta0} LQ beta parameter of the reference radiation [Gy^-2]
+  \item{rN} cell nucleus radius [um]
+  \item{rd} domain radius [um]
+}
+Optionally, instead of the specific values, the range of the parameters can be specified in the same data.frame. In the case of MKM:
+\itemize{
+  \item{alpha0.min, alpha0.max, alpha0.N} range of variability for parameter \code{alpha0} and number of steps
+  \item{beta0.min, beta0.max, beta0.N} range of variability for parameter \code{beta0} and number of steps
+  \item{rN.min, rN.max, rN.N} range of variability for parameter \code{rN} and number of steps
+  \item{rd.min, rN.max} domain radius [um]
+}}
+
 \item{particle}{available particles: 'H', 'He', 'Li', 'Be', 'B,', 'C', 'N', 'O', 'F', 'Ne'.}
 
 \item{energies}{vector of energies for the particle [MeV]}
@@ -28,21 +43,6 @@ alpha.beta.ion.range(model = "MKM", model.parameters = data.frame(alpha0 =
 }}
 
 \item{precision}{used onlu for the Monte Carlo evaluation. If precision < 1.0 it represents the target relative standard deviation to be reached in the evaluations of the cell survivals. If precision >= 1 it represents the number of cells to be simulated.}
-
-\item{model}{a dataframe containing the "biological" parameter associated to a specific biological tissue/cell line. In the case of the MKM:
-\itemize{
-  \item{alpha0} LQ alpha parameter of the reference radiation [Gy^-1]
-  \item{beta0} LQ beta parameter of the reference radiation [Gy^-2]
-  \item{rN} cell nucleus radius [um]
-  \item{rd} domain radius [um]
-}
-Optionally, instead of the specific values, the range of the parameters can be specified in the same data.frame. In the case of MKM:
-\itemize{
-  \item{alpha0.min, alpha0.max, alpha0.N} range of variability for parameter \code{alpha0} and number of steps
-  \item{beta0.min, beta0.max, beta0.N} range of variability for parameter \code{beta0} and number of steps
-  \item{rN.min, rN.max, rN.N} range of variability for parameter \code{rN} and number of steps
-  \item{rd.min, rN.max} domain radius [um]
-}}
 
 \item{cellType}{name of the tissue/cell line (optional)}
 }
