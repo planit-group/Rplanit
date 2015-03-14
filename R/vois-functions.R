@@ -432,7 +432,9 @@ sanitize.contours <- function(contours) {
 #' Read the contours from a "*.contours" file format (PlanKIT format) and return a \code{contours} dataframe.
 #' 
 #' @param file.contours the name of the contours file
-#' @param file.CT the name of the CT file. The CT file (in PlanKIT format) is needed to properly reconstruc the 3D coordinates of the contours.
+#' @param file.CT the name of the CT file. The CT file (in PlanKIT format) is needed to properly reconstruc the 3D coordinates of the contours (alternatively to CT and z.CT)
+#' @param CT the CT object (alternatively to file.CT and z.CT)
+#' @param z.CT a vector for the z coordinates of the slices of the reference CT (alternatively to file.CT and CT)
 #' @return A \code{contours} dataframe consisting of:
 #' \item{id}{index of the contours}
 #' \item{polygon}{index of the polygon}
@@ -444,48 +446,59 @@ sanitize.contours <- function(contours) {
 #' 
 #' @family R/W Contours
 #' @export
-read.contours <- function(file.contours, file.CT) {
+read.contours <- function(file.contours, file.CT=NULL, CT=NULL, z.CT=NULL) {
   
-  # leggi header CT
-  cat('reading contours: ', file.contours, ', ', file.CT, '\n', sep='')
+  z <- NULL
   
-  # apri connessione
-  file.3d <- file(file.CT, "rb") # read binary
+  if(!is.null(z.CT)) {
+    z <- z.CT
+  } else if(!is.null(CT)) {
+    z - CT$z
+  } else if(!is.null(file.CT)){
   
-  # leggi l'header
-  cat('reading header CT...\n')
-  myline <- readLines(file.3d, n=8) # legge le prime 8 linee, ogni linea e' un elemento del vettore
-  close(file.3d)
+    # leggi header CT
+    cat('reading contours: ', file.contours, ', ', file.CT, '\n', sep='')
+    
+    # apri connessione
+    file.3d <- file(file.CT, "rb") # read binary
+    
+    # leggi l'header
+    cat('reading header CT...\n')
+    myline <- readLines(file.3d, n=8) # legge le prime 8 linee, ogni linea e' un elemento del vettore
+    close(file.3d)
+    
+    # parsing dell'header
+    # splitta la stringa in sottostringhe delimitate da uno o piu' spazi (regexpr: " +")
+    myline.splitted <- unlist(strsplit(myline[1], ' +'))
+    Nx <- as.numeric(myline.splitted[1])
+    myline.splitted <- unlist(strsplit(myline[2], ' +'))
+    x <- as.numeric(myline.splitted)
+    
+    myline.splitted <- unlist(strsplit(myline[3], ' +'))
+    Ny <- as.numeric(myline.splitted[1])
+    myline.splitted <- unlist(strsplit(myline[4], ' +'))
+    y <- as.numeric(myline.splitted)
+    
+    myline.splitted <- unlist(strsplit(myline[5], ' +'))
+    Nz <- as.numeric(myline.splitted[1])
+    myline.splitted <- unlist(strsplit(myline[6], ' +'))
+    z <- as.numeric(myline.splitted)
+    
+    myline.splitted <- unlist(strsplit(myline[7], ' +'))
+    Nv <- as.numeric(myline.splitted[1])
+    values <- myline.splitted[2:length(myline.splitted)]
+    
+    Ntot <- Nx * Ny * Nz * Nv
+    cat('number of voxels:', Nv, 'x', Nx, 'x', Ny, 'x', Nz, '=', Ntot, '\n')
+    cat('variables:', values, '\n')
+    
+    # trasforma intervalli in coordinate puntuali
+    x <- (x[1:Nx] + x[2:(Nx+1)])/2
+    y <- (y[1:Ny] + y[2:(Ny+1)])/2
+    z <- (z[1:Nz] + z[2:(Nz+1)])/2
+  }
   
-  # parsing dell'header
-  # splitta la stringa in sottostringhe delimitate da uno o piu' spazi (regexpr: " +")
-  myline.splitted <- unlist(strsplit(myline[1], ' +'))
-  Nx <- as.numeric(myline.splitted[1])
-  myline.splitted <- unlist(strsplit(myline[2], ' +'))
-  x <- as.numeric(myline.splitted)
-  
-  myline.splitted <- unlist(strsplit(myline[3], ' +'))
-  Ny <- as.numeric(myline.splitted[1])
-  myline.splitted <- unlist(strsplit(myline[4], ' +'))
-  y <- as.numeric(myline.splitted)
-  
-  myline.splitted <- unlist(strsplit(myline[5], ' +'))
-  Nz <- as.numeric(myline.splitted[1])
-  myline.splitted <- unlist(strsplit(myline[6], ' +'))
-  z <- as.numeric(myline.splitted)
-  
-  myline.splitted <- unlist(strsplit(myline[7], ' +'))
-  Nv <- as.numeric(myline.splitted[1])
-  values <- myline.splitted[2:length(myline.splitted)]
-  
-  Ntot <- Nx * Ny * Nz * Nv
-  cat('number of voxels:', Nv, 'x', Nx, 'x', Ny, 'x', Nz, '=', Ntot, '\n')
-  cat('variables:', values, '\n')
-  
-  # trasforma intervalli in coordinate puntuali
-  x <- (x[1:Nx] + x[2:(Nx+1)])/2
-  y <- (y[1:Ny] + y[2:(Ny+1)])/2
-  z <- (z[1:Nz] + z[2:(Nz+1)])/2
+  if(is.null(z)) {error('No z coordinates for contours')}
   
   
   # legge contorni

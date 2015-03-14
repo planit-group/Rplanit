@@ -4,12 +4,16 @@
 \alias{read.contours}
 \title{Read contours from file}
 \usage{
-read.contours(file.contours, file.CT)
+read.contours(file.contours, file.CT = NULL, CT = NULL, z.CT = NULL)
 }
 \arguments{
 \item{file.contours}{the name of the contours file}
 
-\item{file.CT}{the name of the CT file. The CT file (in PlanKIT format) is needed to properly reconstruc the 3D coordinates of the contours.}
+\item{file.CT}{the name of the CT file. The CT file (in PlanKIT format) is needed to properly reconstruc the 3D coordinates of the contours (alternatively to CT and z.CT)}
+
+\item{CT}{the CT object (alternatively to file.CT and z.CT)}
+
+\item{z.CT}{a vector for the z coordinates of the slices of the reference CT (alternatively to file.CT and CT)}
 }
 \value{
 A \code{contours} dataframe consisting of:
