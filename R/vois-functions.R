@@ -451,10 +451,13 @@ read.contours <- function(file.contours, file.CT=NULL, CT=NULL, z.CT=NULL) {
   z <- NULL
   
   if(!is.null(z.CT)) {
+    message('using z from z.CT...')
     z <- z.CT
   } else if(!is.null(CT)) {
+    message('using z from CT...')
     z - CT$z
   } else if(!is.null(file.CT)){
+    message('using z from ', file.CT, '...')
   
     # leggi header CT
     cat('reading contours: ', file.contours, ', ', file.CT, '\n', sep='')
