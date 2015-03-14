@@ -448,14 +448,14 @@ sanitize.contours <- function(contours) {
 #' @export
 read.contours <- function(file.contours, file.CT=NULL, CT=NULL, z.CT=NULL) {
   
-  z <- NA
+  z <- NULL
   
   if(!is.null(z.CT)) {
     message('using z from z.CT...')
     z <- z.CT
   } else if(!is.null(CT)) {
     message('using z from CT...')
-    z - CT$z
+    z <- CT$z
   } else if(!is.null(file.CT)){
     message('using z from ', file.CT, '...')
   
@@ -501,7 +501,7 @@ read.contours <- function(file.contours, file.CT=NULL, CT=NULL, z.CT=NULL) {
     z <- (z[1:Nz] + z[2:(Nz+1)])/2
   }
   
-  if(is.na(z)) {stop('No z coordinates for contours')}
+  if(is.null(z)) {stop('No z coordinates for contours')}
   
   
   # legge contorni
