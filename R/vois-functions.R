@@ -498,7 +498,7 @@ read.contours <- function(file.contours, file.CT=NULL, CT=NULL, z.CT=NULL) {
     z <- (z[1:Nz] + z[2:(Nz+1)])/2
   }
   
-  if(is.null(z)) {error('No z coordinates for contours')}
+  if(is.null(z)) {stop('No z coordinates for contours')}
   
   
   # legge contorni
