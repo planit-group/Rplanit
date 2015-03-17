@@ -21,8 +21,12 @@
 #' 
 #' @family DVH
 #' @export
-dvh.evaluate <- function(values=NULL, vois=NULL, voi='PTV', variable=NULL, with.na=FALSE, with.0=FALSE, name=NULL)
+dvh.evaluate <- function(values=NULL, vois=NULL, voi=NULL, variable=NULL, with.na=FALSE, with.0=FALSE, name=NULL)
 {
+  
+  if(is.null(voi)) {
+    return(dvh.evaluate.all(values = values, vois = vois, variable = variable, with.0 = with.0, with.na = with.na))
+  }
   
   # variable
   v <- which(values$variables==variable)

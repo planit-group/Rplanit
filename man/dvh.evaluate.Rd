@@ -4,7 +4,7 @@
 \alias{dvh.evaluate}
 \title{Evaluate DVH}
 \usage{
-dvh.evaluate(values = NULL, vois = NULL, voi = "PTV", variable = NULL,
+dvh.evaluate(values = NULL, vois = NULL, voi = NULL, variable = NULL,
   with.na = FALSE, with.0 = FALSE, name = NULL)
 }
 \arguments{

@@ -19,7 +19,7 @@ create.field <- function(N=1,
                          targetVOIIndex=NA,
                          iecGantryAngle=0,
                          iecPatientSupportAngle=0,
-                         interSpotSpacing=c(1.5,1.5,1),
+                         interSpotSpacing=c(1.2,1.2,1.2),
                          spotsExtensionOutsideTarget=0,
                          targetIsocenter=c(NA,NA,NA)
                          )
@@ -38,6 +38,7 @@ create.field <- function(N=1,
                       targetIsocenter.y=targetIsocenter[2],
                       targetIsocenter.z=targetIsocenter[3], stringsAsFactors=FALSE)
   #class(field) <- 'field.plankit'
+  field$field <- 1:nrow(field)
   return(field)
 }
 

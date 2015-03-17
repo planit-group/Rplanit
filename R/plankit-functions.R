@@ -14,7 +14,8 @@ available.beamlines <- function()
     'carbonSimple',
     'lithiumSimple',
     'heliumSimple',
-    'oxygenSimple')
+    'oxygenSimple',
+    'protonSimpleGate')
   )
 }
 
@@ -249,7 +250,15 @@ run.dek.inverse <- function(plan, outmessages=FALSE) {
   # calcolo
   p.computingGridVoxelSizes <- paste(plan[['computingGridVoxelSizes']], collapse=' ')
   writeLines(paste('computingGridVoxelSizes = ', p.computingGridVoxelSizes, '\n', collapse=' '), con=con, sep='')
-  coverage <- paste0(plan[['computingGridCoverage']], collapse=' ')
+  if(!is.null(plan[['computingGridCoverageVOI']])) {
+    coverage <- rep(0, length(plan[['computingGridCoverageVOI']]))
+    for(icov in 1:length(coverage)) {
+      coverage[icov] <- get.voiindex(voi = plan[['computingGridCoverageVOI']][icov], file.contours=plan[['contoursFile']])
+      message('computing grid over ', plan[['computingGridCoverageVOI']][icov], ' (', coverage[icov], ')')
+    }
+  } else {
+    coverage <- paste0(plan[['computingGridCoverage']], collapse=' ')
+  }
   writeLines(paste('computingGridCoverage = ', coverage, '\n'), con=con, sep='')
   writeLines(paste('computingGridCoverageBoundary = ', plan[['computingGridCoverageBoundary']], '\n'), con=con, sep='')
 
@@ -334,8 +343,10 @@ run.dek.inverse <- function(plan, outmessages=FALSE) {
   if(outmessages) {ignore.stdout=FALSE; ignore.stderr=FALSE} else {ignore.stdout=TRUE; ignore.stderr=TRUE}
   cmd <- paste0('pure-dek ',  plan[['name']], '/plan.config') # runna da fuori la cartella.
   message('executing: ', cmd)
-  system(cmd, ignore.stdout=ignore.stdout, ignore.stderr=ignore.stderr)
-
+  t <- system.time(system(cmd, ignore.stdout=ignore.stdout, ignore.stderr=ignore.stderr))
+  #message('elapsed time: ', t)
+  print(t)
+  
   # incolla i beams calcolati nel piano
   plan[['beams']] <- read.beams(beams.file = plan[['outputBeamsFile']])
   save.plan(plan)
@@ -408,6 +419,15 @@ run.dek.forward <- function(plan, outmessages=FALSE) {
   p.computingGridVoxelSizes <- paste(plan[['computingGridVoxelSizes']], collapse=' ')
   writeLines(paste('computingGridVoxelSizes = ', p.computingGridVoxelSizes, '\n', collapse=' '), con=con, sep='')
   coverage <- paste0(plan[['computingGridCoverage']], collapse=' ')
+  if(!is.null(plan[['computingGridCoverageVOI']])) {
+    coverage <- rep(0, length(plan[['computingGridCoverageVOI']]))
+    for(icov in 1:length(coverage)) {
+      coverage[icov] <- get.voiindex(voi = plan[['computingGridCoverageVOI']][icov], file.contours=plan[['contoursFile']])
+      message('computing grid over ', plan[['computingGridCoverageVOI']][icov], ' (', coverage[icov], ')')
+    }
+  } else {
+    coverage <- paste0(plan[['computingGridCoverage']], collapse=' ')
+  }
   writeLines(paste('computingGridCoverage = ', coverage, '\n'), con=con, sep='')
   writeLines(paste('computingGridCoverageBoundary = ', plan[['computingGridCoverageBoundary']], '\n'), con=con, sep='')
 
@@ -457,7 +477,9 @@ run.dek.forward <- function(plan, outmessages=FALSE) {
   if(outmessages) {ignore.stdout=FALSE; ignore.stderr=FALSE} else {ignore.stdout=TRUE; ignore.stderr=TRUE}
   cmd <- paste0('pure-dek ',  plan[['name']], '/plan.config') # runna da fuori la cartella.
   message('executing: ', cmd)
-  system(cmd, ignore.stdout=ignore.stdout, ignore.stderr=ignore.stderr)
+  t <- system.time(system(cmd, ignore.stdout=ignore.stdout, ignore.stderr=ignore.stderr))
+  #message('elapsed time: ', t)
+  print(t)
 
   # incolla i beams di output (= input) nel piano (già fatto automaticamente)
   # plan[['beams']] <- read.beams(beams.file = plan[['outputBeamsFile']])
