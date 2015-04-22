@@ -614,6 +614,8 @@ alpha.beta.ion.range <- function(model='MKM',
 #'   \item{energy} Energy of the particle in MeV/u
 #'   \item{let} LET of the particle in keV/um. It is used only if the energy is not specified.
 #' }
+#' #' @family LEM/MKM Models
+#' @export
 alpha.beta.ion.sequence <- function(model='MKM',
                                     parameters=data.frame(cell='test', alpha0=0.1295, beta0=0.03085, rN=4, rd=0.31,
                                                           particle='H', energy=50, let=NA),

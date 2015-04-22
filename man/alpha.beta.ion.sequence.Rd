@@ -31,9 +31,14 @@ The ion is specified with the columns:
   \item{particle} ion type: 'H', 'He', 'Li', 'Be', 'B', 'C', 'N', 'O', 'F' or 'Ne'
   \item{energy} Energy of the particle in MeV/u
   \item{let} LET of the particle in keV/um. It is used only if the energy is not specified.
-}}
+}
+#'}
 }
 \description{
 The evaluation is performed for a monoenergetic ion. It uses a C++ implementation for the evaluation. It accepts a sequence of parameters and ion specifications stored in an input data.frame.
+}
+\seealso{
+Other LEM/MKM Models: \code{\link{alpha.beta.ion.range}};
+  \code{\link{alpha.beta.mkm}}; \code{\link{alpha.fun.mkm}}
 }
 

@@ -62,7 +62,7 @@ a data.frame containing all the information specified including the alpha and be
 The evaluation is performed for a monoenergetic ion. It uses a C++ implementation for the evaluation. It accepts a single set of parameter depending on the choosen radiobiological model, or alternatively a full range of variability (min,max) for each parameter.
 }
 \seealso{
-Other LEM/MKM Models: \code{\link{alpha.beta.mkm}};
-  \code{\link{alpha.fun.mkm}}
+Other LEM/MKM Models: \code{\link{alpha.beta.ion.sequence}};
+  \code{\link{alpha.beta.mkm}}; \code{\link{alpha.fun.mkm}}
 }
 
