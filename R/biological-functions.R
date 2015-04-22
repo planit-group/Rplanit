@@ -637,7 +637,10 @@ alpha.beta.ion.sequence <- function(model='MKM',
   
   # aggiunge identificativo unico per i parametri radiobiologici
   message('identifying models...')
-  parameters$id.par <- interaction(parameters[,parameters.column.index])
+  parameters$id.par <- interaction(parameters[, parameters.column.index, with=FALSE])
+  
+  # ho perso le chiavi
+  setkey(parameters, id.par)
   
   # dataframe di output
   alpha.beta.out <- NULL
@@ -647,29 +650,67 @@ alpha.beta.ion.sequence <- function(model='MKM',
   particles <- sort(unique(parameters[, particle])) #sort(unique(parameters$particle))
   message('particles: ')
   print(particles)
-  print(summary(parameters))
+  #print(summary(parameters))
   for(ip in 1:length(particles)) {
     message('Evaluating ', particles[ip])
-    parameters.p <- parameters[.(particle==particles[ip])]
-    messagge('cicio')
+    parameters.p <- parameters[particle==particles[ip], ]
     # identifica combinazioni di parametri
     id.pars <- unique(parameters.p$id.par)
     for(ib in 1:length(id.pars)) {
-      parameters.b <- subset(parameters.p, id.par==id.pars[ib])
-      biological.parameters <- parameters.b[1,parameters.column.index]
+      parameters.b <- parameters.p[id.par==id.pars[ib]] #subset(parameters.p, id.par==id.pars[ib])
+      biological.parameters <- as.data.frame(parameters.b[1, parameters.column.index, with=FALSE])
       print(biological.parameters)
       
-      cell <- parameters.b$cell[1]
-      energies <- parameters.b$energy
-      lets <- parameters.b$let
+      if('cell' %in% names(parameters.b)) {cell <- parameters.b[,cell][1]} else {cell <- NULL}
+      if('energy' %in% names(parameters.b)) {energies <- parameters.b[,energy]} else {energies <- NULL}
+      if('let' %in% names(parameters.b)) {lets <- parameters.b[,let]} else {lets <- NULL}
       
       alpha.beta.tmp <- alpha.beta.ion.range(model=model, model.parameters=biological.parameters, cell.name=cell, particle=particles[ip], energies=energies, lets=lets, calculusType=calculusType, precision=precision, ignore.stdout=ignore.stdout, ignore.stderr=ignore.stderr, remove.temp.files=remove.temp.files)
       alpha.beta.out <- rbind(alpha.beta.out, alpha.beta.tmp)
     }
   }
   
-  return(alpha.beta.out)
+  return(alpha.beta.out) 
+}
+
+#' @export
+#' @import data.table
+alpha.beta.ion.sequence2 <- function(model='MKM',
+                                    parameters=data.table(cell='test', alpha0=0.1295, beta0=0.03085, rN=4, rd=0.31,
+                                                          particle='H', energy=50, let=NA),
+                                    calculusType='rapidMKM', precision=0.5,
+                                    ignore.stdout=TRUE, ignore.stderr=TRUE,
+                                    remove.temp.files=TRUE)
+{
   
+  #parameters <- data.table(parameters)
+  parameters.column.index <- which(names(parameters) %in% c('alpha0', 'beta0', 'rN', 'rd', 'Dt'))
+  if(length(parameters.column.index)!=4) {stop('alpha.beta.ion.sequence: error in the definition of the parameters')}
+  
+  # fa diventare data.table....
+  if('data.table' %in% class(parameters)) {
+    message('casting in data.table')
+    parameters <- as.data.table(parameters)
+  }
+  
+  # aggiunge identificativo unico per i parametri radiobiologici
+  message('identifying models...')
+  parameters$id.par <- interaction(parameters[, parameters.column.index, with=FALSE])
+  
+  # ho perso le chiavi
+  setkey(parameters, id.par)
+  
+  # dataframe di output
+  alpha.beta.out <- NULL
+  
+  # loop su id.par
+  id.pars <- unique(parameters[id.par])
+  message(lenght(id.par), ' different models')
+  for(id in 1:length(id.par)) {
+    parameters.m <- parameters[id.par==id.pars]
+  }
+  
+  return(alpha.beta.out) 
 }
 
 #' Evaluate alpha function (MKM)
