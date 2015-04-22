@@ -616,8 +616,9 @@ alpha.beta.ion.range <- function(model='MKM',
 #' }
 #' #' @family LEM/MKM Models
 #' @export
+#' @import data.table
 alpha.beta.ion.sequence <- function(model='MKM',
-                                    parameters=data.frame(cell='test', alpha0=0.1295, beta0=0.03085, rN=4, rd=0.31,
+                                    parameters=data.table(cell='test', alpha0=0.1295, beta0=0.03085, rN=4, rd=0.31,
                                                           particle='H', energy=50, let=NA),
                                     calculusType='rapidMKM', precision=0.5,
                                     ignore.stdout=TRUE, ignore.stderr=TRUE,
@@ -628,7 +629,14 @@ alpha.beta.ion.sequence <- function(model='MKM',
   parameters.column.index <- which(names(parameters) %in% c('alpha0', 'beta0', 'rN', 'rd', 'Dt'))
   if(length(parameters.column.index)!=4) {stop('alpha.beta.ion.sequence: error in the definition of the parameters')}
   
+  # fa diventare data.table....
+  if('data.table' %in% class(parameters)) {
+    message('casting in data.table')
+    parameters <- as.data.table(parameters)
+  }
+  
   # aggiunge identificativo unico per i parametri radiobiologici
+  message('identifying models...')
   parameters$id.par <- interaction(parameters[,parameters.column.index])
   
   # dataframe di output
@@ -636,10 +644,14 @@ alpha.beta.ion.sequence <- function(model='MKM',
   
   # aggrega per combinazione di particelle e parametri. le sequenze di energie avvengono invece in una singola chiamata...
   # identifica sequenze per le particelle...
-  particles <- sort(unique(parameters$particle))
+  particles <- sort(unique(parameters[, particle])) #sort(unique(parameters$particle))
+  message('particles: ')
+  print(particles)
+  print(summary(parameters))
   for(ip in 1:length(particles)) {
     message('Evaluating ', particles[ip])
-    parameters.p <- subset(parameters, particle==particles[ip])
+    parameters.p <- parameters[.(particle==particles[ip])]
+    messagge('cicio')
     # identifica combinazioni di parametri
     id.pars <- unique(parameters.p$id.par)
     for(ib in 1:length(id.pars)) {

@@ -22,4 +22,5 @@ Imports:
     reshape2,
     splancs,
     shiny (>= 0.9.1),
-    grid
+    grid,
+    data.table
