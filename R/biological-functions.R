@@ -110,7 +110,7 @@ tcp.lqp <- function(dvh.dose=dvh.dose, D50=66, R=10,  gam=2, d=2, alphaX=NULL, b
 {
   # costanti
   e <- exp(1)
-
+  
   # ricava i valori di alphaX e betaX
   if((is.null(alphaX) | is.null(betaX))) {
     alphaX <- alpha.beta.lqp(R, D50, gam, d)$alphaX
@@ -119,17 +119,17 @@ tcp.lqp <- function(dvh.dose=dvh.dose, D50=66, R=10,  gam=2, d=2, alphaX=NULL, b
   #cat('LQ parameters:\n')
   #cat('alphaX =', mean(alphaX), 'Gy^(-1)\n')
   #cat('betaX =', mean(betaX), 'Gy^(-2)\n')
-
+  
   # Lea-Catcheside dose-protraction factor (assume repair completo tra frazioni)
   if(is.null(G)) {G <- 1/Nf}
-
+  
   # volume elemetare (frazione):
   dv <- 1/dvh.dose$Nvoxel
-
+  
   # dose assorbita per frazione
   D.tot <- dvh.dose$value * Nf * RBE  # dose totale assorbita
   #print(length(alphaX))
-
+  
   S <- exp(-alphaX*D.tot - G*betaX*D.tot*D.tot)
   return( exp(-exp(e*gam)*dv*sum(S)) )
 }
@@ -157,7 +157,7 @@ ntcp.kallman <- function(dvh.dose, D50=57, R=3,  gam=6.7, s=1, d=2, alphaX=NULL,
 {
   # costanti
   e <- exp(1)
-
+  
   # ricava i valori di alphaX e betaX
   if((is.null(alphaX) | is.null(betaX))) {
     alphaX <- alpha.beta.lqp(R, D50, gam, d)$alphaX
@@ -166,16 +166,16 @@ ntcp.kallman <- function(dvh.dose, D50=57, R=3,  gam=6.7, s=1, d=2, alphaX=NULL,
   #cat('LQ parameters:\n')
   #cat('alphaX =', mean(alphaX), 'Gy^(-1)\n')
   #cat('betaX =', mean(betaX), 'Gy^(-2)\n')
-
+  
   # Lea-Catcheside dose-protraction factor (assume repair completo tra frazioni)
   if(is.null(G)) {G <- 1/Nf}
-
+  
   # volume elemetare (frazione):
   dv <- 1/dvh.dose$Nvoxel
-
+  
   # dose assorbita per frazione
   D.tot <- dvh.dose$value * Nf * RBE  # dose totale assorbita
-
+  
   S <- exp(-alphaX*D.tot - G*betaX*D.tot*D.tot)
   return( (1 - prod( (1 - exp(-s*exp(e*gam)*S))^dv ) )^(1/s) )
 }
@@ -208,7 +208,7 @@ tcp.lqp.train <- function(dvhs, D50=66, R=10,  gam=2, d=2, alphaX=NULL, betaX=NU
 {
   # costanti
   e <- exp(1)
-
+  
   # ricava i valori di alphaX e betaX
   if((is.null(alphaX) | is.null(betaX))) {
     alphaX <- alpha.beta.lqp(R, D50, gam, d)$alphaX
@@ -217,14 +217,14 @@ tcp.lqp.train <- function(dvhs, D50=66, R=10,  gam=2, d=2, alphaX=NULL, betaX=NU
   #cat('LQ parameters:\n')
   #cat('alphaX =', mean(alphaX), 'Gy^(-1)\n')
   #cat('betaX =', mean(betaX), 'Gy^(-2)\n')
-
+  
   # numero di frazioni
   Nf <- length(dvhs)
   #message('Number of fractions: ', Nf)
-
+  
   # volume elemetare (frazione). Assume che le divere frazioni abbiano la stessa griglia di voxel
   dv <- 1/dvhs[[1]]$Nvoxel
-
+  
   # sopravvivenza finale per voxel
   S <- dvhs[[1]]$value*0 + 1 # vettore di sopravvivenze finali per ogni voxel
   for(i in 1:Nf) {
@@ -232,7 +232,7 @@ tcp.lqp.train <- function(dvhs, D50=66, R=10,  gam=2, d=2, alphaX=NULL, betaX=NU
     s <- exp(-alphaX*df - betaX*df*df)
     S <- S*s # assume scorrelazione temporale tra le frazioni
   }
-
+  
   return( exp(-exp(e*gam)*dv*sum(S)) )
 }
 
@@ -264,7 +264,7 @@ ntcp.kallman.train <- function(dvhs, D50=57, R=3,  gam=6.7, s=1, d=2, alphaX=NUL
 {
   # costanti
   e <- exp(1)
-
+  
   # ricava i valori di alphaX e betaX
   if((is.null(alphaX) | is.null(betaX))) {
     alphaX <- alpha.beta.lqp(R, D50, gam, d)$alphaX
@@ -273,14 +273,14 @@ ntcp.kallman.train <- function(dvhs, D50=57, R=3,  gam=6.7, s=1, d=2, alphaX=NUL
   #cat('LQ parameters:\n')
   #cat('alphaX =', mean(alphaX), 'Gy^(-1)\n')
   #cat('betaX =', mean(betaX), 'Gy^(-2)\n')
-
+  
   # numero di frazioni
   Nf <- length(dvhs)
   #message('Number of fractions: ', Nf)
-
+  
   # volume elemetare (frazione). Assume che le divere frazioni abbiano la stessa griglia di voxel
   dv <- 1/dvhs[[1]]$Nvoxel
-
+  
   # sopravvivenza finale per voxel
   S <- dvhs[[1]]$value*0 + 1 # vettore di sopravvivenze finali per ogni voxel
   for(i in 1:Nf) {
@@ -288,7 +288,7 @@ ntcp.kallman.train <- function(dvhs, D50=57, R=3,  gam=6.7, s=1, d=2, alphaX=NUL
     sf <- exp(-alphaX*df - betaX*df*df)
     S <- S*sf # assume scorrelazione temporale tra le frazioni
   }
-
+  
   return( (1 - prod( (1 - exp(-s*exp(e*gam)*S))^dv ) )^(1/s) )
 }
 
@@ -308,16 +308,16 @@ ntcp.kallman.train <- function(dvhs, D50=57, R=3,  gam=6.7, s=1, d=2, alphaX=NUL
 #' @family General TCP/NTCP Models
 #' @export
 tcp.S <- function(dvh.survival=dvh.survival, gam=2, Nf=30) {
-
+  
   # costanti
   e <- exp(1)
-
+  
   # volume elementare (frazione). Assume che le diverse frazioni abbiano la stessa griglia di voxel
   dv <- 1/dvh.survival$Nvoxel
-
+  
   # Sopravvivenza complessiva (assume completa scorrelazione temporale e che le diverse frazioni siano identiche)
   S <- dvh.survival$value^Nf
-
+  
   return( exp(-exp(e*gam)*dv*sum(S)) )
 }
 
@@ -339,16 +339,16 @@ tcp.S <- function(dvh.survival=dvh.survival, gam=2, Nf=30) {
 #' @export
 #'
 ntcp.S <- function(dvh.survival, gam=2, s=1, Nf=30) {
-
+  
   # costanti
   e <- exp(1)
-
+  
   # volume elementare (frazione). Assume che le diverse frazioni abbiano la stessa griglia di voxel
   dv <- 1/dvh.survival$Nvoxel
-
+  
   # Sopravvivenza complessiva (assume completa scorrelazione temporale e che le diverse frazioni siano identiche)
   S <- dvh.survival$value^Nf
-
+  
   return( (1 - prod( (1 - exp(-s*exp(e*gam)*S))^dv ) )^(1/s) )
 }
 
@@ -405,18 +405,18 @@ alpha.beta.mkm <- function(alphaX=0.1295, betaX=0.03085, rN=4, rd=0.31,
   model <- 'MKM'
   calculusType <- 'rapidMKM'
   precision <- 1
-
+  
   #lem.setenv=get('lem.setenv', envir=dektoolsEnv)
-
+  
   # nome cellType
   if(is.null(cellType)) {cellType <- paste('R', sprintf("%06d", round(runif(1,min=0,max=1e6))), sep='')}
-
+  
   # valori dei parametri MKM
   if (!is.null(alphaX)) {a <- paste(alphaX, alphaX, 1)} else {a <- paste(alphaX.min, alphaX.max, alphaX.N)}
   if (!is.null(betaX)) {b <- paste(betaX, betaX, 1)} else {b <- paste(betaX.min, betaX.max, betaX.N)}
   if (!is.null(rN)) {n <- paste(rN, rN, 1)} else {n <- paste(rN.min, rN.max, rN.N)}
   if (!is.null(rd)) {d <- paste(rd, rd, 1)} else {d <- paste(rd.min, rd.max, rd.N)}
-
+  
   # check per vedere se il calcolo è sulle energie o sul let (e controllo estremi):
   if(length(energies)>0) {
     energyType <- 'energy'
@@ -428,30 +428,30 @@ alpha.beta.mkm <- function(alphaX=0.1295, betaX=0.03085, rN=4, rd=0.31,
   } else if(length(energies)==0 & length(lets)==0){
     stop('energies/lets not specified.')
   }
-
+  
   # output file
   of <- paste(particleType, cellType, model, calculusType, sep='_')
   of <- paste(of, 'csv', sep='.')
-
+  
   # costruzione linea di comando:
   s.args <- paste(cellType, model, calculusType, a, b, n, d, particleType, precision, energyType, e)
   # cmd <- paste('.', lem.setenv, '; survival_alpha_beta_parameter_study', s.args)
   cmd <- paste('survival', s.args)
   if(!ignore.stdout) {message(cmd)}
-
+  
   t <- system.time(system(cmd, ignore.stdout=ignore.stdout, ignore.stderr=ignore.stderr))
   #message('time elapsed: ', t)
-
+  
   # legge file temporaneo salvato
   out.df <- read.csv(of)
-
+  
   # cancella file temporaneo
   system(paste('rm', of))
-
+  
   return(out.df)
 }
 
-#' Evaluation of alpha and beta LQ parameter (generic)
+#' Evaluation of ion alpha and beta LQ parameters
 #'
 #' The evaluation is performed for a monoenergetic ion. It uses a C++ implementation for the evaluation. It accepts a single set of parameter depending on the choosen radiobiological model, or alternatively a full range of variability (min,max) for each parameter.
 #'
@@ -462,6 +462,13 @@ alpha.beta.mkm <- function(alphaX=0.1295, betaX=0.03085, rN=4, rd=0.31,
 #'   \item{beta0} LQ beta parameter of the reference radiation [Gy^-2]
 #'   \item{rN} cell nucleus radius [um]
 #'   \item{rd} domain radius [um]
+#' }
+#' In the case of LEMI, LEMII, LEMIII:
+#' \itemize{
+#'   \item{alpha0} LQ alpha parameter of the reference radiation [Gy^-1]
+#'   \item{beta0} LQ beta parameter of the reference radiation [Gy^-2]
+#'   \item{rN} cell nucleus radius [um]
+#'   \item{Dt} threshold dose [Gy]
 #' }
 #' Optionally, instead of the specific values, the range of the parameters can be specified in the same data.frame. In the case of MKM:
 #' \itemize{
@@ -478,23 +485,25 @@ alpha.beta.mkm <- function(alphaX=0.1295, betaX=0.03085, rN=4, rd=0.31,
 #' @param calculusType the type of the evaluations options are:
 #' \itemize{
 #'   \item{rapidMKM} fast implementation for the MKM (Kase2008)
-#'   \item{rapidSholz} fast implementation of the LEMI, LEMII, LEMIII (Sholz2000)
-#'   \item{rapidRusso} fast implementation of the LEMI, LEMII, LEMIII, more accurate than the \code{rapidSholz} (Russo2010)
+#'   \item{rapidScholz} fast implementation of the LEMI, LEMII, LEMIII (Scholz2000)
+#'   \item{rapidRusso} fast implementation of the LEMI, LEMII, LEMIII, more accurate than the \code{rapidScholz} (Russo2010)
 #'   \item{slow_alphaIon_betaIon} slow Monte Carlo evaluation (compatible with MKM, LEMI, LEMII and LEMIII).
 #' }
-#' @param precision used onlu for the Monte Carlo evaluation. If precision < 1.0 it represents the target relative standard deviation to be reached in the evaluations of the cell survivals. If precision >= 1 it represents the number of cells to be simulated.
+#' @param precision used only for the Monte Carlo evaluation. If precision < 1.0 it represents the target relative standard deviation to be reached in the evaluations of the cell survivals. If precision >= 1 it represents the number of cells to be simulated.
+#' @param get.raw.data If calculusType=slow_alphaIon_betaIon, returns the raw data (survival vs dose for each simulated cell) from which alpha and beta parameters can be extracted, otherwhise it is ignored.
 #' 
 #' @return a data.frame containing all the information specified including the alpha and beta MKM evaluation (note, in the MKM implementation beta = betaX).
 #'
 #' @family LEM/MKM Models
 #' @export
 alpha.beta.ion.range <- function(model='MKM',
-                           model.parameters=data.frame(alpha0=0.1295, beta0=0.03085, rN=4, rd=0.31),
-                           cell.name=NULL,
-                           particle='H',
-                           energies=NULL, lets=NULL,
-                           calculusType='rapidMKM', precision=0.5,
-                           ignore.stdout=TRUE, ignore.stderr=TRUE, remove.temp.files=TRUE)
+                                 model.parameters=data.frame(alpha0=0.1295, beta0=0.03085, rN=4, rd=0.31),
+                                 cell.name=NULL,
+                                 particle='H',
+                                 energies=NULL, lets=NULL,
+                                 calculusType='rapidMKM', precision=0.5,
+                                 ignore.stdout=TRUE, ignore.stderr=TRUE,
+                                 get.raw.data=FALSE, remove.temp.files=TRUE)
 {
   # nome cellType
   if(is.null(cell.name)) {cell.name <- paste('R', sprintf("%06d", round(runif(1,min=0,max=1e6))), sep='')}
@@ -580,6 +589,75 @@ alpha.beta.ion.range <- function(model='MKM',
 }
 
 
+#' Evaluation of ion alpha and beta LQ parameters
+#'
+#' The evaluation is performed for a monoenergetic ion. It uses a C++ implementation for the evaluation. It accepts a sequence of parameters and ion specifications stored in an input data.frame.
+#'
+#' @param model the name of the model (options: 'MKM', 'LEMI', 'LEMII', 'LEMIII')
+#' @param parameters input data.frame containing the cell name (column 'cell', optional) "biological" parameters associated to a specific biological tissue/model, and the specification of the primary particles (ion type and energy and/or LET). All the parameters have to be put in a dataframe. Each row of the dataframe represent the irradiation of a specific tissue/model with a specific particle. In the case of the MKM the biological parameters
+#' \itemize{
+#'   \item{alpha0} LQ alpha parameter of the reference radiation [Gy^-1]
+#'   \item{beta0} LQ beta parameter of the reference radiation [Gy^-2]
+#'   \item{rN} cell nucleus radius [um]
+#'   \item{rd} domain radius [um]
+#' }
+#' In the case of LEMI, LEMII, LEMIII:
+#' \itemize{
+#'   \item{alpha0} LQ alpha parameter of the reference radiation [Gy^-1]
+#'   \item{beta0} LQ beta parameter of the reference radiation [Gy^-2]
+#'   \item{rN} cell nucleus radius [um]
+#'   \item{Dt} threshold dose [Gy]
+#' }
+#' The ion is specified with the columns:
+#' \itemize{
+#'   \item{particle} ion type: 'H', 'He', 'Li', 'Be', 'B', 'C', 'N', 'O', 'F' or 'Ne'
+#'   \item{energy} Energy of the particle in MeV/u
+#'   \item{let} LET of the particle in keV/um. It is used only if the energy is not specified.
+#' }
+alpha.beta.ion.sequence <- function(model='MKM',
+                                    parameters=data.frame(cell='test', alpha0=0.1295, beta0=0.03085, rN=4, rd=0.31,
+                                                          particle='H', energy=50, let=NA),
+                                    calculusType='rapidMKM', precision=0.5,
+                                    ignore.stdout=TRUE, ignore.stderr=TRUE,
+                                    remove.temp.files=TRUE)
+{
+  
+  #parameters <- data.table(parameters)
+  parameters.column.index <- which(names(parameters) %in% c('alpha0', 'beta0', 'rN', 'rd', 'Dt'))
+  if(length(parameters.column.index)!=4) {stop('alpha.beta.ion.sequence: error in the definition of the parameters')}
+  
+  # aggiunge identificativo unico per i parametri radiobiologici
+  parameters$id.par <- interaction(parameters[,parameters.column.index])
+  
+  # dataframe di output
+  alpha.beta.out <- NULL
+  
+  # aggrega per combinazione di particelle e parametri. le sequenze di energie avvengono invece in una singola chiamata...
+  # identifica sequenze per le particelle...
+  particles <- sort(unique(parameters$particle))
+  for(ip in 1:length(particles)) {
+    message('Evaluating ', particles[ip])
+    parameters.p <- subset(parameters, particle==particles[ip])
+    # identifica combinazioni di parametri
+    id.pars <- unique(parameters.p$id.par)
+    for(ib in 1:length(id.pars)) {
+      parameters.b <- subset(parameters.p, id.par==id.pars[ib])
+      biological.parameters <- parameters.b[1,parameters.column.index]
+      print(biological.parameters)
+      
+      cell <- parameters.b$cell[1]
+      energies <- parameters.b$energy
+      lets <- parameters.b$let
+      
+      alpha.beta.tmp <- alpha.beta.ion.range(model=model, model.parameters=biological.parameters, cell.name=cell, particle=particles[ip], energies=energies, lets=lets, calculusType=calculusType, precision=precision, ignore.stdout=ignore.stdout, ignore.stderr=ignore.stderr, remove.temp.files=remove.temp.files)
+      alpha.beta.out <- rbind(alpha.beta.out, alpha.beta.tmp)
+    }
+  }
+  
+  return(alpha.beta.out)
+  
+}
+
 #' Evaluate alpha function (MKM)
 #'
 #' Returns a function alpha(LET) or alpha(specific energy), using the MKM model. The functions is an interpolation functions that uses a set of alpha values evaluated over the defined set of LETs (or specific energies).
@@ -594,29 +672,29 @@ alpha.beta.ion.range <- function(model='MKM',
 #' @export
 #'
 alpha.fun.mkm <- function(alphaX=0.1295, betaX=0.03085, rN=4, rd=0.31,
-                      cellType=NULL,
-                      particleType='H',
-                      energies=NULL, lets=NULL,
-                      use.limits=FALSE, outmessages=FALSE)
+                          cellType=NULL,
+                          particleType='H',
+                          energies=NULL, lets=NULL,
+                          use.limits=FALSE, outmessages=FALSE)
 {
   model <- 'MKM'
   calculusType <- 'rapidMKM'
   precision <- 1
-
+  
   #lem.setenv=get('lem.setenv', envir=dektoolsEnv)
-
+  
   # nome cellType
   if(is.null(cellType)) {
     cellType <- paste('R', sprintf("%06d", round(runif(1,min=0,max=1e6))), sep='')
     #message('cellType = ', cellType)
   }
-
+  
   # valori dei parametri MKM
   a <- paste(alphaX, alphaX, 1)
   b <- paste(betaX, betaX, 1)
   n <- paste(rN, rN, 1)
   d <- paste(rd, rd, 1)
-
+  
   # check per vedere se il calcolo è sulle energie o sul let:
   if(!is.null(energies)) {
     energyType <- 'energy'
@@ -628,7 +706,7 @@ alpha.fun.mkm <- function(alphaX=0.1295, betaX=0.03085, rN=4, rd=0.31,
     e <- paste(lets, collapse=' ')
     ee <- lets
   }
-
+  
   # check per vedere se siamo fuori limiti (restituisce valori alti di alpha, da usare nelle ottimizzazioni)
   if(use.limits) {
     #message('using limits')
@@ -638,31 +716,31 @@ alpha.fun.mkm <- function(alphaX=0.1295, betaX=0.03085, rN=4, rd=0.31,
       return(mkm.fun)
     }
   }
-
+  
   # output file
   of <- paste(particleType, cellType, model, calculusType, sep='_')
   of <- paste(of, 'csv', sep='.')
-
+  
   # costruzione linea di comando:
   s.args <- paste(cellType, model, calculusType, a, b, n, d, particleType, precision, energyType, e)
   #cmd <- paste('.', lem.setenv, '; survival_alpha_beta_parameter_study', s.args)
   cmd <- paste('survival', s.args)
   #print(cmd)
-
+  
   if(outmessages) {ignore.stdout=FALSE; ignore.stderr=FALSE} else {ignore.stdout=TRUE; ignore.stderr=TRUE}
-
+  
   t <- system.time(system(cmd, ignore.stdout=TRUE, ignore.stderr=TRUE))
   #message('time elapsed: ', t)
-
+  
   # legge file temporaneo salvato
   out.df <- read.csv(of)
-
+  
   # cancella file temporaneo
   system(paste('rm', of))
-
+  
   # crea funzione interpolazione
   mkm.fun <- approxfun(ee, out.df$alpha, method='linear')
-
+  
   #print(c(alphaX, betaX, rN, rd))
   return(mkm.fun)
 }
@@ -684,24 +762,24 @@ alpha.fun.mkm <- function(alphaX=0.1295, betaX=0.03085, rN=4, rd=0.31,
 #'
 values.add.survival.LM <- function(values, alpha0, m, beta, add.alpha=TRUE)
 {
-
+  
   # identifica gli indici per 'Dose[Gy]' e 'DoseAveragedLET[keV/um]'
   index.dose<- which(values$variables=='Dose[Gy]')
   index.LETd <- which(values$variables=='DoseAveragedLET[keV/um]')
   # estrae dose e LETd da values
   dose <- values$values[index.dose,,,]
   LETd <- values$values[index.LETd,,,]
-
+  
   # calcola un nuovo array 'Survival.LM' da 'Dose[Gy]' e 'DoseAveragedLET[keV/um]' usando come parametri m, c, e beta
   alpha <- m*LETd + alpha0
   new.array <- exp(-alpha*dose - beta*dose^2)
-
+  
   # aggiungi l'array calcolato all'oggetto values
   values <- add.array.values(values, new.array, variable='Survival.LM')
-
+  
   # aggiungi opzionalmente anche l'array alpha
   if(add.alpha) {values <- add.array.values(values, alpha, variable='Alpha.LM[Gy^(-1)]')}
-
+  
   # ritorna values
   return(values)
 }
@@ -731,7 +809,7 @@ values.add.RBE.alpha <- function(values, model=NULL, alphaX=0.2, model.LM=NULL, 
   else if(model=='LM') {var.alpha <- 'Alpha.LM[Gy^(-1)]'; var.rbe <- 'RBE.alpha.LM'}
   else if(model=='cMKM') {var.alpha <- 'Alpha.cMKM[Gy^(-1)]'; var.rbe <- 'RBE.alpha.cMKM'}
   v.alpha <- which(values$variables==var.alpha)
-
+  
   # calcola alpha ex novo
   if(length(v.alpha)==0) {
     if(model=='LM') {
@@ -748,10 +826,10 @@ values.add.RBE.alpha <- function(values, model=NULL, alphaX=0.2, model.LM=NULL, 
     }
   }
   v.alpha <- which(values$variables==var.alpha)
-
+  
   rbe.array <- values$values[v.alpha,,,]/alphaX
   values <- add.array.values(values=values, new.array=rbe.array, variable=var.rbe)
-
+  
   return(values)
 }
 
@@ -768,32 +846,32 @@ values.add.RBE.alpha <- function(values, model=NULL, alphaX=0.2, model.LM=NULL, 
 #'
 values.add.survival.cMKM <- function(values=values, alphaX=alphaX, betaX=betaX, rN=rN, rd=rd, particleType=particleType, beta=beta, add.alpha=TRUE)
 {
-
+  
   # identifica gli indici per 'Dose[Gy]' e 'DoseAveragedLET[keV/um]'
   index.dose<- which(values$variables=='Dose[Gy]')
   index.LETd <- which(values$variables=='DoseAveragedLET[keV/um]')
   # estrae dose e LETd da values
   dose <- values$values[index.dose,,,]
   LETd <- values$values[index.LETd,,,]
-
+  
   # vettore di lets da interpolare
   lets <- seq(min(LETd, na.rm=TRUE), max(LETd, na.rm=TRUE), length.out=30)
-
+  
   # calcola un nuovo array 'Survival.cMKM' da 'Dose[Gy]' e 'DoseAveragedLET[keV/um]'
   alpha.mkm <- alpha.fun.mkm(alphaX=alphaX, betaX=betaX, rN=rN, rd=rd,
                              particleType=particleType,
                              lets=lets,
                              use.limits=FALSE)
-
+  
   alpha <- alpha.mkm(LETd)
   new.array <- exp(-alpha*dose - beta*dose^2)
-
+  
   # aggiungi l'array calcolato all'oggetto values
   values <- add.array.values(values=values, new.array=new.array, variable='Survival.cMKM')
-
+  
   # aggiungi opzionalmente anche l'array alpha
   if(add.alpha) {values <- add.array.values(values, alpha, variable='Alpha.cMKM[Gy^(-1)]')}
-
+  
   # ritorna values
   return(values)
 }
@@ -808,51 +886,51 @@ values.add.RBE <- function(values, model=NULL, alphaX=0.2, betaX=0.02, model.LM=
 {
   if(is.null(model)) {var.alpha <- 'Alpha[Gy^(-1)]'; var.beta <- 'Beta[Gy^(-2)]'; var.rbe <- 'RBE'}
   else if(model=='LM') {var.alpha <- 'Alpha.LM[Gy^(-1)]'; var.beta <- 'Beta.LM[Gy^(-2)]'; var.rbe <- 'RBE.LM'}
-    else if(model=='cMKM') {var.alpha <- 'Alpha.cMKM[Gy^(-1)]'; var.beta <- 'Beta.cMKM[Gy^(-2)]'; var.rbe <- 'RBE.cMKM'}
-
-    v.alpha <- which(values$variables==var.alpha)
-    v.beta <- which(values$variables==var.beta)
-
-    # calcola alpha e beta ex novo, e quindi l'rbe
-    if(length(v.alpha)+length(v.beta)==0) {
-      # modello LM
-      if(model=='LM') {
-        message('Evaluating RBE using Model: LM')
-        index.dose <- which(values$variables=='Dose[Gy]')
-        index.LETd <- which(values$variables=='DoseAveragedLET[keV/um]')
-	      LETd <- values$values[index.LETd,,,]
-	      dose <- values$values[index.dose,,,]
-	      alpha <- model.LM$m*LETd + model.LM$alpha0
-        beta <- alpha*0 + model.LM$beta
-	      rbe <- rbe.evaluate(alpha=alpha, beta=beta, dose=dose, alphaX=alphaX, betaX=betaX)
-	      values <- add.array.values(values=values, new.array=rbe, variable='RBE.LM')
-        if(biological.dose) {
-          dbio <- dose*rbe
-          values <- add.array.values(values=values, new.array=dbio, variable='BiologicalDose.LM[Gy(RBE)]')
-        }
-      }
-      # modello cMKM
-      else if(model=='cMKM') {
-        message('Evaluating RBE using Model: cMKM')
-        index.dose <- which(values$variables=='Dose[Gy]')
-        index.LETd <- which(values$variables=='DoseAveragedLET[keV/um]')
-	      LETd <- values$values[index.LETd,,,]
-	      dose <- values$values[index.dose,,,]
-	      lets <- seq(min(LETd, na.rm=TRUE), max(LETd, na.rm=TRUE), length.out=30)
-	      alpha.mkm <- alpha.fun.mkm(alphaX=model.cMKM$alphaX, betaX=model.cMKM$betaX, rN=model.cMKM$rN, rd=model.cMKM$rd,
-				                           cellType='RCell', particleType=as.character(model.cMKM$particleType), lets=lets, use.limits=FALSE)
-	      alpha <- alpha.mkm(LETd)
-	      beta <- alpha*0 + model.cMKM$beta
-	      rbe <- rbe.evaluate(alpha=alpha, beta=beta, dose=dose, alphaX=alphaX, betaX=betaX)
-	      values <- add.array.values(values=values, new.array=rbe, variable='RBE.cMKM')
-        if(biological.dose) {
-          dbio <- dose*rbe
-          values <- add.array.values(values=values, new.array=dbio, variable='BiologicalDose.cMKM[Gy(RBE)]')
-        }
+  else if(model=='cMKM') {var.alpha <- 'Alpha.cMKM[Gy^(-1)]'; var.beta <- 'Beta.cMKM[Gy^(-2)]'; var.rbe <- 'RBE.cMKM'}
+  
+  v.alpha <- which(values$variables==var.alpha)
+  v.beta <- which(values$variables==var.beta)
+  
+  # calcola alpha e beta ex novo, e quindi l'rbe
+  if(length(v.alpha)+length(v.beta)==0) {
+    # modello LM
+    if(model=='LM') {
+      message('Evaluating RBE using Model: LM')
+      index.dose <- which(values$variables=='Dose[Gy]')
+      index.LETd <- which(values$variables=='DoseAveragedLET[keV/um]')
+      LETd <- values$values[index.LETd,,,]
+      dose <- values$values[index.dose,,,]
+      alpha <- model.LM$m*LETd + model.LM$alpha0
+      beta <- alpha*0 + model.LM$beta
+      rbe <- rbe.evaluate(alpha=alpha, beta=beta, dose=dose, alphaX=alphaX, betaX=betaX)
+      values <- add.array.values(values=values, new.array=rbe, variable='RBE.LM')
+      if(biological.dose) {
+        dbio <- dose*rbe
+        values <- add.array.values(values=values, new.array=dbio, variable='BiologicalDose.LM[Gy(RBE)]')
       }
     }
-
-    return(values)
+    # modello cMKM
+    else if(model=='cMKM') {
+      message('Evaluating RBE using Model: cMKM')
+      index.dose <- which(values$variables=='Dose[Gy]')
+      index.LETd <- which(values$variables=='DoseAveragedLET[keV/um]')
+      LETd <- values$values[index.LETd,,,]
+      dose <- values$values[index.dose,,,]
+      lets <- seq(min(LETd, na.rm=TRUE), max(LETd, na.rm=TRUE), length.out=30)
+      alpha.mkm <- alpha.fun.mkm(alphaX=model.cMKM$alphaX, betaX=model.cMKM$betaX, rN=model.cMKM$rN, rd=model.cMKM$rd,
+                                 cellType='RCell', particleType=as.character(model.cMKM$particleType), lets=lets, use.limits=FALSE)
+      alpha <- alpha.mkm(LETd)
+      beta <- alpha*0 + model.cMKM$beta
+      rbe <- rbe.evaluate(alpha=alpha, beta=beta, dose=dose, alphaX=alphaX, betaX=betaX)
+      values <- add.array.values(values=values, new.array=rbe, variable='RBE.cMKM')
+      if(biological.dose) {
+        dbio <- dose*rbe
+        values <- add.array.values(values=values, new.array=dbio, variable='BiologicalDose.cMKM[Gy(RBE)]')
+      }
+    }
+  }
+  
+  return(values)
 }
 
 
@@ -947,8 +1025,8 @@ TCP.LL.LM <- function(values, vois, voi='PTV', alpha0, beta, m, G=G, Np=Np, R=R,
 #' @export
 #'
 TCP.LL.cMKM <- function(values, vois, voi='PTV',
-                      alphaX, betaX, rN, rd, beta, particleType,
-                      G, Np, R, Nf){
+                        alphaX, betaX, rN, rd, beta, particleType,
+                        G, Np, R, Nf){
   values.S <- values.add.survival.cMKM(values=values, alphaX=alphaX, betaX=betaX, rN=rN, rd=rd, particleType=particleType, beta=beta)
   dvh.surv <- dvh.evaluate(values=values.S, variable='Survival.LM', voi=voi, vois=vois)
   TCP <- tcp.S(dvh.survival=dvh.surv, gam=G, Nf=Nf)
