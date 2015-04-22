@@ -618,7 +618,7 @@ alpha.beta.ion.range <- function(model='MKM',
 #' @export
 #' @import data.table
 alpha.beta.ion.sequence <- function(model='MKM',
-                                    parameters=data.table(cell='test', alpha0=0.1295, beta0=0.03085, rN=4, rd=0.31,
+                                    parameters=data.frame(cell='test', alpha0=0.1295, beta0=0.03085, rN=4, rd=0.31,
                                                           particle='H', energy=50, let=NA),
                                     calculusType='rapidMKM', precision=0.5,
                                     ignore.stdout=TRUE, ignore.stderr=TRUE,
@@ -630,84 +630,115 @@ alpha.beta.ion.sequence <- function(model='MKM',
   if(length(parameters.column.index)!=4) {stop('alpha.beta.ion.sequence: error in the definition of the parameters')}
   
   # fa diventare data.table....
-  if('data.table' %in% class(parameters)) {
-    message('casting in data.table')
-    parameters <- as.data.table(parameters)
-  }
+  #if('data.table' %in% class(parameters)) {
+  #  message('casting in data.table')
+  #  parameters <- as.data.table(parameters)
+  #}
   
   # aggiunge identificativo unico per i parametri radiobiologici
-  message('identifying models...')
-  parameters$id.par <- interaction(parameters[, parameters.column.index, with=FALSE])
+  
+  #parameters$id.par <- interaction(parameters[, parameters.column.index])
   
   # ho perso le chiavi
-  setkey(parameters, id.par)
-  
-  # dataframe di output
-  alpha.beta.out <- NULL
-  
-  # aggrega per combinazione di particelle e parametri. le sequenze di energie avvengono invece in una singola chiamata...
-  # identifica sequenze per le particelle...
-  particles <- sort(unique(parameters[, particle])) #sort(unique(parameters$particle))
-  message('particles: ')
-  print(particles)
-  #print(summary(parameters))
-  for(ip in 1:length(particles)) {
-    message('Evaluating ', particles[ip])
-    parameters.p <- parameters[particle==particles[ip], ]
-    # identifica combinazioni di parametri
-    id.pars <- unique(parameters.p$id.par)
-    for(ib in 1:length(id.pars)) {
-      parameters.b <- parameters.p[id.par==id.pars[ib]] #subset(parameters.p, id.par==id.pars[ib])
-      biological.parameters <- as.data.frame(parameters.b[1, parameters.column.index, with=FALSE])
-      print(biological.parameters)
-      
-      if('cell' %in% names(parameters.b)) {cell <- parameters.b[,cell][1]} else {cell <- NULL}
-      if('energy' %in% names(parameters.b)) {energies <- parameters.b[,energy]} else {energies <- NULL}
-      if('let' %in% names(parameters.b)) {lets <- parameters.b[,let]} else {lets <- NULL}
-      
-      alpha.beta.tmp <- alpha.beta.ion.range(model=model, model.parameters=biological.parameters, cell.name=cell, particle=particles[ip], energies=energies, lets=lets, calculusType=calculusType, precision=precision, ignore.stdout=ignore.stdout, ignore.stderr=ignore.stderr, remove.temp.files=remove.temp.files)
-      alpha.beta.out <- rbind(alpha.beta.out, alpha.beta.tmp)
-    }
-  }
-  
-  return(alpha.beta.out) 
-}
-
-#' @export
-#' @import data.table
-alpha.beta.ion.sequence2 <- function(model='MKM',
-                                    parameters=data.table(cell='test', alpha0=0.1295, beta0=0.03085, rN=4, rd=0.31,
-                                                          particle='H', energy=50, let=NA),
-                                    calculusType='rapidMKM', precision=0.5,
-                                    ignore.stdout=TRUE, ignore.stderr=TRUE,
-                                    remove.temp.files=TRUE)
-{
-  
-  #parameters <- data.table(parameters)
-  parameters.column.index <- which(names(parameters) %in% c('alpha0', 'beta0', 'rN', 'rd', 'Dt'))
-  if(length(parameters.column.index)!=4) {stop('alpha.beta.ion.sequence: error in the definition of the parameters')}
-  
-  # fa diventare data.table....
-  if('data.table' %in% class(parameters)) {
-    message('casting in data.table')
-    parameters <- as.data.table(parameters)
-  }
-  
-  # aggiunge identificativo unico per i parametri radiobiologici
-  message('identifying models...')
-  parameters$id.par <- interaction(parameters[, parameters.column.index, with=FALSE])
-  
-  # ho perso le chiavi
-  setkey(parameters, id.par)
+  #setkey(parameters, id.par)
   
   # dataframe di output
   alpha.beta.out <- NULL
   
   # loop su id.par
-  id.pars <- unique(parameters[id.par])
-  message(lenght(id.par), ' different models')
-  for(id in 1:length(id.par)) {
-    parameters.m <- parameters[id.par==id.pars]
+  Npar <- nrow(parameters)
+
+  for(id in 1:Npar) {
+    if(nrow(parameters)==0) {break}
+    par <-  parameters[1, parameters.column.index]
+    index.par <- parameters[,parameters.column.index[1]] == par[1,1] &
+      parameters[,parameters.column.index[2]] == par[1,2] &
+      parameters[,parameters.column.index[3]] == par[1,3] &
+      parameters[,parameters.column.index[4]] == par[1,4]
+    parameters.m <- parameters[index.par, ]
+    
+    cell <- parameters.m$cell[1]
+    message('cell: ', cell)
+    print(par)
+    #print(summary(parameters.m))
+    
+    # loop su particles
+    particles <- unique(parameters.m$particle)
+    for(ip in 1:length(particles)) {
+      message('particle: ', particles[ip])
+      parameters.p <- subset(parameters.m, particle==particles[ip])
+      
+      energies <- parameters.p$energy
+      lets <- parameters.p$let
+      
+      alpha.beta.tmp <- alpha.beta.ion.range(model=model, model.parameters=par, cell.name=cell, particle=particles[ip], energies=energies, lets=lets, calculusType=calculusType, precision=precision, ignore.stdout=ignore.stdout, ignore.stderr=ignore.stderr, remove.temp.files=remove.temp.files)
+      alpha.beta.out <- rbind(alpha.beta.out, alpha.beta.tmp)
+    }
+    
+    parameters <- parameters[-which(index.par),]
+    
+  }
+  
+  return(alpha.beta.out)  
+}
+
+#' @export
+#' @import data.table
+alpha.beta.ion.sequence2 <- function(model='MKM',
+                                    parameters=data.frame(cell='test', alpha0=0.1295, beta0=0.03085, rN=4, rd=0.31,
+                                                          particle='H', energy=50, let=NA),
+                                    calculusType='rapidMKM', precision=0.5,
+                                    ignore.stdout=TRUE, ignore.stderr=TRUE,
+                                    remove.temp.files=TRUE)
+{
+  
+  #parameters <- data.table(parameters)
+  parameters.column.index <- which(names(parameters) %in% c('alpha0', 'beta0', 'rN', 'rd', 'Dt'))
+  if(length(parameters.column.index)!=4) {stop('alpha.beta.ion.sequence: error in the definition of the parameters')}
+  
+  # fa diventare data.table....
+  #if('data.table' %in% class(parameters)) {
+  #  message('casting in data.table')
+  #  parameters <- as.data.table(parameters)
+  #}
+  
+  # aggiunge identificativo unico per i parametri radiobiologici
+
+  #parameters$id.par <- interaction(parameters[, parameters.column.index])
+  
+  # ho perso le chiavi
+  #setkey(parameters, id.par)
+  
+  # dataframe di output
+  alpha.beta.out <- NULL
+  
+  # loop su id.par
+  message('identifying models...')
+  id.pars <- unique(parameters[, parameters.column.index])
+  message(nrow(id.pars), ' different models')
+  for(id in 1:nrow(id.pars)) {
+    parameters.m <- parameters[parameters[,parameters.column.index[1]] == id.pars[id,1] &
+                                  parameters[,parameters.column.index[2]] == id.pars[id,2] &
+                                  parameters[,parameters.column.index[3]] == id.pars[id,3] &
+                                  parameters[,parameters.column.index[4]] == id.pars[id,4], ]
+    
+    biological.parameters <- id.pars[id,]
+    cell <- parameters.m$cell[1]
+    message('cell: ', cell)
+    print(biological.parameters)
+    
+    # loop su particles
+    particles <- unique(parameters.m$particle)
+    for(ip in 1:length(particles)) {
+      message('particle: ', particles[ip])
+      parameters.p <- subset(parameters.m, particle==particles[ip])
+      
+      energies <- parameters.p$energy
+      lets <- parameters.p$let
+      
+      alpha.beta.tmp <- alpha.beta.ion.range(model=model, model.parameters=biological.parameters, cell.name=cell, particle=particles[ip], energies=energies, lets=lets, calculusType=calculusType, precision=precision, ignore.stdout=ignore.stdout, ignore.stderr=ignore.stderr, remove.temp.files=remove.temp.files)
+      alpha.beta.out <- rbind(alpha.beta.out, alpha.beta.tmp)
+    }
   }
   
   return(alpha.beta.out) 
