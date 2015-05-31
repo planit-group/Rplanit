@@ -10,7 +10,8 @@ display.slice.all(ct = NULL, contours = NULL, values = NULL,
   vlim = NULL, file.name = NULL, width = 7, height = 7,
   HU.window = c(-1000, 3000), alpha.lower = 0, alpha.upper = 1,
   invert.y.axis = FALSE, contour.color = "green", dpi = 300,
-  levels = NULL, use.contour.colors = FALSE, title = NULL)
+  levels = NULL, use.contour.colors = FALSE, title = NULL,
+  col.invert = FALSE)
 }
 \arguments{
 \item{ct}{the ct object (optional, if plan is specified)}
@@ -50,6 +51,8 @@ display.slice.all(ct = NULL, contours = NULL, values = NULL,
 \item{use.contour.colors}{Use the colors defined in the contours object for the contours.}
 
 \item{title}{Explicitly define the text to be displayed in the plot title.}
+
+\item{col.invert}{Invert the color map (red for lower values and blue for high values)}
 
 \item{Nx,Ny,Nz}{slice index to be displayed. Only one of them should be defined, corresponding to an axial, coronal or sagittal slice (optional)}
 

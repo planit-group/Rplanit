@@ -405,6 +405,7 @@ display.slice.ct <- function(ct, contours=NULL,
 #' @param dpi dpi of the saved image.
 #' @param use.contour.colors Use the colors defined in the contours object for the contours.
 #' @param title Explicitly define the text to be displayed in the plot title.
+#' @param col.invert Invert the color map (red for lower values and blue for high values)
 #'
 #' @family display slices
 #' @export
@@ -432,7 +433,8 @@ display.slice.all <- function(ct=NULL,
                               dpi=300,
                               levels=NULL,
                               use.contour.colors=FALSE,
-                              title=NULL)
+                              title=NULL,
+                              col.invert=FALSE)
 {
   #suppressMessages(library(fields))
 
@@ -515,6 +517,8 @@ display.slice.all <- function(ct=NULL,
   interval.alpha <- c( rep(alpha.lower,round(Nc*alpha.lower)), seq(alpha.lower, alpha.upper, length.out=Nc.alpha), rep(alpha.upper,round(Nc-Nc*alpha.upper)) )
   col.val <- hsv( interval[Nc:1]*0.64, alpha=interval.alpha[1:Nc])
   col.ct <- colormap.ct(HU.range=range(ct$values), HU.window=HU.window)
+  
+  if(col.invert) {col.val <- col.val[length(col.val):1]}
 
 
   # estremi

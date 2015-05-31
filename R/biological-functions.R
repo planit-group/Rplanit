@@ -629,19 +629,6 @@ alpha.beta.ion.sequence <- function(model='MKM',
   parameters.column.index <- which(names(parameters) %in% c('alpha0', 'beta0', 'rN', 'rd', 'Dt'))
   if(length(parameters.column.index)!=4) {stop('alpha.beta.ion.sequence: error in the definition of the parameters')}
   
-  # fa diventare data.table....
-  #if('data.table' %in% class(parameters)) {
-  #  message('casting in data.table')
-  #  parameters <- as.data.table(parameters)
-  #}
-  
-  # aggiunge identificativo unico per i parametri radiobiologici
-  
-  #parameters$id.par <- interaction(parameters[, parameters.column.index])
-  
-  # ho perso le chiavi
-  #setkey(parameters, id.par)
-  
   # dataframe di output
   alpha.beta.out <- NULL
   
