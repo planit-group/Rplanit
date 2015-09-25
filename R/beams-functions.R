@@ -278,7 +278,7 @@ write.beams <- function(beams, file.name, format='puredek', ion='1H', add.extens
     } else if(all(colnames(beams) %in% c("particle", "beamLine", "x_iso", "y_iso", "z_iso", "gantryAngle", "patientAngle", "fluence", "energy", "deflX", "deflY"))) {
       beams.ord <- beams[c("particle", "beamLine", "x_iso", "y_iso", "z_iso", "gantryAngle", "patientAngle", "fluence", "energy", "deflX", "deflY")]
     } else {
-      stop('Error, missing mandatory data in beams.')
+      stop('Error, missing mandatory data in beams...')
     }
 
     write.table(beams.ord, file=file.name, append=TRUE, col.names=FALSE, row.names=FALSE, quote=FALSE)
