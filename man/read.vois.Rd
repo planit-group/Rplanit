@@ -2,16 +2,20 @@
 % Please edit documentation in R/vois-functions.R
 \name{read.vois}
 \alias{read.vois}
-\title{Legge i vois da un file .3d e restituisce un dataframe "esteso"}
+\title{Read VOIs from file}
 \usage{
 read.vois(file.name, x.min = -Inf, x.max = +Inf, y.min = -Inf,
   y.max = +Inf, z.min = -Inf, z.max = +Inf)
 }
-\description{
-OBSOLETE
+\arguments{
+\item{file.name}{the file name}
+
+\item{x.min,x.max,y.min,y.max,z.min,z.max}{load only the volume inside the specified ranges (optinal)}
 }
-\seealso{
-Other R/W VOIs: \code{\link{read.vois.array}};
-  \code{\link{read.vois.spliced}}
+\value{
+The \code{vois} object
+}
+\description{
+Read the VOIS from a file (VOIs *.3d PlanKIT format) and return a \code{vois} object.
 }
 

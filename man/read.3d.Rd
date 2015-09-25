@@ -17,7 +17,6 @@ Read file with format "3d" (PlanKIT) and return a \code{values} object.
 }
 \seealso{
 Other R/W Arrays: \code{\link{read.1d}};
-  \code{\link{read.3d.df}}; \code{\link{read.3d.dicom}};
-  \code{\link{read.3d.hdr}}; \code{\link{read.3d.spliced}}
+  \code{\link{read.3d.dicom}}; \code{\link{read.3d.hdr}}
 }
 

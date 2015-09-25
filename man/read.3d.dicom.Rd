@@ -28,7 +28,6 @@ and the same ImagePositionPatient for each slice.
 }
 \seealso{
 Other R/W Arrays: \code{\link{read.1d}};
-  \code{\link{read.3d.df}}; \code{\link{read.3d.hdr}};
-  \code{\link{read.3d.spliced}}; \code{\link{read.3d}}
+  \code{\link{read.3d.hdr}}; \code{\link{read.3d}}
 }
 
