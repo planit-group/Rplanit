@@ -272,13 +272,13 @@ write.beams <- function(beams, file.name, format='puredek', ion='1H', add.extens
     if(length(index.field>0)) {beams <- beams[,-index.field]}
 
     # riordina le colonne per essere consistente con pure-dek
-    if(ncol(beams)==14) {
+    # spot position presenti
+    if(all(c("particle", "beamLine", "x_iso", "y_iso", "z_iso", "gantryAngle", "patientAngle", "fluence", "energy", "deflX", "deflY", "x_s", "y_s", "z_s") %in% colnames(beams))) {
       beams.ord <- beams[c("particle", "beamLine", "x_iso", "y_iso", "z_iso", "gantryAngle", "patientAngle", "fluence", "energy", "deflX", "deflY", "x_s", "y_s", "z_s")]
-    } else if(ncol(beams)==11) {
+    } else if(all(c("particle", "beamLine", "x_iso", "y_iso", "z_iso", "gantryAngle", "patientAngle", "fluence", "energy", "deflX", "deflY") %in% colnames(beams))) {
       beams.ord <- beams[c("particle", "beamLine", "x_iso", "y_iso", "z_iso", "gantryAngle", "patientAngle", "fluence", "energy", "deflX", "deflY")]
     } else {
-      warning('Warning, number of columns in beams data.frame anomalous...')
-      beams.ord <- beams[c("particle", "beamLine", "x_iso", "y_iso", "z_iso", "gantryAngle", "patientAngle", "fluence", "energy", "deflX", "deflY", "x_s", "y_s", "z_s")]
+      stop('Error, missing mandatory data in beams.')
     }
 
     write.table(beams.ord, file=file.name, append=TRUE, col.names=FALSE, row.names=FALSE, quote=FALSE)
