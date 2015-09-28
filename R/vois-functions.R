@@ -77,7 +77,7 @@ get.vois <- function(plan, input=FALSE)
     if(is.null(vois.file)) {
       stop('vois object not present')
     } else { 
-      return(read.vois.array(vois.file))
+      return(read.vois(vois.file))
     }
   }
 }
