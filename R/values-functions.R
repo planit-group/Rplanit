@@ -223,22 +223,27 @@ dataframe.from.values <- function(values=values, vois=vois, variables=NULL, rois
 }
 
 
-#' recupera matrice sparsa da values
+#' get sparse format data from a values object
 #'
-#' accetta values con più di una variabile. la selezione è fatta sulla prima.
-#' (che può coincidere o meno con la variabile specificata)
+#'@param values the values object
+#'@param variables a vector of variable names. If it is not specified, all variabels stored in values are extracted in the sparse matrix.
+#'@param threshold applay a threshold selection on the first variable stored in values (usually 'Dose[Gy]')
 #'
 #' @family Values
 #' @export
-sparse.array.from.values <- function(values, variable='Dose[Gy]', threshold=0)
+sparse.array.from.values <- function(values, variables=NULL, threshold=0)
 {
   # identifica variabile
+  #print(variable)
+  if(is.null(variables)) {variables <- values$variables}
+  
   if(values$Nv>1) {
-    v.index <- which(values$variables==variable)
-    my.array <- values$values[v.index,,,]
-    voxel.index <- which(values$values[1,,,]>threshold)
-
-    for(i in 1:values$Nv) {
+    v.index <- which(values$variables %in% variables)
+    print(v.index)
+    #my.array <- values$values[v.index,,,]
+    voxel.index <- which(values$values[1,,,]>threshold) # assume threshold sulla dose...?
+    
+    for(i in v.index) {
       my.array <- values$values[i,,,]
       sparse.array <- my.array[voxel.index]
       if(i==1) {
@@ -248,14 +253,14 @@ sparse.array.from.values <- function(values, variable='Dose[Gy]', threshold=0)
       }
     }
     return(df)
-
+    
   } else {
     my.array <- values$values
     voxel.index <- which(my.array>threshold)
     sparse.array <- my.array[voxel.index]
     return(data.frame(voxel.index=voxel.index, value=sparse.array))
   }
-
+  
 }
 
 
@@ -272,12 +277,12 @@ sparse.array.from.values <- function(values, variable='Dose[Gy]', threshold=0)
 #'
 values.from.sparse.array <- function(sparse.array, variables=NULL, x, y, z)
 {
-  values <- list()
-
+  #values <- list()
+  
   Nx <- length(x)
   Ny <- length(y)
   Nz <- length(z)
-
+  
   # variables
   if(is.null(variables)) {
     if('variable' %in% colnames(sparse.array)) {
@@ -289,15 +294,16 @@ values.from.sparse.array <- function(sparse.array, variables=NULL, x, y, z)
   } else {
     if('variable' %in% colnames(sparse.array)) {
       sparse.array <- subset(sparse.array, variable %in% variables)
-      variables <- as.character(sparse.array$variable)
+      variables <- unique(as.character(sparse.array$variable))
     } else {
       if(length(variables)>1) {stop('variable names not present in sparse array')}
     }
   }
   Nv <- length(variables)
-
+  #print(Nv)
+  
   values <- create.values(variables=variables, x=x, y=y, z=z)
-
+  
   if(Nv==1) {values$values[sparse.array$voxel.index] <- sparse.array[,2]}
   else {
     for(i in 1:Nv) {
@@ -306,7 +312,7 @@ values.from.sparse.array <- function(sparse.array, variables=NULL, x, y, z)
       values$values[i,,,] <- temp.array
     }
   }
-
+  
   return(values)
 }
 

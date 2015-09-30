@@ -2,13 +2,19 @@
 % Please edit documentation in R/values-functions.R
 \name{sparse.array.from.values}
 \alias{sparse.array.from.values}
-\title{recupera matrice sparsa da values}
+\title{get sparse format data from a values object}
 \usage{
-sparse.array.from.values(values, variable = "Dose[Gy]", threshold = 0)
+sparse.array.from.values(values, variables = NULL, threshold = 0)
+}
+\arguments{
+\item{values}{the values object}
+
+\item{variables}{a vector of variable names. If it is not specified, all variabels stored in values are extracted in the sparse matrix.}
+
+\item{threshold}{applay a threshold selection on the first variable stored in values (usually 'Dose[Gy]')}
 }
 \description{
-accetta values con più di una variabile. la selezione è fatta sulla prima.
-(che può coincidere o meno con la variabile specificata)
+get sparse format data from a values object
 }
 \seealso{
 Other Values: \code{\link{combine.values}};
