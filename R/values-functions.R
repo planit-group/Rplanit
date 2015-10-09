@@ -243,14 +243,15 @@ sparse.array.from.values <- function(values, variables=NULL, threshold=0)
     #my.array <- values$values[v.index,,,]
     voxel.index <- which(values$values[1,,,]>threshold) # assume threshold sulla dose...?
     
+    df <- NULL
     for(i in v.index) {
       my.array <- values$values[i,,,]
       sparse.array <- my.array[voxel.index]
-      if(i==1) {
-        df <- data.frame(voxel.index=voxel.index, value=sparse.array, variable=as.factor(values$variables[i]))
-      } else {
-        df <- rbind(df, data.frame(voxel.index=voxel.index, value=sparse.array, variable=as.factor(values$variables[i])))
-      }
+      #if(i==1) {
+      #  df <- data.frame(voxel.index=voxel.index, value=sparse.array, variable=as.factor(values$variables[i]))
+      #} else {
+      df <- rbind(df, data.frame(voxel.index=voxel.index, value=sparse.array, variable=as.factor(values$variables[i])))
+      #}
     }
     return(df)
     
