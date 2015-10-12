@@ -101,24 +101,25 @@ get.values.gate.plan <- function(plan, center.coordinates=NULL)
 {
   values <- list()
   variables <- plan$computingValues
-  print(variables)
+  #print(variables)
   for(i in 1:length(variables))
   {
     variable.file <- file.variable.gate(variables[i])
     variable.file <- paste(plan$name, '/output/', variable.file, sep='')
+    message('reading ', variables[i], ' ... (', variable.file, ')')
     values[[i]] <- read.3d.hdr(file.name=variable.file, variable=variables[i])
   }
   values <- combine.values(values.list=values)
-
+  
   # recupera le coordinate assolute dalla CT
   if(is.null(center.coordinates)) {
     ct <- get.ct(plan)
     center.coordinates[1] <- sum(range(ct$x))/2
     center.coordinates[2] <- sum(range(ct$y))/2
     center.coordinates[3] <- sum(range(ct$z))/2
-    print(center.coordinates)
+    message('center coordinates: ', center.coordinates[1], ', ', center.coordinates[2], ', ', center.coordinates[3])
   }
-
+  
   # traslazione del centro
   x.c <- sum(range(values$x))/2
   y.c <- sum(range(values$y))/2
@@ -126,7 +127,7 @@ get.values.gate.plan <- function(plan, center.coordinates=NULL)
   values$x <- values$x + (center.coordinates[1]-x.c)
   values$y <- values$y + (center.coordinates[2]-y.c)
   values$z <- values$z + (center.coordinates[3]-z.c)
-
+  
   return(values)
 }
 

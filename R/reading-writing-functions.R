@@ -154,7 +154,7 @@ read.3d.hdr <- function(file.name, variable='Dose[Gy]', voxel.origin=c(0,0,0))
   z <- seq(from=voxel.origin[3], by=dz, length.out=Nz)
   
   # crea oggetto values
-  values <- list(values=Values.3d, x=x, y=y, z=z, Nx=Nx, Ny=Ny, Nz=Nz, Nv=Nv, variables=variables, file=file.name)
+  values <- list(values=Values.3d, x=x, y=y, z=z, Nx=Nx, Ny=Ny, Nz=Nz, Nv=Nv, variables=variable, file=file.name)
   class(values) <- 'values'
   return(values)
 }
