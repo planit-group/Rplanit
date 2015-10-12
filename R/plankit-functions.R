@@ -153,7 +153,7 @@ create.plan <- function(plan=NA,
 #'
 save.plan <- function(plan) {
 
-  message('Saving plan ', plan$Name, ' ...')
+  message('Saving plan ', plan$name, ' ...')
   plan.file <- paste(plan$name, '/plan.Rdata', sep='')
   dir.create(plan$name, recursive=TRUE, showWarnings=FALSE)
   save(plan, file=plan.file, compress='bzip2')
