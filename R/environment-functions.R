@@ -205,7 +205,7 @@ install.gate <- function()
   }
   
   message('downloading gate...')
-  download.file(url='http://totlxl.to.infn.it/tools/Gate6.2-install.tar.bz2', destfile='Gate6.2-install.tar.bz2')
+  download.file(url='http://totlxl.to.infn.it/tools/Gate6.2-install.tar.bz2', destfile='Gate6.2-install.tar.bz2', method='internal', method='internal')
   
   message('uncompressing gate...')
   system('tar jxf Gate6.2-install.tar.bz2; rm Gate6.2-install.tar.bz2', ignore.stdout=TRUE, ignore.stderr=TRUE)
@@ -245,7 +245,7 @@ install.puredek <- function()
   }
   
   message('downloading pure-dek...')
-  download.file(url=paste0('http://totlxl.to.infn.it/tools/', puredek_package), destfile='Pure-dek-install.tar.bz2')
+  download.file(url=paste0('http://totlxl.to.infn.it/tools/', puredek_package), destfile='Pure-dek-install.tar.bz2', method='internal')
   
   message('uncompressing pure-dek...')
   system('tar jxf Pure-dek-install.tar.bz2; rm Pure-dek-install.tar.bz2', ignore.stdout=TRUE, ignore.stderr=TRUE)
@@ -278,7 +278,7 @@ install.survival <- function()
   }
   
   message('downloading survival...')
-  download.file(url=paste0('http://totlxl.to.infn.it/tools/', survival_package, '.bz2'), destfile='Survival-install.tar.bz2')
+  download.file(url=paste0('http://totlxl.to.infn.it/tools/', survival_package, '.bz2'), destfile='Survival-install.tar.bz2', method='internal')
   
   message('uncompressing survival...')
   system(paste0('tar jxf Survival-install.tar.bz2; rm Survival-install.tar.bz2'), ignore.stdout=TRUE, ignore.stderr=TRUE)
