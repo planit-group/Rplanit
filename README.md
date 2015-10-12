@@ -20,7 +20,7 @@ Note: it is assumed that the camputer is connected to the web...
 $ sudo apt-get install libcurl4-openssl-dev
 $ sudo apt-get install tk8.5-dev
 $ sudo apt-get install libsdl1.2-dev
-$ sudo apt-get install mesa-common-dev # opzionale per rendering con openGL
+$ sudo apt-get install mesa-common-dev # optional, for OpenGL rendering
 $ sudo apt-get install libssl-dev
 $ sudo ln -s /lib/x86_64-linux-gnu/libcrypto.so.1.0.0 /lib/x86_64-linux-gnu/libcrypto.so.6
 $ sudo ln -s /lib/x86_64-linux-gnu/libssl.so.1.0.0 /lib/x86_64-linux-gnu/libssl.so.6
@@ -36,7 +36,7 @@ $ sudo apt-get install liblog4cxx10-dev
 $ sudo apt-get install libcurl4-openssl-dev
 $ sudo apt-get install tk8.6-dev
 $ sudo apt-get install libsdl1.2-dev
-$ sudo apt-get install mesa-common-dev  # opzionale per rendering con openGL
+$ sudo apt-get install mesa-common-dev  # optional, for OpenGL rendering
 $ sudo apt-get install liblog4cxx10-dev
 ```
 * Install the latest version of R (for Ubuntu 14.04) following the instruction at this [link](http://www.sysads.co.uk/2014/06/install-r-base-3-1-0-ubuntu-14-04/).
@@ -56,7 +56,7 @@ $ sudo apt-get install liblog4cxx10-dev
 ```
 > install.packages("devtools") # it needs to be done only once
 > library(devtools)
-> install_github("Rplanit", username="planit-group", dependencies=TRUE)
+> install_github("planit-group/Rplanit", dependencies=TRUE)
 ```
 * To load the package:
 ```
@@ -70,8 +70,9 @@ $ sudo apt-get install liblog4cxx10-dev
 ```
 * To update everything to the latest version, the last commands should be runned again:
 ```
-> install_github("Rplanit", username="planit-group", dependencies=TRUE)
+> install_github("planit-group/Rplanit", dependencies=TRUE)
 > library(Rplanit)
+> The followings are optional:
 > install.puredek(<lincence number>) # please read the note below.
 > install.gate()
 > install.survival()
