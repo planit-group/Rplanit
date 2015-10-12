@@ -188,12 +188,13 @@ set.ct.gate <- function(plan.gate) {
     vp.mac.txt <- sub('@Dy', plan.gate$ctWater$Dy, vp.mac.txt)
     vp.mac.txt <- sub('@Dz', plan.gate$ctWater$Dz, vp.mac.txt)
   } else {
-    error('setting for CT not yet implemented')
+    stop('setting for CT not yet implemented')
   }
   
   # traslazione origine + isocentro
   vp.mac.txt <- gsub('#@trasl', '', vp.mac.txt)
-  ct.origin <- c(plan.gate[['ct']]$x[1], plan.gate[['ct']]$x[2], plan.gate[['ct']]$x[3])
+  ct.origin <- c(plan.gate[['ct']]$x[1], plan.gate[['ct']]$y[1], plan.gate[['ct']]$z[1])
+  #ct.origin <- c(plan.gate[['ct']]$x[1], plan.gate[['ct']]$x[2], plan.gate[['ct']]$x[3])
   isocenter <- get.isocenter(plan.gate)
   vp.mac.txt <- gsub('@setOrigin', paste0(ct.origin, collapse = ' '), vp.mac.txt)
   vp.mac.txt <- gsub('@TranslateTheImageAtThisIsoCenter', paste0(isocenter, collapse = ' '), vp.mac.txt)
