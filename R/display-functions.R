@@ -2108,18 +2108,24 @@ display.beamports <- function(beams,
 #'
 #' If colours are not specitied in the contours dataframe, they will be added using the "raimbow" colour selection.
 #' @param contours The contours dataframe.
+#' @param add Put the legend in the active plot. If FALSE, it returns a stand alone legend in a new display.
 #' @param position The position of the legend ('topleft', 'bottomleft', etc.)
 #' @param cex dimension of the text font
 #' @param ... pther parameters to legend()
 #' @export
 #' @family Contours
 display.contours.legend <- function(contours,
-                              position='topleft',
-                              cex=0.8,
-                              ...)
+                                    add=TRUE,
+                                    position='topleft',
+                                    cex=0.8,
+                                    ...)
 {
   if( !('display.color' %in% colnames(contours)) ) {
     contours <- add.colours.contours(contours)
   }
-  legend(position, legend = unique(contours$contour), col = unique(contours$display.color), lty=1, cex=cex,  ...)
+  if(!add) {
+    plot.new()
+    position <- 'center'
+  }
+  legend(position, legend = unique(contours$contour), col = unique(contours$display.color), lty=1, cex=cex, ...)
 }

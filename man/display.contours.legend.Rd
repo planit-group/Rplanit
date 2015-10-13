@@ -4,10 +4,13 @@
 \alias{display.contours.legend}
 \title{Add a legend with contours names/colours.}
 \usage{
-display.contours.legend(contours, position = "topleft", cex = 0.8, ...)
+display.contours.legend(contours, add = TRUE, position = "topleft",
+  cex = 0.8, ...)
 }
 \arguments{
 \item{contours}{The contours dataframe.}
+
+\item{add}{Put the legend in the active plot. If FALSE, it returns a stand alone legend in a new display.}
 
 \item{position}{The position of the legend ('topleft', 'bottomleft', etc.)}
 
