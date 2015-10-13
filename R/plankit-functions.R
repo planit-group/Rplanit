@@ -266,12 +266,13 @@ run.dek.inverse <- function(plan, outmessages=FALSE) {
   writeLines(paste('computingGridCoverageBoundary = ', plan[['computingGridCoverageBoundary']], '\n'), con=con, sep='')
 
   # beamLines (opzionale, ora le beamline sono specificate in field)
+  plan[['beamLines']] <- unique(c(as.character(plan[['beamLines']]), as.character(plan[['fields']]$beamLine))) # aggiunge quelle definite in fields
   #if(!is.null(plan[['beamLines']])) {
     # sovrappone direttamente
-    for(indexBL in 1:length(plan[['beamLines']])){
-      message('using beamline: ', plan[['beamLines']][indexBL])
-      writeLines(paste('beamLine = ', plan[['beamLines']][indexBL], '\n'), con=con, sep='')
-    }
+#     for(indexBL in 1:length(plan[['beamLines']])){
+#       message('using beamline: ', plan[['beamLines']][indexBL])
+#       writeLines(paste('beamLine = ', plan[['beamLines']][indexBL], '\n'), con=con, sep='')
+#     }
   #}
 
   # computing values
