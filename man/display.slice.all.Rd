@@ -11,7 +11,7 @@ display.slice.all(ct = NULL, contours = NULL, values = NULL,
   HU.window = c(-1000, 3000), alpha.lower = 0, alpha.upper = 1,
   invert.y.axis = FALSE, contour.color = "green", dpi = 300,
   levels = NULL, use.contour.colors = FALSE, contours.legend = FALSE,
-  cex.contour.legend = 0.8, contour.legend.position = "topleft",
+  cex.contours.legend = 0.8, contour.legend.position = "topleft",
   title = NULL, col.invert = FALSE)
 }
 \arguments{
@@ -51,7 +51,7 @@ display.slice.all(ct = NULL, contours = NULL, values = NULL,
 
 \item{use.contour.colors}{Use the colors defined in the contours object for the contours.}
 
-\item{cex.contour.legend}{Font dimension for the contour legend.}
+\item{cex.contours.legend}{Font dimension for the contour legend.}
 
 \item{contour.legend.position}{Position of the contour legend.}
 

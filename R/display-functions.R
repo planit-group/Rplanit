@@ -422,7 +422,7 @@ display.slice.ct <- function(ct, contours=NULL,
 #' @param dpi dpi of the saved image.
 #' @param use.contour.colors Use the colors defined in the contours object for the contours.
 #' @param display.contours.legend Display a legend for the contours.
-#' @param cex.contour.legend Font dimension for the contour legend.
+#' @param cex.contours.legend Font dimension for the contour legend.
 #' @param contour.legend.position Position of the contour legend.
 #' @param title Explicitly define the text to be displayed in the plot title.
 #' @param col.invert Invert the color map (red for lower values and blue for high values)
@@ -454,7 +454,7 @@ display.slice.all <- function(ct=NULL,
                               levels=NULL,
                               use.contour.colors=FALSE,
                               contours.legend=FALSE,
-                              cex.contour.legend=0.8,
+                              cex.contours.legend=0.8,
                               contour.legend.position='topleft',
                               title=NULL,
                               col.invert=FALSE)
