@@ -424,6 +424,24 @@ sanitize.contours <- function(contours) {
   return(cc)
 }
 
+
+#' Add color definitions to contours
+#' 
+#' Colours will be added using the "raimbow" colour selection and will be stored in a new "display.colour" column of the dataframe.
+#' 
+#' @param contours the contours dataframe.
+#' @return contours dataframe with colour definition for each contour.
+#' 
+#' @export
+#' @family Contours
+add.colours.contours <- function(contours)
+{
+  display.color <- rainbow(length(unique(contours$contour))) 
+  contours$display.color <- display.color[contours$id + 1]
+  return(contours)
+}
+
+
 # R/W CONTOURS -----------------------------------------------------------------
 
 
@@ -587,7 +605,6 @@ write.contours <- function(contours, name)
 
 
 # R/W VOIS ---------------------------------------------------------------------
-
 
 
 #' Read VOIs from file

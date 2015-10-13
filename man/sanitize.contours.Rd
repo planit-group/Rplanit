@@ -13,7 +13,8 @@ sanitize.contours(contours)
 Check and correct the consistency of a contours object (such as not uniform and/or ordered polygon numbering, negative index, etc.)
 }
 \seealso{
-Other Contours: \code{\link{get.contours}};
-  \code{\link{volume.contours}}
+Other Contours: \code{\link{add.colours.contours}};
+  \code{\link{display.contours.legend}};
+  \code{\link{get.contours}}; \code{\link{volume.contours}}
 }
 

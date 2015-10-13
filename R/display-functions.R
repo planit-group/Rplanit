@@ -298,7 +298,10 @@ display.slice.ct <- function(ct, contours=NULL,
                              invert.y.axis=FALSE,
                              file.name=NULL,
                              width=7, height=7, dpi=300,
-                             use.contour.colors=FALSE)
+                             use.contours.colors=TRUE,
+                             contours.legend=FALSE,
+                             cex.contours.legend=0.8,
+                             contour.legend.position='topleft')
 {
 
   # estremi
@@ -309,8 +312,15 @@ display.slice.ct <- function(ct, contours=NULL,
   if(invert.y.axis) {ylim <- rev(ylim)}
   #vlim <- range(ct$values, na.rm=TRUE)
 
-
+  
+  # colori
   my.colors <- colormap.ct(HU.range=vlim, HU.window=HU.window)
+  if(use.contours.colors | contours.legend) {
+    if( !('display.color' %in% colnames(contours)) ) {
+      contours <- add.colours.contours(contours)
+    }
+    use.contour.colors <- TRUE # se si vuole visualizzare la legenda allora occorre usare i colori...
+  }
 
   # INIZIA FIGURA
   if(!is.null(file.name)) {
@@ -363,11 +373,18 @@ display.slice.ct <- function(ct, contours=NULL,
     }
   }
 
+  # legenda contorni
+  if(contours.legend) {
+    display.contours.legend(contours = contours, position = contour.legend.position, cex = cex.contours.legend)
+  }
+  
   par(oma=c(0,0,0,1))# reset margin to be much smaller.
   #image.plot(legend.only=TRUE, zlim=vlim, col=col.val)
 
   set.panel()
 
+  
+  
   # FINISCE FIGURA
   if(!is.null(file.name)) {dev.off(); message('figure saved in ', file.name)}
 
@@ -404,6 +421,9 @@ display.slice.ct <- function(ct, contours=NULL,
 #' @param contour.color The color used for the contour of the VOI.
 #' @param dpi dpi of the saved image.
 #' @param use.contour.colors Use the colors defined in the contours object for the contours.
+#' @param display.contours.legend Display a legend for the contours.
+#' @param cex.contour.legend Font dimension for the contour legend.
+#' @param contour.legend.position Position of the contour legend.
 #' @param title Explicitly define the text to be displayed in the plot title.
 #' @param col.invert Invert the color map (red for lower values and blue for high values)
 #'
@@ -433,6 +453,9 @@ display.slice.all <- function(ct=NULL,
                               dpi=300,
                               levels=NULL,
                               use.contour.colors=FALSE,
+                              contours.legend=FALSE,
+                              cex.contour.legend=0.8,
+                              contour.legend.position='topleft',
                               title=NULL,
                               col.invert=FALSE)
 {
@@ -519,6 +542,14 @@ display.slice.all <- function(ct=NULL,
   col.ct <- colormap.ct(HU.range=range(ct$values), HU.window=HU.window)
   
   if(col.invert) {col.val <- col.val[length(col.val):1]}
+  
+  # colori contorni
+  if(use.contour.colors | contours.legend) {
+    if( !('display.color' %in% colnames(contours)) ) {
+      contours <- add.colours.contours(contours)
+    }
+    use.contour.colors <- TRUE # se si vuole visualizzare la legenda allora occorre usare i colori...
+  }
 
 
   # estremi
@@ -620,9 +651,14 @@ display.slice.all <- function(ct=NULL,
 
   par(oma=c( 0,0,0,1))# reset margin to be much smaller.
   fields::image.plot(legend.only=TRUE, zlim=vlim, col=col.val)
+  
+  # legenda contorni
+  if(contours.legend) {
+    display.contours.legend(contours = contours, position = contour.legend.position, cex = cex.contours.legend)
+  }
 
   fields::set.panel()
-
+  
   # FINISCE FIGURA
   if(!is.null(file.name)) {dev.off(); message('figure saved in ', file.name)}
 
@@ -641,10 +677,7 @@ dumpslices.3d.2.png <- function(file.name,
 
   cat('reading values:', file.name, '\n')
 
-  ###############
   # leggi file 3d
-  ###############
-
   # apri connsessione
   file.3d <- file(file.name, "rb") # read binary
 
@@ -687,9 +720,7 @@ dumpslices.3d.2.png <- function(file.name,
   Values.3d <- array(readBin(file.3d, numeric(), Ntot), dim=c(Nv, Nx, Ny, Nz))
 
 
-  #######################
   # selezione sottovolume
-  #######################
 
   cat('selecting subvolume...\n')
 
@@ -728,9 +759,7 @@ dumpslices.3d.2.png <- function(file.name,
   Nz <- length(z)
 
 
-  ######################
   # salva png nel folder
-  ######################
 
   cat('saving slices to pngs...\n')
   library(png)
@@ -779,7 +808,7 @@ display.all.plan <- function(plan)
   # display
   for(v in 1:.values$Nv) {
     display.slice.all(ct=.ct,
-                      roi=.roi,
+                      contours=.roi,
                       values=.values,
                       variable=.values$variables[v],
                       plan=plan)
@@ -1858,6 +1887,7 @@ display.profile <- function(profile.values,
 
 }
 
+
 # UTILITIES ====================================================================
 
 #' Generate gray colormap for Hounsfield numbers
@@ -1934,7 +1964,6 @@ my.ggplot.theme <- function(size=16)
 #' @export
 #' @import ggplot2
 #' @family Beams
-
 display.beams <- function(beams,
                           plan=NULL,
                           numeric=FALSE,
@@ -2070,4 +2099,27 @@ display.beamports <- function(beams,
 
   if(!is.null(file.name)) {ggsave(plot=p, filename=file.name, height=height, width=width)}
   if(show.plot) {print(p)} else {return(p)}
+}
+
+
+# CONTOURS DISPLAY FUNCTIONS ---------------------------------------------------
+
+#' Add a legend with contours names/colours.
+#'
+#' If colours are not specitied in the contours dataframe, they will be added using the "raimbow" colour selection.
+#' @param contours The contours dataframe.
+#' @param position The position of the legend ('topleft', 'bottomleft', etc.)
+#' @param cex dimension of the text font
+#' @param ... pther parameters to legend()
+#' @export
+#' @family Contours
+display.contours.legend <- function(contours,
+                              position='topleft',
+                              cex=0.8,
+                              ...)
+{
+  if( !('display.color' %in% colnames(contours)) ) {
+    contours <- add.colours.contours(contours)
+  }
+  legend(position, legend = unique(contours$contour), col = unique(contours$display.color), lty=1, cex=cex,  ...)
 }
