@@ -1,6 +1,6 @@
 # CT ---------------------------------------------------------------------------
 
-#' Get ct object from plan
+#' Get ct object from plan object
 #' @param plan The plan object
 #' @family CT
 #' @export
