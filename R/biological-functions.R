@@ -619,7 +619,7 @@ alpha.beta.ion.range <- function(model='MKM',
 #' @import data.table
 alpha.beta.ion.sequence <- function(model='MKM',
                                     parameters=data.frame(cell='test', alpha0=0.1295, beta0=0.03085, rN=4, rd=0.31,
-                                                          particle='H', energy=50, let=NA),
+                                                          particle='H', energy=50, let=NULL),
                                     calculusType='rapidMKM', precision=0.5,
                                     ignore.stdout=TRUE, ignore.stderr=TRUE,
                                     remove.temp.files=TRUE)

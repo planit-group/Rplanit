@@ -2,7 +2,7 @@
 % Please edit documentation in R/ct-functions.R
 \name{get.ct}
 \alias{get.ct}
-\title{Get ct object from plan}
+\title{Get ct object from plan object}
 \usage{
 get.ct(plan)
 }
@@ -10,7 +10,7 @@ get.ct(plan)
 \item{plan}{The plan object}
 }
 \description{
-Get ct object from plan
+Get ct object from plan object
 }
 \seealso{
 Other CT: \code{\link{sanitize.ct}}
