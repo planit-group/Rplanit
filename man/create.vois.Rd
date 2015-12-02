@@ -11,7 +11,7 @@ create.vois(contours, x, y, z, vois = NULL)
 
 \item{x,y,z}{The coordinates of the x,y,z axes for the VOIS 3D grid.}
 
-\item{voi}{Vois names vector. Optionally it is possible to specificy a specific set of vois to use.}
+\item{vois}{Vois names vector. Optionally it is possible to specificy a specific set of vois to use.}
 }
 \value{
 a VOIS object.

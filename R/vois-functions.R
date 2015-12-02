@@ -199,7 +199,7 @@ is.in.voi <- function(x, y, z, contours, voi, progressbar=FALSE)
 #' Create a VOIS object from a contours object
 #' @param contours The contours object.
 #' @param x,y,z The coordinates of the x,y,z axes for the VOIS 3D grid.
-#' @param voi Vois names vector. Optionally it is possible to specificy a specific set of vois to use.
+#' @param vois Vois names vector. Optionally it is possible to specificy a specific set of vois to use.
 #' @return a VOIS object.
 #' @family VOIs
 #' @export
