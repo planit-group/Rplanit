@@ -174,12 +174,14 @@ save.plan <- function(plan) {
 read.plan <- function(name)
 {
   if(length(name)==1) {
+    message('reading plan: ', name)
     load(paste0(name, '/plan.Rdata'))
     return(plan)
   } else {
     plans <- list()
     for(i in 1:length(name)) {
-      load(paste0(name, '/plan.Rdata'))
+      message('reading plan: ', name[i])
+      load(paste0(name[i], '/plan.Rdata'))
       plans[[i]] <- plan
     }
     return(plans)
