@@ -68,6 +68,20 @@ create.values <- function(array.values=NULL, variables='variable name', x, y, z)
 #' @export
 get.values <- function(plan, ...) UseMethod("get.values")
 
+#' Get values objects
+#'
+#' Get the values objects associated to a list of plans (PlanKIT/Gate).
+#' @param plan The plan list.
+#' @family Values
+#' @export
+get.values.list <- function(plans) {
+  values <- list()
+  for(i in 1:length(plans)) {
+    values[[i]] <- get.values(plans[[i]])
+  }
+  return(values)
+}
+
 #' Get values object (PlanKIT)
 #'
 #' Get the values object associated to a plan (PlanKIT).
