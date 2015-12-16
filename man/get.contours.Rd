@@ -7,10 +7,10 @@
 get.contours(plan)
 }
 \arguments{
-\item{plan}{the \code{plan} object}
+\item{plan}{the \code{plan} object. It can be a list of plans.}
 }
 \value{
-A \code{contours} dataframe consisting of:
+A \code{contours} dataframe (or a list of dataframes) consisting of:
 \item{id}{index of the contours}
 \item{polygon}{index of the polygon}
 \item{slice}{index of the slice}

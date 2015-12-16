@@ -2,6 +2,7 @@
 
 S3method(get.beams,gate.plan)
 S3method(get.beams,plankit.plan)
+S3method(get.contours,list)
 S3method(get.contours,plankit.plan)
 S3method(get.ct,entrance.point)
 S3method(get.ct,gate.plan)

@@ -244,8 +244,8 @@ create.vois <- function(contours, x, y, z, vois=NULL) {
 #' 
 #' Get the contours dataframe from the \code{plan} object.
 #' 
-#' @param plan the \code{plan} object
-#' @return A \code{contours} dataframe consisting of:
+#' @param plan the \code{plan} object. It can be a list of plans.
+#' @return A \code{contours} dataframe (or a list of dataframes) consisting of:
 #' \item{id}{index of the contours}
 #' \item{polygon}{index of the polygon}
 #' \item{slice}{index of the slice}
@@ -257,6 +257,16 @@ create.vois <- function(contours, x, y, z, vois=NULL) {
 #' @family Contours
 #' @export
 get.contours <- function(plan) UseMethod('get.contours')
+
+#' @family Contours
+#' @export
+get.contours.list <- function(plans) {
+  contours <- list()
+  for(i in 1:length(plans)) {
+    contours[[i]] <- get.contours(plans[[i]])
+  }
+  return(contours)
+}
 
 #' @family Contours
 #' @export
