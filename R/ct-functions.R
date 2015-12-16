@@ -1,7 +1,8 @@
 # CT ---------------------------------------------------------------------------
 
 #' Get ct object from plan object
-#' @param plan The plan object
+#' @param plan The plan object (it can be a list of plans)
+#' @return A CT object (or a list of CT objects)
 #' @family CT
 #' @export
 get.ct <- function(plan) UseMethod("get.ct")
@@ -12,6 +13,17 @@ get.ct <- function(plan) UseMethod("get.ct")
   #   }
   
   #return(read.3d(plan$ctFile))
+}
+
+#' @family CT
+#' @export
+get.ct.list <- function(plans)
+{
+  CTs <- list()
+  for(i in 1:length(plans)) {
+    CTs[[i]] <- get.ct(plans[[i]])
+  }
+  return(CTs)
 }
 
 #' @family CT

@@ -7,7 +7,10 @@
 get.ct(plan)
 }
 \arguments{
-\item{plan}{The plan object}
+\item{plan}{The plan object (it can be a list of plans)}
+}
+\value{
+A CT object (or a list of CT objects)
 }
 \description{
 Get ct object from plan object
