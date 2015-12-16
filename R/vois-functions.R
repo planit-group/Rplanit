@@ -51,9 +51,9 @@ get.voiindex <- function(voi, file.contours=NULL, contours=NULL)
 #' 
 #' The \code{vois} object is similar (but different) to the values object.
 #'
-#' @param plan The \code{plan} object.
+#' @param plan The \code{plan} object or a list of plan objects.
 #' @param input Return the input vois (if exists).
-#' @return the \code{vois} object; a list consisting of
+#' @return the \code{vois} object (or a list of vois objects); The vois object is a list consisting of
 #' \item{values}{3D "character" array (logical strings such as "10010110")}
 #' \item{vois}{vector of VOI names}
 #' \item{x}{vector of x coordinates}
@@ -69,14 +69,24 @@ get.voiindex <- function(voi, file.contours=NULL, contours=NULL)
 #' @export
 get.vois <- function(plan, input=FALSE)
 {
-  if(!is.null(plan[['vois']])) {
+  # lista di piani
+  if(class(plan)=='list') {
+    vois <- list()
+    for(i in 1:length(plan)) {
+      vois[[i]] <- get.vois(plan[[i]])
+    }
+    return(vois)
+  }
+  
+  # singolo piano
+  else if(!is.null(plan[['vois']])) {
     return(plan[['vois']])
   } else {
     if(input) {vois.file <- plan[['inputVoisFile']]}
     else {vois.file <- plan[['outputVoisFile']]}
     if(is.null(vois.file)) {
       stop('vois object not present')
-    } else { 
+    } else {
       return(read.vois(vois.file))
     }
   }

@@ -7,12 +7,12 @@
 get.vois(plan, input = FALSE)
 }
 \arguments{
-\item{plan}{The \code{plan} object.}
+\item{plan}{The \code{plan} object or a list of plan objects.}
 
 \item{input}{Return the input vois (if exists).}
 }
 \value{
-the \code{vois} object; a list consisting of
+the \code{vois} object (or a list of vois objects); The vois object is a list consisting of
 \item{values}{3D "character" array (logical strings such as "10010110")}
 \item{vois}{vector of VOI names}
 \item{x}{vector of x coordinates}
