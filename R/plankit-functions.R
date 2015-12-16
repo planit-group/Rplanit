@@ -165,16 +165,25 @@ save.plan <- function(plan) {
 #' Read Plan
 #'
 #' Read a Plan object from disk. The origin folder is derived from the plan name.
-#' @param name a string name of the plan.
-#' @return the Plan object
+#' @param name a string name of the plan. It can be a vector of names. In the latter case a list of plan objects is returned.
+#' @return the Plan object (or a list of Plan objects)
 #'
 #' @family Plan
 #' @export
 #'
 read.plan <- function(name)
 {
-  load(paste(name, '/plan.Rdata', sep=''))
-  return(plan)
+  if(length(name)==1) {
+    load(paste0(name, '/plan.Rdata'))
+    return(plan)
+  } else {
+    plans <- list()
+    for(i in 1:length(name)) {
+      load(paste0(name, '/plan.Rdata'))
+      plans[[i]] <- plan
+    }
+    return(plans)
+  }
 }
 
 

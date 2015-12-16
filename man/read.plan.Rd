@@ -7,10 +7,10 @@
 read.plan(name)
 }
 \arguments{
-\item{name}{a string name of the plan.}
+\item{name}{a string name of the plan. It can be a vector of names. In the latter case a list of plan objects is returned.}
 }
 \value{
-the Plan object
+the Plan object (or a list of Plan objects)
 }
 \description{
 Read a Plan object from disk. The origin folder is derived from the plan name.
