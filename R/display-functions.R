@@ -819,85 +819,85 @@ display.all.plan <- function(plan)
 # DVH DISPLAY FUNCTIONS --------------------------------------------------------
 
 
-#' plot del dvh per una variabile specifica
-display.dvh.old <- function(dvh, plan=NULL, Diff=FALSE) {
-
-  # check per vedere se è una lista
-  if (class(dvh[[1]]) != "numeric") {N <- length(dvh)} else {N <- 1}
-
-  # text
-  if(N==1) {
-    if(!is.null(plan)) {main <- paste(plan$name, '-', dvh$voi)}
-    else {main <- dvh$voi}
-  } else {
-    if(!is.null(plan)) {main <- paste(plan$name, '- DVHs')}
-    else {main <- 'DVHs'}
-    #my.cols <- sample(colors(), N)
-    palette(rainbow(round(N*1.5))) # prende solo la prima parte del rainbow
-    my.cols <- palette()[1:N]
-  }
-
-  # plot
-  if(N==1) {
-    if(!Diff) {
-      plot(dvh$value, dvh$volume, type='l', main=main, xlab=dvh$variable, ylab='%Volume')
-    } else {
-      hist(dvh$value, breaks=100, freq=FALSE, main=main, xlab=dvh$variable, ylab='Normalized Volume')
-    }
-  } else {
-    # check variabili
-    val.min <- 1e10
-    val.max <- -1e10
-    vois <- variables <- rep(' ', N)
-    for(i in 1:N) {
-      variables[i] <- dvh[[i]]$variable
-      vois[i] <- dvh[[i]]$voi
-      val.min <- min(val.min, min(dvh[[i]]$value))
-      val.max <- max(val.max, max(dvh[[i]]$value))
-    }
-    if(length(unique(variables))>1) {
-      message('error: inconsistent variables...')
-      return()
-    } else {message('dvhs variable: ', unique(variables))}
-
-    # Add extra space to right of plot area; change clipping to figure
-    par(mar=c(5.1, 4.1, 4.1, 8.1), xpd=TRUE)
-
-    plot(dvh[[1]]$value, dvh[[1]]$volume,
-         type='l', col=my.cols[1],
-         xlim=c(val.min, val.max),
-         ylim=c(0, 1),
-         main=main, xlab=dvh[[1]]$variable, ylab='%Volume')
-    for(i in 2:N) {
-      lines(dvh[[i]]$value, dvh[[i]]$volume, col=my.cols[i])
-    }
-    legend("topright", inset=c(-0.5,0), legend=vois, col=my.cols, lty=1, title="VOIs", cex=0.6, bty='n')
-  }
-}
+# plot del dvh per una variabile specifica
+# display.dvh.old <- function(dvh, plan=NULL, Diff=FALSE) {
+# 
+#   # check per vedere se è una lista
+#   if (class(dvh[[1]]) != "numeric") {N <- length(dvh)} else {N <- 1}
+# 
+#   # text
+#   if(N==1) {
+#     if(!is.null(plan)) {main <- paste(plan$name, '-', dvh$voi)}
+#     else {main <- dvh$voi}
+#   } else {
+#     if(!is.null(plan)) {main <- paste(plan$name, '- DVHs')}
+#     else {main <- 'DVHs'}
+#     #my.cols <- sample(colors(), N)
+#     palette(rainbow(round(N*1.5))) # prende solo la prima parte del rainbow
+#     my.cols <- palette()[1:N]
+#   }
+# 
+#   # plot
+#   if(N==1) {
+#     if(!Diff) {
+#       plot(dvh$value, dvh$volume, type='l', main=main, xlab=dvh$variable, ylab='%Volume')
+#     } else {
+#       hist(dvh$value, breaks=100, freq=FALSE, main=main, xlab=dvh$variable, ylab='Normalized Volume')
+#     }
+#   } else {
+#     # check variabili
+#     val.min <- 1e10
+#     val.max <- -1e10
+#     vois <- variables <- rep(' ', N)
+#     for(i in 1:N) {
+#       variables[i] <- dvh[[i]]$variable
+#       vois[i] <- dvh[[i]]$voi
+#       val.min <- min(val.min, min(dvh[[i]]$value))
+#       val.max <- max(val.max, max(dvh[[i]]$value))
+#     }
+#     if(length(unique(variables))>1) {
+#       message('error: inconsistent variables...')
+#       return()
+#     } else {message('dvhs variable: ', unique(variables))}
+# 
+#     # Add extra space to right of plot area; change clipping to figure
+#     par(mar=c(5.1, 4.1, 4.1, 8.1), xpd=TRUE)
+# 
+#     plot(dvh[[1]]$value, dvh[[1]]$volume,
+#          type='l', col=my.cols[1],
+#          xlim=c(val.min, val.max),
+#          ylim=c(0, 1),
+#          main=main, xlab=dvh[[1]]$variable, ylab='%Volume')
+#     for(i in 2:N) {
+#       lines(dvh[[i]]$value, dvh[[i]]$volume, col=my.cols[i])
+#     }
+#     legend("topright", inset=c(-0.5,0), legend=vois, col=my.cols, lty=1, title="VOIs", cex=0.6, bty='n')
+#   }
+# }
 
 
 #' Display DVHs
 #'
 #' Display a single DVH or a list of DVHs
 #'
-#'  @param dvh single DVH (created via \code{\link{dvh.evaluate}}) or a list of DVHs
-#'  @param plan plan object (optional)
-#'  @param Diff display "differential" DVH (boolean, optional)
-#'  @param alpha.color opacity of the plot (optional)
-#'  @param title the title of the plot (optional)
-#'  @param show.plot if \code{TRUE} it display the plot on screen. If \code{FALSE} it returns a ggplot plot structure if (optional)
-#'  @param decimate if the DVH points are too much (> 1000), it plots only a sample of them, to speed up the visualization (boolean, optional)
-#'  @param show.prescription plot the prescription over the DVH. The plan object needs to be specified also (boolean, optional)
-#'  @param filename the name of the file in which to save the figure (optional)
-#'  @param height,weight sizes (inches) of the figure to be saved in the file (optional)
-#'  @param fixed.scale Forces a common fixed scale when faceting (if there are different variables).
-#'  @param return.dataframe Return the data.frame of the DVH(s).
+#' @param dvh single DVH (created via \code{\link{dvh.evaluate}}) or a list of DVHs
+#' @param plan plan object (optional)
+#' @param Diff display "differential" DVH (boolean, optional)
+#' @param alpha.color opacity of the plot (optional)
+#' @param title the title of the plot (optional)
+#' @param show.plot if \code{TRUE} it display the plot on screen. If \code{FALSE} it returns a ggplot plot structure if (optional)
+#' @param decimate if the DVH points are too much (> 1000), it plots only a sample of them, to speed up the visualization (boolean, optional)
+#' @param show.prescription plot the prescription over the DVH. The plan object needs to be specified also (boolean, optional)
+#' @param filename the name of the file in which to save the figure (optional)
+#' @param height,weight sizes (inches) of the figure to be saved in the file (optional)
+#' @param fixed.scale Forces a common fixed scale when faceting (if there are different variables).
+#' @param return.dataframe Return the data.frame of the DVH(s).
 #'
-#'  @return If \code{show.plot} is \code{FALSE}, it returns a ggplot2 plot structure to be used for further processing. If \code{return.dataframe = TRUE} it returns the generated data.frame of the DVH(s).
+#' @return If \code{show.plot} is \code{FALSE}, it returns a ggplot2 plot structure to be used for further processing. If \code{return.dataframe = TRUE} it returns the generated data.frame of the DVH(s).
 #'
-#'  @family display dvh
-#'  @export
-#'  @import ggplot2
+#' @family display dvh
+#' @export
+#' @import ggplot2
 
 display.dvh <- function(dvh, plan=NULL,
                         Diff=FALSE,
