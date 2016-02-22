@@ -20,8 +20,9 @@ A logical vector.
 Check if point(s) is inside VOI
 }
 \seealso{
-Other VOIs: \code{\link{create.vois}},
-  \code{\link{get.subset.vois}},
+Other VOIs: \code{\link{add.vois}},
+  \code{\link{create.vois.from.logical.array}},
+  \code{\link{create.vois}}, \code{\link{get.subset.vois}},
   \code{\link{get.voi.logical}},
   \code{\link{get.voiindex}}, \code{\link{get.vois}}
 }

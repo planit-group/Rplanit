@@ -235,7 +235,47 @@ create.vois <- function(contours, x, y, z, vois=NULL) {
   dim(vois.logical.char.all) <- c(length(x), length(y), length(z))
   
   return(list(values=vois.logical.char.all, vois=vois, x=x, y=y, z=z, Nx=length(x), Ny=length(y), Nz=length(z)))
+}
+
+#' Create a VOIS object from a logical array
+#' @param logical.array The logical array (TRUE -> the voi is present in the voxel.
+#' @param x,y,z The coordinates of the x,y,z axes for the VOIS 3D grid.
+#' @param voi the VOI name.
+#' @return a VOIS object.
+#' @family VOIs
+#' @export
+create.vois.from.logical.array <- function(logical.array, x, y, z, voi) {
   
+  xyz <- expand.grid(list(x=x, y=y, z=z))
+  
+  message('creating vois for ', voi, ' ...')
+  vois.logical.char <- rep('0', nrow(xyz))
+  vois.logical.char[logical.array] <- '1'
+  
+  # dimensioni giuste
+  dim(vois.logical.char) <- c(length(x), length(y), length(z))
+  
+  return(list(values=vois.logical.char, vois=voi, x=x, y=y, z=z, Nx=length(x), Ny=length(y), Nz=length(z)))
+  
+}
+
+#' Combine 2 existing VOIS object into one
+#' @param vois,vois.new the VOIS objects
+#' @return a VOIS object.
+#' @family VOIs
+#' @export
+add.vois <- function(vois, vois.new)
+{
+  if(!any(vois$x==vois.new$x) | !any(vois$y==vois.new$y) | !any(vois$z==vois.new$z)) {
+    stop('vois dimensions not congruent.')
+  }
+  
+  vois.logical.char <- vois$values
+  vois.logical.char.new <- vois.new$values
+  vois.logical.char.all <- paste0(vois.logical.char, vois.logical.char.new)
+  dim(vois.logical.char) <- c(length(vois$x), length(vois$y), length(vois$z))
+  
+  return(list(values=vois.logical.char.all, vois=c(vois$vois, vois.new$vois), x=vois$x, y=vois$y, z=vois$z, Nx=vois$Nx, Ny=vois$Ny, Nz=vois$Nz))
 }
 
 # CONTOURS ---------------------------------------------------------------------

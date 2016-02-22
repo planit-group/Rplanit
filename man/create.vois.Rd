@@ -20,7 +20,9 @@ a VOIS object.
 Create a VOIS object from a contours object
 }
 \seealso{
-Other VOIs: \code{\link{get.subset.vois}},
+Other VOIs: \code{\link{add.vois}},
+  \code{\link{create.vois.from.logical.array}},
+  \code{\link{get.subset.vois}},
   \code{\link{get.voi.logical}},
   \code{\link{get.voiindex}}, \code{\link{get.vois}},
   \code{\link{is.in.voi}}
