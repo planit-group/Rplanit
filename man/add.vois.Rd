@@ -7,7 +7,7 @@
 add.vois(vois, vois.new)
 }
 \arguments{
-\item{vois, vois.new}{the VOIS objects}
+\item{vois, vois.new}{the VOIS objects to be combined.}
 }
 \value{
 a VOIS object.

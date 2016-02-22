@@ -136,10 +136,10 @@ get.subset.vois <- function(vois, xlim=c(-Inf,Inf), ylim=c(-Inf,Inf), zlim=c(-In
   return(list(values = array.v, vois = vois$vois, x=x, y=y, z=z, Nx=length(x), Ny=length(y), Nz=length(z)))
 }
 
-#' Check if point(s) is inside VOI
-#' @param x,y,z Coordinate(s) of the point.
+#' Check if point(s) is(are) inside a VOI
+#' @param x,y,z coordinate(s) of the point(s).
 #' @param contours Contours object.
-#' @param voi The voi name.
+#' @param voi The VOI name.
 #' @return A logical vector.
 #' @family VOIs
 #' @export
@@ -260,7 +260,7 @@ create.vois.from.logical.array <- function(logical.array, x, y, z, voi) {
 }
 
 #' Combine 2 existing VOIS object into one
-#' @param vois,vois.new the VOIS objects
+#' @param vois,vois.new the VOIS objects to be combined.
 #' @return a VOIS object.
 #' @family VOIs
 #' @export
@@ -268,6 +268,9 @@ add.vois <- function(vois, vois.new)
 {
   if(!any(vois$x==vois.new$x) | !any(vois$y==vois.new$y) | !any(vois$z==vois.new$z)) {
     stop('vois dimensions not congruent.')
+  }
+  if(any(vois$vois == vois.new$vois)) {
+    stop('Some vois already present.')
   }
   
   vois.logical.char <- vois$values

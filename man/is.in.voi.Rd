@@ -2,22 +2,22 @@
 % Please edit documentation in R/vois-functions.R
 \name{is.in.voi}
 \alias{is.in.voi}
-\title{Check if point(s) is inside VOI}
+\title{Check if point(s) is(are) inside a VOI}
 \usage{
 is.in.voi(x, y, z, contours, voi, progressbar = FALSE)
 }
 \arguments{
-\item{x, y, z}{Coordinate(s) of the point.}
+\item{x, y, z}{coordinate(s) of the point(s).}
 
 \item{contours}{Contours object.}
 
-\item{voi}{The voi name.}
+\item{voi}{The VOI name.}
 }
 \value{
 A logical vector.
 }
 \description{
-Check if point(s) is inside VOI
+Check if point(s) is(are) inside a VOI
 }
 \seealso{
 Other VOIs: \code{\link{add.vois}},
