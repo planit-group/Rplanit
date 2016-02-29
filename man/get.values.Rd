@@ -23,6 +23,7 @@ Other Values: \code{\link{combine.values}},
   \code{\link{get.values.plankit.plan}},
   \code{\link{sanitize.values}},
   \code{\link{sparse.array.from.values}},
+  \code{\link{threshold.values}},
   \code{\link{values.from.sparse.array}}
 }
 

@@ -25,6 +25,7 @@ Other Values: \code{\link{create.values}},
   \code{\link{get.values.plankit.plan}},
   \code{\link{get.values}}, \code{\link{sanitize.values}},
   \code{\link{sparse.array.from.values}},
+  \code{\link{threshold.values}},
   \code{\link{values.from.sparse.array}}
 }
 

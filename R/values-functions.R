@@ -333,8 +333,10 @@ values.from.sparse.array <- function(sparse.array, variables=NULL, x, y, z)
 }
 
 
-#' rimuove valori nulli non "fisici"
+#' Set not defined or not "physical" values to NA
 #'
+#' @param values a values object
+#' @return a values object with NA where the radiobiological quantities are not defined (e.g. where the dose is zero)
 #' @family Values
 #' @export
 sanitize.values <- function(values)
@@ -346,6 +348,30 @@ sanitize.values <- function(values)
       vv <- values$values[v,,,]
       vv[vv<=0] <- NA
       values$values[v,,,] <- vv
+    }
+  }
+  return(values)
+}
+
+#' Set values under threshold to NA
+#'
+#' The treshold is definied for a single variable. Where the specified quantities is equal or less the threshold, all variables are set to NA.
+#' @param values a values object
+#' @param threshold the threshold value
+#' @param the variable associated to the threshold
+#' @return a values object with NA where the specified variable is equal or less the threshold value
+#' @family Values
+#' @export
+threshold.values <- function(values, threshold = 0, variable = 'Dose[Gy]')
+{
+  variable.array <- get.array.values(values = values, variable = variable)
+  index.t <- variable.array <= threshold
+  if(values$Nv == 1) {values$values[index.t] <- NA}
+  else {
+    for(iv in 1:values$Nv) {
+      variable.array <- values$values[iv,,,]
+      variable.array[index.t] <- NA
+      values$values[iv,,,] <- variable.array
     }
   }
   return(values)
