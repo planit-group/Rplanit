@@ -254,30 +254,35 @@ sparse.array.from.values <- function(values, variables=NULL, threshold=0)
   
   if(values$Nv>1) {
     v.index <- which(values$variables %in% variables)
-    print(v.index)
+    # print(v.index)
     #my.array <- values$values[v.index,,,]
-    voxel.index <- which(values$values[1,,,]>threshold) # assume threshold sulla dose...?
+    voxel.index <- values$values[1,,,]>threshold # assume threshold sulla dose...?
+    Nvoxels <- sum(voxel.index)
+    message('found ', Nvoxels, ' voxels above threshold.')
+    if(Nvoxels==0) return(NULL)
     
     df <- NULL
     for(i in v.index) {
       my.array <- values$values[i,,,]
       sparse.array <- my.array[voxel.index]
-      #if(i==1) {
-      #  df <- data.frame(voxel.index=voxel.index, value=sparse.array, variable=as.factor(values$variables[i]))
-      #} else {
-      df <- rbind(df, data.frame(voxel.index=voxel.index, value=sparse.array, variable=as.factor(values$variables[i])))
-      #}
+      message('adding ', values$variables[i])
+      if(i==1) {
+        df <- data.frame(voxel.index=voxel.index, value=sparse.array, variable=as.factor(values$variables[i]))
+      } else {
+        df <- rbind(df, data.frame(voxel.index=voxel.index, value=sparse.array, variable=as.factor(values$variables[i])))
+      }
     }
     return(df)
     
   } else {
+    message('adding ', variables)
     my.array <- values$values
     voxel.index <- which(my.array>threshold)
     sparse.array <- my.array[voxel.index]
     return(data.frame(voxel.index=voxel.index, value=sparse.array))
   }
-  
 }
+
 
 
 #' Create values from sparse array
