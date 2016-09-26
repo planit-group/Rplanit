@@ -139,7 +139,7 @@ read.3d.hdr <- function(file.name, variable='Dose[Gy]', voxel.origin=c(0,0,0))
   an <- readANALYZE(file.name)
   
   # array
-  # chech dimensioni
+  # check dimensioni 
   if(length(an@.Data)==3) {Values.3d <- an@.Data}
   else if (length(an@.Data)==4) {Values.3d <- an@.Data[,,,1]}
   else {stop('error in matrix dimension: ', length(an@.Data))}
