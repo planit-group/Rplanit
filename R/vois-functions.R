@@ -503,6 +503,7 @@ add.colours.contours <- function(contours)
   colori <- rainbow(length(contorni))
   names(colori) <- contorni
   contours$display.color <- colori[as.character(contours$contour)]
+
   return(contours)
 }
 
