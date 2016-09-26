@@ -499,8 +499,12 @@ sanitize.contours <- function(contours) {
 #' @family Contours
 add.colours.contours <- function(contours)
 {
-  display.color <- rainbow(length(unique(contours$contour))) 
-  contours$display.color <- display.color[contours$id + 1]
+  #display.color <- rainbow(length(unique(contours$contour))) 
+  #contours$display.color <- display.color[contours$id + 1] # non funziona se è una sottoselezione (id non più significativi)
+
+  contorni <- as.character(unique(contours$contour))
+  colori <- rainbow(length(contorni))
+  contours$display.color <- colori[contours$contour] 
   return(contours)
 }
 
