@@ -256,8 +256,8 @@ sparse.array.from.values <- function(values, variables=NULL, threshold=0)
     v.index <- which(values$variables %in% variables)
     # print(v.index)
     #my.array <- values$values[v.index,,,]
-    voxel.index <- values$values[1,,,]>threshold # assume threshold sulla dose...?
-    Nvoxels <- sum(voxel.index)
+    voxel.index <- which(values$values[1,,,])>threshold # assume threshold sulla dose...?
+    Nvoxels <- sum(voxel.index>0)
     message('found ', Nvoxels, ' voxels above threshold.')
     if(Nvoxels==0) return(NULL)
     
