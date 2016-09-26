@@ -151,6 +151,7 @@ create.plan.gate <- function(name='gate.simulation',
 #' 
 #' Set the patient CT or phantom for a simulation with Gate
 #' @param plan.gate a plan (Gate) object.
+#' @export
 #' @family PlanGate
 set.ct.gate <- function(plan.gate) {
   
