@@ -169,15 +169,17 @@ set.ct.gate <- function(plan.gate) {
     write.analyze(values=plan.gate[['ct']], file.name=paste0(plan.gate$name, '/data/ct'))
     vp.mac.txt <- gsub('#@ct', '', vp.mac.txt)
     vp.mac.txt <- gsub('@myct.hdr', 'data/ct.hdr', vp.mac.txt)
+    ct.origin <- c(plan.gate[['ct']]$x[1], plan.gate[['ct']]$y[1], plan.gate[['ct']]$z[1])
     #plan.gate$origin <- c(ct$x[1], ct$y[1], ct$z[1]) # usa l'origine della CT
     #vp.mac.txt <- sub('@origin', paste(plan.gate$origin, collapse=' '), vp.mac.txt)
   }
   else
-  # FILE CT
+  # FILE CT (nota: il path della CT deve essere relativo alla cartella di gate, oppure assoluto)
   if(!is.null(plan.gate[['ctFile']])) {
     vp.mac.txt <- gsub('#@ct', '', vp.mac.txt)
     vp.mac.txt <- gsub('@myct.hdr', plan.gate$ctFile, vp.mac.txt)
-    vp.mac.txt <- sub('@origin', paste(plan.gate$origin, collapse=' '), vp.mac.txt)
+    ct.origin <- plan.gate$origin # se do il file hdr devo specificare obbligatoriamente l'origine a mano.
+    #vp.mac.txt <- sub('@origin', paste(plan.gate$origin, collapse=' '), vp.mac.txt)
   }
   else
   # WATERBOX
@@ -193,8 +195,7 @@ set.ct.gate <- function(plan.gate) {
   
   # traslazione origine + isocentro
   vp.mac.txt <- gsub('#@trasl', '', vp.mac.txt)
-  ct.origin <- c(plan.gate[['ct']]$x[1], plan.gate[['ct']]$y[1], plan.gate[['ct']]$z[1])
-  #ct.origin <- c(plan.gate[['ct']]$x[1], plan.gate[['ct']]$x[2], plan.gate[['ct']]$x[3])
+  #ct.origin <- c(plan.gate[['ct']]$x[1], plan.gate[['ct']]$y[1], plan.gate[['ct']]$z[1])
   isocenter <- get.isocenter(plan.gate)
   vp.mac.txt <- gsub('@setOrigin', paste0(ct.origin, collapse = ' '), vp.mac.txt)
   vp.mac.txt <- gsub('@TranslateTheImageAtThisIsoCenter', paste0(isocenter, collapse = ' '), vp.mac.txt)
