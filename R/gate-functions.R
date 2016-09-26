@@ -197,6 +197,7 @@ set.ct.gate <- function(plan.gate) {
   vp.mac.txt <- gsub('#@trasl', '', vp.mac.txt)
   #ct.origin <- c(plan.gate[['ct']]$x[1], plan.gate[['ct']]$y[1], plan.gate[['ct']]$z[1])
   isocenter <- get.isocenter(plan.gate)
+  message('set origin at: ', ct.origin)
   vp.mac.txt <- gsub('@setOrigin', paste0(ct.origin, collapse = ' '), vp.mac.txt)
   vp.mac.txt <- gsub('@TranslateTheImageAtThisIsoCenter', paste0(isocenter, collapse = ' '), vp.mac.txt)
   
