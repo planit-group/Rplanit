@@ -259,22 +259,22 @@ create.gate.structure <- function(plan)
   # actor: dose
   if(sum('DoseToMaterial[Gy]' %in% plan$computingValues)>0) {
     message('computing DoseToMaterial[Gy]')
-    main.mac.txt <- sub('@enableDose', 'true', main.mac.txt)
+    main.mac.txt <- sub('@enableDose_', 'true', main.mac.txt)
   } else {
-    main.mac.txt <- sub('@enableDose', 'false', main.mac.txt)
+    main.mac.txt <- sub('@enableDose_', 'false', main.mac.txt)
   }
 
   if(sum('DoseToMaterial^2[Gy^2]' %in% plan$computingValues)>0) {
     message('computing DoseToMaterial^2[Gy^2]')
-    main.mac.txt <- sub('@enableSquaredDose', 'true', main.mac.txt)
+    main.mac.txt <- sub('@enableSquaredDose_', 'true', main.mac.txt)
   } else {
-    main.mac.txt <- sub('@enableSquaredDose', 'false', main.mac.txt)
+    main.mac.txt <- sub('@enableSquaredDose_', 'false', main.mac.txt)
   }
 
   if(sum('DoseToMaterialUncertainty[Gy]' %in% plan$computingValues)>0) {
-    main.mac.txt <- sub('@enableUncertaintyDose', 'true', main.mac.txt)
+    main.mac.txt <- sub('@enableUncertaintyDose_', 'true', main.mac.txt)
   } else {
-    main.mac.txt <- sub('@enableUncertaintyDose', 'false', main.mac.txt)
+    main.mac.txt <- sub('@enableUncertaintyDose_', 'false', main.mac.txt)
   }
 
   # dose 2 water
