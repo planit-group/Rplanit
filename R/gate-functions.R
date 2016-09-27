@@ -440,7 +440,8 @@ run.gate.forward <- function(plan=plan, N=NULL, K=NULL, evaluate.sparse.arrays=F
   #close(run)
   
   # run
-  cmd <- paste('cd ', plan$name, '; chmod +x ./run-gate.sh; ./run-gate.sh', sep='')
+  cmd <- paste('cd ', plan$name, '; Gate mac/main.mac; for i in output/*.hdr; do sanitize_hdr "$i" "$i"; done', sep='')
+  #cmd <- paste('cd ', plan$name, '; chmod +x ./run-gate.sh; ./run-gate.sh', sep='')
   if(outmessages) {ignore.stdout=FALSE; ignore.stderr=FALSE} else {ignore.stdout=TRUE; ignore.stderr=TRUE}
   
   if(!evaluate.sparse.arrays) {
