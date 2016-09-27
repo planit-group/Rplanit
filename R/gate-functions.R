@@ -446,7 +446,7 @@ run.gate.forward <- function(plan=plan, N=NULL, K=NULL, evaluate.sparse.arrays=F
   
   if(!evaluate.sparse.arrays) {
     message('running Gate...')
-    system(cmd, ignore.stdout=ignore.stdout, ignore.stderr=ignore.stderr)
+    t <- system.time(system(cmd, ignore.stdout=ignore.stdout, ignore.stderr=ignore.stderr))
   }
   else 
   {
@@ -478,7 +478,7 @@ run.gate.forward <- function(plan=plan, N=NULL, K=NULL, evaluate.sparse.arrays=F
       close(run.mac)
       
       # run
-      system(cmd, ignore.stdout=ignore.stdout, ignore.stderr=ignore.stderr)
+      t <- system.time(system(cmd, ignore.stdout=ignore.stdout, ignore.stderr=ignore.stderr))
       
       vb <- get.values.gate.plan(plan)
       vs.tmp <- sparse.array.from.values(vb)
