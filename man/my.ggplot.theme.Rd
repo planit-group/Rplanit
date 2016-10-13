@@ -4,7 +4,7 @@
 \alias{my.ggplot.theme}
 \title{imposta stile generale per ggplot2}
 \usage{
-my.ggplot.theme(size = 16)
+my.ggplot.theme(size = 12)
 }
 \description{
 imposta stile generale per ggplot2

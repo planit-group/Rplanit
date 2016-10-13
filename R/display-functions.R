@@ -1934,7 +1934,7 @@ colormap.ct <- function(HU.range=c(-1000, 3000), HU.window=c(-1000,3000))
 
 #' imposta stile generale per ggplot2
 #' @export
-my.ggplot.theme <- function(size=16)
+my.ggplot.theme <- function(size=12)
 {
   # assume che le librerie ggplot siano già caricate
   theme_set(theme_bw(size))
@@ -1990,7 +1990,7 @@ display.beams <- function(beams,
   # plot
   my.ggplot.theme()
   p <- ggplot(beams) +
-    stat_bin(aes(x=energy.f, weight=fluence, fill=field)) +
+    stat_count(aes(x=energy.f, weight=fluence, fill=field)) +
     coord_flip() +
     labs(y='Total number of primary ions', x='Energy Layers [MeV/u]', title=my.title) +
     theme(axis.title.y=element_text(vjust=.2))

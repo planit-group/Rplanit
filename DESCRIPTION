@@ -12,7 +12,7 @@ License: GPL2
 Depends:
     R (>= 3.0.0)
 Imports:
-    ggplot2 (>= 0.9.3.1),
+    ggplot2 (>= 2.1.0),
     fields (>= 6.8),
     grid (>= 3.0.1),
     gtable (>= 0.1.2),
