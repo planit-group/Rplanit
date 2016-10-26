@@ -89,3 +89,6 @@ $ sudo apt-get install liblog4cxx10-dev
 
 ### Important Note
 While _Rplanit_, _Gate_ and _Survivals_ are open-source, the TPS kernel, _Pure-dek_ is a fork of a previous kernel proprietary by INFN/IBA. To use it for research purposes please contact Andrea Attili (attili@to.infn.it).
+
+### Tutorial
+A tutorial (in Italian) is available at http://rstudio-pubs-static.s3.amazonaws.com/66368_3aea5f348bd144ca89f9faf9bb1167b4.html
