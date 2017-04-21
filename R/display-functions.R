@@ -1993,16 +1993,18 @@ colormap.ct <- function(HU.range=c(-1000, 3000), HU.window=c(-1000,3000))
 
 #' imposta stile generale per ggplot2
 #' @export
-my.ggplot.theme <- function(size=12)
+my.ggplot.theme <- function(size=14)
 {
   # assume che le librerie ggplot siano già caricate
-  theme_set(theme_bw(size))
-  pt <- theme(legend.key = element_rect(colour = 'white')) +
-    theme(panel.border = element_rect(colour = "black"))
+  my.theme <- theme_bw(size) + theme(axis.text = element_text(colour="black"), panel.grid.major = element_blank(), panel.grid.minor = element_blank()); theme_set(my.theme)
+  theme_set(my.theme)
+  
+  #pt <- theme(legend.key = element_rect(colour = 'white')) +
+  #  theme(panel.border = element_rect(colour = "black"))
 
     # altre possibilità..
     # theme(panel.grid.major = element_line(colour = rgb(0.8, 0.8, 0.8)))
-  return(pt)
+  #return(pt)
 }
 
 
