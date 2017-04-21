@@ -21,4 +21,3 @@ display.spots(beams, vois = NULL, voi = NULL, display.iso = TRUE,
 \description{
 Display spots (3D)
 }
-

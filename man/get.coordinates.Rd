@@ -22,4 +22,3 @@ Other Values, Values Utilities: \code{\link{create.intervals}},
   \code{\link{generate.values.from.events}},
   \code{\link{get.voxel.index}}
 }
-

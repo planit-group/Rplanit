@@ -18,4 +18,3 @@ Get ct object from plan object
 \seealso{
 Other CT: \code{\link{sanitize.ct}}
 }
-

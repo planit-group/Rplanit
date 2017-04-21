@@ -11,4 +11,3 @@ display.dvh2d(values = values, vois = vois, variables = c("Dose[Gy]",
 \description{
 plot di "dvh2D per un voi e due variabili specifiche
 }
-

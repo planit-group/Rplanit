@@ -14,4 +14,3 @@ Other Values Manipulation: \code{\link{add.array.values}},
   \code{\link{get.origin}},
   \code{\link{get.subset.values}}, \code{\link{set.origin}}
 }
-

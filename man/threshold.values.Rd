@@ -32,4 +32,3 @@ Other Values: \code{\link{combine.values}},
   \code{\link{sparse.array.from.values}},
   \code{\link{values.from.sparse.array}}
 }
-

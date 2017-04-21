@@ -38,4 +38,3 @@ CT and contours are directly written in two files with names specfied by \code{n
 Other Phantoms: \code{\link{generate.contours}},
   \code{\link{generate.ct}}
 }
-

@@ -1783,21 +1783,9 @@ display.slices.interactive <- function(values=values, variables=NULL, gray=FALSE
 
 #' Display profile
 #'
-#' Display the profile. Optionally the profile could be plotted over a background color gradient representing the ct data (or other values).
-#'
-#' @param profile.values the main profile dataframe to be plotted. It can be a single profile or a list of profiles
-#' @param profile.ct the background ct (or other data) profile
-#' @param profile.names a vector containing the names of the profiles. It is used if a list of different profiles is used as input.
-#' @param depth.lim The x-axis range to display. (automatic if not specified).
-#' @param show.plot Show plot.
-#' @param file.name File name for saving the plot.
-#' @param height The height of the saved plot image (inches).
-#' @param width The width of the saved plot image (inches).
-#' @param return.dataframe return the dataframe created for the plot (with ggplot2).
-#' @return If show.plot=FALSE, it returns a ggplot object. If return.dataframe=TRUE, it returns the the dataframe created for the plot (with ggplot2).
+#' Deprecated: see "display.profiles"
 #' @export
 #' @family Profiles
-
 display.profile <- function(profile.values,
                             profile.ct=NULL,
                             profile.names=NULL,
@@ -1886,6 +1874,77 @@ display.profile <- function(profile.values,
   if(show.plot) {print(p)} else {return(p)}
 
 }
+
+#' Display profiles
+#'
+#' Display a single or multiple profiles. Optionally the profile could be plotted over a background color gradient representing the ct data (or other values).
+#'
+#' @param profile.values The main profiles dataframe to be plotted. It can contain a single profile or a multiple of profiles.
+#' @param profile.ct the Background ct (or other data) profile.
+#' @param show.ct.legend Boolean. A colorbar for the levels containted in profile.ct is displayed if TRUE.
+#' @param x.axis.name Optional label for the x axis (default uses the data stored in profile.values if unique).
+#' @param y.axis.name Optional label for the y axis (default uses the data stored in profile.values if unique).
+#' @param name Optional label for the set of profiles.
+#' @param depth.lim Optional limits for the x axis.
+#' @param show.plot Show plot.
+#' @param file.name File name for saving the plot.
+#' @param height The height of the saved plot image (inches).
+#' @param width The width of the saved plot image (inches).
+#' @param return.plot return a ggplot2 plot if TRUE.
+#' @export
+#' @family Profiles
+display.profiles <- function(profile.values,
+                             profile.ct=NULL, show.ct.legend=TRUE,
+                             y.axis.name=NULL,
+                             x.axis.name=NULL,
+                             name=NULL,
+                             depth.lim=NULL,
+                             file.name=NULL, height=7, width=7, dpi=300,
+                             show.plot=TRUE, return.plot=FALSE)
+{
+  
+  #crea intervalli per la ct
+  if (!is.null(profile.ct)) {
+    names(profile.ct) <- c("variable", "axis", "depth", "value.ct")
+    d.depth <- mean(diff(profile.ct$depth))
+    profile.ct$depth.min <- profile.ct$depth - d.depth/2
+    profile.ct$depth.max <- profile.ct$depth + d.depth/2
+    ct.variable <- unique(profile.ct$variable)[1]
+    
+    # estremi espliciti
+    y.lim <- range(profile.values$value, na.rm = TRUE)
+    if(diff(y.lim)==0) {y.lim <- c(y.lim[1]-0.5, y.lim[2]+0.5)} # nel caso di profilo "piatto"
+    #x.lim <- range(profile.values$depth, na.rm = TRUE)
+  }
+  
+  # variabile e asse del profilo
+  if(is.null(x.axis.name)) {
+    x.axis.name <- unique(profile.values$axis)
+    if(length(x.axis.name)>1) x.axis.name <- 'depth'
+  }
+  variables <- unique(profile.values$variable)
+  if(is.null(y.axis.name)) {
+    y.axis.name <- variables
+    if(length(y.axis.name)>1) y.axis.name <- 'value'
+  }
+  
+  p <- ggplot()
+  if(!is.null(profile.ct)) {
+    p <- p + geom_rect(data=profile.ct, ymin=y.lim[1], ymax=y.lim[2], aes(xmin=depth.min, xmax=depth.max, fill=value.ct))
+    if(show.ct.legend) p <- p + scale_fill_gradient(low="gray", high='white') + labs(fill=ct.variable)
+    else p <- p + scale_fill_gradient(low="gray", high='white', guide=FALSE)
+  }
+  p <- p + geom_line(data=profile.values, aes(x=depth, y=value, colour=variable)) +
+    labs(x=x.axis.name, y=y.axis.name, colour=name)
+  if(length(variables)==1) p <- p + scale_colour_discrete(guide=FALSE)
+  if(!is.null(depth.lim)) p <- p + scale_x_continuous(limits=depth.lim)
+  
+  my.ggplot.theme()
+  if(!is.null(file.name)) {ggsave(plot=p, filename=file.name, height=height, width=width, dpi=dpi)}
+  if(show.plot) {print(p)}
+  if(return.plot) {return(p)}
+}
+
 
 
 # UTILITIES ====================================================================

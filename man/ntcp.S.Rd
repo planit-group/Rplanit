@@ -29,4 +29,3 @@ Other General TCP/NTCP Models: \code{\link{ntcp.kallman.train}},
   \code{\link{ntcp.kallman}}, \code{\link{tcp.S}},
   \code{\link{tcp.lqp.train}}, \code{\link{tcp.lqp}}
 }
-

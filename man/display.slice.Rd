@@ -54,4 +54,3 @@ Other display slices: \code{\link{display.slice.all}},
   \code{\link{display.slice.ct}},
   \code{\link{dumpslices.3d.2.png}}
 }
-

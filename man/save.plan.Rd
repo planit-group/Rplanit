@@ -13,4 +13,3 @@ Save the Plan object on disk. The name of the folder in which the plan data are 
 Other Plan: \code{\link{create.plan}},
   \code{\link{read.plan}}
 }
-

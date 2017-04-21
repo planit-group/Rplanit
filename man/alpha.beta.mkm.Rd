@@ -54,4 +54,3 @@ The evaluation is performed for a monoenergetic ion. It uses a C++ MKM "rapid" i
 Other LEM/MKM Models: \code{\link{alpha.beta.ion.range}},
   \code{\link{alpha.fun.mkm}}
 }
-

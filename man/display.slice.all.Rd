@@ -79,4 +79,3 @@ Other display slices: \code{\link{display.slice.ct}},
   \code{\link{display.slice}},
   \code{\link{dumpslices.3d.2.png}}
 }
-

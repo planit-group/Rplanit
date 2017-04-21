@@ -26,4 +26,3 @@ Returns a function alpha(LET) or alpha(specific energy), using the MKM model. Th
 Other LEM/MKM Models: \code{\link{alpha.beta.ion.range}},
   \code{\link{alpha.beta.mkm}}
 }
-

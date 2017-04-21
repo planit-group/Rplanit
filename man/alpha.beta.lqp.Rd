@@ -34,4 +34,3 @@ standard per D50 e gam (forse... )
 \seealso{
 Other Basic Biological Models: \code{\link{rbe.evaluate}}
 }
-

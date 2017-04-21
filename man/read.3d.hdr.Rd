@@ -20,4 +20,3 @@ Read file with format "*.img, *.hdr" (Analyze/Gate) and return a \code{values} o
 Other R/W Arrays: \code{\link{read.1d}},
   \code{\link{read.3d.dicom}}, \code{\link{read.3d}}
 }
-

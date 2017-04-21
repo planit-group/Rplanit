@@ -24,4 +24,3 @@ It uses the parameters: alpha, beta, alphaX and betaX
 \seealso{
 Other Basic Biological Models: \code{\link{alpha.beta.lqp}}
 }
-

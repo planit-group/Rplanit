@@ -15,4 +15,3 @@ calcola NTCP con modello cMKM
 Other LM/cMKM TCP/NTCP Models: \code{\link{NTCP.LM}},
   \code{\link{TCP.LM}}, \code{\link{TCP.cMKM}}
 }
-

@@ -13,4 +13,3 @@ display.dvh.bands(dvh, plan = NULL, alpha = 0.37, eval.bands = TRUE,
 accetta una lista "dvh.bands" (composta da due dvh: dvh.max e dvh.min)
 se first.is.reference=TRUE allora visualizza il primo dvh della lista come riferimento (non è quindi usato per calcolare le bande)
 }
-

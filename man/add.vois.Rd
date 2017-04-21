@@ -22,4 +22,3 @@ Other VOIs: \code{\link{create.vois.from.logical.array}},
   \code{\link{get.voiindex}}, \code{\link{get.vois}},
   \code{\link{is.in.voi}}
 }
-

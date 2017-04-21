@@ -37,4 +37,3 @@ Other Values, Values Utilities: \code{\link{create.intervals}},
   \code{\link{get.coordinates}},
   \code{\link{get.voxel.index}}
 }
-

@@ -12,4 +12,3 @@ A list of the available variables
 \description{
 The available variables name identifiers that can be evaluated with Gate.
 }
-

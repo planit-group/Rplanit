@@ -27,4 +27,3 @@ Generate a default (empty) template of the Plan to be used with PlanKIT.
 Other Plan: \code{\link{read.plan}},
   \code{\link{save.plan}}
 }
-

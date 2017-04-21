@@ -21,4 +21,3 @@ Nf -> numero di frazioni
 Other Likelihood Evaluations: \code{\link{NTCP.LL.LM}},
   \code{\link{TCP.LL.LM}}, \code{\link{TCP.LL.cMKM}}
 }
-

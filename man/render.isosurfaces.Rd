@@ -16,4 +16,3 @@ Rendering remoto usando Xvfb (da implementare)}
 \description{
 rendering di isosuperfici da matrice values (openGL)
 }
-

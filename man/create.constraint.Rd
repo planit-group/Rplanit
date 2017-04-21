@@ -15,4 +15,3 @@ appendendo delle righe al dataframe...
 Other Prescription: \code{\link{check.prescription}},
   \code{\link{get.prescription}}
 }
-

@@ -13,4 +13,3 @@ recupera prescrizione
 Other Prescription: \code{\link{check.prescription}},
   \code{\link{create.constraint}}
 }
-

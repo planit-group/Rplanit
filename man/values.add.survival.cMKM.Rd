@@ -19,4 +19,3 @@ Other Values Bioogical Evaluations: \code{\link{values.add.RBE.alpha}},
   \code{\link{values.add.RBE}},
   \code{\link{values.add.survival.LM}}
 }
-

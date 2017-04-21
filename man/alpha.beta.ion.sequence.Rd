@@ -37,4 +37,3 @@ The ion is specified with the columns:
 \description{
 The evaluation is performed for a monoenergetic ion. It uses a C++ implementation for the evaluation. It accepts a sequence of parameters and ion specifications stored in an input data.frame.
 }
-

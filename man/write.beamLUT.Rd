@@ -22,4 +22,3 @@ Other BeamLUT: \code{\link{get.alpha.beta.beamLUT}},
   \code{\link{get.values.for.beam}},
   \code{\link{read.beamLUT}}
 }
-

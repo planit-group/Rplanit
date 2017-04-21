@@ -28,4 +28,3 @@ Other Values: \code{\link{create.values}},
   \code{\link{threshold.values}},
   \code{\link{values.from.sparse.array}}
 }
-

@@ -21,4 +21,3 @@ A values object
 \description{
 Removes values outside VOI
 }
-

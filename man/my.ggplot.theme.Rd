@@ -9,4 +9,3 @@ my.ggplot.theme(size = 12)
 \description{
 imposta stile generale per ggplot2
 }
-

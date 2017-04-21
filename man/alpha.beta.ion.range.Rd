@@ -65,4 +65,3 @@ The evaluation is performed for a monoenergetic ion. It uses a C++ implementatio
 Other LEM/MKM Models: \code{\link{alpha.beta.mkm}},
   \code{\link{alpha.fun.mkm}}
 }
-

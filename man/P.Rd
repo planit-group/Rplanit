@@ -9,4 +9,3 @@ P(K, lambda = 0.15)
 \description{
 funzione spettro di potenza
 }
-

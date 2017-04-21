@@ -27,4 +27,3 @@ Other LUT: \code{\link{get.zBP.fun}},
   \code{\link{write.lut.optics}},
   \code{\link{write.lut.zBP}}, \code{\link{write.lut}}
 }
-

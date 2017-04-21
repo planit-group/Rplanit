@@ -24,4 +24,3 @@ Generate a simple water phantom CT with a central PTV and four OARs around.
 Set a plan with protons (default) with 4 coplanar fields and perform an optimization to deliver exatly 1 Gy(RBE) (default) in the PTV.
 Generate a graphical report.
 }
-

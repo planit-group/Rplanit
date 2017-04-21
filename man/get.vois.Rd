@@ -37,4 +37,3 @@ Other VOIs: \code{\link{add.vois}},
   \code{\link{get.voi.logical}},
   \code{\link{get.voiindex}}, \code{\link{is.in.voi}}
 }
-

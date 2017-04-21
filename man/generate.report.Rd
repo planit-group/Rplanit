@@ -18,4 +18,3 @@ generate.report(plan, file.name = "report", N.slice = 6, html = FALSE)
 \description{
 Generate a report summarizing the plan in a file with the markdown format (it can be converted in html via rstudio or the "markdown" package).
 }
-

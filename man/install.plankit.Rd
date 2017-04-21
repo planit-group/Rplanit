@@ -14,4 +14,3 @@ Other Install: \code{\link{install.gate}},
   \code{\link{install.puredek}},
   \code{\link{install.survival}}
 }
-

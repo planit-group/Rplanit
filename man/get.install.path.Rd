@@ -9,4 +9,3 @@ get.install.path()
 \description{
 Get the path to the folder where external precompiled packages (such as plankit, survivals and gate) are/will be installed.
 }
-

@@ -28,4 +28,3 @@ Other Contours: \code{\link{add.colours.contours}},
   \code{\link{sanitize.contours}},
   \code{\link{volume.contours}}
 }
-

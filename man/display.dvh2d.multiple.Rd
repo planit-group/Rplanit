@@ -42,4 +42,3 @@ del modello
 
 Nota: per il modello cMKM occorre specificare obbligatoriamente l'intervallo xlim
 }
-

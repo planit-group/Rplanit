@@ -20,4 +20,3 @@ Other ValuesUtilities: \code{\link{get.values_at.points}},
   \code{\link{identify.slice}},
   \code{\link{interpolate.values}}
 }
-

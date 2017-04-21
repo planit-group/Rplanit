@@ -16,4 +16,3 @@ The available constraint types name identifiers tha can be used in the optimizat
 Other PlanKITVariables: \code{\link{available.beamlines}},
   \code{\link{available.variables}}
 }
-

@@ -21,4 +21,3 @@ Other Values Manipulation: \code{\link{get.array.values}},
   \code{\link{get.origin}},
   \code{\link{get.subset.values}}, \code{\link{set.origin}}
 }
-

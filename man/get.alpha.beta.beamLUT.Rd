@@ -31,4 +31,3 @@ Other BeamLUT: \code{\link{get.bdose.beamLUT}},
   \code{\link{get.values.for.beam}},
   \code{\link{read.beamLUT}}, \code{\link{write.beamLUT}}
 }
-

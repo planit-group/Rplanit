@@ -19,4 +19,3 @@ Returns the name of the file with complete filepath for the specified object in 
 Other Utilities: \code{\link{evaluate.bands}},
   \code{\link{sanitize.filename}}
 }
-

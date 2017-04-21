@@ -37,4 +37,3 @@ Evaluate the DVH for a single VOI and a specified variable.
 Other DVH: \code{\link{dvh.evaluate.all}},
   \code{\link{dvh.evaluate.bands}}
 }
-

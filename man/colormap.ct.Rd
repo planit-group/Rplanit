@@ -14,4 +14,3 @@ colormap.ct(HU.range = c(-1000, 3000), HU.window = c(-1000, 3000))
 \description{
 Generate gray colormap for Hounsfield numbers
 }
-

@@ -9,4 +9,3 @@ display.all.plan(plan)
 \description{
 procedura per creare un display complessivo da un "plan"
 }
-

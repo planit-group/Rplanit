@@ -27,4 +27,3 @@ Other Values: \code{\link{combine.values}},
   \code{\link{threshold.values}},
   \code{\link{values.from.sparse.array}}
 }
-

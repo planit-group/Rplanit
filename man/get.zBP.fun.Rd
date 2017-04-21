@@ -25,4 +25,3 @@ Other LUT: \code{\link{lut.add.alpha}},
   \code{\link{write.lut.phasespace}},
   \code{\link{write.lut.zBP}}, \code{\link{write.lut}}
 }
-

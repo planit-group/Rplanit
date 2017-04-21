@@ -25,4 +25,3 @@ display.lut(lut, variable = NULL, E = NULL, bw = FALSE, r.cut = NULL,
 \description{
 The \code{lut} object use a structure similar to the "values" object. For example the different quantities are stored in a 5D array, \code{lut$values[i,j,k,l]}. The indices of the array correspond to: variable, energy, x, y, normalized z.
 }
-

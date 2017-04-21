@@ -19,4 +19,3 @@ Read file with format "3d" (PlanKIT) and return a \code{values} object.
 Other R/W Arrays: \code{\link{read.1d}},
   \code{\link{read.3d.dicom}}, \code{\link{read.3d.hdr}}
 }
-

@@ -12,4 +12,3 @@ usa il pacchetto tkrplot (installa prima tk-dev con apt-get)
 può visualizzare più di una variabile simultaneamente (mappandola sul "tempo")
 (questo magari lo riformulerò quando userò immagini 4D...)
 }
-

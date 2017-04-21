@@ -13,4 +13,3 @@ display.dvh.bands.multiple(dvh, dvh.reference = NULL, alpha = 0.37,
 accetta una lista di "dvh"
 i dvh vengono raggruppati a seconda del nome contenuto in dvh$voi.
 }
-

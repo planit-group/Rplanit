@@ -9,4 +9,3 @@ ray.tracing(ray, xi, yi, zi, values = NULL)
 \description{
 Evaluate the intersections along voxels
 }
-

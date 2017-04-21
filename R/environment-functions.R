@@ -185,6 +185,23 @@ set.lut.folder <- function(lut.folder=NULL)
   Sys.setenv(PATH_TO_LUT=path.expand(lut.folder))
 }
 
+#' Set WEPL folder
+#' 
+#' Set the WEPL (water equivalent path length) folder where the wepl files are stored.
+#' 
+#' @param wepl.folder The wepl.folder. If it is not defined the lut folder is set to the default one (the pure-dek local installation.)
+#' @export
+#' @family Environment
+set.wepl.folder <- function(wepl.folder=NULL)
+{
+  if(is.null(wepl.folder)) {
+    my.home <- get.install.path()
+    wepl.folder <- paste0(my.home, '/Pure-dek-install/Beams/')
+  }
+  
+  Sys.setenv(PATH_TO_WEPL=path.expand(wepl.folder))
+}
+
 # INSTALLING -------------------------------------------------------------------
 
 #' Install Gate

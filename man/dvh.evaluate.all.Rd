@@ -14,4 +14,3 @@ OBSOLETA ... da integrare con dvh.evaluate
 Other DVH: \code{\link{dvh.evaluate.bands}},
   \code{\link{dvh.evaluate}}
 }
-

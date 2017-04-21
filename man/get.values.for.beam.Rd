@@ -37,4 +37,3 @@ Other BeamLUT: \code{\link{get.alpha.beta.beamLUT}},
   \code{\link{get.rbe.beamLUT}},
   \code{\link{read.beamLUT}}, \code{\link{write.beamLUT}}
 }
-

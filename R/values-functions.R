@@ -601,7 +601,7 @@ ray.tracing <- function(ray, xi, yi, zi, values=NULL) {
 #' @param return.xyz Returns also the x,y,z of the points along the ray (used only for a ray profile).
 #' @return a dataframe containing the specified profile.
 #' @family Values, Values Manipulation, Profiles
-#' TODO: Generation of multi-variable profiles (a list?). If no variable is specified all the available variable will be used. Integration around arbitrary ray. Gestisci in maniera uniforme i casi ortogonali rispetto al caso generale "ray".
+#' Note: for the evaluation of multiple profiles see "get.profiles"
 #' @export
 get.profile <- function(values, variable=NULL, x=NULL, y=NULL, z=NULL, integrate=FALSE, ray=NULL, return.voxel.index=FALSE, return.xyz=FALSE)
 {
@@ -696,7 +696,30 @@ get.profile <- function(values, variable=NULL, x=NULL, y=NULL, z=NULL, integrate
   return(profile.df)
 }
 
-
+#' Get profiles
+#'
+#' Get multiple profiles (values along a specific axis, or voxel line) from a \code{values} object. The axis is specifed trough the definition of two of the following three coordinates: x, y, z, or with a single ray object for arbitrary directions.
+#'
+#' @param values the \code{values object}
+#' @param variables the variables to be profiled. If it is not specified, al the available variables in values will be used.
+#' @param x,y,z definition of the axis (only two coordinates should be defined). For example \code{x=4.4} and \code{z=0.5} specifies a profile along the y-axis passing through x=4.4 and z=0.5
+#' @param integrate perform an integration over the two coordinates (boolean, optional). Note: integration is not yet implemented around an arbitrary ray.
+#' @param ray The ray object, Note the ray is a data.frame defined by 6 components (X, Y, Z, xn, yn, zn), i.e. point coordinates + normalized vector direction.
+#' @param return.voxel.index Returns also the index of the voxel crossed by the ray (used only for a ray profile).
+#' @param return.xyz Returns also the x,y,z of the points along the ray (used only for a ray profile).
+#' @return a dataframe containing the specified profile.
+#' @family Values, Values Manipulation, Profiles
+#' @export
+get.profiles <- function(values, variables=NULL, ...)
+{
+  if(is.null(variables)) {variables <- values$variables}
+  Nv <- length(variables)
+  for(iv in 1:Nv) {
+    if(iv==1) profiles.df <- get.profile(values = values, variable = variables[iv], ...)
+    else profiles.df <- rbind(profiles.df, get.profile(values = values, variable = variables[iv], ...))
+  }
+  return(profiles.df)
+}
 
 # VALUES UTILITIES -------------------------------------------------------------
 

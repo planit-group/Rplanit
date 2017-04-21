@@ -14,4 +14,3 @@ render.isosurfaces.static(values, variable = NULL, levels = 0,
 \description{
 rendering di isosuperfici da matrice values
 }
-

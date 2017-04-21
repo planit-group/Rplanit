@@ -10,4 +10,3 @@ create.noise.ct(ct, lambda = 0.15, sigma = 0.025, sigmaHU = NULL,
 \description{
 noise sulla CT
 }
-

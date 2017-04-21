@@ -18,4 +18,3 @@ Read materials database (Gate)
 \seealso{
 Other GateMaterials: \code{\link{generate.materials.gate}}
 }
-

@@ -13,4 +13,3 @@ render.voi.isosurfaces(vois = vois, voi = PTV, file.name = NULL,
 \description{
 rendering 3D dei voi con isosuperfici
 }
-

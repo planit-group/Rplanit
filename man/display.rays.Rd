@@ -18,4 +18,3 @@ display.rays(rays, alpha = 1, ray.length = 1, add = FALSE)
 \description{
 Display rays (3D)
 }
-

@@ -19,4 +19,3 @@ Other PlanGate: \code{\link{create.gate.structure}},
   \code{\link{file.variable.gate}},
   \code{\link{run.gate.forward}}
 }
-

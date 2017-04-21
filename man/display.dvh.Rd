@@ -40,4 +40,3 @@ If \code{show.plot} is \code{FALSE}, it returns a ggplot2 plot structure to be u
 \description{
 Display a single DVH or a list of DVHs
 }
-

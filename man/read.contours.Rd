@@ -31,4 +31,3 @@ Read the contours from a "*.contours" file format (PlanKIT format) and return a 
 \seealso{
 Other R/W Contours: \code{\link{write.contours}}
 }
-

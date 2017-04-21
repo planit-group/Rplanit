@@ -39,4 +39,3 @@ Other Beams: \code{\link{add.field}},
   \code{\link{read.beams.fluka}}, \code{\link{read.beams}},
   \code{\link{write.beams}}
 }
-

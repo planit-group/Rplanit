@@ -11,4 +11,3 @@ display.dvh.combined(dvh, plan = NULL, alpha.color = 1, title = NULL,
 \description{
 plot del dvh diff+integral combinato
 }
-

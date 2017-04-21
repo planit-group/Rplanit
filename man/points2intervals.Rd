@@ -21,4 +21,3 @@ Voxel coordinates are usually specified by indicating (x,y,z) the middle point. 
 \seealso{
 Other Values Utilities: \code{\link{evaluate.epl}}
 }
-
