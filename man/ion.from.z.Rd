@@ -21,7 +21,8 @@ its atomic mass number (e.g.: "C" or "12C" for carbon ion.)
 Note: the available range is from 1H to 20 Ne.
 }
 \seealso{
-Other Particles: \code{\link{a.from.ion}},
+Other Particles: \code{\link{Zeff}},
+  \code{\link{a.from.ion}}, \code{\link{beta.c}},
   \code{\link{remove.atomic.mass}},
-  \code{\link{z.from.ion}}
+  \code{\link{rest.energy}}, \code{\link{z.from.ion}}
 }

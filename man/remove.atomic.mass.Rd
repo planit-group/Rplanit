@@ -17,6 +17,8 @@ Returns the name of the ion/atom removing its atomic mass number specification (
 Note: the available range is from 1H to 20 Ne.
 }
 \seealso{
-Other Particles: \code{\link{a.from.ion}},
-  \code{\link{ion.from.z}}, \code{\link{z.from.ion}}
+Other Particles: \code{\link{Zeff}},
+  \code{\link{a.from.ion}}, \code{\link{beta.c}},
+  \code{\link{ion.from.z}}, \code{\link{rest.energy}},
+  \code{\link{z.from.ion}}
 }

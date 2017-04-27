@@ -81,4 +81,52 @@ remove.atomic.mass <- function(ions) {
   ion.table <- c('1H', '4He', '7Li', '9Be', '11B', '12C', '14N', '16O', '19F', '20Ne')                                                                 
   ion.sequence <- c('H', 'He', 'Li', 'Be', 'B', 'C', 'N', 'O', 'F', 'Ne')                                                                              
   ion.sequence[match(ions, ion.table)]                                                                                                                  
-} 
+}
+
+#' Rest energy 
+#'
+#' Returns the (approximate) rest energy from the atomic mass number.
+#'
+#' @param A A numeric vector containing the atomic mass number (or mass in atomic mass units).
+#' @return the rest energies.
+#'
+#' @family Particles
+#' @export
+#'
+rest.energy <- function(A) {
+  AMU2MEV <- 931.494027
+  A * AMU2MEV # MeV
+}
+
+#' Evaluate beta (velocity/c) 
+#'
+#' Evaluate the velocity in c units from the kinetic energy of the particle and its atomic mass number.
+#'
+#' @param Ec A numeric vector containing the kinetic energies (MeV)
+#' @param A A numeric vector containing the atomic mass number (or mass in atomic mass units).
+#' @return the velocity in c units.
+#'
+#' @family Particles
+#' @export
+#'
+beta.c <- function(Ec, A) {
+  # energia in MeV
+  restEnergy <- rest.energy(A)
+  sqrt( 1 - 1/((Ec/restEnergy + 1) * (Ec/restEnergy + 1)) )
+}
+
+#' Evaluate the effective charge 
+#'
+#' Evaluate the effective charge (Zeff) using the Barkas approximate formula.
+#'
+#' @param Ec A numeric vector containing kinetic energies (MeV).
+#' @param Z A numeric vector containing the charges of the particle.
+#' @param A A numeric vector containing the atomic mass numbers.
+#' @return The effective charge.
+#'
+#' @family Particles
+#' @export
+#'
+Zeff <- function(Ec, Z, A) {
+  Z * (1 - exp(-125 * beta.c(Ec, A) / Z^(2.0/3.0)))
+}
