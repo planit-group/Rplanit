@@ -225,7 +225,8 @@ convert.fluence2mu <- function(beams, type='protonCnao')
 #'  \item{"parameter 2"}{Stuff}
 #' }
 #' @param nbeams The number of the beams
-#' @param with.spots Include spot coordinates
+#' @param particle particle name
+#' @param beamLine the beamLine name (i.e. the corresponding LUT to use).
 #' @param x_iso,y_iso,z_iso Coordinates of the isocenter (mm).
 #' @param gantryAngle,patientAngle Gantry and patient support angles (degree).
 #' @param fluence The number of particles for the beam(s).
@@ -234,13 +235,9 @@ convert.fluence2mu <- function(beams, type='protonCnao')
 #' @param x_s,y_s,z_s Spot coordinates, i.e. the position of the Bragg peak (mm).
 #' @family Beams
 #' @export
-create.beam <- function(nbeams=1, with.spots=FALSE, x_iso=0, y_iso=0, z_iso=0, gantryAngle=0, patientAngle=0, fluence=1, energy=0, deflX=0, deflY=0, x_s=0, y_s=0, z_s=0)
+create.beam <- function(particle='1H', beamLine='simpleProtons' ,x_iso=0, y_iso=0, z_iso=0, gantryAngle=0, patientAngle=0, fluence=1, energy=0, deflX=0, deflY=0, x_s=0, y_s=0, z_s=0)
 {
-  if(with.spots) {
-    beam <- data.frame(x_iso=rep(0, nbeams), y_iso=0, z_iso=0, gantryAngle=0, patientAngle=0, fluence=fluence, energy=energy, deflX=0, deflY=0, x_s=0, y_s=0, z_s=0)
-  } else {
-    beam <- data.frame(x_iso=rep(0, nbeams),  y_iso=0, z_iso=0, gantryAngle=0, patientAngle=0, fluence=fluence, energy=energy, deflX=0, deflY=0)
-  }
+  beam <- data.frame(particle=particle, beamLine=beamLine, x_iso=x_iso,  y_iso=y_iso, z_iso=z_iso, gantryAngle=gantryAngle, patientAngle=patientAngle, fluence=fluence, energy=energy, deflX=deflX, deflY=deflY, x_s=x_s, y_s=y_s, z_s=z_s)
   return(beam)
 }
 
