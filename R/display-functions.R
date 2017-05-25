@@ -881,6 +881,7 @@ display.all.plan <- function(plan)
 #' Display a single DVH or a list of DVHs
 #'
 #' @param dvh single DVH (created via \code{\link{dvh.evaluate}}) or a list of DVHs
+#' @param plan plan object (optional)
 #' @param Diff display "differential" DVH (boolean, optional)
 #' @param alpha.color opacity of the plot (optional)
 #' @param title the title of the plot (optional)
@@ -899,6 +900,7 @@ display.all.plan <- function(plan)
 #' @export
 #' @import ggplot2
 display.dvh <- function(dvh,
+                        plan=NULL,
                         Diff=FALSE,
                         alpha.color=1,
                         title=NULL,
