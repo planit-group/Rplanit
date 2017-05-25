@@ -4,13 +4,15 @@
 \alias{display.dvh}
 \title{Display DVHs}
 \usage{
-display.dvh(dvh, Diff = FALSE, alpha.color = 1, title = NULL,
-  show.plot = TRUE, decimate = TRUE, show.prescription = FALSE,
-  file.name = NULL, height = 7, width = 7, original.colors = TRUE,
-  fixed.scale = FALSE, return.dataframe = FALSE)
+display.dvh(dvh, plan = NULL, Diff = FALSE, alpha.color = 1,
+  title = NULL, show.plot = TRUE, decimate = TRUE,
+  show.prescription = FALSE, file.name = NULL, height = 7, width = 7,
+  original.colors = TRUE, fixed.scale = FALSE, return.dataframe = FALSE)
 }
 \arguments{
 \item{dvh}{single DVH (created via \code{\link{dvh.evaluate}}) or a list of DVHs}
+
+\item{plan}{plan object (optional)}
 
 \item{Diff}{display "differential" DVH (boolean, optional)}
 
