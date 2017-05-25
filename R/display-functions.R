@@ -1015,13 +1015,11 @@ display.dvh <- function(dvh, plan=NULL,
       #geom_line(aes(x=value, y=volume*100, colour=voi, group=id)) +
 
      labs(y='Normalized Volume', title=main, colour='VOI', fill='VOI') +
-      scale_fill_manual(values=my.cols) +
       my.ggplot.theme() #+ coord_cartesian(xlim = c(1, 1.25))
   }
   
   if(!original.colors) {
-    p <- p + scale_color_manual(values=my.cols) +
-      scale_fill_manual(values=my.cols)
+    p <- p + scale_color_manual(values=my.cols) + scale_fill_manual(values=my.cols)
   }
 
   if(Nv==1) {
