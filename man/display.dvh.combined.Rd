@@ -2,12 +2,36 @@
 % Please edit documentation in R/display-functions.R
 \name{display.dvh.combined}
 \alias{display.dvh.combined}
-\title{plot del dvh diff+integral combinato}
+\title{Display DVHs}
 \usage{
-display.dvh.combined(dvh, plan = NULL, alpha.color = 1, title = NULL,
-  decimate = TRUE, unique.variable = FALSE, show.plot = TRUE,
-  original.colors = FALSE, filename = NULL, width = 7, height = 7)
+display.dvh.combined(dvh, type = "cumulative", alpha.color = 1,
+  title = NULL, decimate = TRUE, unique.variable = FALSE,
+  show.plot = TRUE, original.colors = TRUE, filename = NULL, width = 7,
+  height = 7)
+}
+\arguments{
+\item{dvh}{single DVH (created via \code{\link{dvh.evaluate}}) or a list of DVHs}
+
+\item{type}{type of display ('cumulative', 'differential', or 'both')}
+
+\item{alpha.color}{opacity of the plot (optional)}
+
+\item{title}{the title of the plot (optional)}
+
+\item{decimate}{if the DVH points are too much (> 1000), it plots only a sample of them, to speed up the visualization (boolean, optional)}
+
+\item{show.plot}{if \code{TRUE} it display the plot on screen. If \code{FALSE} it returns a ggplot plot structure if (optional)}
+
+\item{filename}{the name of the file in which to save the figure (optional)}
+
+\item{height, weight}{sizes (inches) of the figure to be saved in the file (optional)}
+}
+\value{
+If \code{show.plot} is \code{FALSE}, it returns a ggplot2 plot structure to be used for further processing. If \code{return.dataframe = TRUE} it returns the generated data.frame of the DVH(s).
 }
 \description{
-plot del dvh diff+integral combinato
+Display a single DVH or a list of DVHs with the possibility to use cumulative or differential representations.
+}
+\seealso{
+Other display dvh: \code{\link{display.dvh}}
 }

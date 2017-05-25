@@ -10,7 +10,7 @@ display.slice.all(ct = NULL, contours = NULL, values = NULL,
   vlim = NULL, file.name = NULL, width = 7, height = 7,
   HU.window = c(-1000, 3000), alpha.lower = 0, alpha.upper = 1,
   invert.y.axis = FALSE, contour.color = "green", dpi = 300,
-  levels = NULL, use.contour.colors = FALSE, contours.legend = FALSE,
+  levels = NULL, use.contour.colors = TRUE, contours.legend = FALSE,
   cex.contours.legend = 0.8, contour.legend.position = "topleft",
   title = NULL, col.invert = FALSE)
 }

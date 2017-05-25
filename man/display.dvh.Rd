@@ -4,15 +4,13 @@
 \alias{display.dvh}
 \title{Display DVHs}
 \usage{
-display.dvh(dvh, plan = NULL, Diff = FALSE, alpha.color = 1,
-  title = NULL, show.plot = TRUE, decimate = TRUE,
-  show.prescription = FALSE, file.name = NULL, height = 7, width = 7,
+display.dvh(dvh, Diff = FALSE, alpha.color = 1, title = NULL,
+  show.plot = TRUE, decimate = TRUE, show.prescription = FALSE,
+  file.name = NULL, height = 7, width = 7, original.colors = TRUE,
   fixed.scale = FALSE, return.dataframe = FALSE)
 }
 \arguments{
 \item{dvh}{single DVH (created via \code{\link{dvh.evaluate}}) or a list of DVHs}
-
-\item{plan}{plan object (optional)}
 
 \item{Diff}{display "differential" DVH (boolean, optional)}
 
@@ -33,10 +31,15 @@ display.dvh(dvh, plan = NULL, Diff = FALSE, alpha.color = 1,
 \item{return.dataframe}{Return the data.frame of the DVH(s).}
 
 \item{filename}{the name of the file in which to save the figure (optional)}
+
+\item{original.color}{use ggplot default colors}
 }
 \value{
 If \code{show.plot} is \code{FALSE}, it returns a ggplot2 plot structure to be used for further processing. If \code{return.dataframe = TRUE} it returns the generated data.frame of the DVH(s).
 }
 \description{
 Display a single DVH or a list of DVHs
+}
+\seealso{
+Other display dvh: \code{\link{display.dvh.combined}}
 }
