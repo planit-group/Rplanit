@@ -881,7 +881,6 @@ display.all.plan <- function(plan)
 #' Display a single DVH or a list of DVHs
 #'
 #' @param dvh single DVH (created via \code{\link{dvh.evaluate}}) or a list of DVHs
-#' @param plan plan object (optional)
 #' @param Diff display "differential" DVH (boolean, optional)
 #' @param alpha.color opacity of the plot (optional)
 #' @param title the title of the plot (optional)
@@ -899,7 +898,7 @@ display.all.plan <- function(plan)
 #' @family display dvh
 #' @export
 #' @import ggplot2
-display.dvh <- function(dvh, plan=NULL,
+display.dvh <- function(dvh,
                         Diff=FALSE,
                         alpha.color=1,
                         title=NULL,
@@ -924,15 +923,8 @@ display.dvh <- function(dvh, plan=NULL,
   else {N <- 1; dvh <- list(dvh)}
 
   # text
-  if(!is.null(title)) {
     main <- title
-  } else if(N==1) {
-    if(!is.null(plan)) {main <- paste(plan$name, '-', dvh$voi)}
-    else {main <- dvh$voi}
-  } else {
-    if(!is.null(plan)) {main <- paste(plan$name, '- DVHs')}
-    else {main <- 'DVHs'}
-  }
+
 
   # crea dataframe per ggplot
   init=1
