@@ -1046,7 +1046,7 @@ display.dvh.combined <- function(dvh,
                                  decimate=TRUE,
                                  unique.variable=FALSE,
                                  show.plot=TRUE,
-                                 original.colors=FALSE,
+                                 original.colors=TRUE,
                                  filename=NULL, width=7, height=7) {
 
   # usa le librerie ggplot2 (per fare prima...)
