@@ -891,6 +891,7 @@ display.all.plan <- function(plan)
 #' @param filename the name of the file in which to save the figure (optional)
 #' @param height,weight sizes (inches) of the figure to be saved in the file (optional)
 #' @param fixed.scale Forces a common fixed scale when faceting (if there are different variables).
+#' @param original.color use ggplot default colors
 #' @param return.dataframe Return the data.frame of the DVH(s).
 #'
 #' @return If \code{show.plot} is \code{FALSE}, it returns a ggplot2 plot structure to be used for further processing. If \code{return.dataframe = TRUE} it returns the generated data.frame of the DVH(s).
@@ -898,7 +899,6 @@ display.all.plan <- function(plan)
 #' @family display dvh
 #' @export
 #' @import ggplot2
-
 display.dvh <- function(dvh, plan=NULL,
                         Diff=FALSE,
                         alpha.color=1,
@@ -909,6 +909,7 @@ display.dvh <- function(dvh, plan=NULL,
                         file.name=NULL,
                         height=7,
                         width=7,
+                        original.colors=TRUE,
                         fixed.scale=FALSE,
                         return.dataframe=FALSE) {
 
@@ -998,7 +999,6 @@ display.dvh <- function(dvh, plan=NULL,
     p <- ggplot(df) +
       geom_line(alpha=alpha.color, aes(x=value, y=volume*100, colour=voi, group=id)) +
       labs(y='%Volume', title=main, colour='VOI') +
-      scale_color_manual(values=my.cols) +
       my.ggplot.theme()
       if(show.prescription) {
 	      p <- p + geom_point(data=pres, aes(x=value.pres, y=volumeFraction*100, colour=voi, shape=type))
@@ -1015,9 +1015,13 @@ display.dvh <- function(dvh, plan=NULL,
       #geom_line(aes(x=value, y=volume*100, colour=voi, group=id)) +
 
      labs(y='Normalized Volume', title=main, colour='VOI', fill='VOI') +
-      scale_color_manual(values=my.cols) +
       scale_fill_manual(values=my.cols) +
       my.ggplot.theme() #+ coord_cartesian(xlim = c(1, 1.25))
+  }
+  
+  if(!original.colors) {
+    p <- p + scale_color_manual(values=my.cols) +
+      scale_fill_manual(values=my.cols)
   }
 
   if(Nv==1) {
@@ -1035,12 +1039,25 @@ display.dvh <- function(dvh, plan=NULL,
 }
 
 
-#' plot del dvh diff+integral combinato
+#' Display DVHs
 #'
-#' @import ggplot2
+#' Display a single DVH or a list of DVHs with the possibility to use cumulative or differential representations.
+#'
+#' @param dvh single DVH (created via \code{\link{dvh.evaluate}}) or a list of DVHs
+#' @param type type of display ('cumulative', 'differential', or 'both')
+#' @param alpha.color opacity of the plot (optional)
+#' @param title the title of the plot (optional)
+#' @param show.plot if \code{TRUE} it display the plot on screen. If \code{FALSE} it returns a ggplot plot structure if (optional)
+#' @param decimate if the DVH points are too much (> 1000), it plots only a sample of them, to speed up the visualization (boolean, optional)
+#' @param filename the name of the file in which to save the figure (optional)
+#' @param height,weight sizes (inches) of the figure to be saved in the file (optional)
+#' @return If \code{show.plot} is \code{FALSE}, it returns a ggplot2 plot structure to be used for further processing. If \code{return.dataframe = TRUE} it returns the generated data.frame of the DVH(s).
+#'
+#' @family display dvh
 #' @export
+#' @import ggplot2
 display.dvh.combined <- function(dvh,
-                                 plan=NULL,
+                                 type='cumulative', # scelta tra 'cumulative', 'differential', 'both'
                                  alpha.color=1,
                                  title=NULL,
                                  decimate=TRUE,
@@ -1048,109 +1065,131 @@ display.dvh.combined <- function(dvh,
                                  show.plot=TRUE,
                                  original.colors=TRUE,
                                  filename=NULL, width=7, height=7) {
-
+  
   # usa le librerie ggplot2 (per fare prima...)
   #suppressMessages(library(ggplot2))
-
+  
   # massimo numero di pti per dvh da visualizzare
   max.v <- 1000
-
+  
   # check per vedere se è una lista
   if (class(dvh[[1]]) != "numeric") {N <- length(dvh)}
   else {N <- 1; dvh <- list(dvh)}
-
-  # text
-  if(!is.null(title)) {
-    main <- title
-  } else if(N==1) {
-    if(!is.null(plan)) {main <- paste(plan$name, '-', dvh$voi)}
-    else {main <- dvh$voi}
-  } else {
-    if(!is.null(plan)) {main <- paste(plan$name, '- DVHs')}
-    else {main <- 'DVHs'}
-  }
-
+  
+  # title
+  # if(!is.null(title)) {
+  #   main <- title
+  # } else if(N==1) {
+  #   if(!is.null(plan)) {main <- paste(plan$name, '-', dvh$voi)}
+  #   else {main <- dvh$voi}
+  # } else {
+  #   if(!is.null(plan)) {main <- paste(plan$name, '- DVHs')}
+  #   else {main <- 'DVHs'}
+  # }
+  main <- title
+  
   # crea dataframe per ggplot
   init=1
+  df.tmp <- df.tmp.diff <- NULL
   for(i in 1:N) {
     message('dataframing dvh #:', i)
-    if(length(dvh[[i]]$value)==0) {warning('void dvh!'); init <- init+1; next}
-    df.tmp <- data.frame(volume=dvh[[i]]$volume*100,
-                         value=dvh[[i]]$value,
-                         voi=dvh[[i]]$voi,
-                         variable=dvh[[i]]$variable,
-                         Type='cumulative',
-                         alpha=0,
-                         id=i)
-    # stima della densità
-    dens <- density(dvh[[i]]$value,
-                    na.rm=TRUE,
-                    bw='nrd0',
-                    from=min(dvh[[i]]$value, na.rm=TRUE),
-                    to=max(dvh[[i]]$value, na.rm=TRUE))
-    df.tmp.diff <- data.frame(volume=dens$y,
-                              value=dens$x,
-                              voi=dvh[[i]]$voi,
-                              variable=dvh[[i]]$variable,
-                              Type='differential',
-                              alpha=alpha.color/(N+1),
-                              id=i)
-
-    # riduce il numero di punti...
-    if(decimate) {
-      nr <- nrow(df.tmp)
-      if(nr>max.v+2) {
-        #message('decimating dvh...')
-        index <- c(1, sort(sample(x=2:(nr-1), size=max.v)), nr)
-        df.tmp <- df.tmp[index,]
+    
+    # cumulativo
+    if(type=='cumulative' | type=='both') {
+      if(length(dvh[[i]]$value)==0) {warning('void dvh!'); init <- init+1; next}
+      df.tmp <- data.frame(volume=dvh[[i]]$volume*100,
+                           value=dvh[[i]]$value,
+                           voi=dvh[[i]]$voi,
+                           variable=dvh[[i]]$variable,
+                           Type='cumulative',
+                           alpha=0,
+                           id=i)
+      # riduce il numero di punti...
+      if(decimate) {
+        nr <- nrow(df.tmp)
+        if(nr>max.v+2) {
+          #message('decimating dvh...')
+          index <- c(1, sort(sample(x=2:(nr-1), size=max.v)), nr)
+          df.tmp <- df.tmp[index,]
+        }
       }
     }
-
+    
+    # differenziale
+    if(type=='differential' | type=='both') {
+      # stima della densità
+      dens <- density(dvh[[i]]$value,
+                      na.rm=TRUE,
+                      bw='nrd0',
+                      from=min(dvh[[i]]$value, na.rm=TRUE),
+                      to=max(dvh[[i]]$value, na.rm=TRUE))
+      df.tmp.diff <- data.frame(volume=dens$y,
+                                value=dens$x,
+                                voi=dvh[[i]]$voi,
+                                variable=dvh[[i]]$variable,
+                                Type='differential',
+                                alpha=alpha.color/(N+1),
+                                id=i)
+    }
+    
     if(i==init) {df <- rbind(df.tmp, df.tmp.diff)} else (df <- rbind(df, df.tmp, df.tmp.diff))
   }
-
+  
   # check per vedere quante variabili ci sono nella lista
   variables <- unique(df$variable)
   Nv <- length(variables)
-
+  
   # check per vedere se ci sono VOI ripetuti.
   if(unique.variable & length(unique(df$voi)) < N) {
     df$voi <- as.factor(paste(df$voi, df$variable))
   }
   #print(summary(df))
   #print(unique(df$id))
-
+  
   # scala colori
   Ncol <- length(unique(df$voi))
   #my.cols <- sample(colors(), N)
   #palette(rainbow(round(Ncol*1.5))) # prende solo la prima parte del rainbow
   #my.cols <- palette()[1:Ncol]
   my.cols <- rainbow(round(Ncol*1.5))[1:Ncol]
-
+  
   # plot
   p <- ggplot(df) +
     my.ggplot.theme() + #+ coord_cartesian(xlim = c(1, 1.25))
     geom_ribbon(aes(x=value, ymax=volume, ymin=0, fill=voi, alpha=Type, group=id)) +
-    scale_alpha_discrete(range=c(0, alpha.color/(N+1))) +
     geom_line(aes(x=value, y=volume, colour=voi, group=id)) +
     labs(y='Normalized Volume', title=main, colour='VOI', fill='VOI')
-    if(!original.colors) {
+  if(!original.colors) {
     p <- p + scale_color_manual(values=my.cols) +
-             scale_fill_manual(values=my.cols)
-    }
-  p <- p + guides(alpha=FALSE, fill=FALSE)
-
-
-  if(Nv==1) {
-    p <- p + labs(x=variables) + facet_grid(Type~., scales='free_y')
-  } else {
-    if(!unique.variable) p <- p + facet_grid(Type~variable, scales='free')
-    if(unique.variable) p <- p + labs(x=variables[1]) + facet_grid(Type~., scales='free_y')
+      scale_fill_manual(values=my.cols)
   }
-
+  p <- p + guides(alpha=FALSE, fill=FALSE)
+  
+  
+  if(type=='both') {
+    p <- p + scale_alpha_discrete(range=c(0, alpha.color/(N+1)))
+    if(Nv==1) {
+      p <- p + labs(x=variables) + facet_grid(Type~., scales='free_y')
+    } else {
+      if(!unique.variable) p <- p + facet_grid(Type~variable, scales='free')
+      if(unique.variable) p <- p + labs(x=variables[1]) + facet_grid(Type~., scales='free_y')
+    }
+  }
+  else {
+    if(type=='differential') {p <- p + scale_alpha_discrete(range=c(alpha.color/(N+1), alpha.color/(N+1)))}
+    else {p <- p + scale_alpha_discrete(range=c(0, 0))}
+    if(Nv==1) {
+      p <- p + labs(x=variables)
+    } else {
+      if(!unique.variable) p <- p + facet_grid(.~variable, scales='free')
+      if(unique.variable) p <- p + labs(x=variables[1])
+    }
+  }
+  
   if(!is.null(filename)) {ggsave(plot=p, filename=filename, width=width, height=height)}
   if(show.plot) {print(p)} else {return(p)}
 }
+
 
 
 
