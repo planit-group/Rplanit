@@ -2027,7 +2027,8 @@ colormap.ct <- function(HU.range=c(-1000, 3000), HU.window=c(-1000,3000))
 my.ggplot.theme <- function(size=14)
 {
   # assume che le librerie ggplot siano già caricate
-  my.theme <- theme_bw(size) + theme(axis.text = element_text(colour="black"), panel.grid.major = element_blank(), panel.grid.minor = element_blank()); theme_set(my.theme)
+  #my.theme <- theme_bw(size) + theme(axis.text = element_text(colour="black"), panel.grid.major = element_blank(), panel.grid.minor = element_blank()); theme_set(my.theme)
+  my.theme <- theme_bw(14) + theme(axis.text = element_text(colour="black"), panel.grid.major = element_blank(), panel.grid.minor = element_blank(), strip.background = element_blank()); theme_set(my.theme)
   theme_set(my.theme)
   
   #pt <- theme(legend.key = element_rect(colour = 'white')) +
