@@ -1036,7 +1036,7 @@ display.dvh <- function(dvh,
 #' Display a single DVH or a list of DVHs with the possibility to use cumulative or differential representations.
 #'
 #' @param dvh single DVH (created via \code{\link{dvh.evaluate}}) or a list of DVHs
-#' @param type type of display ('cumulative', 'differential', or 'both')
+#' @param type type of display: 'cumulative', 'differential', or 'both' (default)
 #' @param alpha.color opacity of the plot (optional)
 #' @param title the title of the plot (optional)
 #' @param show.plot if \code{TRUE} it display the plot on screen. If \code{FALSE} it returns a ggplot plot structure if (optional)
@@ -1049,7 +1049,7 @@ display.dvh <- function(dvh,
 #' @export
 #' @import ggplot2
 display.dvh.combined <- function(dvh,
-                                 type='cumulative', # scelta tra 'cumulative', 'differential', 'both'
+                                 type='both', # scelta tra 'cumulative', 'differential', 'both'
                                  alpha.color=1,
                                  title=NULL,
                                  decimate=TRUE,

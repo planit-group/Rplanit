@@ -4,15 +4,14 @@
 \alias{display.dvh.combined}
 \title{Display DVHs}
 \usage{
-display.dvh.combined(dvh, type = "cumulative", alpha.color = 1,
-  title = NULL, decimate = TRUE, unique.variable = FALSE,
-  show.plot = TRUE, original.colors = TRUE, filename = NULL, width = 7,
-  height = 7)
+display.dvh.combined(dvh, type = "both", alpha.color = 1, title = NULL,
+  decimate = TRUE, unique.variable = FALSE, show.plot = TRUE,
+  original.colors = TRUE, filename = NULL, width = 7, height = 7)
 }
 \arguments{
 \item{dvh}{single DVH (created via \code{\link{dvh.evaluate}}) or a list of DVHs}
 
-\item{type}{type of display ('cumulative', 'differential', or 'both')}
+\item{type}{type of display: 'cumulative', 'differential', or 'both' (default)}
 
 \item{alpha.color}{opacity of the plot (optional)}
 
