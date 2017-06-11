@@ -2,7 +2,7 @@
 % Please edit documentation in R/lut-functions.R
 \name{write.beamLUT}
 \alias{write.beamLUT}
-\title{scrive le matrici V_{b,v} (beamLUT)}
+\title{scrive le matrici V_{b,v} (beamLUT) (obsolete)}
 \usage{
 write.beamLUT(plan, threshold = 0, threshold.variable = "Dose[Gy]",
   variable = "Dose[Gy]", file.name)
@@ -20,5 +20,5 @@ Other BeamLUT: \code{\link{get.alpha.beta.beamLUT}},
   \code{\link{get.letd.beamLUT}},
   \code{\link{get.rbe.beamLUT}},
   \code{\link{get.values.for.beam}},
-  \code{\link{read.beamLUT}}
+  \code{\link{read.beamLUTs}}, \code{\link{read.beamLUT}}
 }

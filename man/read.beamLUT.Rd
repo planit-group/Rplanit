@@ -2,20 +2,23 @@
 % Please edit documentation in R/lut-functions.R
 \name{read.beamLUT}
 \alias{read.beamLUT}
-\title{Read the beamLUTs (pure-dek)}
+\title{Read a beamLUT (pure-dek)}
 \usage{
-read.beamLUT(beamLUT.name, Nx, Ny, Nz, dose.threshold = 0,
-  preallocate = FALSE)
+read.beamLUT(beamLUT.file, Nx = NULL, Ny = NULL, Nz = NULL,
+  dose.threshold = 0)
 }
 \arguments{
-\item{beamLUT.name}{the prefix of the beamLUT files. The complete filenames are expected to be: <beamLUT.name>_<beamIndex>.beamLUT}
+\item{beamLUT.file}{the name of the beamLUT file.}
 
-\item{Nx, Ny, Nz}{the dimensions of the target 3D array (to evaluate an absolute voxelID)}
+\item{Nx, Ny, Nz}{optional dimensions of the target 3D array (to evaluate an absolute voxelID)}
 
 \item{dose.threshold}{additional dose threshold to filter elements with dose <= dose.threshold.}
 }
+\value{
+a data.table of the beamLUT
+}
 \description{
-Read the beamLUTs (pure-dek)
+Read a beamLUT (pure-dek)
 }
 \seealso{
 Other BeamLUT: \code{\link{get.alpha.beta.beamLUT}},
@@ -25,5 +28,5 @@ Other BeamLUT: \code{\link{get.alpha.beta.beamLUT}},
   \code{\link{get.letd.beamLUT}},
   \code{\link{get.rbe.beamLUT}},
   \code{\link{get.values.for.beam}},
-  \code{\link{write.beamLUT}}
+  \code{\link{read.beamLUTs}}, \code{\link{write.beamLUT}}
 }

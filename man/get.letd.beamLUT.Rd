@@ -29,5 +29,6 @@ Other BeamLUT: \code{\link{get.alpha.beta.beamLUT}},
   \code{\link{get.dose.beamLUT}},
   \code{\link{get.rbe.beamLUT}},
   \code{\link{get.values.for.beam}},
-  \code{\link{read.beamLUT}}, \code{\link{write.beamLUT}}
+  \code{\link{read.beamLUTs}}, \code{\link{read.beamLUT}},
+  \code{\link{write.beamLUT}}
 }

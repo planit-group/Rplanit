@@ -2,7 +2,7 @@
 % Please edit documentation in R/lut-functions.R
 \name{get.values.for.beam}
 \alias{get.values.for.beam}
-\title{Evaluate BeamLUT}
+\title{Evaluate BeamLUT (obsolete)}
 \usage{
 \method{get.values}{for.beam}(beams = NULL, beam.index, fluence = NULL,
   plan, variables = "Dose[Gy]", temp.name = "temp", remove.temp = TRUE)
@@ -35,5 +35,6 @@ Other BeamLUT: \code{\link{get.alpha.beta.beamLUT}},
   \code{\link{get.dose.beamLUT}},
   \code{\link{get.letd.beamLUT}},
   \code{\link{get.rbe.beamLUT}},
-  \code{\link{read.beamLUT}}, \code{\link{write.beamLUT}}
+  \code{\link{read.beamLUTs}}, \code{\link{read.beamLUT}},
+  \code{\link{write.beamLUT}}
 }

@@ -9,7 +9,7 @@ get.beamLUTs(plan, preallocate = FALSE)
 \arguments{
 \item{plan}{The plan object.}
 
-\item{preallocate}{Preallocate memory (parameter passed to read.beamLUT().)}
+\item{concatenate}{use alternative faster reading approach (parameter passed to read.beamLUT(), may not work on windows and osx.)}
 }
 \description{
 Get the evaluated beamLUTs from the plan
@@ -21,5 +21,6 @@ Other BeamLUT: \code{\link{get.alpha.beta.beamLUT}},
   \code{\link{get.letd.beamLUT}},
   \code{\link{get.rbe.beamLUT}},
   \code{\link{get.values.for.beam}},
-  \code{\link{read.beamLUT}}, \code{\link{write.beamLUT}}
+  \code{\link{read.beamLUTs}}, \code{\link{read.beamLUT}},
+  \code{\link{write.beamLUT}}
 }
