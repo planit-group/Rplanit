@@ -707,7 +707,7 @@ read.beamLUTs <- function(beamLUT.name, Nx, Ny, Nz, dose.threshold=0, concatenat
   
   if(concatenate) {
     # sistema con concatenazione...
-    message('reading', Nb, 'concatenated beamLUTs...')
+    message('reading ', Nb, ' concatenated beamLUTs...')
     concantenate.cmd <- paste0('tail -q -n +3 ', beamLUT.name, '*.beamLUT')
     beamLUT <- fread(concantenate.cmd, header = FALSE)
     beamLUT.tmp <- read.beamLUT(beamLUT.files[1])
