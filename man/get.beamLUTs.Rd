@@ -4,7 +4,7 @@
 \alias{get.beamLUTs}
 \title{Get beamLUTs}
 \usage{
-get.beamLUTs(plan, preallocate = FALSE)
+get.beamLUTs(plan, concatenate = FALSE)
 }
 \arguments{
 \item{plan}{The plan object.}

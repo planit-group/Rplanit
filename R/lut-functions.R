@@ -566,12 +566,12 @@ write.lut <- function(lut.array, variables=NULL, E=NULL, x=NULL, y=NULL, zn=NULL
 #' @param concatenate use alternative faster reading approach (parameter passed to read.beamLUT(), may not work on windows and osx.)
 #' @export
 #' @family BeamLUT
-get.beamLUTs <- function(plan, preallocate=FALSE) {
+get.beamLUTs <- function(plan, concatenate=FALSE) {
   if(is.null(plan[['outputBeamLUTFile']])) {
     stop('beamLUTs not present in plan ', plan[['name']], '. To evaluate the beamLUT set the plan with saveBeamLUTs=TRUE.')
   } else {
     values <- get.values(plan)
-    return(read.beamLUTs(beamLUT.name = plan[['outputBeamLUTFile']], Nx = values$Nx, Ny = values$Ny, Nz = values$Nz, preallocate = preallocate))
+    return(read.beamLUTs(beamLUT.name = plan[['outputBeamLUTFile']], Nx = values$Nx, Ny = values$Ny, Nz = values$Nz, concatenate = concatenate))
   }
 }
 
