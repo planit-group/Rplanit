@@ -13,14 +13,14 @@
 Get the values objects associated to a list of plans (PlanKIT/Gate).
 }
 \seealso{
-Other Values: \code{\link{combine.values}},
-  \code{\link{create.values}},
+Other Values: \code{\link{create.values}},
   \code{\link{dataframe.from.values}},
   \code{\link{get.sparse.array.gate}},
   \code{\link{get.values.dataframe}},
   \code{\link{get.values.gate.plan}},
   \code{\link{get.values.plankit.plan}},
-  \code{\link{get.values}}, \code{\link{sanitize.values}},
+  \code{\link{get.values}}, \code{\link{merge.values}},
+  \code{\link{sanitize.values}},
   \code{\link{sparse.array.from.values}},
   \code{\link{threshold.values}},
   \code{\link{values.from.sparse.array}}

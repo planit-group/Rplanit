@@ -4,7 +4,7 @@
 \alias{get.voi.logical}
 \title{Evaluate VOI logical matrix}
 \usage{
-get.voi.logical(vois, voi = NULL)
+get.voi.logical(vois, voi)
 }
 \arguments{
 \item{vois}{the \code{vois} object}

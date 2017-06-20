@@ -389,7 +389,7 @@ threshold.values <- function(values, threshold = 0, variable = 'Dose[Gy]')
 #' @return A values object
 #' @family Values
 #' @export
-combine.values <- function(values.list)
+merge.values <- function(values.list)
 {
   NV <- length(values.list)
   if(NV==1) {return(values.list[[1]])}

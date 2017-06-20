@@ -17,15 +17,15 @@ sparse.array.from.values(values, variables = NULL, threshold = 0)
 get sparse format data from a values object
 }
 \seealso{
-Other Values: \code{\link{combine.values}},
-  \code{\link{create.values}},
+Other Values: \code{\link{create.values}},
   \code{\link{dataframe.from.values}},
   \code{\link{get.sparse.array.gate}},
   \code{\link{get.values.dataframe}},
   \code{\link{get.values.gate.plan}},
   \code{\link{get.values.list}},
   \code{\link{get.values.plankit.plan}},
-  \code{\link{get.values}}, \code{\link{sanitize.values}},
+  \code{\link{get.values}}, \code{\link{merge.values}},
+  \code{\link{sanitize.values}},
   \code{\link{threshold.values}},
   \code{\link{values.from.sparse.array}}
 }
