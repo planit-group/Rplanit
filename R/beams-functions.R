@@ -53,7 +53,7 @@ create.field <- function(N=1,
 read.beams <- function(beams.file)
 {
   message('reading beams file...')
-  beams <- read.table(beams.file, skip=1)
+  beams <- read.table(beams.file, skip=1, stringsAsFactors = FALSE)
 
   # mette i nomi delle colonne
   if(ncol(beams)==14) {
