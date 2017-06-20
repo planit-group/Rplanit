@@ -4,12 +4,14 @@
 \alias{get.voi.logical}
 \title{Evaluate VOI logical matrix}
 \usage{
-get.voi.logical(vois, voi)
+get.voi.logical(vois, voi, Nv = NULL)
 }
 \arguments{
 \item{vois}{the \code{vois} object}
 
 \item{voi}{the name of the VOI}
+
+\item{Nv}{number of values (optional). This is used to produce a 4D array to account to variable multiplicity in the voxels (to be used directly with values objects with multiple variables)}
 }
 \value{
 boolean array representing the volumetric occupancy of a specific VOI.

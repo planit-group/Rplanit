@@ -99,15 +99,20 @@ get.vois <- function(plan, input=FALSE)
 #' 
 #' @param vois the \code{vois} object
 #' @param voi the name of the VOI
+#' @param Nv number of values (optional). This is used to produce a 4D array to account to variable multiplicity in the voxels (to be used directly with values objects with multiple variables)
 #' @return boolean array representing the volumetric occupancy of a specific VOI.
 #' 
 #' @family VOIs
 #' @export
-get.voi.logical <- function(vois, voi) {
+get.voi.logical <- function(vois, voi, Nv=NULL) {
   # indice VOI
   #if(is.null(voi)) {cat('No VOI...\n'); return(0)}
   v <- which(vois$vois==voi)
-  return(array(substr(vois$values, v, v)=='1', dim=c(vois$Nx, vois$Ny, vois$Nz)))
+  if(is.null(Nv)) {
+    return(array(substr(vois$values, v, v)=='1', dim=c(vois$Nx, vois$Ny, vois$Nz)))
+  } else {
+    return(array(rep(substr(vois$values, v, v)=='1', each=Nv), dim=c(Nv, vois$Nx, vois$Ny, vois$Nz)))
+  }
 }
 
 #' Get a subset of a  \code{vois} object.
