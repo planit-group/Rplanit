@@ -14,7 +14,8 @@ Get the sparse array evaluated for a plan (Gate).
 Note: the plan has to be evaluated via run.gate.forward() with the option evaluate.sparse.arrays=TRUE.
 }
 \seealso{
-Other Values: \code{\link{create.values}},
+Other Values: \code{\link{combine.values}},
+  \code{\link{create.values}},
   \code{\link{dataframe.from.values}},
   \code{\link{get.values.dataframe}},
   \code{\link{get.values.gate.plan}},

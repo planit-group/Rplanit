@@ -21,7 +21,8 @@ a data.table of the beamLUT
 Read a beamLUT (pure-dek)
 }
 \seealso{
-Other BeamLUT: \code{\link{get.alpha.beta.beamLUT}},
+Other BeamLUT: \code{\link{combine.beamLUTs}},
+  \code{\link{get.alpha.beta.beamLUT}},
   \code{\link{get.bdose.beamLUT}},
   \code{\link{get.beamLUTs}},
   \code{\link{get.dose.beamLUT}},

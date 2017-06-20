@@ -29,7 +29,8 @@ The beam(s) can be one or more (by using a vector of indices). If the beams are 
 Optionally it is possible to specify also the fluences (i.e. the number of particles) for each beam.
 }
 \seealso{
-Other BeamLUT: \code{\link{get.alpha.beta.beamLUT}},
+Other BeamLUT: \code{\link{combine.beamLUTs}},
+  \code{\link{get.alpha.beta.beamLUT}},
   \code{\link{get.bdose.beamLUT}},
   \code{\link{get.beamLUTs}},
   \code{\link{get.dose.beamLUT}},

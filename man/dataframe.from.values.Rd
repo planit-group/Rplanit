@@ -14,7 +14,8 @@ Each voxel is associated to a VOI.
 Voxels assiciated to different VOIs are replicated on different rows.
 }
 \seealso{
-Other Values: \code{\link{create.values}},
+Other Values: \code{\link{combine.values}},
+  \code{\link{create.values}},
   \code{\link{get.sparse.array.gate}},
   \code{\link{get.values.dataframe}},
   \code{\link{get.values.gate.plan}},

@@ -16,7 +16,8 @@ A values object
 Merge a list of values objects in a single object. It assumes that the variable names are not overlapping among different values objects.
 }
 \seealso{
-Other Values: \code{\link{create.values}},
+Other Values: \code{\link{combine.values}},
+  \code{\link{create.values}},
   \code{\link{dataframe.from.values}},
   \code{\link{get.sparse.array.gate}},
   \code{\link{get.values.dataframe}},

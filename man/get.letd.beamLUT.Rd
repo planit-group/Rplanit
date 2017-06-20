@@ -23,7 +23,8 @@ A values object (if  x, y and z are specified), otherwise a sparse array.
 Get the net dose averged LET distribution (values object or sparse array) from the beamLUTs.
 }
 \seealso{
-Other BeamLUT: \code{\link{get.alpha.beta.beamLUT}},
+Other BeamLUT: \code{\link{combine.beamLUTs}},
+  \code{\link{get.alpha.beta.beamLUT}},
   \code{\link{get.bdose.beamLUT}},
   \code{\link{get.beamLUTs}},
   \code{\link{get.dose.beamLUT}},

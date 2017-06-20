@@ -869,3 +869,57 @@ get.bdose.beamLUT <- function(beamLUTs, beams, x, y, z, variable='BiologicalDose
   return(create.values(array.values = rbe$values*dose$values, variables = variable, x = x, y = y, z = z))
 }
 
+
+#' Combine beamLUTs
+#' 
+#' Combine a list of beamLUTs in a unique beamLUTs object. The voxel values are taken from the different beamLUTs in the list, according to the tissue
+#' specification in the contours and their belonging to the corresponding VOI. In case of a voxel belonging to multiple VOIS, the last tissue specification in the contours will overwrite the previous ones. The beamLUTs in the list and the vois object should have the same dimensionality.
+#' 
+#' @param beamLUTs.list the list of the beamLUTs. The elements of this list have to be named according to the names of the tissues specified in the contours (e.g. list(tissue1=beamLUTs1, tissue2=beamLUTs2, ....))
+#' @param vois the vois object.
+#' @param contours the contours object.
+#' @return a beamLUTs object.
+#' @family BeamLUT
+#' @export
+combine.beamLUTs <- function(beamLUTs.list, vois, contours) {
+  NV <- length(beamLUTs.list)
+  if(NV<=1) {
+    error('no set of values to combine.')
+  }
+  
+  # check dimensionality
+  d0 <- ncol(beamLUTs.list[[1]])
+  for(iV in 2:NV) {
+    d <- ncol(beamLUTs.list[[iV]])
+    if(!all.equal(d,d0)) {
+      error('not consistent dimensionality among values in values.list')
+    }
+    d0 <- d
+  }
+  
+  # check tissues specifications
+  tissues <- unique(contours$tissue)
+  tissues.list <- names(beamLUTs.list)
+  if(!all(tissues %in% tissues.list)) {
+    error('not consistent tissue definitions.')
+  }
+  
+  # combining loop
+  cc <- unique(contours[['contour']])
+  NC <- length(cc)
+  beamLUTs <- NULL
+  for(iC in 1:NC) {
+    tissue.C <- unique(contours['tissue'][contours['contour']==cc[iC]])
+    message('combining contour: ', cc[iC], ' -> ', tissue.C)
+    index.voi <- which(get.voi.logical(vois = vois, voi = cc[iC]))
+    if(iC==1) {
+      beamLUTs <- beamLUTs.list[[tissue.C]] [voxelID %in% index.voi]
+    } else {
+      # rimuove voxel del nuovo voi (per evitare duplicati)
+      beamLUTs <- beamLUTs[!(voxelID %in% index.voi)]
+      beamLUTs <- rbind(beamLUTs, beamLUTs.list[[tissue.C]] [voxelID %in% index.voi])
+    }
+  }
+  
+  return(beamLUTs)
+}

@@ -15,7 +15,8 @@ get.beamLUTs(plan, concatenate = FALSE)
 Get the evaluated beamLUTs from the plan
 }
 \seealso{
-Other BeamLUT: \code{\link{get.alpha.beta.beamLUT}},
+Other BeamLUT: \code{\link{combine.beamLUTs}},
+  \code{\link{get.alpha.beta.beamLUT}},
   \code{\link{get.bdose.beamLUT}},
   \code{\link{get.dose.beamLUT}},
   \code{\link{get.letd.beamLUT}},

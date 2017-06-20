@@ -404,6 +404,56 @@ merge.values <- function(values.list)
   return(values1)
 }
 
+#' Combine values
+#' 
+#' Combine a list of values in a unique values object. The voxel values are taken from the different values in the list, according to the tissue
+#' specification in the contours and their belonging to the corresponding VOI. In case of a voxel belonging to multiple VOIS, the last tissue specification in the contours will overwrite the previous ones. The values in the list and the vois object should have the same dimensionality.
+#' 
+#' @param values.list the list of the values. The elements of this list have to be named according to the names of the tissues specified in the contours (e.g. list(tissue1=values1, tissue2=values2, ....))
+#' @param vois the vois object.
+#' @param contours the contours object.
+#' @return a values object.
+#' @family Values
+#' @export
+combine.values <- function(values.list, vois, contours) {
+  NV <- length(values.list)
+  if(NV<=1) {
+    error('no set of values to combine.')
+  }
+  
+  # check dimensionality
+  d0 <- dim(values.list[[1]][['values']])
+  for(iV in 2:NV) {
+    d <- dim(values.list[[iV]][['values']])
+    if(!all.equal(d,d0)) {
+      error('not consistent dimensionality among values in values.list')
+    }
+    d0 <- d
+  }
+  
+  # check tissues specifications
+  tissues <- unique(contours$tissue)
+  tissues.list <- names(values.list)
+  if(!all(tissues %in% tissues.list)) {
+    error('not consistent tissue definitions.')
+  }
+  
+  # combining loop
+  cc <- unique(contours[['contour']])
+  NC <- length(cc)
+  variables <- values.list[[1]][['variables']]
+  Nv <- length(variables)
+  values <- create.values(variables = variables, x=values.list[[1]][['x']], y=values.list[[1]][['y']], z=values.list[[1]][['z']])
+  values[['values']] <- values[['values']] * NA
+  for(iC in 1:NC) {
+    tissue.C <- unique(contours['tissue'][contours['contour']==cc[iC]])
+    message('combining contour: ', cc[iC], ' -> ', tissue.C)
+    index.voi <- get.voi.logical(vois = vois, voi = cc[iC], Nv = Nv)
+    values[['values']][index.voi] <- values.list[[tissue.C]] [['values']] [index.voi]
+  }
+  
+  return(values)
+}
 
 # VALUES MANIPULATION ----------------------------------------------------
 

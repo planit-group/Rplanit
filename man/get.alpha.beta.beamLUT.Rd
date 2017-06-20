@@ -23,7 +23,8 @@ A values object (if  x, y and z are specified), otherwise a sparse array.
 Get the net alpha and beta Linear-Quadratic parameters distribution (values object or sparse array) from the beamLUTs.
 }
 \seealso{
-Other BeamLUT: \code{\link{get.bdose.beamLUT}},
+Other BeamLUT: \code{\link{combine.beamLUTs}},
+  \code{\link{get.bdose.beamLUT}},
   \code{\link{get.beamLUTs}},
   \code{\link{get.dose.beamLUT}},
   \code{\link{get.letd.beamLUT}},

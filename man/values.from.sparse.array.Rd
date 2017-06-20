@@ -19,7 +19,8 @@ Note: the sparse array is a dataframe containing at least the following columns:
 Create a values object from a sparse array.
 }
 \seealso{
-Other Values: \code{\link{create.values}},
+Other Values: \code{\link{combine.values}},
+  \code{\link{create.values}},
   \code{\link{dataframe.from.values}},
   \code{\link{get.sparse.array.gate}},
   \code{\link{get.values.dataframe}},

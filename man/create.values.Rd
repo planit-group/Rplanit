@@ -21,7 +21,8 @@ Create values object from array. Note: the value distributions are stored in a m
 values$values with dim(values$values) = c(Nv, Nx, Nz, Ny).
 }
 \seealso{
-Other Values: \code{\link{dataframe.from.values}},
+Other Values: \code{\link{combine.values}},
+  \code{\link{dataframe.from.values}},
   \code{\link{get.sparse.array.gate}},
   \code{\link{get.values.dataframe}},
   \code{\link{get.values.gate.plan}},

@@ -20,7 +20,8 @@ a values object with NA where the specified variable is equal or less the thresh
 The treshold is definied for a single variable. Where the specified quantities is equal or less the threshold, all variables are set to NA.
 }
 \seealso{
-Other Values: \code{\link{create.values}},
+Other Values: \code{\link{combine.values}},
+  \code{\link{create.values}},
   \code{\link{dataframe.from.values}},
   \code{\link{get.sparse.array.gate}},
   \code{\link{get.values.dataframe}},
