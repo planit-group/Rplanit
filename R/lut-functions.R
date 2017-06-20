@@ -884,7 +884,7 @@ get.bdose.beamLUT <- function(beamLUTs, beams, x, y, z, variable='BiologicalDose
 combine.beamLUTs <- function(beamLUTs.list, vois, contours) {
   NV <- length(beamLUTs.list)
   if(NV<=1) {
-    error('no set of values to combine.')
+    stop('no set of values to combine.')
   }
   
   # check dimensionality
@@ -892,7 +892,7 @@ combine.beamLUTs <- function(beamLUTs.list, vois, contours) {
   for(iV in 2:NV) {
     d <- ncol(beamLUTs.list[[iV]])
     if(!all.equal(d,d0)) {
-      error('not consistent dimensionality among values in values.list')
+      stop('not consistent dimensionality among values in values.list')
     }
     d0 <- d
   }
@@ -901,7 +901,7 @@ combine.beamLUTs <- function(beamLUTs.list, vois, contours) {
   tissues <- unique(contours$tissue)
   tissues.list <- names(beamLUTs.list)
   if(!all(tissues %in% tissues.list)) {
-    error('not consistent tissue definitions.')
+    stop('not consistent tissue definitions.')
   }
   
   # combining loop
