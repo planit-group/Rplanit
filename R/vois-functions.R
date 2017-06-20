@@ -603,7 +603,7 @@ read.contours <- function(file.contours, file.CT=NULL, CT=NULL, z.CT=NULL) {
   print(con.names)
   
   # body
-  contours.ct <- read.table(file.contours, skip=1)
+  contours.ct <- read.table(file.contours, skip=1, stringsAsFactors = FALSE)
   names(contours.ct) <- c('id', 'polygon', 'slice', 'x', 'y')
   
   # check per inconsistenze nella tabella
