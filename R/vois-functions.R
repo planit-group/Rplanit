@@ -103,9 +103,9 @@ get.vois <- function(plan, input=FALSE)
 #' 
 #' @family VOIs
 #' @export
-get.voi.logical <- function(vois, voi=NULL) {
+get.voi.logical <- function(vois, voi) {
   # indice VOI
-  if(is.null(voi)) {cat('No VOI...\n'); return(0)}
+  #if(is.null(voi)) {cat('No VOI...\n'); return(0)}
   v <- which(vois$vois==voi)
   return(array(substr(vois$values, v, v)=='1', dim=c(vois$Nx, vois$Ny, vois$Nz)))
 }
@@ -315,88 +315,15 @@ get.contours.list <- function(plans) {
 #' @export
 get.contours.plankit.plan <- function(plan) {
   
+  # prende direttamente data.frame contours se presente in plan
+  if(!is.null(plan[['contours']])) return(plan[['contours']])
+  
   # recupera informazioni da plan
   file.CT <- plan$ctFile
   file.contours <- plan$contoursFile
   targets <- plan$fields$targetVOIIndex
   
-  
-  cat('reading contours: ', file.contours, ', ', file.CT, '\n', sep='')
-  
-  # apri connsessione
-  file.3d <- file(file.CT, "rb") # read binary
-  
-  # leggi l'header CT
-  cat('reading header CT...\n')
-  myline <- readLines(file.3d, n=8) # legge le prime 8 linee, ogni linea e' un elemento del vettore
-  close(file.3d)
-  
-  # parsing dell'header
-  # splitta la stringa in sottostringhe delimitate da uno o piu' spazi (regexpr: " +")
-  myline.splitted <- unlist(strsplit(myline[1], ' +'))
-  Nx <- as.numeric(myline.splitted[1])
-  myline.splitted <- unlist(strsplit(myline[2], ' +'))
-  x <- as.numeric(myline.splitted)
-  
-  myline.splitted <- unlist(strsplit(myline[3], ' +'))
-  Ny <- as.numeric(myline.splitted[1])
-  myline.splitted <- unlist(strsplit(myline[4], ' +'))
-  y <- as.numeric(myline.splitted)
-  
-  myline.splitted <- unlist(strsplit(myline[5], ' +'))
-  Nz <- as.numeric(myline.splitted[1])
-  myline.splitted <- unlist(strsplit(myline[6], ' +'))
-  z <- as.numeric(myline.splitted)
-  
-  myline.splitted <- unlist(strsplit(myline[7], ' +'))
-  Nv <- as.numeric(myline.splitted[1])
-  values <- myline.splitted[2:length(myline.splitted)]
-  
-  Ntot <- Nx * Ny * Nz * Nv
-  
-  # trasforma intervalli in coordinate puntuali
-  x <- (x[1:Nx] + x[2:(Nx+1)])/2
-  y <- (y[1:Ny] + y[2:(Ny+1)])/2
-  z <- (z[1:Nz] + z[2:(Nz+1)])/2
-  
-  
-  # legge contorni
-  
-  # header
-  file.con <- file(file.contours, "rb") # read binary
-  myline <- readLines(file.con, n=1)
-  myline.splitted <- unlist(strsplit(myline[1], ' +'))
-  Nc <- as.numeric(myline.splitted[1])
-  con.names <- myline.splitted[2:length(myline.splitted)]
-  close(file.con)
-  
-  print(con.names)
-  
-  # body
-  contours.ct <- read.table(file.contours, skip=1)
-  names(contours.ct) <- c('id', 'polygon', 'slice', 'x', 'y')
-  contours.ct$z <- (sapply(contours.ct$slice, function(v) z[v+1]))
-  contours.ct$contour <- factor(sapply(contours.ct$id, function(v) con.names[v+1]), levels=con.names)
-  
-  # identifica tessuto+modello
-  con.names <- levels(contours.ct$contour)
-  con <- tis <- con.names
-  Nc <- length(con.names)
-  con.name <- strsplit(con.names, '_', fixed=TRUE)
-  for (i in 1:Nc) {
-    con[i] <- unlist(con.name[i])[1]
-    tis[i] <- unlist(con.name[i])[2]
-  }
-  levels(contours.ct$contour) <- con
-  contours.ct$tissue <- contours.ct$contour
-  levels(contours.ct$tissue) <- tis
-  
-  # identifica target
-  contours.ct$type <- 'VOI/OAR'
-  contours.ct$type[contours.ct$id %in% targets] <- 'PTV'
-  contours.ct$type <- as.factor(contours.ct$type)
-  
-  return(contours.ct)
+  return(read.contours(file.contours = file.contours, file.CT = file.CT))
   
 }
 
@@ -542,7 +469,7 @@ read.contours <- function(file.contours, file.CT=NULL, CT=NULL, z.CT=NULL) {
     z <- CT$z
   } else if(!is.null(file.CT)){
     message('using z from ', file.CT, '...')
-  
+    
     # leggi header CT
     cat('reading contours: ', file.contours, ', ', file.CT, '\n', sep='')
     
@@ -603,7 +530,7 @@ read.contours <- function(file.contours, file.CT=NULL, CT=NULL, z.CT=NULL) {
   print(con.names)
   
   # body
-  contours.ct <- read.table(file.contours, skip=1, stringsAsFactors = FALSE)
+  contours.ct <- read.table(file.contours, skip=1)
   names(contours.ct) <- c('id', 'polygon', 'slice', 'x', 'y')
   
   # check per inconsistenze nella tabella
@@ -614,7 +541,7 @@ read.contours <- function(file.contours, file.CT=NULL, CT=NULL, z.CT=NULL) {
     print(summary(contours.ct))
     contours.ct <- contours.ct[-i.wrong,]
   }
-    
+  
   contours.ct$z <- (sapply(contours.ct$slice, function(v) z[v+1]))
   contours.ct$contour <- factor(sapply(contours.ct$id, function(v) con.names[v+1]), levels=con.names)
   
@@ -635,8 +562,12 @@ read.contours <- function(file.contours, file.CT=NULL, CT=NULL, z.CT=NULL) {
   # identifica target
   contours.ct$type <- 'VOI/OAR'
   contours.ct$type[substr(contours.ct$contour,1,3) %in% 'PTV'] <- 'PTV'
-  contours.ct$type <- as.factor(contours.ct$type)
-
+  contours.ct$type <- contours.ct$type
+  
+  # trasforma fattori in strings
+  contours.ct$contour <- as.character(contours.ct$contour)
+  contours.ct$tissue <- as.character(contours.ct$tissue)
+  
   
   return(contours.ct)
   
