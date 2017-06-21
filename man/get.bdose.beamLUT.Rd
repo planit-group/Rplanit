@@ -2,7 +2,7 @@
 % Please edit documentation in R/lut-functions.R
 \name{get.bdose.beamLUT}
 \alias{get.bdose.beamLUT}
-\title{Get equivalent dose from beamLUTs (pure-dek)}
+\title{Evaluate equivalent dose from beamLUTs (pure-dek)}
 \usage{
 get.bdose.beamLUT(beamLUTs, beams, x, y, z,
   variable = "BiologicalDose[Gy(RBE)]", alphaX, betaX)

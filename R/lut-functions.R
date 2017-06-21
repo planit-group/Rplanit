@@ -730,7 +730,7 @@ read.beamLUTs <- function(beamLUT.name, Nx, Ny, Nz, dose.threshold=0, concatenat
   return(beamLUT)
 }
 
-#' Get Dose from beamLUTs (pure-dek)
+#' Evaluate net Dose from beamLUTs  (pure-dek)
 #'
 #' Get the net Dose distribution (values object or sparse array) from the beamLUTs. If coordinates x, y and z are specified it returns a complete values object
 #' @param beamLUTs the beamLUTs data frame.
@@ -742,11 +742,15 @@ read.beamLUTs <- function(beamLUT.name, Nx, Ny, Nz, dose.threshold=0, concatenat
 #' @export
 get.dose.beamLUT <- function(beamLUTs, beams, x=NULL, y=NULL, z=NULL, variable='Dose[Gy]')
 {
-
+  
   # calcolo con aggregate
-  dose.bl <- beamLUTs$`DosePerEvent[Gy/primary]` * beams$fluence[beamLUTs$beamID]
-  dose.bl <- aggregate(list(dose=dose.bl), by = list(voxelID=beamLUTs$voxelID), sum)
-
+  #dose.bl <- beamLUTs$`DosePerEvent[Gy/primary]` * beams$fluence[beamLUTs$beamID]
+  #dose.bl <- aggregate(list(dose=dose.bl), by = list(voxelID=beamLUTs$voxelID), sum)
+  
+  # calcolo con data.table
+  beamLUTs$dose <- beamLUTs$`DosePerEvent[Gy/primary]` * beams$fluence[beamLUTs$beamID]
+  dose.bl <- beamLUTs[, .(dose=sum(dose)), by=voxelID]
+  
   if(is.null(x) | is.null(y) | is.null(z)) { # matrice sparsa
     names(dose.bl) <- c('voxelID', variable)
     return(dose.bl)
@@ -757,7 +761,7 @@ get.dose.beamLUT <- function(beamLUTs, beams, x=NULL, y=NULL, z=NULL, variable='
   }
 }
 
-#' Get dose averaged LET from beamLUTs (pure-dek)
+#' Evaluate net dose averaged LET from beamLUTs (pure-dek)
 #'
 #' Get the net dose averged LET distribution (values object or sparse array) from the beamLUTs.
 #' @param beamLUTs the beamLUTs data frame.
@@ -769,12 +773,18 @@ get.dose.beamLUT <- function(beamLUTs, beams, x=NULL, y=NULL, z=NULL, variable='
 #' @export
 get.letd.beamLUT <- function(beamLUTs, beams, x=NULL, y=NULL, z=NULL, variable='DoseAveragedLET[keV/um]')
 {
-  endens.bl <- beamLUTs$`EnergyDensityPerEvent[keV/(um^3*primary)]` * beams$fluence[beamLUTs$beamID]
-  letd.bl <- beamLUTs$`DoseWeightedEnergyDensityPerEvent[keV^2/(um^4*primary)]` * beams$fluence[beamLUTs$beamID]
-  letd.bl <- aggregate(list(endens=endens.bl, letd=letd.bl), by = list(voxelID=beamLUTs$voxelID), sum)
-
+  # calcolo con aggregate
+  #endens.bl <- beamLUTs$`EnergyDensityPerEvent[keV/(um^3*primary)]` * beams$fluence[beamLUTs$beamID]
+  #letd.bl <- beamLUTs$`DoseWeightedEnergyDensityPerEvent[keV^2/(um^4*primary)]` * beams$fluence[beamLUTs$beamID]
+  #letd.bl <- aggregate(list(endens=endens.bl, letd=letd.bl), by = list(voxelID=beamLUTs$voxelID), sum)
+  
+  # calcolo con data.table
+  beamLUTs$endens.bl <- beamLUTs$`EnergyDensityPerEvent[keV/(um^3*primary)]` * beams$fluence[beamLUTs$beamID]
+  beamLUTs$letd.bl <- beamLUTs$`DoseWeightedEnergyDensityPerEvent[keV^2/(um^4*primary)]` * beams$fluence[beamLUTs$beamID]
+  letd.bl <- beamLUTs[, .(letd=sum(letd.bl), endens=sum(endens.bl)), by=voxelID]
+  
   if(is.null(x) | is.null(y) | is.null(z)) {
-    letd.bl <- data.frame(letd.bl$voxelID, letd.bl$letd/letd.bl$endens)
+    letd.bl <- data.table(letd.bl$voxelID, letd.bl$letd/letd.bl$endens)
     names(letd.bl) <- c('voxelID', variable)
     return(letd.bl)
   } else {
@@ -784,7 +794,7 @@ get.letd.beamLUT <- function(beamLUTs, beams, x=NULL, y=NULL, z=NULL, variable='
   }
 }
 
-#' Get RBE from beamLUTs (pure-dek)
+#' Evaluate net RBE from beamLUTs (pure-dek)
 #'
 #' Get the net RBE distribution (values object or sparse array) from the beamLUTs.
 #' @param beamLUTs the beamLUTs data frame.
@@ -797,19 +807,29 @@ get.letd.beamLUT <- function(beamLUTs, beams, x=NULL, y=NULL, z=NULL, variable='
 #' @export
 get.rbe.beamLUT <- function(beamLUTs, beams, x=NULL, y=NULL, z=NULL, variable='RBE', alphaX, betaX)
 {
-
-
-  dose.bl <- beamLUTs$`DosePerEvent[Gy/primary]` * beams$fluence[beamLUTs$beamID]
-  alpha.bl <- beamLUTs$`LethAlphaPerEvent[1/primary]` * beams$fluence[beamLUTs$beamID]
-  beta.bl <- beamLUTs$`SqrtLethBetaPerEvent[1/primary]` * beams$fluence[beamLUTs$beamID]
-
-  rbe.bl <- aggregate(list(dose=dose.bl, alpha=alpha.bl, beta=beta.bl), by = list(voxelID=beamLUTs$voxelID), sum)
-  i.dose <- rbe.bl$dose>0
+  
+  # usa aggregate
+  #dose.bl <- beamLUTs$`DosePerEvent[Gy/primary]` * beams$fluence[beamLUTs$beamID]
+  #alpha.bl <- beamLUTs$`LethAlphaPerEvent[1/primary]` * beams$fluence[beamLUTs$beamID]
+  #beta.bl <- beamLUTs$`SqrtLethBetaPerEvent[1/primary]` * beams$fluence[beamLUTs$beamID]
+  
+  #rbe.bl <- aggregate(list(dose=dose.bl, alpha=alpha.bl, beta=beta.bl), by = list(voxelID=beamLUTs$voxelID), sum)
+  #i.dose <- rbe.bl$dose>0
+  #rbe.bl$alpha <- rbe.bl$alpha/rbe.bl$dose
+  #rbe.bl$beta <- rbe.bl$beta^2/rbe.bl$dose^2
+  
+  # usa data.table
+  beamLUTs$dose.bl <- beamLUTs$`DosePerEvent[Gy/primary]` * beams$fluence[beamLUTs$beamID]
+  beamLUTs$alpha.bl <- beamLUTs$`LethAlphaPerEvent[1/primary]` * beams$fluence[beamLUTs$beamID]
+  beamLUTs$beta.bl <- beamLUTs$`SqrtLethBetaPerEvent[1/primary]` * beams$fluence[beamLUTs$beamID]
+  
+  rbe.bl <- beamLUTs[, .(dose=sum(dose.bl), alpha=sum(alpha.bl), beta=sum(beta.bl)), by=voxelID]
+  #i.dose <- rbe.bl$dose>0
   rbe.bl$alpha <- rbe.bl$alpha/rbe.bl$dose
   rbe.bl$beta <- rbe.bl$beta^2/rbe.bl$dose^2
-
+  
   if(is.null(x) | is.null(y) | is.null(z)) {
-    rbe.bl <- data.frame(rbe.bl$voxelID, rbe.evaluate(alpha=rbe.bl$alpha, beta=rbe.bl$beta, dose=rbe.bl$dose, alphaX=alphaX, betaX=betaX))
+    rbe.bl <- data.table(rbe.bl$voxelID, rbe.evaluate(alpha=rbe.bl$alpha, beta=rbe.bl$beta, dose=rbe.bl$dose, alphaX=alphaX, betaX=betaX))
     names(rbe.bl) <- c('voxelID', variable)
     return(rbe.bl)
   } else {
@@ -819,7 +839,8 @@ get.rbe.beamLUT <- function(beamLUTs, beams, x=NULL, y=NULL, z=NULL, variable='R
   }
 }
 
-#' Get alpha/beta from beamLUTs (pure-dek)
+
+#' Evaluate net alpha and beta from beamLUTs (pure-dek)
 #'
 #' Get the net alpha and beta Linear-Quadratic parameters distribution (values object or sparse array) from the beamLUTs.
 #' @param beamLUTs the beamLUTs data frame.
@@ -831,15 +852,20 @@ get.rbe.beamLUT <- function(beamLUTs, beams, x=NULL, y=NULL, z=NULL, variable='R
 #' @export
 get.alpha.beta.beamLUT <- function(beamLUTs, beams, x=NULL, y=NULL, z=NULL, variables=c('Alpha[Gy^(-1)]', 'Beta[Gy^(-2)]'))
 {
-  dose.bl <- beamLUTs$`DosePerEvent[Gy/primary]` * beams$fluence[beamLUTs$beamID]
-  alpha.bl <- beamLUTs$`LethAlphaPerEvent[1/primary]` * beams$fluence[beamLUTs$beamID]
-  beta.bl <- beamLUTs$`SqrtLethBetaPerEvent[1/primary]` * beams$fluence[beamLUTs$beamID]
-
-  alpha.beta.bl <- aggregate(list(dose=dose.bl, alpha=alpha.bl, beta=beta.bl), by = list(voxelID=beamLUTs$voxelID), sum)
-
-
+  # usa aggregate
+  #dose.bl <- beamLUTs$`DosePerEvent[Gy/primary]` * beams$fluence[beamLUTs$beamID]
+  #alpha.bl <- beamLUTs$`LethAlphaPerEvent[1/primary]` * beams$fluence[beamLUTs$beamID]
+  #beta.bl <- beamLUTs$`SqrtLethBetaPerEvent[1/primary]` * beams$fluence[beamLUTs$beamID]
+  #alpha.beta.bl <- aggregate(list(dose=dose.bl, alpha=alpha.bl, beta=beta.bl), by = list(voxelID=beamLUTs$voxelID), sum)
+  
+  # usa data.table
+  beamLUTs$dose.bl <- beamLUTs$`DosePerEvent[Gy/primary]` * beams$fluence[beamLUTs$beamID]
+  beamLUTs$alpha.bl <- beamLUTs$`LethAlphaPerEvent[1/primary]` * beams$fluence[beamLUTs$beamID]
+  beamLUTs$beta.bl <- beamLUTs$`SqrtLethBetaPerEvent[1/primary]` * beams$fluence[beamLUTs$beamID]
+  alpha.beta.bl <- beamLUTs[, .(dose=sum(dose.bl), alpha=sum(alpha.bl), beta=sum(beta.bl)), by=voxelID]
+  
   if(is.null(x) | is.null(y) | is.null(z)) {
-    alpha.beta.bl <- data.frame(alpha.beta.bl$voxelID, alpha.beta.bl$alpha/alpha.beta.bl$dose, alpha.beta.bl$beta^2/alpha.beta.bl$dose^2)
+    alpha.beta.bl <- data.table(alpha.beta.bl$voxelID, alpha.beta.bl$alpha/alpha.beta.bl$dose, alpha.beta.bl$beta^2/alpha.beta.bl$dose^2)
     names(alpha.beta.bl) <- c('voxelID', variables)
     return(alpha.beta.bl)
   } else {
@@ -850,7 +876,7 @@ get.alpha.beta.beamLUT <- function(beamLUTs, beams, x=NULL, y=NULL, z=NULL, vari
   }
 }
 
-#' Get equivalent dose from beamLUTs (pure-dek)
+#' Evaluate equivalent dose from beamLUTs (pure-dek)
 #'
 #' Get the net equivalent (biological) dose distribution (values object) from the beamLUTs.
 #' @param beamLUTs the beamLUTs data frame.

@@ -2,7 +2,7 @@
 % Please edit documentation in R/lut-functions.R
 \name{get.dose.beamLUT}
 \alias{get.dose.beamLUT}
-\title{Get Dose from beamLUTs (pure-dek)}
+\title{Evaluate net Dose from beamLUTs  (pure-dek)}
 \usage{
 get.dose.beamLUT(beamLUTs, beams, x = NULL, y = NULL, z = NULL,
   variable = "Dose[Gy]")

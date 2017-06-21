@@ -2,7 +2,7 @@
 % Please edit documentation in R/lut-functions.R
 \name{get.alpha.beta.beamLUT}
 \alias{get.alpha.beta.beamLUT}
-\title{Get alpha/beta from beamLUTs (pure-dek)}
+\title{Evaluate net alpha and beta from beamLUTs (pure-dek)}
 \usage{
 get.alpha.beta.beamLUT(beamLUTs, beams, x = NULL, y = NULL, z = NULL,
   variables = c("Alpha[Gy^(-1)]", "Beta[Gy^(-2)]"))

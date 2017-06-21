@@ -2,7 +2,7 @@
 % Please edit documentation in R/lut-functions.R
 \name{get.rbe.beamLUT}
 \alias{get.rbe.beamLUT}
-\title{Get RBE from beamLUTs (pure-dek)}
+\title{Evaluate net RBE from beamLUTs (pure-dek)}
 \usage{
 get.rbe.beamLUT(beamLUTs, beams, x = NULL, y = NULL, z = NULL,
   variable = "RBE", alphaX, betaX)

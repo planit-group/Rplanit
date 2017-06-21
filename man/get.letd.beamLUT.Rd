@@ -2,7 +2,7 @@
 % Please edit documentation in R/lut-functions.R
 \name{get.letd.beamLUT}
 \alias{get.letd.beamLUT}
-\title{Get dose averaged LET from beamLUTs (pure-dek)}
+\title{Evaluate net dose averaged LET from beamLUTs (pure-dek)}
 \usage{
 get.letd.beamLUT(beamLUTs, beams, x = NULL, y = NULL, z = NULL,
   variable = "DoseAveragedLET[keV/um]")
