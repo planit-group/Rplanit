@@ -9,7 +9,8 @@ alpha.beta.mkm(alphaX = 0.1295, betaX = 0.03085, rN = 4, rd = 0.31,
   betaX.min = NULL, betaX.max = NULL, betaX.N = NULL, rN.min = NULL,
   rN.max = NULL, rN.N = NULL, rd.min = NULL, rd.max = NULL,
   rd.N = NULL, cellType = NULL, particleType = "H", energies = NULL,
-  lets = NULL, ignore.stdout = TRUE, ignore.stderr = TRUE)
+  lets = NULL, calculusType = "rapidMKM", ignore.stdout = TRUE,
+  ignore.stderr = TRUE)
 }
 \arguments{
 \item{alphaX, betaX, rN, rd}{MKM "biological" parameter associated to a specific biological tissue/cell line:
@@ -41,6 +42,15 @@ alpha.beta.mkm(alphaX = 0.1295, betaX = 0.03085, rN = 4, rd = 0.31,
 \item{energies}{vector of energies for the particle [MeV]}
 
 \item{lets}{vector of LETs for the particle [keV/um]. It is used if \code{energies} is \code{NULL}.}
+
+\item{calculusType}{the type of the evaluations options are:
+\itemize{
+  \item{rapidKase} implementation of MKM as described in (Kase2008)
+  \item{rapidMKM} more correct implementation for the MKM from the one described in (Kase2008)
+  \item{newMKMKase} "rapidKase" implementation +  non poissionian correction for beta
+  \item{newMKM} "rapidMKM" implementation +  non poissionian correction for beta
+  \item{slow_alphaIon_betaIon} slow Monte Carlo evaluation (compatible with MKM, LEMI, LEMII and LEMIII).
+}}
 
 \item{particel}{type. Available ions: 'H', 'He', 'Li', 'Be', 'B,', 'C', 'N', 'O', 'F', 'Ne'.}
 }

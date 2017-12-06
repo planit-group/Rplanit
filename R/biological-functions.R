@@ -387,6 +387,14 @@ ntcp.S <- function(dvh.survival, gam=2, s=1, Nf=30) {
 # utilizza il main main_alpha_beta_parameter_study.cc
 # crea una stringa di argomenti da passare a alpha_beta_parameter_study, predisposta
 # per il calcolo MKM "rapido".
+#' @param calculusType the type of the evaluations options are:
+#' \itemize{
+#'   \item{rapidKase} implementation of MKM as described in (Kase2008)
+#'   \item{rapidMKM} more correct implementation for the MKM from the one described in (Kase2008)
+#'   \item{newMKMKase} "rapidKase" implementation +  non poissionian correction for beta
+#'   \item{newMKM} "rapidMKM" implementation +  non poissionian correction for beta
+#'   \item{slow_alphaIon_betaIon} slow Monte Carlo evaluation (compatible with MKM, LEMI, LEMII and LEMIII).
+#' }
 # In output ritorna un data.frame con i parametri corrispondenti. I valori di
 # output vengono passati attraverso il file temporaneo salvato dall'eseguibile, che
 # viene cancellato subito dopo. Il file temporaneo è identificato dal nome della
@@ -400,10 +408,10 @@ alpha.beta.mkm <- function(alphaX=0.1295, betaX=0.03085, rN=4, rd=0.31,
                            cellType=NULL,
                            particleType='H',
                            energies=NULL, lets=NULL,
+                           calculusType='rapidMKM',
                            ignore.stdout=TRUE, ignore.stderr=TRUE)
 {
   model <- 'MKM'
-  calculusType <- 'rapidMKM'
   precision <- 1
   
   #lem.setenv=get('lem.setenv', envir=dektoolsEnv)
