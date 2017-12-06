@@ -484,7 +484,10 @@ alpha.beta.mkm <- function(alphaX=0.1295, betaX=0.03085, rN=4, rd=0.31,
 #' @param lets vector of LETs for the particle [keV/um]. It is used if \code{energies} is \code{NULL}.
 #' @param calculusType the type of the evaluations options are:
 #' \itemize{
-#'   \item{rapidMKM} fast implementation for the MKM (Kase2008)
+#'   \item{rapidKase} implementation of MKM as described in (Kase2008)
+#'   \item{rapidMKM} more correct implementation for the MKM from the one described in (Kase2008)
+#'   \item{newMKMKase} "rapidKase" implementation +  non poissionian correction for beta
+#'   \item{newMKM} "rapidMKM" implementation +  non poissionian correction for beta
 #'   \item{rapidScholz} fast implementation of the LEMI, LEMII, LEMIII (Scholz2000)
 #'   \item{rapidRusso} fast implementation of the LEMI, LEMII, LEMIII, more accurate than the \code{rapidScholz} (Russo2010)
 #'   \item{slow_alphaIon_betaIon} slow Monte Carlo evaluation (compatible with MKM, LEMI, LEMII and LEMIII).
@@ -594,6 +597,16 @@ alpha.beta.ion.range <- function(model='MKM',
 #' The evaluation is performed for a monoenergetic ion. It uses a C++ implementation for the evaluation. It accepts a sequence of parameters and ion specifications stored in an input data.frame.
 #'
 #' @param model the name of the model (options: 'MKM', 'LEMI', 'LEMII', 'LEMIII')
+#' @param calculusType the type of the evaluations options are:
+#' \itemize{
+#'   \item{rapidKase} implementation of MKM as described in (Kase2008)
+#'   \item{rapidMKM} more correct implementation for the MKM from the one described in (Kase2008)
+#'   \item{newMKMKase} "rapidKase" implementation +  non poissionian correction for beta
+#'   \item{newMKM} "rapidMKM" implementation +  non poissionian correction for beta
+#'   \item{rapidScholz} fast implementation of the LEMI, LEMII, LEMIII (Scholz2000)
+#'   \item{rapidRusso} fast implementation of the LEMI, LEMII, LEMIII, more accurate than the \code{rapidScholz} (Russo2010)
+#'   \item{slow_alphaIon_betaIon} slow Monte Carlo evaluation (compatible with MKM, LEMI, LEMII and LEMIII).
+#' }
 #' @param parameters input data.frame containing the cell name (column 'cell', optional) "biological" parameters associated to a specific biological tissue/model, and the specification of the primary particles (ion type and energy and/or LET). All the parameters have to be put in a dataframe. Each row of the dataframe represent the irradiation of a specific tissue/model with a specific particle. In the case of the MKM the biological parameters
 #' \itemize{
 #'   \item{alpha0} LQ alpha parameter of the reference radiation [Gy^-1]

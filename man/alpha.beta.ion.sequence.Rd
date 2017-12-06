@@ -33,6 +33,17 @@ The ion is specified with the columns:
   \item{let} LET of the particle in keV/um. It is used only if the energy is not specified.
 }
 #' @family LEM/MKM Models}
+
+\item{calculusType}{the type of the evaluations options are:
+\itemize{
+  \item{rapidKase} implementation of MKM as described in (Kase2008)
+  \item{rapidMKM} more correct implementation for the MKM from the one described in (Kase2008)
+  \item{newMKMKase} "rapidKase" implementation +  non poissionian correction for beta
+  \item{newMKM} "rapidMKM" implementation +  non poissionian correction for beta
+  \item{rapidScholz} fast implementation of the LEMI, LEMII, LEMIII (Scholz2000)
+  \item{rapidRusso} fast implementation of the LEMI, LEMII, LEMIII, more accurate than the \code{rapidScholz} (Russo2010)
+  \item{slow_alphaIon_betaIon} slow Monte Carlo evaluation (compatible with MKM, LEMI, LEMII and LEMIII).
+}}
 }
 \description{
 The evaluation is performed for a monoenergetic ion. It uses a C++ implementation for the evaluation. It accepts a sequence of parameters and ion specifications stored in an input data.frame.

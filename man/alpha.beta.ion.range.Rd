@@ -43,7 +43,10 @@ Optionally, instead of the specific values, the range of the parameters can be s
 
 \item{calculusType}{the type of the evaluations options are:
 \itemize{
-  \item{rapidMKM} fast implementation for the MKM (Kase2008)
+  \item{rapidKase} implementation of MKM as described in (Kase2008)
+  \item{rapidMKM} more correct implementation for the MKM from the one described in (Kase2008)
+  \item{newMKMKase} "rapidKase" implementation +  non poissionian correction for beta
+  \item{newMKM} "rapidMKM" implementation +  non poissionian correction for beta
   \item{rapidScholz} fast implementation of the LEMI, LEMII, LEMIII (Scholz2000)
   \item{rapidRusso} fast implementation of the LEMI, LEMII, LEMIII, more accurate than the \code{rapidScholz} (Russo2010)
   \item{slow_alphaIon_betaIon} slow Monte Carlo evaluation (compatible with MKM, LEMI, LEMII and LEMIII).
