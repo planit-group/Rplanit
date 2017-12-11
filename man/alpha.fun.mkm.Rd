@@ -6,7 +6,7 @@
 \usage{
 alpha.fun.mkm(alphaX = 0.1295, betaX = 0.03085, rN = 4, rd = 0.31,
   cellType = NULL, particleType = "H", energies = NULL, lets = NULL,
-  use.limits = FALSE, outmessages = FALSE)
+  use.limits = FALSE, outmessages = FALSE, calculusType = "rapidMKM")
 }
 \arguments{
 \item{alphaX, betaX, rN, rd}{The radiobiological parameter of the MKM.}
@@ -18,6 +18,15 @@ alpha.fun.mkm(alphaX = 0.1295, betaX = 0.03085, rN = 4, rd = 0.31,
 \item{energies, lets}{A vector of specific energies (MeV/u) or LETs (keV/um).}
 
 \item{use.limits}{Filters the energies or the LETs values to rule out values too high or too low.}
+
+\item{calculusType}{the type of the evaluations options are:
+\itemize{
+  \item{rapidKase} implementation of MKM as described in (Kase2008)
+  \item{rapidMKM} more correct implementation for the MKM from the one described in (Kase2008)
+  \item{newMKMKase} "rapidKase" implementation +  non poissionian correction for beta
+  \item{newMKM} "rapidMKM" implementation +  non poissionian correction for beta
+  \item{slow_alphaIon_betaIon} slow Monte Carlo evaluation.
+}}
 }
 \description{
 Returns a function alpha(LET) or alpha(specific energy), using the MKM model. The functions is an interpolation functions that uses a set of alpha values evaluated over the defined set of LETs (or specific energies).

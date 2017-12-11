@@ -761,6 +761,14 @@ alpha.beta.ion.sequence2 <- function(model='MKM',
 #' @param particleType The particle specification ('H', 'He', 'Li', 'Be', 'B', 'C', 'N', 'O', 'F')
 #' @param energies,lets A vector of specific energies (MeV/u) or LETs (keV/um).
 #' @param use.limits Filters the energies or the LETs values to rule out values too high or too low.
+#' @param calculusType the type of the evaluations options are:
+#' \itemize{
+#'   \item{rapidKase} implementation of MKM as described in (Kase2008)
+#'   \item{rapidMKM} more correct implementation for the MKM from the one described in (Kase2008)
+#'   \item{newMKMKase} "rapidKase" implementation +  non poissionian correction for beta
+#'   \item{newMKM} "rapidMKM" implementation +  non poissionian correction for beta
+#'   \item{slow_alphaIon_betaIon} slow Monte Carlo evaluation.
+#' }
 #'
 #' @family LEM/MKM Models
 #' @export
@@ -769,7 +777,8 @@ alpha.fun.mkm <- function(alphaX=0.1295, betaX=0.03085, rN=4, rd=0.31,
                           cellType=NULL,
                           particleType='H',
                           energies=NULL, lets=NULL,
-                          use.limits=FALSE, outmessages=FALSE)
+                          use.limits=FALSE, outmessages=FALSE,
+                          calculusType='rapidMKM')
 {
   model <- 'MKM'
   calculusType <- 'rapidMKM'
