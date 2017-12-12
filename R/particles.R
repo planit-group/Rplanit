@@ -69,7 +69,6 @@ ion.from.z <- function(Z, with.atomic.mass = FALSE) {
 #' Remove atomic mass number
 #'
 #' Returns the name of the ion/atom removing its atomic mass number specification (e.g. it returns "C" from "12C").
-#' Note: the available range is from 1H to 20 Ne.
 #'
 #' @param ions A character vector containing the ion names (including the atomic mass number specification).
 #' @return A character vector containing the ion names (without the atomic mass number specification).

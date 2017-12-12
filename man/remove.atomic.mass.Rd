@@ -14,7 +14,6 @@ A character vector containing the ion names (without the atomic mass number spec
 }
 \description{
 Returns the name of the ion/atom removing its atomic mass number specification (e.g. it returns "C" from "12C").
-Note: the available range is from 1H to 20 Ne.
 }
 \seealso{
 Other Particles: \code{\link{Zeff}},
