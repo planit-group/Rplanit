@@ -78,9 +78,7 @@ ion.from.z <- function(Z, with.atomic.mass = FALSE) {
 #' @export
 #'
 remove.atomic.mass <- function(ions) {                                                                                                                  
-  ion.table <- c('1H', '4He', '7Li', '9Be', '11B', '12C', '14N', '16O', '19F', '20Ne')                                                                 
-  ion.sequence <- c('H', 'He', 'Li', 'Be', 'B', 'C', 'N', 'O', 'F', 'Ne')                                                                              
-  ion.sequence[match(ions, ion.table)]                                                                                                                  
+  gsub("[[:digit:]]", "", ions)                                                                                                                  
 }
 
 #' Rest energy 
