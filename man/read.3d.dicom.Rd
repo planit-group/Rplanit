@@ -26,7 +26,3 @@ Read 3D image from DICOM dile and return a \code{values} object.
 Note: it assumes a regurlary spaced slices, constant pixel dimensions among slices
 and the same ImagePositionPatient for each slice.
 }
-\seealso{
-Other R/W Arrays: \code{\link{read.1d}},
-  \code{\link{read.3d.hdr}}, \code{\link{read.3d}}
-}

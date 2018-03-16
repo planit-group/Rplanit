@@ -176,7 +176,7 @@ read.3d.hdr <- function(file.name, variable='Dose[Gy]', voxel.origin=c(0,0,0))
 #' @param variable name of the variable to be assigned to the 3d data.
 #' @return A values object.
 #' 
-#' @family R/W Arrays
+#' @family R/W Arrays, DICOM
 #' @import oro.dicom
 #' @export
 read.3d.dicom <- function(dicom.folder, exclude=NULL, recursive=TRUE, verbose=TRUE, invert=TRUE, variable='HounsfieldNumber')
@@ -432,4 +432,71 @@ sanitize.filename <- function(filename)
 {
   filename <- gsub('%', '_', filename)
   return(filename)
+}
+
+# DICOM ------------------------------------------------------------------------
+
+#' Convert DICOM header plain data.frame to nested list
+#' 
+#' Convert the DICOM header plain data.frame obtained from the oro.dicom::readDICOMfile() function
+#' into a nested list of data. The nested list is analogous to the structure obtained in MatLab from
+#' the function dicominfo().
+#' 
+#' @param header the header data frame.
+#' @param index the starting row of the header data.frame to be parsed.
+#' @param lev starting nesting level.
+#' 
+#' @family DICOM
+#' @export
+#' @import oro.dicom
+header2list <- function(header, index=1, lev=0) {
+  my.list <- list()
+  Nrow <- nrow(header)
+  lev <- lev + 1
+  item <- 1
+  
+  while(index <= Nrow) {
+    
+    # item
+    if(header[['name']][index] == 'Item') {
+      item.name <- paste0('Item_', item)
+      item <- item + 1
+      index <- index + 1
+      
+      temp <- header2list(header, index, lev)
+      my.list[[item.name]] <- temp[[1]]
+      index <- temp[[2]]
+      
+      #return(list(my.list, index))
+    }
+    
+    # sequence
+    else if(header[['value']][index] == 'Sequence') {
+      sequence.name <- header[['name']][index]
+      index <- index + 1
+      
+      temp <- header2list(header, index, lev)
+      my.list[[sequence.name]] <- temp[[1]]
+      index <- temp[[2]]
+      
+      #return(list(my.list, index))
+    }
+    
+    # esci 
+    else if( (header[['name']][index] == 'SequenceDelimitationItem') | (header[['name']][index] == 'ItemDelimitationItem')) {
+      index <- index + 1
+      return(list(my.list, index))
+    }
+    
+    # campo semplice
+    else {
+      item.name <- header[['name']][index]
+      value <- header[['value']][index]
+      #message(index, '-->', lev )
+      #message(item.name, ' = ', value)
+      my.list[[item.name]] <- value
+      index <- index + 1
+    }
+  }
+  return(list(my.list, index))
 }

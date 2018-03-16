@@ -16,6 +16,6 @@ a dataframe
 Read a file "*.1d" (PlanKIT format) and return a dataframe.
 }
 \seealso{
-Other R/W Arrays: \code{\link{read.3d.dicom}},
-  \code{\link{read.3d.hdr}}, \code{\link{read.3d}}
+Other R/W Arrays: \code{\link{read.3d.hdr}},
+  \code{\link{read.3d}}
 }
