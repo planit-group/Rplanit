@@ -498,5 +498,5 @@ header2list <- function(header, index=1, lev=0) {
       index <- index + 1
     }
   }
-  return(list(my.list, index))
+  if(lev>1) return(list(my.list, index)) else return(my.list)
 }
