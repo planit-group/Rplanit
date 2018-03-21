@@ -29,5 +29,6 @@ A \code{contours} dataframe consisting of:
 Read the contours from a "*.contours" file format (PlanKIT format) and return a \code{contours} dataframe.
 }
 \seealso{
-Other R/W Contours: \code{\link{write.contours}}
+Other R/W Contours: \code{\link{read.contours.dicom}},
+  \code{\link{write.contours}}
 }

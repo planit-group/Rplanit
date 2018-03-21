@@ -15,5 +15,6 @@ write.contours(contours, name)
 Save the \code{contours} dataframe in a file with PlanKIT format ("*.contours")
 }
 \seealso{
-Other R/W Contours: \code{\link{read.contours}}
+Other R/W Contours: \code{\link{read.contours.dicom}},
+  \code{\link{read.contours}}
 }

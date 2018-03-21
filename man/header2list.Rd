@@ -22,3 +22,7 @@ Convert the DICOM header file or the header plain data frame obtained from the o
 to a nested list of data. The nested list is analogous to the structure obtained in MatLab using
 the function dicominfo() and it is easier to navigate and parse than the plain data frame.
 }
+\details{
+Note: info about the element types
+can be found at http://dicom.nema.org/dicom/2013/output/chtml/part05/sect_6.2.html
+}

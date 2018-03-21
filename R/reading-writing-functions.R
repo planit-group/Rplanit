@@ -230,7 +230,8 @@ read.3d.dicom <- function(dicom.folder, exclude=NULL, recursive=TRUE, verbose=TR
   dy <- mean(dxy[seq(2, length(dxy), by=2)])
   x <- seq(from=voxel.origin[1], by=dx, length.out=Nx)
   y <- seq(from=voxel.origin[2], by=dy, length.out=Ny)
-  z <- sort(zz)-min(zz) + voxel.origin[3]
+  # z <- sort(zz)-min(zz) + voxel.origin[3] # perché ho traslato sull'origine? 
+  z <- sort(zz)
   
   # crea oggetto values
   values <- list(values=Values.3d, x=x, y=y, z=z, Nx=Nx, Ny=Ny, Nz=Nz, Nv=Nv, variables=variable)
@@ -441,6 +442,9 @@ sanitize.filename <- function(filename)
 #' Convert the DICOM header file or the header plain data frame obtained from the oro.dicom::readDICOMfile()
 #' to a nested list of data. The nested list is analogous to the structure obtained in MatLab using
 #' the function dicominfo() and it is easier to navigate and parse than the plain data frame.
+#' 
+#' Note: info about the element types
+#' can be found at http://dicom.nema.org/dicom/2013/output/chtml/part05/sect_6.2.html
 #' 
 #' @param file the DICOM header file (alternative to the header data frame).
 #' @param header the header data frame (alternative to DICOM header file).

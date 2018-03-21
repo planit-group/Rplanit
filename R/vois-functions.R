@@ -606,6 +606,153 @@ write.contours <- function(contours, name)
 }
 
 
+#' Read contours from DICOM file
+#' 
+#' Read the contours from a DICOM file and return a \code{contours} data frame. The CT data is also mandatory
+#' to identify the slice for each contour polygon. The CT data can be specified with one of the following:
+#' folder.CT.dicom, CT or z.CT. z.CT has precendence to CT that has precendence to folder.CT.dicom.
+#' 
+#' @param file.contours.dicom the name of the contours file
+#' @param folder.CT.dicom the name of the DICOM CT folder. The CT is needed to properly identify the slice for each contour polygon.
+#' @param CT the CT object (alternative to folder.CT.dicom and z.CT)
+#' @param z.CT a vector for the z coordinates of the slices of the reference CT (alternative to folder.CT.dicom and CT)
+#' @return A \code{contours} dataframe consisting of:
+#' \item{id}{index of the contours}
+#' \item{polygon}{index of the polygon}
+#' \item{slice}{index of the slice}
+#' \item{x,y,z}{x,y,z coordinates}
+#' \item{contour}{contour (VOI) name}
+#' \item{tissue}{tissue+biological model name}
+#' \item{type}{contour type (target, OAR, etc.)}
+#' \item{colour}{the hex specification of the colour associated to the contour.}
+#' 
+#' @family R/W Contours
+#' @export
+read.contours.dicom <- function(file.contours.dicom, folder.CT.dicom=NULL, CT=NULL, z.CT=NULL, tissue='R3PIDEd0.2v0+MKM') {
+  
+  # CT data
+  x_verspr <- y_versor <- 1
+  if(is.null(z.CT)) {
+    if(is.null(CT)) {
+      CT <- read.3d.dicom(folder.CT.dicom, recursive=FALSE)
+    }
+    z.CT <- CT$z
+  }
+  
+  
+  # SS data
+  header <- header2list(file = file.contours.dicom)
+  
+  message('creating contours data frame...')
+  
+  structureSetItems <- names(header[['StructureSetROISequence']])
+  RTROIObservationsItems <- names(header[['RTROIObservationsSequence']])
+  if (length(structureSetItems) != length(RTROIObservationsItems)) stop('VOI and observations not equal!')
+  
+  VOINumber <- VOIName <- VOIInterpretation <- contours <- NULL
+  
+  for(i in 1:length(structureSetItems)) {
+    structureSetItem <- header[['StructureSetROISequence']][[structureSetItems[i]]]
+    VOINumber[i] <- structureSetItem[['ROINumber']]
+    VOIName[i] <- structureSetItem[['ROIName']]
+    VOIInterpretation[i] = header[['RTROIObservationsSequence']][[RTROIObservationsItems[i]]][['RTROIInterpretedType']]
+  }
+  
+  ROIContourItems <- names(header[['ROIContourSequence']])
+  validContours <- rep(TRUE, length(ROIContourItems))
+  
+  for(n in 1:length(ROIContourItems)) {
+    ROIContourItem <- header[['ROIContourSequence']][[ROIContourItems[n]]]
+    refVOINumber = ROIContourItem[['ReferencedROINumber']]
+    voiIndex <- which(VOINumber == refVOINumber)
+    if( length(voiIndex) == 0 ) stop('contour index not present among VOI indices')
+    
+    contourItems <- names(ROIContourItem[['ContourSequence']]);
+    for (p in 1:length(contourItems)) {
+      contourItem <- ROIContourItem[['ContourSequence']][[contourItems[p]]]
+      if ((contourItem[['ContourGeometricType']] != 'CLOSED_PLANAR') & (contourItem[['ContourGeometricType']] != 'POINT')) stop('Non closed planar contour')
+      
+      coordinates <- t(array(contourItem[['ContourData']], dim = c(3,length(contourItem[['ContourData']])/3)))
+      z <- unique(coordinates[,3]) # deve essere uno solo in quanto "CLOSED_PLANAR"
+      if(length(z)>1) stop(VOIName[voiIndex], ' not planar contour: z = ', z) # ma se il piano non è ortogonale a z...
+      slice <- which(!(z <= z.CT | z > z.CT))
+      if (length(slice) == 0) slice <- NA
+      RGB <- ROIContourItem[['ROIDisplayColor']]
+      colour <- rgb(RGB[1], RGB[2], RGB[3], maxColorValue = 255)
+      
+      contours.tmp <- data.frame(id=voiIndex, polygon=p, slice=slice,
+                                 x=coordinates[,1], y=coordinates[,2], z=coordinates[,3],
+                                 contour=VOIName[voiIndex], tissue=tissue, type=VOIInterpretation[voiIndex],
+                                 colour=colour)
+      contours <- rbind(contours, contours.tmp)
+    }
+    
+  }
+  
+  return(contours)
+}
+
+read.3d.dicom <- function(dicom.folder, exclude=NULL, recursive=TRUE, verbose=TRUE, invert=TRUE, variable='HounsfieldNumber')
+{
+  dcmImages <- readDICOM(path=dicom.folder, verbose=verbose, recursive=recursive, exclude=exclude)
+  dcm.info <- dicomTable(dcmImages$hdr)
+  
+  # trasforma le immagini...
+  message('scaling images...')
+  rs <- as.numeric(dcm.info$`0028-1053-RescaleSlope`)
+  ri <- as.numeric(dcm.info$`0028-1052-RescaleIntercept`)
+  for(i in 1:length(rs)) {
+    dcmImages$img[[i]] <- dcmImages$img[[i]]*rs[i] + ri[i]
+  }
+  
+  # inverte immagini
+  if(invert) {
+    message('inverting images...')
+    for(i in 1:length(dcmImages$img)) {
+      dcmImages$img[[i]] <- dcmImages$img[[i]][seq(dim(dcmImages$img[[i]])[1], 1), ]
+    }
+  }
+  
+  # ordina le immagini
+  message('sorting images...')
+  zz <- as.numeric(dcm.info$`0020-1041-SliceLocation`)
+  oz <- order(zz)
+  imgs <- list()
+  for(i in 1:length(oz)) {
+    imgs[[i]] <- dcmImages$img[[oz[i]]]
+  }
+  dcmImages$img <- imgs
+  
+  # array 3d
+  Values.3d <- create3D(dcmImages); #return(Values.3d)
+  Nx <- dim(Values.3d)[1]
+  Ny <- dim(Values.3d)[2]
+  Nz <- dim(Values.3d)[3]
+  Nv <- 1
+  
+  # coordinates
+  
+  dxy <- as.numeric(unlist(strsplit(paste(dcm.info$`0028-0030-PixelSpacing`, collapse=' '), split=' ', fixed=TRUE)))
+  
+  vo <- as.numeric(unlist(strsplit(paste(dcm.info$`0020-0032-ImagePositionPatient`, collapse=' '), split=' ', fixed=TRUE)))
+  voxel.origin <- c(mean(vo[seq(1, length(dxy)-2, by=3)]),
+                    mean(vo[seq(2, length(dxy)-1, by=3)]),
+                    mean(vo[seq(3, length(dxy), by=3)]))
+  message('origin: ', voxel.origin[1], ', ', voxel.origin[2], ', ', voxel.origin[3])
+  dx <- mean(dxy[seq(1, length(dxy)-1, by=2)])
+  dy <- mean(dxy[seq(2, length(dxy), by=2)])
+  x <- seq(from=voxel.origin[1], by=dx, length.out=Nx)
+  y <- seq(from=voxel.origin[2], by=dy, length.out=Ny)
+  z <- sort(zz)-min(zz) + voxel.origin[3]
+  z <- sort(zz)
+  
+  # crea oggetto values
+  values <- list(values=Values.3d, x=x, y=y, z=z, Nx=Nx, Ny=Ny, Nz=Nz, Nv=Nv, variables=variable)
+  class(values) <- 'values'
+  return(values)
+}
+
+
 # R/W VOIS ---------------------------------------------------------------------
 
 
