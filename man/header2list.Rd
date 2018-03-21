@@ -2,19 +2,23 @@
 % Please edit documentation in R/reading-writing-functions.R
 \name{header2list}
 \alias{header2list}
-\title{Convert DICOM header plain data.frame to nested list}
+\title{Convert DICOM header file/data.frame to nested list}
 \usage{
-header2list(header, index = 1, lev = 0)
+header2list(file = NULL, header = NULL, index = 1, lev = 0, ...)
 }
 \arguments{
-\item{header}{the header data frame.}
+\item{file}{the DICOM header file (alternative to the header data frame).}
+
+\item{header}{the header data frame (alternative to DICOM header file).}
 
 \item{index}{the starting row of the header data.frame to be parsed.}
 
 \item{lev}{starting nesting level.}
+
+\item{...}{parameters passed to readDICOMFile().}
 }
 \description{
-Convert the DICOM header plain data.frame obtained from the oro.dicom::readDICOMfile() function
-into a nested list of data. The nested list is analogous to the structure obtained in MatLab from
-the function dicominfo().
+Convert the DICOM header file or the header plain data frame obtained from the oro.dicom::readDICOMfile()
+to a nested list of data. The nested list is analogous to the structure obtained in MatLab using
+the function dicominfo() and it is easier to navigate and parse than the plain data frame.
 }

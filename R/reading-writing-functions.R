@@ -436,20 +436,32 @@ sanitize.filename <- function(filename)
 
 # DICOM ------------------------------------------------------------------------
 
-#' Convert DICOM header plain data.frame to nested list
+#' Convert DICOM header file/data.frame to nested list
 #' 
-#' Convert the DICOM header plain data.frame obtained from the oro.dicom::readDICOMfile() function
-#' into a nested list of data. The nested list is analogous to the structure obtained in MatLab from
-#' the function dicominfo().
+#' Convert the DICOM header file or the header plain data frame obtained from the oro.dicom::readDICOMfile()
+#' to a nested list of data. The nested list is analogous to the structure obtained in MatLab using
+#' the function dicominfo() and it is easier to navigate and parse than the plain data frame.
 #' 
-#' @param header the header data frame.
+#' @param file the DICOM header file (alternative to the header data frame).
+#' @param header the header data frame (alternative to DICOM header file).
 #' @param index the starting row of the header data.frame to be parsed.
 #' @param lev starting nesting level.
+#' @param ... parameters passed to readDICOMFile().
 #' 
 #' @family DICOM
 #' @export
 #' @import oro.dicom
-header2list <- function(header, index=1, lev=0) {
+header2list <- function(file=NULL, header=NULL, index=1, lev=0, ...) {
+  
+  if(!is.null(file)) {
+    message('reading DICOM file...')
+    header <- readDICOMFile(fname = file, pixelData = FALSE, ...)[['hdr']]
+  }
+  
+  if(index==1) {
+    message('nesting DICOM data...')
+  }
+  
   my.list <- list()
   Nrow <- nrow(header)
   lev <- lev + 1
@@ -463,7 +475,7 @@ header2list <- function(header, index=1, lev=0) {
       item <- item + 1
       index <- index + 1
       
-      temp <- header2list(header, index, lev)
+      temp <- header2list(file=NULL, header=header, index=index, lev=lev)
       my.list[[item.name]] <- temp[[1]]
       index <- temp[[2]]
       
@@ -475,7 +487,7 @@ header2list <- function(header, index=1, lev=0) {
       sequence.name <- header[['name']][index]
       index <- index + 1
       
-      temp <- header2list(header, index, lev)
+      temp <- header2list(file=NULL, header=header, index=index, lev=lev)
       my.list[[sequence.name]] <- temp[[1]]
       index <- temp[[2]]
       
