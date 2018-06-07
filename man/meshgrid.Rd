@@ -13,7 +13,7 @@ meshgrid(x, y, z)
 A list with X, Y and Z 3D arrays
 }
 \description{
-Generate X, Y and Z matrices for three-dimensional arrays starting from x, y and z vectors. The function is similar to the matlab function "meshgrid".
+Generate X, Y and Z matrices for three-dimensional arrays starting from x, y and z vectors. The function is similar to the Matlab function "meshgrid".
 }
 \seealso{
 Other ValuesUtilities: \code{\link{get.values_at.points}},
