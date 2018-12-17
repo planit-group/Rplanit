@@ -12,7 +12,6 @@ of radiobiological evaluations and display possibilities.
 
 
 ## Installation
-Note: it is assumed that the camputer is connected to the web...
 
 ### Ubuntu (12.04 64bit)
 * The following libraries need to be installed from the Ubuntu repository (from the terminal shell prompt):
