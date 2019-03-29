@@ -53,7 +53,6 @@ values.app <- function(plan=NULL, values=NULL, ct=NULL, contours=NULL, sanitize=
       { 
         # plot della distribuzione di dose
         output$plot.dose <- renderPlot({
-          
           # check per vedere se i.plan è cambiato
           if(!is.null(plan)){
           i.plan.new <- which(input$plan==plan.name)
