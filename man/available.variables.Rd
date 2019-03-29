@@ -16,3 +16,4 @@ The available variables name identifiers that can be evaluated with PlanKIT
 Other PlanKITVariables: \code{\link{available.beamlines}},
   \code{\link{available.constraint.types}}
 }
+\concept{PlanKITVariables}

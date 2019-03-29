@@ -5,7 +5,8 @@
 \title{Evaluate BeamLUT (obsolete)}
 \usage{
 \method{get.values}{for.beam}(beams = NULL, beam.index, fluence = NULL,
-  plan, variables = "Dose[Gy]", temp.name = "temp", remove.temp = TRUE)
+  plan, variables = "Dose[Gy]", temp.name = "temp",
+  remove.temp = TRUE)
 }
 \arguments{
 \item{beam.index}{index of the beam (it can be a vector if indices)}
@@ -39,3 +40,4 @@ Other BeamLUT: \code{\link{combine.beamLUTs}},
   \code{\link{read.beamLUTs}}, \code{\link{read.beamLUT}},
   \code{\link{write.beamLUT}}
 }
+\concept{BeamLUT}

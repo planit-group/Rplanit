@@ -21,3 +21,4 @@ A values object
 \description{
 Removes values outside VOI
 }
+\concept{Vois, Values, Values Utilities}

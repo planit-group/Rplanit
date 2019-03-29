@@ -1,2 +1,5 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
+^Rplanit\.Rcheck$
+^Rplanit.*\.tar\.gz$
+^Rplanit.*\.tgz$

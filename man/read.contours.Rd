@@ -32,3 +32,4 @@ Read the contours from a "*.contours" file format (PlanKIT format) and return a 
 Other R/W Contours: \code{\link{read.contours.dicom}},
   \code{\link{write.contours}}
 }
+\concept{R/W Contours}

@@ -18,3 +18,4 @@ Other LUT: \code{\link{get.zBP.fun}},
   \code{\link{write.lut.phasespace}},
   \code{\link{write.lut.zBP}}, \code{\link{write.lut}}
 }
+\concept{LUT}

@@ -15,3 +15,4 @@ Other Values Bioogical Evaluations: \code{\link{values.add.RBE.alpha}},
   \code{\link{values.add.survival.LM}},
   \code{\link{values.add.survival.cMKM}}
 }
+\concept{Values Bioogical Evaluations}

@@ -17,3 +17,4 @@ Other Environment: \code{\link{check.gate}},
   \code{\link{set.wepl.folder}},
   \code{\link{setenv.rplanit}}
 }
+\concept{Environment}

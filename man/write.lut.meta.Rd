@@ -6,8 +6,8 @@
 \usage{
 write.lut.meta(lut.name, physical.variables = "DosePerEvent[Gy/primary]",
   biological.variables = c("LethAlphaPerEvent[1/primary]",
-  "SqrtLethBetaPerEvent[1/primary]"), tissue.names = "NULL", alphaX = 1,
-  betaX = 1)
+  "SqrtLethBetaPerEvent[1/primary]"), tissue.names = "NULL",
+  alphaX = 1, betaX = 1)
 }
 \arguments{
 \item{lut.name}{The name (file prefix) of the LUT}
@@ -33,3 +33,4 @@ Other LUT: \code{\link{get.zBP.fun}},
   \code{\link{write.lut.phasespace}},
   \code{\link{write.lut.zBP}}, \code{\link{write.lut}}
 }
+\concept{LUT}

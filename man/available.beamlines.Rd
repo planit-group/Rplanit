@@ -16,3 +16,4 @@ The available beamlines name identifiers to be used with PlanKIT
 Other PlanKITVariables: \code{\link{available.constraint.types}},
   \code{\link{available.variables}}
 }
+\concept{PlanKITVariables}

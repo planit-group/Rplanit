@@ -4,10 +4,10 @@
 \alias{display.profiles}
 \title{Display profiles}
 \usage{
-display.profiles(profile.values, profile.ct = NULL, show.ct.legend = TRUE,
-  y.axis.name = NULL, x.axis.name = NULL, name = NULL, depth.lim = NULL,
-  file.name = NULL, height = 7, width = 7, dpi = 300,
-  show.plot = TRUE, return.plot = FALSE)
+display.profiles(profile.values, profile.ct = NULL,
+  show.ct.legend = TRUE, y.axis.name = NULL, x.axis.name = NULL,
+  name = NULL, depth.lim = NULL, file.name = NULL, height = 7,
+  width = 7, dpi = 300, show.plot = TRUE, return.plot = FALSE)
 }
 \arguments{
 \item{profile.values}{The main profiles dataframe to be plotted. It can contain a single profile or a multiple of profiles.}
@@ -40,3 +40,4 @@ Display a single or multiple profiles. Optionally the profile could be plotted o
 \seealso{
 Other Profiles: \code{\link{display.profile}}
 }
+\concept{Profiles}

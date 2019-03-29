@@ -26,3 +26,4 @@ Other Beams: \code{\link{add.field}},
   \code{\link{get.isocenter}}, \code{\link{get.rays}},
   \code{\link{read.beams.fluka}}, \code{\link{write.beams}}
 }
+\concept{Beams}

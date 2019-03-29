@@ -21,3 +21,4 @@ get values at coordinates
 Other ValuesUtilities: \code{\link{identify.slice}},
   \code{\link{interpolate.values}}, \code{\link{meshgrid}}
 }
+\concept{ValuesUtilities}

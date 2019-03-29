@@ -6,8 +6,9 @@
 \usage{
 display.dvh(dvh, plan = NULL, Diff = FALSE, alpha.color = 1,
   title = NULL, show.plot = TRUE, decimate = TRUE,
-  show.prescription = FALSE, file.name = NULL, height = 7, width = 7,
-  original.colors = TRUE, fixed.scale = FALSE, return.dataframe = FALSE)
+  show.prescription = FALSE, file.name = NULL, height = 7,
+  width = 7, original.colors = TRUE, fixed.scale = FALSE,
+  return.dataframe = FALSE)
 }
 \arguments{
 \item{dvh}{single DVH (created via \code{\link{dvh.evaluate}}) or a list of DVHs}
@@ -45,3 +46,4 @@ Display a single DVH or a list of DVHs
 \seealso{
 Other display dvh: \code{\link{display.dvh.combined}}
 }
+\concept{display dvh}

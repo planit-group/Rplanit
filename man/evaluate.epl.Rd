@@ -26,3 +26,4 @@ The evaluation is performed by matching the two cumulative distributions.
 \seealso{
 Other Values Utilities: \code{\link{points2intervals}}
 }
+\concept{Values Utilities}

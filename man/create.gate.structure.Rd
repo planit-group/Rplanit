@@ -18,3 +18,4 @@ Other PlanGate: \code{\link{create.plan.gate}},
   \code{\link{file.variable.gate}},
   \code{\link{run.gate.forward}}, \code{\link{set.ct.gate}}
 }
+\concept{PlanGate}

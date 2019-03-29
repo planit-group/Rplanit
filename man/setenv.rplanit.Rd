@@ -17,3 +17,4 @@ Other Environment: \code{\link{check.gate}},
   \code{\link{set.lut.folder}},
   \code{\link{set.wepl.folder}}
 }
+\concept{Environment}

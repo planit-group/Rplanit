@@ -4,8 +4,8 @@
 \alias{display.lut}
 \title{2D display of the beam-lut}
 \usage{
-display.lut(lut, variable = NULL, E = NULL, bw = FALSE, r.cut = NULL,
-  cont = FALSE, z.absolute = FALSE)
+display.lut(lut, variable = NULL, E = NULL, bw = FALSE,
+  r.cut = NULL, cont = FALSE, z.absolute = FALSE)
 }
 \arguments{
 \item{lut}{the Look Up Table object}

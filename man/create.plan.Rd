@@ -9,10 +9,11 @@ create.plan(plan = NA, name = "test", ctFile = "ct.3d", ct = NULL,
   hounsfieldToDensityFile = NULL, hounsfieldToStoichiometryFile = NULL,
   computingGridVoxelSizes = c(2, 2, 2), computingGridCoverage = 0,
   computingGridCoverageVOI = NULL, computingGridCoverageBoundary = 0,
-  beamLines = NULL, computingValues = c("Dose[Gy]"), cutOffRadius = 100,
-  cutEnergyFraction = 0.01, fields = NULL, prescription = NULL,
-  maxOptimizationIterations = 50, outputBeamsFile = NULL,
-  inputBeamsFile = NULL, saveBeamLUTs = FALSE, outputBeamLUTFile = NULL,
+  beamLines = NULL, computingValues = c("Dose[Gy]"),
+  cutOffRadius = 100, cutEnergyFraction = 0.01, fields = NULL,
+  prescription = NULL, maxOptimizationIterations = 50,
+  outputBeamsFile = NULL, inputBeamsFile = NULL,
+  saveBeamLUTs = FALSE, outputBeamLUTFile = NULL,
   inputBeamLUTFile = NULL, vois = NULL, outputVoisFile = NULL,
   inputVoisFile = NULL, values = NULL, outputValuesFile = NULL,
   inputValuesFile = NULL, beams = NULL)
@@ -27,3 +28,4 @@ Generate a default (empty) template of the Plan to be used with PlanKIT.
 Other Plan: \code{\link{read.plan}},
   \code{\link{save.plan}}
 }
+\concept{Plan}

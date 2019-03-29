@@ -4,7 +4,8 @@
 \alias{read.3d.hdr}
 \title{Read 3d array (Analyze/Gate)}
 \usage{
-read.3d.hdr(file.name, variable = "Dose[Gy]", voxel.origin = c(0, 0, 0))
+read.3d.hdr(file.name, variable = "Dose[Gy]", voxel.origin = c(0, 0,
+  0))
 }
 \arguments{
 \item{file.name}{the file name}
@@ -20,3 +21,4 @@ Read file with format "*.img, *.hdr" (Analyze/Gate) and return a \code{values} o
 Other R/W Arrays: \code{\link{read.1d}},
   \code{\link{read.3d}}
 }
+\concept{R/W Arrays}

@@ -21,3 +21,4 @@ Write a \code{values} object in two files using the analyze format (*.hdr, *.img
 \details{
 Note: with the analyze format only a single variable array from \code{values} can be saved in the same files.
 }
+\concept{Analyze Format}

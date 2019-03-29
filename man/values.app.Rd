@@ -22,3 +22,4 @@ It can use directly  a plan object as argument (deriving from it the correspondi
 It can accept also a list of plan objects, to explore simultaneusly different plans.
 (A full web based app will be released in future.)
 }
+\concept{Apps}

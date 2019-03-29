@@ -22,3 +22,4 @@ Other VOIs: \code{\link{add.vois}},
   \code{\link{get.voiindex}}, \code{\link{get.vois}},
   \code{\link{is.in.voi}}
 }
+\concept{VOIs}

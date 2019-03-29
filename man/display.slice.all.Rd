@@ -6,13 +6,14 @@
 \usage{
 display.slice.all(ct = NULL, contours = NULL, values = NULL,
   variable = NULL, plan = NULL, x = NA, y = NA, z = NA,
-  cont = FALSE, isoc = FALSE, xlim = NULL, ylim = NULL, zlim = NULL,
-  vlim = NULL, file.name = NULL, width = 7, height = 7,
-  HU.window = c(-1000, 3000), alpha.lower = 0, alpha.upper = 1,
-  invert.y.axis = FALSE, contour.color = "green", dpi = 300,
-  levels = NULL, use.contour.colors = TRUE, contours.legend = FALSE,
-  cex.contours.legend = 0.8, contour.legend.position = "topleft",
-  title = NULL, col.invert = FALSE)
+  cont = FALSE, isoc = FALSE, xlim = NULL, ylim = NULL,
+  zlim = NULL, vlim = NULL, file.name = NULL, width = 7,
+  height = 7, HU.window = c(-1000, 3000), alpha.lower = 0,
+  alpha.upper = 1, invert.y.axis = FALSE, contour.color = "green",
+  dpi = 300, levels = NULL, use.contour.colors = TRUE,
+  contours.legend = FALSE, cex.contours.legend = 0.8,
+  contour.legend.position = "topleft", title = NULL,
+  col.invert = FALSE)
 }
 \arguments{
 \item{ct}{the ct object (optional, if plan is specified)}
@@ -79,3 +80,4 @@ Other display slices: \code{\link{display.slice.ct}},
   \code{\link{display.slice}},
   \code{\link{dumpslices.3d.2.png}}
 }
+\concept{display slices}

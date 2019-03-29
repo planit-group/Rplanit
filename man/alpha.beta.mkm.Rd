@@ -6,11 +6,11 @@
 \usage{
 alpha.beta.mkm(alphaX = 0.1295, betaX = 0.03085, rN = 4, rd = 0.31,
   alphaX.min = NULL, alphaX.max = NULL, alphaX.N = NULL,
-  betaX.min = NULL, betaX.max = NULL, betaX.N = NULL, rN.min = NULL,
-  rN.max = NULL, rN.N = NULL, rd.min = NULL, rd.max = NULL,
-  rd.N = NULL, cellType = NULL, particleType = "H", energies = NULL,
-  lets = NULL, calculusType = "rapidMKM", ignore.stdout = TRUE,
-  ignore.stderr = TRUE)
+  betaX.min = NULL, betaX.max = NULL, betaX.N = NULL,
+  rN.min = NULL, rN.max = NULL, rN.N = NULL, rd.min = NULL,
+  rd.max = NULL, rd.N = NULL, cellType = NULL, particleType = "H",
+  energies = NULL, lets = NULL, calculusType = "rapidMKM",
+  ignore.stdout = TRUE, ignore.stderr = TRUE)
 }
 \arguments{
 \item{alphaX, betaX, rN, rd}{MKM "biological" parameter associated to a specific biological tissue/cell line:
@@ -64,3 +64,4 @@ The evaluation is performed for a monoenergetic ion. It uses a C++ MKM "rapid" i
 Other LEM/MKM Models: \code{\link{alpha.beta.ion.range}},
   \code{\link{alpha.fun.mkm}}
 }
+\concept{LEM/MKM Models}

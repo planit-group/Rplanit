@@ -18,3 +18,4 @@ The \code{vois} object
 \description{
 Read the VOIS from a file (VOIs *.3d PlanKIT format) and return a \code{vois} object.
 }
+\concept{R/W VOIs}

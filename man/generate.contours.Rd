@@ -29,3 +29,4 @@ It needs, to identify the slices (axial slices), a reference CT. Alternatively t
 Other Phantoms: \code{\link{generate.ct.contours}},
   \code{\link{generate.ct}}
 }
+\concept{Phantoms}

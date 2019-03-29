@@ -4,8 +4,8 @@
 \alias{values.add.RBE.alpha}
 \title{Calcola l'RBE.alpha e l'aggiunge in values}
 \usage{
-values.add.RBE.alpha(values, model = NULL, alphaX = 0.2, model.LM = NULL,
-  model.cMKM = NULL)
+values.add.RBE.alpha(values, model = NULL, alphaX = 0.2,
+  model.LM = NULL, model.cMKM = NULL)
 }
 \description{
 viene passato come argomento il modello:
@@ -27,3 +27,4 @@ Other Values Bioogical Evaluations: \code{\link{values.add.RBE}},
   \code{\link{values.add.survival.LM}},
   \code{\link{values.add.survival.cMKM}}
 }
+\concept{Values Bioogical Evaluations}

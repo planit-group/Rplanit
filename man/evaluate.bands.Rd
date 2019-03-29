@@ -27,3 +27,4 @@ Evaluate the percentile (confidence) band for a list of vectors.
 Other Utilities: \code{\link{get.filepath}},
   \code{\link{sanitize.filename}}
 }
+\concept{Utilities}

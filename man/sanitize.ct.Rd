@@ -12,3 +12,4 @@ rimuove valori fuori range della ct
 \seealso{
 Other CT: \code{\link{get.ct}}
 }
+\concept{CT}

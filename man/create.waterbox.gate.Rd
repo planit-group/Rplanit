@@ -22,3 +22,4 @@ Other PlanGate: \code{\link{create.gate.structure}},
   \code{\link{file.variable.gate}},
   \code{\link{run.gate.forward}}, \code{\link{set.ct.gate}}
 }
+\concept{PlanGate}

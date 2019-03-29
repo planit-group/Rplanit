@@ -4,8 +4,8 @@
 \alias{dvh.evaluate}
 \title{Evaluate DVH}
 \usage{
-dvh.evaluate(values = NULL, vois = NULL, voi = NULL, variable = NULL,
-  with.na = FALSE, with.0 = FALSE, name = NULL)
+dvh.evaluate(values = NULL, vois = NULL, voi = NULL,
+  variable = NULL, with.na = FALSE, with.0 = FALSE, name = NULL)
 }
 \arguments{
 \item{values}{the \code{values} object}
@@ -37,3 +37,4 @@ Evaluate the DVH for a single VOI and a specified variable.
 Other DVH: \code{\link{dvh.evaluate.all}},
   \code{\link{dvh.evaluate.bands}}
 }
+\concept{DVH}

@@ -5,8 +5,8 @@
 \title{Write LUT phase-space file}
 \usage{
 write.lut.phasespace(lut.name, nominalEnergy = NULL, meanEnergy = NULL,
-  sigmaEnergy = 0, sigmaX = 4, sigmaY = 4, sigmaX1 = 0, sigmaY1 = 0,
-  rhoXX1 = 0, rhoYY1 = 0)
+  sigmaEnergy = 0, sigmaX = 4, sigmaY = 4, sigmaX1 = 0,
+  sigmaY1 = 0, rhoXX1 = 0, rhoYY1 = 0)
 }
 \arguments{
 \item{lut.name}{The name (file prefix) of the LUT}
@@ -27,3 +27,4 @@ Other LUT: \code{\link{get.zBP.fun}},
   \code{\link{write.lut.optics}},
   \code{\link{write.lut.zBP}}, \code{\link{write.lut}}
 }
+\concept{LUT}

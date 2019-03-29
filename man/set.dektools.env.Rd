@@ -4,8 +4,8 @@
 \alias{set.dektools.env}
 \title{Set Environment Variables}
 \usage{
-set.dektools.env(dek.setenv = NULL, lem.setenv = NULL, gate.setenv = NULL,
-  gate.template = NULL)
+set.dektools.env(dek.setenv = NULL, lem.setenv = NULL,
+  gate.setenv = NULL, gate.template = NULL)
 }
 \arguments{
 \item{dek.setenv}{path to configuration script plankit TPS.}
@@ -27,3 +27,4 @@ Other Environment: \code{\link{check.gate}},
   \code{\link{set.wepl.folder}},
   \code{\link{setenv.rplanit}}
 }
+\concept{Environment}

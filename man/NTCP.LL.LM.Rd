@@ -4,8 +4,8 @@
 \alias{NTCP.LL.LM}
 \title{calcola la log likelihood di complicazioni (NTCP), per un singolo caso, rispetto al dato clinico}
 \usage{
-NTCP.LL.LM(values, vois, alpha0, beta, m, G = G, s = s, Np = Np, R = R,
-  Nf = Nf, voi = voi)
+NTCP.LL.LM(values, vois, alpha0, beta, m, G = G, s = s, Np = Np,
+  R = R, Nf = Nf, voi = voi)
 }
 \description{
 Utilizza il modello lineare (alpha=alpha0 + m*LETd, beta=cost.).
@@ -21,3 +21,4 @@ Nf -> numero di frazioni
 Other Likelihood Evaluations: \code{\link{NTCP.LL.cMKM}},
   \code{\link{TCP.LL.LM}}, \code{\link{TCP.LL.cMKM}}
 }
+\concept{Likelihood Evaluations}

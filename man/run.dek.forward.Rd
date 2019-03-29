@@ -21,3 +21,4 @@ Perform a forward planning with Pure-dek. It assumes that the beams are defined 
 Other PlanKIT: \code{\link{embed.data}},
   \code{\link{run.dek.inverse}}
 }
+\concept{PlanKIT}

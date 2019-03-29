@@ -23,3 +23,4 @@ It verifies if the contraints defined in the prescription are verified. It uses 
 Other Prescription: \code{\link{create.constraint}},
   \code{\link{get.prescription}}
 }
+\concept{Prescription}

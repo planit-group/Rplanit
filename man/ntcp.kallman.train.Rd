@@ -4,8 +4,8 @@
 \alias{ntcp.kallman.train}
 \title{NTCP (Biological Dose, Relative Seriality Model [Kallman1992a], Variable fractions)}
 \usage{
-ntcp.kallman.train(dvhs, D50 = 57, R = 3, gam = 6.7, s = 1, d = 2,
-  alphaX = NULL, betaX = NULL, RBE = 1)
+ntcp.kallman.train(dvhs, D50 = 57, R = 3, gam = 6.7, s = 1,
+  d = 2, alphaX = NULL, betaX = NULL, RBE = 1)
 }
 \arguments{
 \item{dvhs}{a list of biological dose DVHs}
@@ -40,3 +40,4 @@ Other General TCP/NTCP Models: \code{\link{ntcp.S}},
   \code{\link{ntcp.kallman}}, \code{\link{tcp.S}},
   \code{\link{tcp.lqp.train}}, \code{\link{tcp.lqp}}
 }
+\concept{General TCP/NTCP Models}

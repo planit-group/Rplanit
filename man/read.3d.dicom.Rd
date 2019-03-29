@@ -26,3 +26,4 @@ Read 3D image from DICOM dile and return a \code{values} object.
 Note: it assumes a regurlary spaced slices, constant pixel dimensions among slices
 and the same ImagePositionPatient for each slice.
 }
+\concept{R/W Arrays, DICOM}

@@ -17,3 +17,4 @@ Other Contours: \code{\link{add.colours.contours}},
   \code{\link{display.contours.legend}},
   \code{\link{get.contours}}, \code{\link{volume.contours}}
 }
+\concept{Contours}

@@ -20,3 +20,4 @@ Other Values, Values Utilities: \code{\link{generate.values.from.events}},
   \code{\link{get.coordinates}},
   \code{\link{get.voxel.index}}
 }
+\concept{Values, Values Utilities}

@@ -4,8 +4,8 @@
 \alias{NTCP.LL.cMKM}
 \title{calcola la log likelihood di complicazioni (NTCP), per un singolo caso, rispetto al dato clinico}
 \usage{
-NTCP.LL.cMKM(values, vois, alphaX, betaX, rN, rd, beta, particleType, G = G,
-  s = s, Np = Np, R = R, Nf = Nf, voi = voi)
+NTCP.LL.cMKM(values, vois, alphaX, betaX, rN, rd, beta, particleType,
+  G = G, s = s, Np = Np, R = R, Nf = Nf, voi = voi)
 }
 \description{
 Utilizza il modello cMKM.
@@ -21,3 +21,4 @@ Nf -> numero di frazioni
 Other Likelihood Evaluations: \code{\link{NTCP.LL.LM}},
   \code{\link{TCP.LL.LM}}, \code{\link{TCP.LL.cMKM}}
 }
+\concept{Likelihood Evaluations}

@@ -22,3 +22,4 @@ x_min, x_max, y_min, y_max, z_min, z_max, HU, voi.
 Other Phantoms: \code{\link{generate.contours}},
   \code{\link{generate.ct.contours}}
 }
+\concept{Phantoms}

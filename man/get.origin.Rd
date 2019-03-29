@@ -20,3 +20,4 @@ Other Values Manipulation: \code{\link{add.array.values}},
   \code{\link{get.array.values}},
   \code{\link{get.subset.values}}, \code{\link{set.origin}}
 }
+\concept{Values Manipulation}

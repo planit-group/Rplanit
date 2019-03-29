@@ -27,3 +27,4 @@ Evaluate the DVH confidence band of a distribution (a list) of DVHs, for a speci
 Other DVH: \code{\link{dvh.evaluate.all}},
   \code{\link{dvh.evaluate}}
 }
+\concept{DVH}

@@ -25,3 +25,4 @@ Other Beams: \code{\link{convert.fluence2mu}},
   \code{\link{read.beams.fluka}}, \code{\link{read.beams}},
   \code{\link{write.beams}}
 }
+\concept{Beams}

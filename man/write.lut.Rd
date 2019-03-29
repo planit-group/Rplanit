@@ -4,8 +4,8 @@
 \alias{write.lut}
 \title{salva la lut a partire dai dati in memoria}
 \usage{
-write.lut(lut.array, variables = NULL, E = NULL, x = NULL, y = NULL,
-  zn = NULL, filename = "lut.4d", binary = FALSE)
+write.lut(lut.array, variables = NULL, E = NULL, x = NULL,
+  y = NULL, zn = NULL, filename = "lut.4d", binary = FALSE)
 }
 \description{
 salva la lut a partire dai dati in memoria
@@ -21,3 +21,4 @@ Other LUT: \code{\link{get.zBP.fun}},
   \code{\link{write.lut.phasespace}},
   \code{\link{write.lut.zBP}}
 }
+\concept{LUT}

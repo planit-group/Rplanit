@@ -31,3 +31,4 @@ Other BeamLUT: \code{\link{get.alpha.beta.beamLUT}},
   \code{\link{read.beamLUTs}}, \code{\link{read.beamLUT}},
   \code{\link{write.beamLUT}}
 }
+\concept{BeamLUT}

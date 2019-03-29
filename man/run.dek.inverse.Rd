@@ -21,3 +21,4 @@ Perform an inverse planning with Pure-dek.
 Other PlanKIT: \code{\link{embed.data}},
   \code{\link{run.dek.forward}}
 }
+\concept{PlanKIT}

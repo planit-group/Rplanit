@@ -4,11 +4,12 @@
 \alias{alpha.beta.ion.range}
 \title{Evaluation of ion alpha and beta LQ parameters}
 \usage{
-alpha.beta.ion.range(model = "MKM", model.parameters = data.frame(alpha0 =
-  0.1295, beta0 = 0.03085, rN = 4, rd = 0.31), cell.name = NULL,
-  particle = "H", energies = NULL, lets = NULL,
-  calculusType = "rapidMKM", precision = 0.5, ignore.stdout = TRUE,
-  ignore.stderr = TRUE, get.raw.data = FALSE, remove.temp.files = TRUE)
+alpha.beta.ion.range(model = "MKM",
+  model.parameters = data.frame(alpha0 = 0.1295, beta0 = 0.03085, rN = 4,
+  rd = 0.31), cell.name = NULL, particle = "H", energies = NULL,
+  lets = NULL, calculusType = "rapidMKM", precision = 0.5,
+  ignore.stdout = TRUE, ignore.stderr = TRUE, get.raw.data = FALSE,
+  remove.temp.files = TRUE)
 }
 \arguments{
 \item{model}{the name of the model (options: 'MKM', 'LEMI', 'LEMII', 'LEMIII')}
@@ -68,3 +69,4 @@ The evaluation is performed for a monoenergetic ion. It uses a C++ implementatio
 Other LEM/MKM Models: \code{\link{alpha.beta.mkm}},
   \code{\link{alpha.fun.mkm}}
 }
+\concept{LEM/MKM Models}

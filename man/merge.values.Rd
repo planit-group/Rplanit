@@ -4,7 +4,7 @@
 \alias{merge.values}
 \title{Merge a list of values}
 \usage{
-merge.values(values.list)
+\method{merge}{values}(values.list)
 }
 \arguments{
 \item{values.list}{A list of values objects.}
@@ -29,3 +29,4 @@ Other Values: \code{\link{combine.values}},
   \code{\link{threshold.values}},
   \code{\link{values.from.sparse.array}}
 }
+\concept{Values}

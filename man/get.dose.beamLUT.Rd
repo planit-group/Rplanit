@@ -33,3 +33,4 @@ Other BeamLUT: \code{\link{combine.beamLUTs}},
   \code{\link{read.beamLUTs}}, \code{\link{read.beamLUT}},
   \code{\link{write.beamLUT}}
 }
+\concept{BeamLUT}

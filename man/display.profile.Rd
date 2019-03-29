@@ -4,9 +4,10 @@
 \alias{display.profile}
 \title{Display profile}
 \usage{
-display.profile(profile.values, profile.ct = NULL, profile.names = NULL,
-  depth.lim = NULL, show.plot = TRUE, file.name = NULL, height = 7,
-  width = 7, return.dataframe = FALSE)
+display.profile(profile.values, profile.ct = NULL,
+  profile.names = NULL, depth.lim = NULL, show.plot = TRUE,
+  file.name = NULL, height = 7, width = 7,
+  return.dataframe = FALSE)
 }
 \description{
 Deprecated: see "display.profiles"
@@ -14,3 +15,4 @@ Deprecated: see "display.profiles"
 \seealso{
 Other Profiles: \code{\link{display.profiles}}
 }
+\concept{Profiles}

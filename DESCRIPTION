@@ -9,6 +9,7 @@ Description: A collection of methods and procedures to perform simulations and
     analysis related to radiotherapy treatment planning (with ion beams). It
     includes a set of radiobiological evaluations and display possibilities.
 License: GPL2
+Encoding: UTF-8
 Depends:
     R (>= 3.0.0)
 Imports:
@@ -24,4 +25,4 @@ Imports:
     shiny (>= 0.9.1),
     grid,
     data.table
-RoxygenNote: 6.0.1
+RoxygenNote: 6.1.1

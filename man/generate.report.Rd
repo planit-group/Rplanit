@@ -4,7 +4,8 @@
 \alias{generate.report}
 \title{Generate report}
 \usage{
-generate.report(plan, file.name = "report", N.slice = 6, html = FALSE)
+generate.report(plan, file.name = "report", N.slice = 6,
+  html = FALSE)
 }
 \arguments{
 \item{plan}{the \code{plan} object}

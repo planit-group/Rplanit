@@ -21,3 +21,4 @@ Other Contours: \code{\link{display.contours.legend}},
   \code{\link{sanitize.contours}},
   \code{\link{volume.contours}}
 }
+\concept{Contours}

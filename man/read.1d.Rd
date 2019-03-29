@@ -19,3 +19,4 @@ Read a file "*.1d" (PlanKIT format) and return a dataframe.
 Other R/W Arrays: \code{\link{read.3d.hdr}},
   \code{\link{read.3d}}
 }
+\concept{R/W Arrays}

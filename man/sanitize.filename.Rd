@@ -19,3 +19,4 @@ Sanitize file name
 Other Utilities: \code{\link{evaluate.bands}},
   \code{\link{get.filepath}}
 }
+\concept{Utilities}

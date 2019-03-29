@@ -4,9 +4,9 @@
 \alias{values.add.survival.cMKM}
 \title{Calcola la sopravvivenza secondo il modello cMKM e la aggiunge in values}
 \usage{
-values.add.survival.cMKM(values = values, alphaX = alphaX, betaX = betaX,
-  rN = rN, rd = rd, particleType = particleType, beta = beta,
-  add.alpha = TRUE)
+values.add.survival.cMKM(values = values, alphaX = alphaX,
+  betaX = betaX, rN = rN, rd = rd, particleType = particleType,
+  beta = beta, add.alpha = TRUE)
 }
 \description{
 alphaX, betaX, rN, rd sono i parametri del modello MKM
@@ -19,3 +19,4 @@ Other Values Bioogical Evaluations: \code{\link{values.add.RBE.alpha}},
   \code{\link{values.add.RBE}},
   \code{\link{values.add.survival.LM}}
 }
+\concept{Values Bioogical Evaluations}

@@ -22,3 +22,4 @@ Embed the data (CT, contours, beams, values, vois) associated with a plan direct
 Other PlanKIT: \code{\link{run.dek.forward}},
   \code{\link{run.dek.inverse}}
 }
+\concept{PlanKIT}

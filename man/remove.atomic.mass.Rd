@@ -21,3 +21,4 @@ Other Particles: \code{\link{Zeff}},
   \code{\link{ion.from.z}}, \code{\link{rest.energy}},
   \code{\link{z.from.ion}}
 }
+\concept{Particles}

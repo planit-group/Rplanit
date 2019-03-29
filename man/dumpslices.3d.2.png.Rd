@@ -5,8 +5,8 @@
 \title{fa un dump del file .3d in una serie di immagini png corrispondenti a ciascuna
 slice in z.}
 \usage{
-dumpslices.3d.2.png(file.name, x.min = -Inf, x.max = +Inf, y.min = -Inf,
-  y.max = +Inf, z.min = -Inf, z.max = +Inf)
+dumpslices.3d.2.png(file.name, x.min = -Inf, x.max = +Inf,
+  y.min = -Inf, y.max = +Inf, z.min = -Inf, z.max = +Inf)
 }
 \description{
 fa un dump del file .3d in una serie di immagini png corrispondenti a ciascuna
@@ -17,3 +17,4 @@ Other display slices: \code{\link{display.slice.all}},
   \code{\link{display.slice.ct}},
   \code{\link{display.slice}}
 }
+\concept{display slices}

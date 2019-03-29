@@ -4,8 +4,8 @@
 \alias{tcp.lqp.train}
 \title{TCP (Biological Dose, Poissonian Model, Variable fractions)}
 \usage{
-tcp.lqp.train(dvhs, D50 = 66, R = 10, gam = 2, d = 2, alphaX = NULL,
-  betaX = NULL, RBE = 1)
+tcp.lqp.train(dvhs, D50 = 66, R = 10, gam = 2, d = 2,
+  alphaX = NULL, betaX = NULL, RBE = 1)
 }
 \arguments{
 \item{dvhs}{a list of biological dose DVHs}
@@ -39,3 +39,4 @@ Other General TCP/NTCP Models: \code{\link{ntcp.S}},
   \code{\link{ntcp.kallman}}, \code{\link{tcp.S}},
   \code{\link{tcp.lqp}}
 }
+\concept{General TCP/NTCP Models}

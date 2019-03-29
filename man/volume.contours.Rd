@@ -20,3 +20,4 @@ Other Contours: \code{\link{add.colours.contours}},
   \code{\link{get.contours}},
   \code{\link{sanitize.contours}}
 }
+\concept{Contours}

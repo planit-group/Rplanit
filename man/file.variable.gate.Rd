@@ -21,3 +21,4 @@ Other PlanGate: \code{\link{create.gate.structure}},
   \code{\link{create.waterbox.gate}},
   \code{\link{run.gate.forward}}, \code{\link{set.ct.gate}}
 }
+\concept{PlanGate}

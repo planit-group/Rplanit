@@ -28,3 +28,4 @@ Generate the material database for Gate simulations.
 \seealso{
 Other GateMaterials: \code{\link{read.materials.gate}}
 }
+\concept{GateMaterials}

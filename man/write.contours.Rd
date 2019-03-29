@@ -18,3 +18,4 @@ Save the \code{contours} dataframe in a file with PlanKIT format ("*.contours")
 Other R/W Contours: \code{\link{read.contours.dicom}},
   \code{\link{read.contours}}
 }
+\concept{R/W Contours}

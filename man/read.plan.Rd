@@ -19,3 +19,4 @@ Read a Plan object from disk. The origin folder is derived from the plan name.
 Other Plan: \code{\link{create.plan}},
   \code{\link{save.plan}}
 }
+\concept{Plan}

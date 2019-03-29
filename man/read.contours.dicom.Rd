@@ -4,8 +4,8 @@
 \alias{read.contours.dicom}
 \title{Read contours from DICOM file}
 \usage{
-read.contours.dicom(file.contours.dicom, folder.CT.dicom = NULL, CT = NULL,
-  z.CT = NULL, tissue = "R3PIDEd0.2v0+MKM")
+read.contours.dicom(file.contours.dicom, folder.CT.dicom = NULL,
+  CT = NULL, z.CT = NULL, tissue = "R3PIDEd0.2v0+MKM")
 }
 \arguments{
 \item{file.contours.dicom}{the name of the contours file}
@@ -36,3 +36,4 @@ folder.CT.dicom, CT or z.CT. z.CT has precendence to CT that has precendence to 
 Other R/W Contours: \code{\link{read.contours}},
   \code{\link{write.contours}}
 }
+\concept{R/W Contours}

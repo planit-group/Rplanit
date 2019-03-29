@@ -26,3 +26,4 @@ Other Particles: \code{\link{Zeff}},
   \code{\link{remove.atomic.mass}},
   \code{\link{rest.energy}}
 }
+\concept{Particles}

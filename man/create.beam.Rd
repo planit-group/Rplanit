@@ -6,8 +6,8 @@
 \usage{
 create.beam(particle = "1H", beamLine = "simpleProtons", x_iso = 0,
   y_iso = 0, z_iso = 0, gantryAngle = 0, patientAngle = 0,
-  fluence = 1, energy = 0, deflX = 0, deflY = 0, x_s = 0, y_s = 0,
-  z_s = 0)
+  fluence = 1, energy = 0, deflX = 0, deflY = 0, x_s = 0,
+  y_s = 0, z_s = 0)
 }
 \arguments{
 \item{particle}{particle name}
@@ -47,3 +47,4 @@ Other Beams: \code{\link{add.field}},
   \code{\link{read.beams.fluka}}, \code{\link{read.beams}},
   \code{\link{write.beams}}
 }
+\concept{Beams}

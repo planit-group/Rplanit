@@ -5,9 +5,9 @@
 \title{Create a field object (dataframe)}
 \usage{
 create.field(N = 1, beamLine = "protonSimple", targetVOI = "PTV",
-  targetVOIIndex = NA, iecGantryAngle = 0, iecPatientSupportAngle = 0,
-  interSpotSpacing = c(1.2, 1.2, 1.2), spotsExtensionOutsideTarget = 0,
-  targetIsocenter = c(NA, NA, NA))
+  targetVOIIndex = NA, iecGantryAngle = 0,
+  iecPatientSupportAngle = 0, interSpotSpacing = c(1.2, 1.2, 1.2),
+  spotsExtensionOutsideTarget = 0, targetIsocenter = c(NA, NA, NA))
 }
 \arguments{
 \item{N}{number of fields.}
@@ -39,3 +39,4 @@ Other Beams: \code{\link{add.field}},
   \code{\link{read.beams.fluka}}, \code{\link{read.beams}},
   \code{\link{write.beams}}
 }
+\concept{Beams}

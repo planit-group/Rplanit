@@ -18,3 +18,4 @@ Other Environment: \code{\link{check.plankit}},
   \code{\link{set.wepl.folder}},
   \code{\link{setenv.rplanit}}
 }
+\concept{Environment}

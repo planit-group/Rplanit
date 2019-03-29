@@ -5,8 +5,9 @@
 \title{Evaluate alpha function (MKM)}
 \usage{
 alpha.fun.mkm(alphaX = 0.1295, betaX = 0.03085, rN = 4, rd = 0.31,
-  cellType = NULL, particleType = "H", energies = NULL, lets = NULL,
-  use.limits = FALSE, outmessages = FALSE, calculusType = "rapidMKM")
+  cellType = NULL, particleType = "H", energies = NULL,
+  lets = NULL, use.limits = FALSE, outmessages = FALSE,
+  calculusType = "rapidMKM")
 }
 \arguments{
 \item{alphaX, betaX, rN, rd}{The radiobiological parameter of the MKM.}
@@ -35,3 +36,4 @@ Returns a function alpha(LET) or alpha(specific energy), using the MKM model. Th
 Other LEM/MKM Models: \code{\link{alpha.beta.ion.range}},
   \code{\link{alpha.beta.mkm}}
 }
+\concept{LEM/MKM Models}

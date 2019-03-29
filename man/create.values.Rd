@@ -4,7 +4,8 @@
 \alias{create.values}
 \title{Create values object}
 \usage{
-create.values(array.values = NULL, variables = "variable name", x, y, z)
+create.values(array.values = NULL, variables = "variable name", x, y,
+  z)
 }
 \arguments{
 \item{variables}{The name of the variable (can be a vector of names).}
@@ -34,3 +35,4 @@ Other Values: \code{\link{combine.values}},
   \code{\link{threshold.values}},
   \code{\link{values.from.sparse.array}}
 }
+\concept{Values}

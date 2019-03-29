@@ -27,3 +27,4 @@ a dataframe containing the specified profile.
 \description{
 Get multiple profiles (values along a specific axis, or voxel line) from a \code{values} object. The axis is specifed trough the definition of two of the following three coordinates: x, y, z, or with a single ray object for arbitrary directions.
 }
+\concept{Values, Values Manipulation, Profiles}

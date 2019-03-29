@@ -14,3 +14,4 @@ write.3d(values, file.name)
 \description{
 Write a \code{values} object in a file using the pure-dek format (*.3d)
 }
+\concept{R/W Array}

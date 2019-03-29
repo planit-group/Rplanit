@@ -4,9 +4,9 @@
 \alias{display.beamports}
 \title{Beam-port splot}
 \usage{
-display.beamports(beams, plan = NULL, numeric = FALSE, show.plot = TRUE,
-  file.name = NULL, height = 7, width = 7, dpi = 300,
-  field.names = NULL)
+display.beamports(beams, plan = NULL, numeric = FALSE,
+  show.plot = TRUE, file.name = NULL, height = 7, width = 7,
+  dpi = 300, field.names = NULL)
 }
 \arguments{
 \item{beams}{beams dataframe.}
@@ -44,3 +44,4 @@ Other Beams: \code{\link{add.field}},
   \code{\link{read.beams.fluka}}, \code{\link{read.beams}},
   \code{\link{write.beams}}
 }
+\concept{Beams}

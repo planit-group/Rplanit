@@ -23,3 +23,4 @@ Other BeamLUT: \code{\link{combine.beamLUTs}},
   \code{\link{get.values.for.beam}},
   \code{\link{read.beamLUTs}}, \code{\link{read.beamLUT}}
 }
+\concept{BeamLUT}
