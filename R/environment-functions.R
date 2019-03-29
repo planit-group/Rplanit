@@ -115,7 +115,14 @@ get.dektools.env <- function()
 get.install.path <- function()
 {
   # usa la variabile d'ambiente $R_LIBS_USER
-  return(paste0(path.expand(Sys.getenv('R_LIBS_USER')), '/'))
+  path1 <- paste0(path.expand(Sys.getenv('R_LIBS_USER')), '/')
+  
+  #oppure .lib.Path
+  path2 <- .libPaths()[1]
+  
+  if(path1 != path2) {message('Warning, ambigous R library path: using ', path2)}
+  
+  return(path2)
 }
 
 #'Check the configuration of PlanKIT
