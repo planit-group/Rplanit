@@ -120,7 +120,7 @@ get.install.path <- function()
   #oppure .lib.Path
   path2 <- .libPaths()[1]
   
-  if(path1 != path2) {message('Warning, ambigous R library path: using ', path2)}
+  if(path1 != path2) {message('Using library path: ', path2)}
   
   return(path2)
 }
@@ -229,7 +229,7 @@ install.gate <- function()
   }
   
   message('downloading gate...')
-  download.file(url='http://totlxl.to.infn.it/tools/Gate6.2-install.tar.bz2', destfile='Gate6.2-install.tar.bz2', method='internal', method='internal')
+  download.file(url='http://totlxl.to.infn.it/tools/Gate6.2-install.tar.bz2', destfile='Gate6.2-install.tar.bz2', method='internal')
   
   message('uncompressing gate...')
   system('tar jxf Gate6.2-install.tar.bz2; rm Gate6.2-install.tar.bz2', ignore.stdout=TRUE, ignore.stderr=TRUE)

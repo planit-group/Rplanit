@@ -73,64 +73,65 @@ read.beams <- function(beams.file)
   return(beams)
 }
 
-#' Read beams from file (Fluka)
-#'
-#' Read RtIonPlan file (Fluka format) and return a beams object.
-#' @param fluka.file The file name.
-#' @return a beams object.
-#' @family Beams
-#' @export
-read.beams.fluka <- function(fluka.file)
-{
-  message('reading beams file...')
-  beams.fluka <- readLines(fluka.file)
-  index <- 0
-  Nbeams <- 0
-
-  # ciclo preliminare per numero totale di fasci
-  for(i in 1:length(beams.fluka)) {
-    if(length(grep('#points', beams.fluka[i], fixed=TRUE))>0) {
-      st <- strsplit(beams.fluka[i], ' +')[[1]]
-      Nbeams <- Nbeams + as.numeric(st[2])
-    }
-  }
-  message('number of beams: ', Nbeams)
-
-  beams <- create.beam(nbeams=Nbeams, with.spots=FALSE)
-
-  i <- 0
-  while(i < length(beams.fluka)) {
-    i <- i+1
-    if(length(grep('submachine#', beams.fluka[i], fixed=TRUE))>0) {
-      st <- strsplit(beams.fluka[i], ' +')[[1]]
-      energy <- as.numeric(st[3])
-      message(i, ', energy: ', energy)
-    } else if (length(grep('#points', beams.fluka[i], fixed=TRUE))>0) {
-      while(
-        length(grep('submachine#', beams.fluka[i], fixed=TRUE))==0 & i < length(beams.fluka)
-        ) {
-        i <- i+1
-        if(length(grep('submachine#', beams.fluka[i], fixed=TRUE))==0) {
-          st <- strsplit(beams.fluka[i], ' +')[[1]]
-          deflX <- as.numeric(st[1])
-          deflY <- as.numeric(st[2])
-          fluence <- as.numeric(st[3])
-          index <- index+1
-          beams$energy[index] <- energy
-          beams$deflX[index] <- deflX
-          beams$deflY[index] <- deflY
-          beams$fluence[index] <- fluence
-          if(is.na(deflX)) {message('NA: ', i)}
-        }
-        #print(beams[index,])
-      }
-      i <- i-1
-    }
-  }
-
-  #class(beams) <- beams
-  return(beams)
-}
+## Read beams from file (Fluka)
+## DA RISCRIVERE PER LA NUOVA Struttura dei beams!!!!
+##
+## Read RtIonPlan file (Fluka format) and return a beams object.
+## @param fluka.file The file name.
+## @return a beams object.
+## @family Beams
+## @export
+# read.beams.fluka <- function(fluka.file)
+# {
+#   message('reading beams file...')
+#   beams.fluka <- readLines(fluka.file)
+#   index <- 0
+#   Nbeams <- 0
+# 
+#   # ciclo preliminare per numero totale di fasci
+#   for(i in 1:length(beams.fluka)) {
+#     if(length(grep('#points', beams.fluka[i], fixed=TRUE))>0) {
+#       st <- strsplit(beams.fluka[i], ' +')[[1]]
+#       Nbeams <- Nbeams + as.numeric(st[2])
+#     }
+#   }
+#   message('number of beams: ', Nbeams)
+# 
+#   beams <- create.beam(nbeams=Nbeams, with.spots=FALSE)
+# 
+#   i <- 0
+#   while(i < length(beams.fluka)) {
+#     i <- i+1
+#     if(length(grep('submachine#', beams.fluka[i], fixed=TRUE))>0) {
+#       st <- strsplit(beams.fluka[i], ' +')[[1]]
+#       energy <- as.numeric(st[3])
+#       message(i, ', energy: ', energy)
+#     } else if (length(grep('#points', beams.fluka[i], fixed=TRUE))>0) {
+#       while(
+#         length(grep('submachine#', beams.fluka[i], fixed=TRUE))==0 & i < length(beams.fluka)
+#         ) {
+#         i <- i+1
+#         if(length(grep('submachine#', beams.fluka[i], fixed=TRUE))==0) {
+#           st <- strsplit(beams.fluka[i], ' +')[[1]]
+#           deflX <- as.numeric(st[1])
+#           deflY <- as.numeric(st[2])
+#           fluence <- as.numeric(st[3])
+#           index <- index+1
+#           beams$energy[index] <- energy
+#           beams$deflX[index] <- deflX
+#           beams$deflY[index] <- deflY
+#           beams$fluence[index] <- fluence
+#           if(is.na(deflX)) {message('NA: ', i)}
+#         }
+#         #print(beams[index,])
+#       }
+#       i <- i-1
+#     }
+#   }
+# 
+#   #class(beams) <- beams
+#   return(beams)
+# }
 
 
 #' Get beams from plan

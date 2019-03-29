@@ -22,7 +22,6 @@ Other Beams: \code{\link{convert.fluence2mu}},
   \code{\link{display.beams}}, \code{\link{get.beams}},
   \code{\link{get.ct.entrance.point}},
   \code{\link{get.isocenter}}, \code{\link{get.rays}},
-  \code{\link{read.beams.fluka}}, \code{\link{read.beams}},
-  \code{\link{write.beams}}
+  \code{\link{read.beams}}, \code{\link{write.beams}}
 }
 \concept{Beams}
