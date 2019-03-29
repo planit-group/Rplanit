@@ -12,7 +12,6 @@ of radiobiological evaluations and display possibilities.
 
 
 ## Installation
-Note: it is assumed that the camputer is connected to the web...
 
 ### Ubuntu (12.04 64bit)
 * The following libraries need to be installed from the Ubuntu repository (from the terminal shell prompt):
@@ -30,7 +29,7 @@ $ sudo apt-get install liblog4cxx10-dev
 * Install the latest version of R (for Ubuntu 12.04) following the instruction at this [link](http://livesoncoffee.wordpress.com/2012/12/09/installing-r-on-ubuntu-12-04/).
 * Optional (but recommended): install the latest version of RStudio from this [link](http://www.rstudio.com/products/rstudio/download/).
 
-### Ubuntu (14.04 64bit)
+### Ubuntu (14.04+ 64bit)
 * The following libraries need to be installed from the Ubuntu repository (from the terminal shell prompt):
 ```
 $ sudo apt-get install libcurl4-openssl-dev

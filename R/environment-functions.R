@@ -115,7 +115,14 @@ get.dektools.env <- function()
 get.install.path <- function()
 {
   # usa la variabile d'ambiente $R_LIBS_USER
-  return(paste0(path.expand(Sys.getenv('R_LIBS_USER')), '/'))
+  path1 <- paste0(path.expand(Sys.getenv('R_LIBS_USER')), '/')
+  
+  #oppure .lib.Path
+  path2 <- .libPaths()[1]
+  
+  if(path1 != path2) {message('Warning, ambigous R library path: using ', path2)}
+  
+  return(path2)
 }
 
 #'Check the configuration of PlanKIT
@@ -253,7 +260,7 @@ install.puredek <- function()
   my.system <- Sys.info()['sysname']
   if(my.system=='Linux') {
     message('installing compiled Pure-dek for Linux...')
-    puredek_package <- 'Pure-dek-install.tar.bz2'
+    puredek_package <- 'https://drive.google.com/uc?export=download&id=12RbiA1ejI1Cz6TcEUnz_8UaD4TbiKiHE'
   } else if(my.system=='Darwin') {
     message('installing compiled Pure-dek for Mac (Darwin)...')
     puredek_package <- 'Pure-dek-install.mac.tar.bz2'
@@ -262,7 +269,7 @@ install.puredek <- function()
   }
   
   message('downloading pure-dek...')
-  download.file(url=paste0('http://totlxl.to.infn.it/tools/', puredek_package), destfile='Pure-dek-install.tar.bz2', method='internal')
+  download.file(url=puredek_package, destfile='Pure-dek-install.tar.bz2', method='auto')
   
   message('uncompressing pure-dek...')
   system('tar jxf Pure-dek-install.tar.bz2; rm Pure-dek-install.tar.bz2', ignore.stdout=TRUE, ignore.stderr=TRUE)
@@ -286,7 +293,7 @@ install.survival <- function()
   my.system <- Sys.info()['sysname']
   if(my.system=='Linux') {
     message('installing compiled survival for Linux...')
-    survival_package <- 'Survival-install.tar'
+    survival_package <- 'https://drive.google.com/uc?export=download&id=1otXtCLcSmZd-5C2yWNFs0eK6TEEtpjP9' #https://drive.google.com/file/d/1otXtCLcSmZd-5C2yWNFs0eK6TEEtpjP9/view?usp=sharing
   } else if(my.system=='Darwin') {
     message('installing compiled survival for Mac (Darwin)...')
     survival_package <- 'Survival-install.mac.tar'
@@ -295,7 +302,7 @@ install.survival <- function()
   }
   
   message('downloading survival...')
-  download.file(url=paste0('http://totlxl.to.infn.it/tools/', survival_package, '.bz2'), destfile='Survival-install.tar.bz2', method='internal')
+  download.file(url=survival_package, destfile='Survival-install.tar.bz2', method='auto')
   
   message('uncompressing survival...')
   system(paste0('tar jxf Survival-install.tar.bz2; rm Survival-install.tar.bz2'), ignore.stdout=TRUE, ignore.stderr=TRUE)
