@@ -316,7 +316,7 @@ install.survival <- function()
 # RUNNING ----------------------------------------------------------------------
 # qui vengono eseguite tutte procedure al momento del caricamento del pacchetto.
 
-.onLoad <- function(libname=find.package("Rplanit"), pkgname = "Rplanit")
-{
-  setenv.rplanit()
-}
+#.onLoad <- function(libname=find.package("Rplanit"), pkgname = "Rplanit")
+#{
+#  setenv.rplanit()
+#}
