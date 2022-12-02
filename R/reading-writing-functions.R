@@ -179,9 +179,18 @@ read.3d.hdr <- function(file.name, variable='Dose[Gy]', voxel.origin=c(0,0,0))
 #' @family R/W Arrays, DICOM
 #' @import oro.dicom
 #' @export
-read.3d.dicom <- function(dicom.folder, exclude=NULL, recursive=TRUE, verbose=TRUE, invert=TRUE, variable='HounsfieldNumber')
+read.3d.dicom <- function(dicom.folder, exclude = NULL, recursive = TRUE, verbose = TRUE,
+                          invert = TRUE, variable = "HounsfieldNumber")
 {
-  message('New dicom implementation.')
+  
+  #dicom.folder = 'CTs/Brain_CaCH/CTImages/'
+  #dicom.folder = 'CTs/Brain_CaCH/RD1.2.752.243.1.1.20211012153635383.3100.78811.dcm'
+  #exclude = NULL
+  #recursive = TRUE
+  #verbose = TRUE
+  #invert = TRUE
+  #variable = "Dose"
+  message('New dicom implementation...')
   dcmImages <- readDICOM(path = dicom.folder, verbose = verbose,
                          recursive = recursive, exclude = exclude)
   dcm.info <- dicomTable(dcmImages$hdr)
@@ -193,18 +202,18 @@ read.3d.dicom <- function(dicom.folder, exclude=NULL, recursive=TRUE, verbose=TR
       dcmImages$img[[i]] <- dcmImages$img[[i]] * rs[i] + ri[i]
     }
   } else {
-    message('slope & intercept not present in dicom, using dose grid scaling...')
+    message('slope & intercept not present in dicom...')
     dose.grid.scaling <- as.numeric(dcm.info$`3004-000E-DoseGridScaling`)
     dcmImages$img[[1]] <- dcmImages$img[[1]] * dose.grid.scaling
   }
-
+  
   if (invert & length(dcmImages$img)>1) {
     message("inverting images...")
     for (i in 1:length(dcmImages$img)) {
       dcmImages$img[[i]] <- dcmImages$img[[i]][seq(dim(dcmImages$img[[i]])[1], 1), ]
     }
   }
-
+  
   if(length(dcmImages$img)>1) {
     message("sorting images...")
     zz <- as.numeric(dcm.info$`0020-1041-SliceLocation`)
@@ -221,7 +230,7 @@ read.3d.dicom <- function(dicom.folder, exclude=NULL, recursive=TRUE, verbose=TR
     Values.3d <- aperm(Values.3d, c(2, 1, 3))
     Values.3d <- DescTools::Rev(Values.3d, margin=2)
   }
-
+  
   Nx <- dim(Values.3d)[1]
   Ny <- dim(Values.3d)[2]
   Nz <- dim(Values.3d)[3]
@@ -250,13 +259,16 @@ read.3d.dicom <- function(dicom.folder, exclude=NULL, recursive=TRUE, verbose=TR
     dz <- as.numeric(dcm.info$`0018-0050-SliceThickness`)
     z <- seq(from = voxel.origin[3], by = dz, length.out = Nz)
   }
-
+  
+  # Values.3d <- array(as.double(Values.3d), dim=dim(Values.3d))
+  
   values <- list(values = Values.3d, x = x, y = y, z = z,
                  Nx = Nx, Ny = Ny, Nz = Nz, Nv = Nv, variables = variable)
   class(values) <- "values"
   message('created values with variable = ', values$variables)
   return(values)
 }
+
 
 
 #' Read 1D array
