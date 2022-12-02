@@ -692,66 +692,6 @@ read.contours.dicom <- function(file.contours.dicom, folder.CT.dicom=NULL, CT=NU
   return(contours)
 }
 
-read.3d.dicom <- function(dicom.folder, exclude=NULL, recursive=TRUE, verbose=TRUE, invert=TRUE, variable='HounsfieldNumber')
-{
-  dcmImages <- readDICOM(path=dicom.folder, verbose=verbose, recursive=recursive, exclude=exclude)
-  dcm.info <- dicomTable(dcmImages$hdr)
-  
-  # trasforma le immagini...
-  message('scaling images...')
-  rs <- as.numeric(dcm.info$`0028-1053-RescaleSlope`)
-  ri <- as.numeric(dcm.info$`0028-1052-RescaleIntercept`)
-  for(i in 1:length(rs)) {
-    dcmImages$img[[i]] <- dcmImages$img[[i]]*rs[i] + ri[i]
-  }
-  
-  # inverte immagini
-  if(invert) {
-    message('inverting images...')
-    for(i in 1:length(dcmImages$img)) {
-      dcmImages$img[[i]] <- dcmImages$img[[i]][seq(dim(dcmImages$img[[i]])[1], 1), ]
-    }
-  }
-  
-  # ordina le immagini
-  message('sorting images...')
-  zz <- as.numeric(dcm.info$`0020-1041-SliceLocation`)
-  oz <- order(zz)
-  imgs <- list()
-  for(i in 1:length(oz)) {
-    imgs[[i]] <- dcmImages$img[[oz[i]]]
-  }
-  dcmImages$img <- imgs
-  
-  # array 3d
-  Values.3d <- create3D(dcmImages); #return(Values.3d)
-  Nx <- dim(Values.3d)[1]
-  Ny <- dim(Values.3d)[2]
-  Nz <- dim(Values.3d)[3]
-  Nv <- 1
-  
-  # coordinates
-  
-  dxy <- as.numeric(unlist(strsplit(paste(dcm.info$`0028-0030-PixelSpacing`, collapse=' '), split=' ', fixed=TRUE)))
-  
-  vo <- as.numeric(unlist(strsplit(paste(dcm.info$`0020-0032-ImagePositionPatient`, collapse=' '), split=' ', fixed=TRUE)))
-  voxel.origin <- c(mean(vo[seq(1, length(dxy)-2, by=3)]),
-                    mean(vo[seq(2, length(dxy)-1, by=3)]),
-                    mean(vo[seq(3, length(dxy), by=3)]))
-  message('origin: ', voxel.origin[1], ', ', voxel.origin[2], ', ', voxel.origin[3])
-  dx <- mean(dxy[seq(1, length(dxy)-1, by=2)])
-  dy <- mean(dxy[seq(2, length(dxy), by=2)])
-  x <- seq(from=voxel.origin[1], by=dx, length.out=Nx)
-  y <- seq(from=voxel.origin[2], by=dy, length.out=Ny)
-  z <- sort(zz)-min(zz) + voxel.origin[3]
-  z <- sort(zz)
-  
-  # crea oggetto values
-  values <- list(values=Values.3d, x=x, y=y, z=z, Nx=Nx, Ny=Ny, Nz=Nz, Nv=Nv, variables=variable)
-  class(values) <- 'values'
-  return(values)
-}
-
 
 # R/W VOIS ---------------------------------------------------------------------
 
