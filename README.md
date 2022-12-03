@@ -10,14 +10,15 @@ Radiotherapy with ion beams: planning, simulations and analysis
 analysis related to radiotherapy treatment planning (with ion beams). It includes a set
 of radiobiological evaluations and display possibilities.
 
+To perform radiobiological evaluations see also [Survival](https://github.com/batuff/Survival). An integration of Rplanit with Survival is underway.
+
+To perform simulations and optimizations of treatments (TPS) an integration with the updated code Planit (based on [Russo et al. 2016](http://dx.doi.org/10.1088/0031-9155/61/1/183) and with [Topas](http://www.topasmc.org/) is underway.
+
 
 ## Installation
 
 NOTE: the following instructions are mostly outdated.
 
-To perform radiobiological evaluations see also [Survival](https://github.com/batuff/Survival). An integration of Rplanit with Survival is underway.
-
-To perform simulations and optimizations of treatments (TPS) an integration with the updated code Planit (based on [Russo et al. 2016](http://dx.doi.org/10.1088/0031-9155/61/1/183) and with [Topas](http://www.topasmc.org/) is underway.
 
 ### Ubuntu (12.04 64bit)
 * The following libraries need to be installed from the Ubuntu repository (from the terminal shell prompt):
