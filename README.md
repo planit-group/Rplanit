@@ -4,7 +4,7 @@ Radiotherapy with ion beams: planning, simulations and analysis
 
 *Author*: Andrea Attili
 
-*Maintainer*: Andrea Attili <attili@to.infn.it>
+*Maintainer*: Andrea Attili <andrea.attili@roma3.infn.it>
 
 *Description*: A collection of methods and procedures to perform simulations and
 analysis related to radiotherapy treatment planning (with ion beams). It includes a set
