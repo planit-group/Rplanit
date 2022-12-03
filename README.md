@@ -13,6 +13,12 @@ of radiobiological evaluations and display possibilities.
 
 ## Installation
 
+NOTE: the following instructions are mostly outdated.
+
+To perform radiobiological evaluations see also [Survival](https://github.com/batuff/Survival). An integration of Rplanit with Survival is underway.
+
+To perform simulations and optimizations of treatments (TPS) an integration with the updated code Planit (based on [Russo et al. 2016](http://dx.doi.org/10.1088/0031-9155/61/1/183) and with [Topas](http://www.topasmc.org/) is underway.
+
 ### Ubuntu (12.04 64bit)
 * The following libraries need to be installed from the Ubuntu repository (from the terminal shell prompt):
 ```
@@ -61,33 +67,7 @@ $ sudo apt-get install liblog4cxx10-dev
 ```
 > library(Rplanit)
 ```
-* To install _Pure-dek_ (the Treatment Planning System kernel), _Gate_ (to perform Monte Carlo simulations) and _Survival_ (the code for the radiobiological simulations):
-```
-> install.puredek(<lincence number>) # please read the note below.
-> install.gate()
-> install.survival()
-```
-* To update everything to the latest version, the last commands should be runned again:
-```
-> install_github("planit-group/Rplanit", dependencies=TRUE)
-> library(Rplanit)
-> The followings are optional:
-> install.puredek(<lincence number>) # please read the note below.
-> install.gate()
-> install.survival()
-> # et voila
-```
 
-### Check
-* To check that everything is working properly, run the following commands (from the R prompt)
-```
-> library(Rplanit) # to load the library, if not yet in memory.
-> plan.out <- demo.puredek()
-> demo.survival()
-```
-
-### Important Note
-While _Rplanit_, _Gate_ and _Survivals_ are open-source, the TPS kernel, _Pure-dek_ is a fork of a previous kernel proprietary by INFN/IBA. To use it for research purposes please contact Andrea Attili (attili@to.infn.it).
 
 ### Tutorial
 A tutorial (in Italian) is available at http://rstudio-pubs-static.s3.amazonaws.com/66368_3aea5f348bd144ca89f9faf9bb1167b4.html
