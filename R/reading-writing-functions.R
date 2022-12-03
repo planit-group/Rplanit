@@ -169,7 +169,7 @@ read.3d.hdr <- function(file.name, variable='Dose[Gy]', voxel.origin=c(0,0,0))
 #' Note: it assumes a regurlary spaced slices, constant pixel dimensions among slices
 #' and the same ImagePositionPatient for each slice.
 #' 
-#' @param dicom.folder Path name to the DICOM directory.
+#' @param dicom.folder Path name to the DICOM directory or DICOM file.
 #' @param recursive Search recursively down from the given path name.
 #' @param exclude Exclude file names containing this character string.
 #' @param verbose Flag to provide text-based progress bar.
@@ -182,14 +182,6 @@ read.3d.hdr <- function(file.name, variable='Dose[Gy]', voxel.origin=c(0,0,0))
 read.3d.dicom <- function(dicom.folder, exclude = NULL, recursive = TRUE, verbose = TRUE,
                           invert = TRUE, variable = "HounsfieldNumber")
 {
-  
-  #dicom.folder = 'CTs/Brain_CaCH/CTImages/'
-  #dicom.folder = 'CTs/Brain_CaCH/RD1.2.752.243.1.1.20211012153635383.3100.78811.dcm'
-  #exclude = NULL
-  #recursive = TRUE
-  #verbose = TRUE
-  #invert = TRUE
-  #variable = "Dose"
   message('New dicom implementation...')
   dcmImages <- readDICOM(path = dicom.folder, verbose = verbose,
                          recursive = recursive, exclude = exclude)
@@ -202,7 +194,7 @@ read.3d.dicom <- function(dicom.folder, exclude = NULL, recursive = TRUE, verbos
       dcmImages$img[[i]] <- dcmImages$img[[i]] * rs[i] + ri[i]
     }
   } else {
-    message('slope & intercept not present in dicom...')
+    message('slope & intercept not present in dicom: using dose grid scaling...')
     dose.grid.scaling <- as.numeric(dcm.info$`3004-000E-DoseGridScaling`)
     dcmImages$img[[1]] <- dcmImages$img[[1]] * dose.grid.scaling
   }
