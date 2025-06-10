@@ -544,7 +544,7 @@ display.slice.all <- function(ct=NULL,
   if(col.invert) {col.val <- col.val[length(col.val):1]}
   
   # colori contorni
-  if(use.contour.colors | contours.legend) {
+  if((use.contour.colors | contours.legend) & !is.null(contours)) {
     if( !('display.color' %in% colnames(contours)) ) {
       contours <- add.colours.contours(contours)
     }
